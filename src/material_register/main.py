@@ -1,5 +1,18 @@
-from src.material_register.providers.root_provider import RootProvider
+import sys
+
+from PySide6.QtWidgets import QApplication
+
+from src.material_register.init.app_init import AppInit
+from src.material_register.ui.main_window import MainWindow
+
+
+def run_app() -> None:
+    app = QApplication(sys.argv)
+    if not AppInit.init_app():
+        sys.exit(1)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
-    RootProvider.paths_init()
-    print("root", RootProvider.root)
+    run_app()
