@@ -1,0 +1,13 @@
+{
+  "MainWindow": {
+    "title": "Titulek hlavního okna"
+  },
+  "SidePanel": {
+    "registerButtonText": "Pohyby",
+    "registerButtonTooltipText": "Zobrazí pohyby materiálu"
+  },
+  "ActionsWidget": {
+    "addActionButtonTooltipText": "Přidat nový záznam",
+    "deleteActionButtonText": "Odstranit označený záznam"
+  }
+}

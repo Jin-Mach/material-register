@@ -5,10 +5,12 @@ from pathlib import Path
 class RootProvider:
     PROJECT_NAME = "material-register"
     root = None
+    resources = None
 
     @classmethod
     def paths_init(cls):
         cls.root = cls.get_base_path()
+        cls.resources = cls.root / "resources"
 
     @classmethod
     def get_base_path(cls) -> Path | None:

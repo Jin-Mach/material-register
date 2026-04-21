@@ -9,7 +9,6 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setMinimumSize(900, 600)
-        self.setWindowTitle("Material Register")
         self.setCentralWidget(self.create_ui())
         self.create_connection()
         self._centered = False
@@ -26,7 +25,7 @@ class MainWindow(QMainWindow):
 
     def create_connection(self) -> None:
         buttons_map = {
-            self.stacked_widget.register_widget.actions_widget.add_action: 0
+            self.stacked_widget.register_widget.actions_widget.add_action_button: 0
         }
         for button, index in buttons_map.items():
             button.clicked.connect(lambda i=index: self.stacked_widget.setCurrentIndex(i))

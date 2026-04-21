@@ -13,11 +13,11 @@ class ActionsWidget(QWidget):
 
     def create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
-        self.add_action = QPushButton("Add Action")
-        self.add_action.setObjectName("addAction")
-        self.delete_action = QPushButton("Delete Action")
-        self.delete_action.setObjectName("deleteAction")
-        main_layout.addWidget(self.add_action)
-        main_layout.addWidget(self.delete_action)
+        self.add_action_button = QPushButton("Add Action")
+        self.add_action_button.setObjectName("addActionButton")
+        self.delete_action_button = QPushButton("Delete Action")
+        self.delete_action_button.setObjectName("deleteActionButton")
+        main_layout.addWidget(self.add_action_button)
+        main_layout.addWidget(self.delete_action_button)
         main_layout.addStretch()
         return main_layout
