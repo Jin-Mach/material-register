@@ -15,7 +15,7 @@ class AppInit:
             RootProvider.paths_init()
             if RootProvider.root is None:
                 return False
-            LanguageProvider.language_init(QLocale().system().name())
+            LanguageProvider.language_init(QLocale().name())
             AppInit._basic_setup(LanguageProvider.current_language, RootProvider.resources)
             return True
         except Exception as e:

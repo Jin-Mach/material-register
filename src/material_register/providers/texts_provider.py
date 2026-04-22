@@ -19,7 +19,7 @@ class TextsProvider:
         try:
             if not resources_path.exists():
                 return {}
-            with open(resources_path / cls.CURRENT_LANGUAGE / "ui_texts.json", "r", encoding="utf-8") as file:
+            with open(resources_path / "texts" / cls.CURRENT_LANGUAGE / "ui_texts.json", "r", encoding="utf-8") as file:
                 return json.load(file)
         except Exception as e:
             print("error:", e)
