@@ -7,10 +7,10 @@ class LanguageProvider:
 
     @classmethod
     def language_init(cls, locale: str) -> None:
-        cls.current_language = LanguageProvider.set_language_code(locale)
+        cls.current_language = LanguageProvider._set_language_code(locale)
 
     @staticmethod
-    def set_language_code(locale: str) -> str:
-        if locale not in LanguageProvider.SUPPORTED_LANGUAGES:
+    def _set_language_code(locale: str) -> str:
+        if not locale or locale not in LanguageProvider.SUPPORTED_LANGUAGES:
             return LanguageProvider.DEFAULT_LANGUAGE
         return locale
