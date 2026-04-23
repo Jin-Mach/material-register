@@ -1,6 +1,7 @@
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 
+from src.material_register.ui.setup.texts_setup import TextsSetup
 from src.material_register.ui.widgets.side_panel import SidePanel
 from src.material_register.ui.widgets.stacked_widget import StackedWidget
 
@@ -9,11 +10,12 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setMinimumSize(900, 600)
-        self.setCentralWidget(self.create_ui())
-        self.create_connection()
+        self.setCentralWidget(self._create_ui())
+        self._ui_setup()
+        self._create_connection()
         self._centered = False
 
-    def create_ui(self) -> QWidget:
+    def _create_ui(self) -> QWidget:
         central_widget = QWidget()
         main_layout = QHBoxLayout()
         self.side_panel = SidePanel(self)
@@ -23,7 +25,14 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(main_layout)
         return central_widget
 
-    def create_connection(self) -> None:
+    def _ui_setup(self) -> None:
+        try:
+            if not TextsSetup.set_ui_texts(self, []):
+                print("No ui texts set", self.__class__.__name__)
+        except Exception as e:
+            print(e)
+
+    def _create_connection(self) -> None:
         buttons_map = {
             self.stacked_widget.register_widget.actions_widget.add_action_button: 0
         }

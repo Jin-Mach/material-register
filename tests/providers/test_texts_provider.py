@@ -5,8 +5,8 @@ from pathlib import Path
 from material_register.providers.texts_provider import TextsProvider
 
 def _create_texts_file(tmp_path: Path, language: str, data: dict) -> None:
-    lang_dir = tmp_path / language
-    lang_dir.mkdir()
+    lang_dir = tmp_path / "texts" / language
+    lang_dir.mkdir(parents=True, exist_ok=True)
     file = lang_dir / "ui_texts.json"
     file.write_text(json.dumps(data), encoding="utf-8")
 

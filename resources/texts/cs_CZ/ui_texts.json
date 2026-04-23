@@ -1,6 +1,6 @@
 {
   "MainWindow": {
-    "title": "Titulek hlavního okna"
+    "titleText": "Titulek hlavního okna"
   },
   "SidePanel": {
     "registerButtonText": "Pohyby",

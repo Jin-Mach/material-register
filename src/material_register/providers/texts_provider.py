@@ -22,5 +22,5 @@ class TextsProvider:
             with open(resources_path / "texts" / cls.CURRENT_LANGUAGE / "ui_texts.json", "r", encoding="utf-8") as file:
                 return json.load(file)
         except Exception as e:
-            print("error:", e)
+            print(e)
             return {}
