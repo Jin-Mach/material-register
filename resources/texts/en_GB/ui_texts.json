@@ -1,0 +1,13 @@
+{
+  "MainWindow": {
+    "titleText": "Main window title"
+  },
+  "SidePanel": {
+    "registerButtonText": "Movements",
+    "registerButtonTooltipText": "Displays material movements"
+  },
+  "ActionsWidget": {
+    "addActionButtonTooltipText": "Add a new record",
+    "deleteActionButtonTooltipText": "Delete selected record"
+  }
+}

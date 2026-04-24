@@ -11,6 +11,7 @@ class RootProvider:
     def paths_init(cls):
         cls.root = cls.get_base_path()
         cls.resources = cls.root / "resources"
+        cls.resources.mkdir(parents=True, exist_ok=True)
 
     @classmethod
     def get_base_path(cls) -> Path | None:

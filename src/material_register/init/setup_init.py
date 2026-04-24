@@ -1,3 +1,4 @@
+from material_register.providers.file_provider import FileProvider
 from src.material_register.providers.language_provider import LanguageProvider
 from src.material_register.providers.root_provider import RootProvider
 from src.material_register.providers.texts_provider import TextsProvider
@@ -9,6 +10,9 @@ class SetupInit:
     @classmethod
     def setup_init(cls) -> bool:
         try:
+            invalid_files = FileProvider.check_missing_files(RootProvider.resources)
+            if invalid_files:
+                pass
             TextsProvider.provider_init(LanguageProvider.current_language, RootProvider.resources)
             if not TextsProvider.UI_TEXTS:
                 return False

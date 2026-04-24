@@ -8,6 +8,6 @@
   },
   "ActionsWidget": {
     "addActionButtonTooltipText": "Přidat nový záznam",
-    "deleteActionButtonText": "Odstranit označený záznam"
+    "deleteActionButtonTooltipText": "Odstranit označený záznam"
   }
 }
