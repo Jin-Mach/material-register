@@ -11,7 +11,8 @@ authors = [
 ]
 
 dependencies = [
-    "PySide6"
+    "PySide6",
+    "requests"
 ]
 
 [project.optional-dependencies]
