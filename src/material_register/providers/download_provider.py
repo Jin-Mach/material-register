@@ -7,7 +7,6 @@ from material_register.utils.system import is_disk_writable
 
 
 class DownloadProvider:
-
     FILES_MAP = {
         "texts/cs_CZ/ui_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/cs_CZ/ui_texts.json",
         "texts/en_GB/ui_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/ui_texts.json",

@@ -1,17 +1,24 @@
 import sys
+
 from pathlib import Path
 
 
-class RootProvider:
+class PathsProvider:
     PROJECT_NAME = "material-register"
+
     root = None
     resources = None
+    logs = None
 
     @classmethod
-    def paths_init(cls):
+    def paths_init(cls, log_structure: dict[str, tuple[str, str]]) -> None:
         cls.root = cls.get_base_path()
         cls.resources = cls.root / "resources"
         cls.resources.mkdir(parents=True, exist_ok=True)
+        cls.logs = cls.root / "logs"
+        cls.logs.mkdir(parents=True, exist_ok=True)
+        for folder, _ in log_structure.values():
+            (cls.logs / folder).mkdir(parents=True, exist_ok=True)
 
     @classmethod
     def get_base_path(cls) -> Path | None:

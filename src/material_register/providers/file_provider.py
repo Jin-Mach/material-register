@@ -4,7 +4,6 @@ from pathlib import Path
 
 
 class FileProvider:
-
     REQUIRED_FILES = [
         Path("cs_CZ/ui_texts.json"),
         Path("en_GB/ui_texts.json"),

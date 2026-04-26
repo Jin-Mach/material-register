@@ -1,7 +1,9 @@
 from PySide6.QtCore import QLocale
 
+from material_register.config.logging_congig import LOG_STRUCTURE
+from material_register.providers.logger_provider import LoggerProvider
 from src.material_register.providers.language_provider import LanguageProvider
-from src.material_register.providers.root_provider import RootProvider
+from src.material_register.providers.paths_provider import PathsProvider
 
 
 class AppInit:
@@ -9,9 +11,12 @@ class AppInit:
     @staticmethod
     def init_app() -> bool:
         try:
-            RootProvider.paths_init()
-            if RootProvider.root is None:
+            PathsProvider.paths_init(LOG_STRUCTURE)
+            if PathsProvider.root is None:
                 return False
+            if PathsProvider.logs is None:
+                return False
+            LoggerProvider.init_loggers(PathsProvider.logs, LOG_STRUCTURE)
             LanguageProvider.language_init(QLocale().name())
             return True
         except Exception as e:
