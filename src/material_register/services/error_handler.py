@@ -17,9 +17,7 @@ class ErrorHandler:
         }
 
     @classmethod
-    def handle_error(cls, error: Exception | str, logger_name: str, level: str, show_dialog: bool = False,
-                     close_app: bool = False) -> None:
-        print(level, cls.LEVELS)
+    def handle_error(cls, error: Exception | str, logger_name: str, level: str) -> None:
         logger = cls.loggers_map[logger_name]
         if level not in cls.LEVELS:
             level = "warning"

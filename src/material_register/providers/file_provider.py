@@ -15,6 +15,10 @@ class FileProvider:
         ("SidePanel", "registerButtonTooltipText"),
         ("ActionsWidget", "addActionButtonTooltipText"),
         ("ActionsWidget", "deleteActionButtonTooltipText"),
+        ("ErrorDialog", "closeDialogButtonText"),
+        ("ErrorDialog", "closeDialogButtonTooltipText"),
+        ("ErrorDialog", "closeAppButtonText"),
+        ("ErrorDialog", "closeAppButtonTooltipText"),
     ]
 
     @classmethod

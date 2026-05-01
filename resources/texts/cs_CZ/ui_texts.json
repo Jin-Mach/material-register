@@ -9,5 +9,11 @@
   "ActionsWidget": {
     "addActionButtonTooltipText": "Přidat nový záznam",
     "deleteActionButtonTooltipText": "Odstranit označený záznam"
+  },
+  "ErrorDialog": {
+    "closeDialogButtonText": "Zavřít",
+    "closeDialogButtonTooltipText": "Zavřít chybový dialog",
+    "closeAppButtonText": "Ukončit",
+    "closeAppButtonTooltipText": "Ukončit aplikaci"
   }
 }

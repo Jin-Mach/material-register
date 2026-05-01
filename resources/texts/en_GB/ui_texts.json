@@ -9,5 +9,11 @@
   "ActionsWidget": {
     "addActionButtonTooltipText": "Add a new record",
     "deleteActionButtonTooltipText": "Delete selected record"
-  }
+  },
+  "ErrorDialog": {
+  "closeDialogButtonText": "Close",
+  "closeDialogButtonTooltipText": "Close the error dialog",
+  "closeAppButtonText": "Exit",
+  "closeAppButtonTooltipText": "Exit the application"
+}
 }
