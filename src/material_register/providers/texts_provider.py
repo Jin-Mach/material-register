@@ -32,7 +32,7 @@ class TextsProvider:
         try:
             if not resources_path.exists():
                 return {}
-            file_path = resources_path / "texts" / "error_texts.json"
+            file_path = resources_path / "texts" / cls.CURRENT_LANGUAGE / "error_texts.json"
             return json.loads(file_path.read_text(encoding="utf-8"))
         except Exception as e:
             print(e)
