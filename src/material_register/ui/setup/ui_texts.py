@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import QWidget
 
 
-class TextsSetup:
+class UiTexts:
     UI_TEXTS = {}
 
     @classmethod
-    def setup_init(cls, ui_texts):
+    def setup_init(cls, ui_texts: dict[str, dict[str, str]]):
         cls.UI_TEXTS = ui_texts
 
     @classmethod

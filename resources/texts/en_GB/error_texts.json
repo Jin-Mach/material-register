@@ -1,0 +1,8 @@
+{
+  "APP_INIT_FAILED": "The application failed to start.",
+  "RESOURCES_MISSING": "Required application files are missing.",
+  "DOWNLOAD_FAILED": "Failed to download required files.",
+  "TEXTS_LOAD_FAILED": "Failed to load application texts.",
+  "CRITICAL_FAILURE": "A critical error has occurred.",
+  "UNKNOWN_ERROR": "An unexpected error has occurred."
+}

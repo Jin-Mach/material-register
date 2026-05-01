@@ -10,17 +10,17 @@ from src.material_register.providers.paths_provider import PathsProvider
 class AppInit:
 
     @staticmethod
-    def init_app() -> bool:
+    def init_app() -> tuple[bool, str]:
         try:
             PathsProvider.paths_init(LOG_STRUCTURE)
             if PathsProvider.root is None:
-                return False
+                return False, "APP_INIT_FAILED"
             if PathsProvider.logs is None:
-                return False
+                return False, "APP_INIT_FAILED"
             LoggerProvider.init_loggers(PathsProvider.logs, LOG_STRUCTURE)
             ErrorHandler.init_handler(LoggerProvider)
             LanguageProvider.language_init(QLocale().name())
-            return True
+            return True, ""
         except Exception as e:
             print(e)
-            return False
+            return False, "UNKNOWN_ERROR"

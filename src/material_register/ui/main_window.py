@@ -1,7 +1,7 @@
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 
-from src.material_register.ui.setup.texts_setup import TextsSetup
+from src.material_register.ui.setup.ui_texts import UiTexts
 from src.material_register.ui.widgets.side_panel import SidePanel
 from src.material_register.ui.widgets.stacked_widget import StackedWidget
 
@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
 
     def _ui_setup(self) -> None:
         try:
-            if not TextsSetup.set_ui_texts(self, []):
+            if not UiTexts.set_ui_texts(self, []):
                 print("No ui texts set", self.__class__.__name__)
         except Exception as e:
             print(e)

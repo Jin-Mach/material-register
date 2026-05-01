@@ -1,0 +1,8 @@
+{
+  "APP_INIT_FAILED": "Aplikaci se nepodařilo spustit.",
+  "RESOURCES_MISSING": "Chybí potřebné soubory aplikace.",
+  "DOWNLOAD_FAILED": "Stažení potřebných souborů selhalo.",
+  "TEXTS_LOAD_FAILED": "Nepodařilo se načíst texty aplikace.",
+  "CRITICAL_FAILURE": "Došlo ke kritické chybě.",
+  "UNKNOWN_ERROR": "Došlo k neočekávané chybě."
+}
