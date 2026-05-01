@@ -2,32 +2,41 @@ import pytest
 
 from material_register.services.error_handler import ErrorHandler
 
-calls = []
 
-def _warning(message: str) -> None:
-    calls.append(("warning", message))
+class FakeLogger:
+    def __init__(self):
+        self.calls = []
 
-def _error(message: str) -> None:
-    calls.append(("error", message))
+    def warning(self, msg, exc_info=None):
+        self.calls.append(("warning", msg, exc_info))
 
-def _critical(message: str) -> None:
-    calls.append(("critical", message))
+    def error(self, msg, exc_info=None):
+        self.calls.append(("error", msg, exc_info))
 
-fake_logger = {
-    "warning": _warning,
-    "error": _error,
-    "critical": _critical
-}
+    def critical(self, msg, exc_info=None):
+        self.calls.append(("critical", msg, exc_info))
 
-@pytest.mark.parametrize("level, expected", [
-        ("warning", ("warning", "fail")),
-        ("error", ("error", "fail")),
-        ("critical", ("critical", "fail")),
-        ("invalid", ("warning", "fail")),
-        ]
+@pytest.fixture
+def fake_logger():
+    return FakeLogger()
+
+@pytest.mark.parametrize(
+    "level, expected",
+    [
+        ("warning", ("warning", "fail", None)),
+        ("error", ("error", "fail", None)),
+        ("critical", ("critical", "fail", None)),
+        ("invalid", ("warning", "fail", None)),
+    ],
 )
-def test_handle_error(level, expected) -> None:
-    calls.clear()
+def test_handle_error(level, expected, fake_logger):
     ErrorHandler.loggers_map = {"app": fake_logger}
     ErrorHandler.handle_error("fail", "app", level)
-    assert calls[0] == expected
+    assert fake_logger.calls[0] == expected
+
+def test_handle_error_exception(fake_logger):
+    ErrorHandler.loggers_map = {"app": fake_logger}
+    ErrorHandler.handle_error(ValueError("fail"), "app", "error")
+    assert fake_logger.calls[0][0] == "error"
+    assert fake_logger.calls[0][1] is not None
+    assert fake_logger.calls[0][2] is True

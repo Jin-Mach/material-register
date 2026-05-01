@@ -21,4 +21,7 @@ class ErrorHandler:
         logger = cls.loggers_map[logger_name]
         if level not in cls.LEVELS:
             level = "warning"
-        logger[level](error)
+        if isinstance(error, Exception):
+            logger.error(error, exc_info=True)
+        else:
+            getattr(logger, level)(error)
