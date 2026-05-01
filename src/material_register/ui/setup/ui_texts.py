@@ -1,5 +1,7 @@
 from PySide6.QtWidgets import QWidget
 
+from material_register.services.error_handler import ErrorHandler
+
 
 class UiTexts:
     UI_TEXTS = {}
@@ -27,5 +29,5 @@ class UiTexts:
                     widget.setToolTipDuration(tooltip_duration)
             return True
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "ui", "warning")
             return False

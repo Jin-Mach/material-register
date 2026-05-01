@@ -1,6 +1,7 @@
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 
+from material_register.ui.dialogs.error_dialog import ErrorDialog
 from src.material_register.ui.setup.ui_texts import UiTexts
 from src.material_register.ui.widgets.side_panel import SidePanel
 from src.material_register.ui.widgets.stacked_widget import StackedWidget
@@ -26,11 +27,9 @@ class MainWindow(QMainWindow):
         return central_widget
 
     def _ui_setup(self) -> None:
-        try:
-            if not UiTexts.set_ui_texts(self, []):
-                print("No ui texts set", self.__class__.__name__)
-        except Exception as e:
-            print(e)
+        if not UiTexts.set_ui_texts(self, []):
+            dialog = ErrorDialog()
+            dialog.show_dialog("TEXTS_LOAD_FAILED", False)
 
     def _create_connection(self) -> None:
         buttons_map = {
