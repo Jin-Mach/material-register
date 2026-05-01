@@ -18,6 +18,8 @@ class ErrorHandler:
 
     @classmethod
     def handle_error(cls, error: Exception | str, logger_name: str, level: str) -> None:
+        if logger_name not in cls.loggers_map:
+            logger_name = "error"
         logger = cls.loggers_map[logger_name]
         if level not in cls.LEVELS:
             level = "warning"

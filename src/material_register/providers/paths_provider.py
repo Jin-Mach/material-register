@@ -2,6 +2,8 @@ import sys
 
 from pathlib import Path
 
+from material_register.services.error_handler import ErrorHandler
+
 
 class PathsProvider:
     PROJECT_NAME = "material-register"
@@ -13,6 +15,8 @@ class PathsProvider:
     @classmethod
     def paths_init(cls, log_structure: dict[str, tuple[str, str]]) -> None:
         cls.root = cls.get_base_path()
+        if cls.root is None:
+            return
         cls.resources = cls.root / "resources"
         cls.resources.mkdir(parents=True, exist_ok=True)
         cls.logs = cls.root / "logs"
@@ -32,5 +36,5 @@ class PathsProvider:
                     return parent
             return current.parents[3]
         except Exception as e:
-            print(f"PathsProvider error: {e}")
+            ErrorHandler.handle_error(e, "app", "error")
             return None

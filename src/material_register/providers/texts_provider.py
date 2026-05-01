@@ -2,6 +2,8 @@ import json
 
 from pathlib import Path
 
+from material_register.services.error_handler import ErrorHandler
+
 
 class TextsProvider:
     CURRENT_LANGUAGE = None
@@ -24,7 +26,7 @@ class TextsProvider:
             file_path = resources_path / "texts" / cls.CURRENT_LANGUAGE / "ui_texts.json"
             return json.loads(file_path.read_text(encoding="utf-8"))
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "app", "error")
             return {}
 
     @classmethod
@@ -35,5 +37,5 @@ class TextsProvider:
             file_path = resources_path / "texts" / cls.CURRENT_LANGUAGE / "error_texts.json"
             return json.loads(file_path.read_text(encoding="utf-8"))
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "app", "error")
             return {}

@@ -1,5 +1,6 @@
 from material_register.providers.download_provider import DownloadProvider
 from material_register.providers.file_provider import FileProvider
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.error_texts import ErrorTexts
 from src.material_register.providers.language_provider import LanguageProvider
 from src.material_register.providers.paths_provider import PathsProvider
@@ -26,5 +27,5 @@ class SetupInit:
             ErrorTexts.setup_init(TextsProvider.ERROR_TEXTS)
             return True, ""
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "error", "critical")
             return False, "UNKNOWN_ERROR"

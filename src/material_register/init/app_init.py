@@ -13,14 +13,13 @@ class AppInit:
     def init_app() -> tuple[bool, str]:
         try:
             PathsProvider.paths_init(LOG_STRUCTURE)
-            if PathsProvider.root is None:
+            if PathsProvider.root is None or PathsProvider.logs is None:
                 return False, "APP_INIT_FAILED"
-            if PathsProvider.logs is None:
+            if not LoggerProvider.init_loggers(PathsProvider.logs, LOG_STRUCTURE):
                 return False, "APP_INIT_FAILED"
-            LoggerProvider.init_loggers(PathsProvider.logs, LOG_STRUCTURE)
             ErrorHandler.init_handler(LoggerProvider)
             LanguageProvider.language_init(QLocale().name())
             return True, ""
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "error", "critical")
             return False, "UNKNOWN_ERROR"

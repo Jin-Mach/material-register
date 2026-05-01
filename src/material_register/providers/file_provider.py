@@ -1,5 +1,8 @@
 import json
+
 from pathlib import Path
+
+from material_register.services.error_handler import ErrorHandler
 
 
 class FileProvider:
@@ -34,10 +37,8 @@ class FileProvider:
     @classmethod
     def check_missing_files(cls, resources_path: Path) -> set[Path]:
         invalid_files = set()
-        texts_files = cls._check_json_files(resources_path / "texts")
-        errors_files = cls._check_json_files(resources_path / "errors")
-        invalid_files.update(texts_files)
-        invalid_files.update(errors_files)
+        texts_folder = cls._check_json_files(resources_path / "texts")
+        invalid_files.update(texts_folder)
         return invalid_files
 
     @classmethod
@@ -63,7 +64,7 @@ class FileProvider:
                 return cls._check_error_json(data)
             return False
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "app", "error")
             return False
 
     @classmethod

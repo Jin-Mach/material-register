@@ -1,5 +1,3 @@
-
-
 class LanguageProvider:
     DEFAULT_LANGUAGE = "en_GB"
     SUPPORTED_LANGUAGES = ["cs_CZ", "en_GB"]

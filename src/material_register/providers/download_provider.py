@@ -2,6 +2,7 @@ import requests
 
 from pathlib import Path
 
+from material_register.services.error_handler import ErrorHandler
 from material_register.utils.network import is_internet_available
 from material_register.utils.system import is_disk_writable
 
@@ -26,7 +27,7 @@ class DownloadProvider:
                         return False
             return True
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "app", "error")
             return False
 
     @classmethod
@@ -41,7 +42,7 @@ class DownloadProvider:
                 path.write_bytes(response.content)
             return True
         except Exception as e:
-            print(e)
+            ErrorHandler.handle_error(e, "app", "error")
             return False
 
     @staticmethod
