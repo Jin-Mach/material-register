@@ -31,6 +31,8 @@ VALID_ERROR_JSON = {
     "TEXTS_LOAD_FAILED": "x",
     "CRITICAL_FAILURE": "x",
     "UNKNOWN_ERROR": "x",
+    "CONNECTION_ERROR": "x",
+    "PERMISSION_ERROR": "x"
 }
 
 def write_valid(path: Path) -> None:

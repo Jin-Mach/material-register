@@ -4,5 +4,7 @@
   "DOWNLOAD_FAILED": "Failed to download required files.",
   "TEXTS_LOAD_FAILED": "Failed to load application texts.",
   "CRITICAL_FAILURE": "A critical error has occurred.",
-  "UNKNOWN_ERROR": "An unexpected error has occurred."
+  "UNKNOWN_ERROR": "An unexpected error has occurred.",
+  "CONNECTION_ERROR": "Unable to establish an internet connection.",
+  "PERMISSION_ERROR": "The application does not have permission to write to disk."
 }

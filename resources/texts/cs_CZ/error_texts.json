@@ -4,5 +4,7 @@
   "DOWNLOAD_FAILED": "Stažení potřebných souborů selhalo.",
   "TEXTS_LOAD_FAILED": "Nepodařilo se načíst texty aplikace.",
   "CRITICAL_FAILURE": "Došlo ke kritické chybě.",
-  "UNKNOWN_ERROR": "Došlo k neočekávané chybě."
+  "UNKNOWN_ERROR": "Došlo k neočekávané chybě.",
+  "CONNECTION_ERROR": "Nelze navázat připojení k internetu.",
+  "PERMISSION_ERROR": "Aplikace nemá oprávnění zapisovat na disk."
 }

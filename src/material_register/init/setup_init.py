@@ -15,11 +15,13 @@ class SetupInit:
         try:
             invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
             if invalid_files:
-                if DownloadProvider.is_ready_for_download(PathsProvider.resources):
-                    if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
-                        return False, "DOWNLOAD_FAILED"
-                else:
-                    return False, "RESOURCES_MISSING"
+                state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
+                if not state["internet"]:
+                    return False, "CONNECTION_ERROR"
+                if not state["writable"]:
+                    return False, "PERMISSION_ERROR"
+                if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
+                    return False, "DOWNLOAD_FAILED"
             TextsProvider.provider_init(LanguageProvider.current_language, PathsProvider.resources)
             if not TextsProvider.UI_TEXTS or not TextsProvider.ERROR_TEXTS:
                 return False, "TEXTS_LOAD_FAILED"

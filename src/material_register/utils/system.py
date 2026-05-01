@@ -7,6 +7,5 @@ def is_disk_writable(test_path: Path) -> bool:
         test_file.write_text("test text")
         test_file.unlink(missing_ok=True)
         return True
-    except OSError as e:
-        print(e)
+    except OSError:
         return False

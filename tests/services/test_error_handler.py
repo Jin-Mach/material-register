@@ -8,13 +8,13 @@ class FakeLogger:
         self.calls = []
 
     def warning(self, msg, exc_info=None):
-        self.calls.append(("warning", msg, exc_info))
+        self.calls.append(("warning", msg, bool(exc_info)))
 
     def error(self, msg, exc_info=None):
-        self.calls.append(("error", msg, exc_info))
+        self.calls.append(("error", msg, bool(exc_info)))
 
     def critical(self, msg, exc_info=None):
-        self.calls.append(("critical", msg, exc_info))
+        self.calls.append(("critical", msg, bool(exc_info)))
 
 @pytest.fixture
 def fake_logger():
@@ -23,10 +23,10 @@ def fake_logger():
 @pytest.mark.parametrize(
     "level, expected",
     [
-        ("warning", ("warning", "fail", None)),
-        ("error", ("error", "fail", None)),
-        ("critical", ("critical", "fail", None)),
-        ("invalid", ("warning", "fail", None)),
+        ("warning", ("warning", "fail", False)),
+        ("error", ("error", "fail", False)),
+        ("critical", ("critical", "fail", False)),
+        ("invalid", ("warning", "fail", False)),
     ],
 )
 def test_handle_error(level, expected, fake_logger):
@@ -37,6 +37,4 @@ def test_handle_error(level, expected, fake_logger):
 def test_handle_error_exception(fake_logger):
     ErrorHandler.loggers_map = {"app": fake_logger}
     ErrorHandler.handle_error(ValueError("fail"), "app", "error")
-    assert fake_logger.calls[0][0] == "error"
-    assert fake_logger.calls[0][1] is not None
-    assert fake_logger.calls[0][2] is True
+    assert fake_logger.calls[0] == ("error", "fail", True)
