@@ -15,6 +15,10 @@ class DownloadProvider:
         "texts/en_GB/error_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/error_texts.json"
     }
 
+    ICONS_MAP = {
+        "images/SplashScreen.jpg": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/SplashScreen.jpg"
+    }
+
     FILES_SUFFIXES = [".json", ".qss"]
     ICONS_SUFFIXES = [".png", ".jpg", ".jpeg"]
 
@@ -23,7 +27,7 @@ class DownloadProvider:
         try:
             for invalid_file in invalid_files:
                 relative = invalid_file.relative_to(resource_path)
-                url = cls.FILES_MAP.get(str(relative))
+                url = cls.FILES_MAP.get(str(relative)) or cls.ICONS_MAP.get(str(relative))
                 if url:
                     if not cls._save_file(url, invalid_file):
                         return False
