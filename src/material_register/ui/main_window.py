@@ -1,6 +1,7 @@
-from PySide6.QtGui import QShowEvent
+from PySide6.QtGui import QShowEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 
+from material_register.services.settings_manager import SettingsManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from src.material_register.ui.setup.ui_texts import UiTexts
 from src.material_register.ui.widgets.side_panel import SidePanel
@@ -14,7 +15,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self._create_ui())
         self._ui_setup()
         self._create_connection()
-        self._centered = False
+        self.settings_manager = SettingsManager(self)
 
     def _create_ui(self) -> QWidget:
         central_widget = QWidget()
@@ -40,11 +41,13 @@ class MainWindow(QMainWindow):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        if self._centered:
-            return
-        self._centered = True
-        screen = self.screen()
-        geometry = screen.availableGeometry()
-        frame = self.frameGeometry()
-        frame.moveCenter(geometry.center())
-        self.move(frame.topLeft())
+        if not self.settings_manager.load_settings():
+            screen = self.screen()
+            geometry = screen.availableGeometry()
+            frame = self.frameGeometry()
+            frame.moveCenter(geometry.center())
+            self.move(frame.topLeft())
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        super().closeEvent(event)
+        self.settings_manager.save_settings()
