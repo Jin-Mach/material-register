@@ -2,26 +2,15 @@ import sys
 
 from PySide6.QtWidgets import QApplication
 
-from material_register.init.setup_init import SetupInit
-from material_register.ui.dialogs.error_dialog import ErrorDialog
-from src.material_register.init.app_init import AppInit
-from src.material_register.ui.main_window import MainWindow
+from material_register.controllers.init.init_controller import InitController
+from material_register.ui.widgets.splash_screen import SplashScreen
 
 
 def run_app() -> None:
     app = QApplication(sys.argv)
-    app_ok, app_error = AppInit.init_app()
-    if not app_ok:
-        dialog = ErrorDialog()
-        dialog.show_dialog(app_error, False)
-        sys.exit(1)
-    setup_ok, setup_error = SetupInit.setup_init()
-    if not setup_ok:
-        dialog = ErrorDialog()
-        dialog.show_dialog(setup_error, False)
-        sys.exit(1)
-    window = MainWindow()
-    window.show()
+    splash_screen = SplashScreen()
+    init_controller = InitController(splash_screen)
+    init_controller.start_thread()
     sys.exit(app.exec())
 
 if __name__ == "__main__":
