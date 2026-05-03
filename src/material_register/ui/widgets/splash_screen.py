@@ -6,8 +6,9 @@ from PySide6.QtWidgets import QWidget, QApplication, QProgressBar, QVBoxLayout, 
 
 
 class SplashScreen(QWidget):
-    def __init__(self) -> None:
+    def __init__(self, resourrces_path: Path) -> None:
         super().__init__()
+        self.resources_path = resourrces_path
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setLayout(self._create_ui())
 
@@ -28,9 +29,8 @@ class SplashScreen(QWidget):
             main_layout.addWidget(SplashScreen._create_progress_bar())
         return main_layout
 
-    @staticmethod
-    def _load_pixmap(pixmap_name: str) -> QPixmap | None:
-        image_path = Path(__file__).parents[4] / "resources" / "images" / f"{pixmap_name}.jpg"
+    def _load_pixmap(self, pixmap_name: str) -> QPixmap | None:
+        image_path = self.resources_path / "images" / f"{pixmap_name}.jpg"
         if image_path.exists():
             pixmap = QPixmap(str(image_path))
             pixmap = pixmap.scaled(800, 600, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)

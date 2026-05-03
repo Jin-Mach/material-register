@@ -1,28 +1,27 @@
 import sys
-from typing import TYPE_CHECKING
+
+from pathlib import Path
 
 from PySide6.QtCore import QThread, QObject, QTimer
 
 from material_register.ui.main_window import MainWindow
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.workers.init.init_worker import InitWorker
-
-if TYPE_CHECKING:
-    from material_register.ui.widgets.splash_screen import SplashScreen
+from material_register.ui.widgets.splash_screen import SplashScreen
 
 
 class InitController(QObject):
 
-    def __init__(self, splash_screen: "SplashScreen") -> None:
+    def __init__(self, resources_path: Path) -> None:
         super().__init__()
-        self.splash_screen = splash_screen
+        self.splash_screen = SplashScreen(resources_path)
         self.main_window = None
         self.thread = None
         self.worker = None
 
     def start_thread(self) -> None:
         self.splash_screen.show_splash()
-        QTimer.singleShot(1000, self._start_worker)
+        QTimer.singleShot(0, self._start_worker)
 
     def _start_worker(self) -> None:
         self.thread = QThread()
@@ -35,16 +34,22 @@ class InitController(QObject):
 
     def init_error(self, error: str) -> None:
         self.clean_thread(True)
+        QTimer.singleShot(1000, lambda: self._finish_error(error))
+
+    def init_ok(self) -> None:
+        self.clean_thread(False)
+        QTimer.singleShot(1000, self._finish_ok)
+
+    def _finish_ok(self):
+        self.splash_screen.close()
+        self.main_window = MainWindow()
+        self.main_window.show()
+
+    def _finish_error(self, error: str):
         self.splash_screen.close()
         dialog = ErrorDialog()
         dialog.show_dialog(error, False)
         sys.exit(1)
-
-    def init_ok(self) -> None:
-        self.clean_thread(False)
-        self.splash_screen.close()
-        self.main_window = MainWindow()
-        self.main_window.show()
 
     def clean_thread(self, reset_main_window: bool) -> None:
         self.thread.quit()
