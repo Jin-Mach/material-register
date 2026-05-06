@@ -1,0 +1,19 @@
+from material_register.db.create_connection import create_connection
+from material_register.providers.paths_provider import PathsProvider
+from material_register.services.error_handler import ErrorHandler
+
+
+class DbInit:
+    DATABASE_NAME = "material_register.db"
+    db_connection = None
+
+    @classmethod
+    def db_init(cls) -> tuple[bool, str]:
+        try:
+            cls.db_connection = create_connection(PathsProvider.database, cls.DATABASE_NAME)
+            if cls.db_connection is None:
+                return False, "DATABASE_FAILED"
+            return True, ""
+        except Exception as e:
+            ErrorHandler.handle_error(e, "db", "critical")
+            return False, "DATABASE_FAILED"
