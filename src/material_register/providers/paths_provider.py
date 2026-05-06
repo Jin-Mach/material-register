@@ -10,6 +10,7 @@ class PathsProvider:
 
     root = None
     resources = None
+    database = None
     logs = None
 
     @classmethod
@@ -19,6 +20,8 @@ class PathsProvider:
             return
         cls.resources = cls.root / "resources"
         cls.resources.mkdir(parents=True, exist_ok=True)
+        cls.database = cls.root / "database"
+        cls.database.mkdir(parents=True, exist_ok=True)
         cls.logs = cls.root / "logs"
         cls.logs.mkdir(parents=True, exist_ok=True)
         for folder, _ in log_structure.values():
