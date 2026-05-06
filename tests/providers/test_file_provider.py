@@ -6,63 +6,72 @@ from pathlib import Path
 from material_register.providers.file_provider import FileProvider
 
 
-VALID_UI_JSON = {
-    "MainWindow": {"titleText": "Title"},
-    "SidePanel": {
-        "registerButtonText": "A",
-        "registerButtonTooltipText": "B",
-    },
-    "ActionsWidget": {
-        "addActionButtonTooltipText": "C",
-        "deleteActionButtonTooltipText": "D",
-    },
-    "ErrorDialog": {
-        "closeDialogButtonText": "x",
-        "closeDialogButtonTooltipText": "x",
-        "closeAppButtonText": "x",
-        "closeAppButtonTooltipText": "x",
-    },
-}
+def write_json(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
 
-VALID_ERROR_JSON = {
-    "APP_INIT_FAILED": "x",
-    "RESOURCES_MISSING": "x",
-    "DOWNLOAD_FAILED": "x",
-    "TEXTS_LOAD_FAILED": "x",
-    "CRITICAL_FAILURE": "x",
-    "UNKNOWN_ERROR": "x",
-    "CONNECTION_ERROR": "x",
-    "PERMISSION_ERROR": "x"
-}
+def write_image(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("img", encoding="utf-8")
 
-def write_valid(path: Path) -> None:
-    path.mkdir(parents=True, exist_ok=True)
-    (path / "ui_texts.json").write_text(json.dumps(VALID_UI_JSON), encoding="utf-8")
-    (path / "error_texts.json").write_text(json.dumps(VALID_ERROR_JSON), encoding="utf-8")
+def create_valid_ui() -> dict:
+    return {
+        "MainWindow": {
+            "titleText": "x",
+        },
+        "SidePanel": {
+            "registerButtonText": "x",
+            "registerButtonTooltipText": "x",
+        },
+        "ActionsWidget": {
+            "addActionButtonTooltipText": "x",
+            "deleteActionButtonTooltipText": "x",
+        },
+        "ErrorDialog": {
+            "closeDialogButtonText": "x",
+            "closeDialogButtonTooltipText": "x",
+            "closeAppButtonText": "x",
+            "closeAppButtonTooltipText": "x",
+        },
+    }
 
-@pytest.fixture
-def resources_structure(tmp_path: Path) -> Path:
-    base = tmp_path
-    write_valid(base / "texts" / "cs_CZ")
-    write_valid(base / "texts" / "en_GB")
-    write_valid(base / "errors" / "cs_CZ")
-    write_valid(base / "errors" / "en_GB")
-    return base
+def create_valid_error() -> dict:
+    return {
+        "APP_INIT_FAILED": "x",
+        "RESOURCES_MISSING": "x",
+        "DOWNLOAD_FAILED": "x",
+        "TEXTS_LOAD_FAILED": "x",
+        "CRITICAL_FAILURE": "x",
+        "UNKNOWN_ERROR": "x",
+    }
 
+def create_base_structure(base: Path) -> None:
+    ui = create_valid_ui()
+    error = create_valid_error()
+    write_json(base / "texts" / "cs_CZ" / "ui_texts.json", ui)
+    write_json(base / "texts" / "en_GB" / "ui_texts.json", ui)
+    write_json(base / "texts" / "cs_CZ" / "error_texts.json", error)
+    write_json(base / "texts" / "en_GB" / "error_texts.json", error)
+    write_image(base / "images" / "SplashScreen.jpg")
 
 @pytest.mark.parametrize(
-    "modify, expected_count",[
+    "modify, expected_missing",
+    [
         ("valid", 0),
         ("missing_en", 1),
         ("invalid_en", 1),
     ],
-    ids=["all valid", "missing en_GB file", "invalid json"]
+    ids=["all valid", "missing en_GB file", "invalid json"],
 )
-
-def test_check_missing_files(resources_structure: Path, modify, expected_count):
+def test_check_missing_files(tmp_path: Path, modify, expected_missing):
+    base = tmp_path / "resources"
+    create_base_structure(base)
+    target = base / "texts" / "en_GB" / "ui_texts.json"
     if modify == "missing_en":
-        (resources_structure / "texts" / "en_GB" / "ui_texts.json").unlink()
-    elif modify == "invalid_en":
-        (resources_structure / "texts" / "en_GB" / "ui_texts.json").write_text("not json", encoding="utf-8")
-    result = FileProvider.check_missing_files(resources_structure)
-    assert len(result) == expected_count
+        target.unlink()
+    if modify == "invalid_en":
+        target.write_text("not json", encoding="utf-8")
+    result = FileProvider.check_missing_files(base)
+    assert len(result) == expected_missing
+    if expected_missing > 0:
+        assert target in result
