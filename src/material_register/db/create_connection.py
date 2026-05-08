@@ -22,7 +22,6 @@ def create_connection(database_path: Path | None, db_name: str) -> QSqlDatabase 
         return None
     return connection
 
-
 def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
     query = QSqlQuery(connection)
 
@@ -32,11 +31,22 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             company TEXT,
             first_name TEXT,
             last_name TEXT,
-            document_number TEXT UNIQUE,
-            address TEXT,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            document_number TEXT NOT NULL UNIQUE,
+            address TEXT NOT NULL,
+            notes TEXT,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
             active INTEGER DEFAULT 1,
-
+            company_normalized TEXT,
+            first_name_normalized TEXT,
+            last_name_normalized TEXT,
+            address_normalized TEXT,
+            
+            CHECK(company IS NULL OR company <> ''),
+            CHECK(first_name IS NULL OR first_name <> ''),
+            CHECK(last_name IS NULL OR last_name <> ''),
+            CHECK(document_number <> ''),
+            CHECK(address <> ''),
+        
             CHECK (
                 (company IS NOT NULL AND first_name IS NULL AND last_name IS NULL)
                 OR
@@ -87,6 +97,9 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             type TEXT NOT NULL CHECK(type IN ('IN', 'OUT')),
             customer_id INTEGER,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            payment_type TEXT NOT NULL,
+            
+            CHECK(payment_type IN ('CASH', 'TRANSFER')),
 
             FOREIGN KEY(customer_id)
                 REFERENCES customers(id)

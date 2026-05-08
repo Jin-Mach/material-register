@@ -2,6 +2,7 @@ from PySide6.QtCore import QObject, Signal, Slot
 
 from material_register.init.app_init import AppInit
 from material_register.init.db_init import DbInit
+from material_register.init.models_init import ModelsSetup
 from material_register.init.setup_init import SetupInit
 
 
@@ -21,6 +22,10 @@ class InitWorker(QObject):
         db_ok, db_error = DbInit.db_init()
         if not db_ok:
             self.error_signal.emit(db_error)
+            return
+        models_ok, models_error = ModelsSetup.models_init()
+        if not models_ok:
+            self.error_signal.emit(models_error)
             return
         setup_ok, setup_error = SetupInit.setup_init()
         if not setup_ok:
