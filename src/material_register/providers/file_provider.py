@@ -11,6 +11,8 @@ class FileProvider:
         Path("en_GB") / "ui_texts.json",
         Path("cs_CZ") / "error_texts.json",
         Path("en_GB") / "error_texts.json",
+        Path("cs_CZ") / "headers_texts.json",
+        Path("en_GB") / "headers_texts.json",
     ]
 
     REQUIRED_IMAGES = [
@@ -32,6 +34,13 @@ class FileProvider:
         ("ErrorDialog", "closeDialogButtonTooltipText"),
         ("ErrorDialog", "closeAppButtonText"),
         ("ErrorDialog", "closeAppButtonTooltipText"),
+    ]
+
+    HEADERS_KEYS = [
+        ("CustomersView", "customer"),
+        ("CustomersView", "document_number"),
+        ("CustomersView", "address"),
+        ("CustomersView", "active"),
     ]
 
     ERROR_KEYS = [
@@ -82,6 +91,8 @@ class FileProvider:
                 return cls._check_ui_json(data)
             if name == "error_texts":
                 return cls._check_error_json(data)
+            if name == "headers_texts":
+                return cls._check_headers_json(data)
             return False
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")
@@ -105,5 +116,17 @@ class FileProvider:
             if key not in data:
                 return False
             if not data[key]:
+                return False
+        return True
+
+    @classmethod
+    def _check_headers_json(cls, data: dict[str, dict[str, str]]) -> bool:
+        for section, key in cls.HEADERS_KEYS:
+            if section not in data:
+                return False
+            if key not in data[section]:
+                return False
+            value = data[section][key]
+            if value is None or value == "":
                 return False
         return True

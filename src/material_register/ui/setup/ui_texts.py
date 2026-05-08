@@ -7,7 +7,7 @@ class UiTexts:
     UI_TEXTS = {}
 
     @classmethod
-    def setup_init(cls, ui_texts):
+    def setup_init(cls, ui_texts) -> None:
         cls.UI_TEXTS = ui_texts.copy()
 
     @classmethod
