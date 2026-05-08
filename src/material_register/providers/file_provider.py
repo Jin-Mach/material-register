@@ -7,10 +7,10 @@ from material_register.services.error_handler import ErrorHandler
 
 class FileProvider:
     REQUIRED_JSON_FILES = [
-        Path("cs_CZ/ui_texts.json"),
-        Path("en_GB/ui_texts.json"),
-        Path("cs_CZ/error_texts.json"),
-        Path("en_GB/error_texts.json"),
+        Path("cs_CZ") / "ui_texts.json",
+        Path("en_GB") / "ui_texts.json",
+        Path("cs_CZ") / "error_texts.json",
+        Path("en_GB") / "error_texts.json",
     ]
 
     REQUIRED_IMAGES = [
@@ -21,8 +21,13 @@ class FileProvider:
         ("MainWindow", "titleText"),
         ("SidePanel", "transactionsButtonText"),
         ("SidePanel", "transactionsButtonTooltipText"),
-        ("TransactionsActionsWidget", "addActionButtonTooltipText"),
-        ("TransactionsActionsWidget", "deleteActionButtonTooltipText"),
+        ("SidePanel", "customersButtonText"),
+        ("SidePanel", "customersButtonTooltipText"),
+        ("TransactionsActionsWidget", "addTransactionButtonTooltipText"),
+        ("TransactionsActionsWidget", "deleteTransactionButtonTooltipText"),
+        ("CustomersActionsWidget", "addCustomerButtonTooltipText"),
+        ("CustomersActionsWidget", "updateCustomerButtonTooltipText"),
+        ("CustomersActionsWidget", "activeCustomerButtonTooltipText"),
         ("ErrorDialog", "closeDialogButtonText"),
         ("ErrorDialog", "closeDialogButtonTooltipText"),
         ("ErrorDialog", "closeAppButtonText"),

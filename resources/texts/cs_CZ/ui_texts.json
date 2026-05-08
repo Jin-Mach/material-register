@@ -4,11 +4,18 @@
   },
   "SidePanel": {
     "transactionsButtonText": "Pohyby",
-    "transactionsButtonTooltipText": "Zobrazí pohyby materiálu"
+    "transactionsButtonTooltipText": "Zobrazí pohyby materiálu",
+    "customersButtonText": "Zákazníci",
+    "customersButtonTooltipText": "Zobrazí seznam zákazníků"
   },
   "TransactionsActionsWidget": {
-    "addActionButtonTooltipText": "Přidat nový záznam",
-    "deleteActionButtonTooltipText": "Odstranit označený záznam"
+    "addTransactionButtonTooltipText": "Přidat nový záznam",
+    "deleteTransactionButtonTooltipText": "Odstranit označený záznam"
+  },
+  "CustomersActionsWidget": {
+    "addCustomerButtonTooltipText": "Přidat nového zákazníka",
+    "updateCustomerButtonTooltipText": "Upravit existujícího zákazníka",
+    "activeCustomerButtonTooltipText": "Aktivovat/Deaktivovat existujícího zákazníka"
   },
   "ErrorDialog": {
     "closeDialogButtonText": "Zavřít",

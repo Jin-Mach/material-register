@@ -3,12 +3,17 @@
     "titleText": "Main window title"
   },
   "SidePanel": {
-    "transactionsButtonText": "Movements",
-    "transactionsButtonTooltipText": "Displays material movements"
+    "registerButtonText": "Movements",
+    "registerButtonTooltipText": "Displays material movements"
   },
-  "TransactionsActionsWidget": {
-    "addActionButtonTooltipText": "Add a new record",
-    "deleteActionButtonTooltipText": "Delete selected record"
+  "ActionsWidget": {
+    "addTransactionButtonTooltipText": "Add a new record",
+    "deleteTransactionButtonTooltipText": "Delete selected record"
+  },
+  "CustomersActionsWidget": {
+    "addCustomerButtonTooltipText": "Add a new customer",
+    "updateCustomerButtonTooltipText": "Edit an existing customer",
+    "activeCustomerButtonTooltipText": "Activate/Deactivate an existing customer"
   },
   "ErrorDialog": {
   "closeDialogButtonText": "Close",

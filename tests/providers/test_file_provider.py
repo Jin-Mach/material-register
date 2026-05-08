@@ -14,28 +14,13 @@ def write_image(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("img", encoding="utf-8")
 
-def create_valid_ui() -> dict:
-    return {
-        "MainWindow": {
-            "titleText": "x",
-        },
-        "SidePanel": {
-            "transactionsButtonText": "x",
-            "transactionsButtonTooltipText": "x",
-        },
-        "TransactionsActionsWidget": {
-            "addActionButtonTooltipText": "x",
-            "deleteActionButtonTooltipText": "x",
-        },
-        "ErrorDialog": {
-            "closeDialogButtonText": "x",
-            "closeDialogButtonTooltipText": "x",
-            "closeAppButtonText": "x",
-            "closeAppButtonTooltipText": "x",
-        },
-    }
+def create_valid_ui() -> dict[str, dict[str, str]]:
+    data = {}
+    for section, key in FileProvider.UI_KEYS:
+        data.setdefault(section, {})[key] = "x"
+    return data
 
-def create_valid_error() -> dict:
+def create_valid_error() -> dict[str, str]:
     return {
         "APP_INIT_FAILED": "x",
         "RESOURCES_MISSING": "x",
@@ -63,7 +48,7 @@ def create_base_structure(base: Path) -> None:
     ],
     ids=["all valid", "missing en_GB file", "invalid json"],
 )
-def test_check_missing_files(tmp_path: Path, modify, expected_missing):
+def test_check_missing_files(tmp_path: Path, modify, expected_missing) -> None:
     base = tmp_path / "resources"
     create_base_structure(base)
     target = base / "texts" / "en_GB" / "ui_texts.json"
@@ -72,6 +57,13 @@ def test_check_missing_files(tmp_path: Path, modify, expected_missing):
     if modify == "invalid_en":
         target.write_text("not json", encoding="utf-8")
     result = FileProvider.check_missing_files(base)
-    assert len(result) == expected_missing
-    if expected_missing > 0:
-        assert target in result
+    if modify == "valid":
+        assert len(result) == 0
+
+    if modify == "missing_en":
+        assert any("en_GB" in str(p) for p in result)
+        assert len(result) == 1
+
+    if modify == "invalid_en":
+        assert any("en_GB" in str(p) for p in result)
+        assert len(result) == 1

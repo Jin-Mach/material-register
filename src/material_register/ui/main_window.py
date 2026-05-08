@@ -3,9 +3,9 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 
 from material_register.services.settings_manager import SettingsManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
-from src.material_register.ui.setup.ui_texts import UiTexts
-from src.material_register.ui.widgets.side_panel import SidePanel
-from src.material_register.ui.widgets.stacked_widget import StackedWidget
+from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.widgets.side_panel import SidePanel
+from material_register.ui.widgets.stacked_widget import StackedWidget
 
 
 class MainWindow(QMainWindow):
@@ -34,10 +34,11 @@ class MainWindow(QMainWindow):
 
     def _create_connection(self) -> None:
         buttons_map = {
-            self.stacked_widget.register_widget.actions_widget.add_action_button: 0
+            self.side_panel.transactions_button: 0,
+            self.side_panel.customers_button: 1,
         }
         for button, index in buttons_map.items():
-            button.clicked.connect(lambda i=index: self.stacked_widget.setCurrentIndex(i))
+            button.clicked.connect(lambda _, i=index: self.stacked_widget.setCurrentIndex(i))
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

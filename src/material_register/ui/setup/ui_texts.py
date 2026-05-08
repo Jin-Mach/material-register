@@ -7,8 +7,8 @@ class UiTexts:
     UI_TEXTS = {}
 
     @classmethod
-    def setup_init(cls, ui_texts: dict[str, dict[str, str]]):
-        cls.UI_TEXTS = ui_texts
+    def setup_init(cls, ui_texts):
+        cls.UI_TEXTS = ui_texts.copy()
 
     @classmethod
     def set_ui_texts(cls, parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000) -> bool:
