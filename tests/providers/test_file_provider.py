@@ -20,10 +20,10 @@ def create_valid_ui() -> dict:
             "titleText": "x",
         },
         "SidePanel": {
-            "registerButtonText": "x",
-            "registerButtonTooltipText": "x",
+            "transactionsButtonText": "x",
+            "transactionsButtonTooltipText": "x",
         },
-        "ActionsWidget": {
+        "TransactionsActionsWidget": {
             "addActionButtonTooltipText": "x",
             "deleteActionButtonTooltipText": "x",
         },

@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 
-from src.material_register.ui.transactions.ui.transactions_widgets.transactions_view import TransactionsView
-from src.material_register.ui.transactions.ui.transactions_widgets.transactions_actions_widget import TransactionsActionsWidget
+from material_register.ui.transactions.transactions_widgets.transactions_view import TransactionsView
+from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import TransactionsActionsWidget
 
 if TYPE_CHECKING:
     from src.material_register.ui.main_window import MainWindow

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QStackedWidget
 
-from src.material_register.ui.transactions.ui.transactions_widget import TransactionsWidget
+from material_register.ui.transactions.transactions_widget import TransactionsWidget
 
 if TYPE_CHECKING:
     from src.material_register.ui.main_window import MainWindow
