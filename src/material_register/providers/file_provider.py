@@ -37,7 +37,7 @@ class FileProvider:
     ]
 
     HEADERS_KEYS = [
-        ("CustomersView", "customer"),
+        ("CustomersView", "company"),
         ("CustomersView", "document_number"),
         ("CustomersView", "address"),
         ("CustomersView", "active"),

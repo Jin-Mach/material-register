@@ -1,6 +1,6 @@
 {
   "CustomersView": {
-    "customer": "Zákazník",
+    "company": "Zákazník",
     "document_number": "Číslo dokladu",
     "address": "Adresa",
     "active": "Stav"

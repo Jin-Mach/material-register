@@ -1,6 +1,6 @@
 {
   "CustomersView": {
-    "customer": "Customer",
+    "company": "Customer",
     "document_number": "Document number",
     "address": "Address",
     "active": "Status"

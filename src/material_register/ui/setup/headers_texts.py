@@ -19,7 +19,7 @@ class HeadersTexts:
             for column in range(model.columnCount()):
                 db_columns.append(model.record().fieldName(column))
             headers_text = cls.HEADERS_TEXTS.get(view.__class__.__name__, {})
-            if not headers_text or len(db_columns) != len(headers_text):
+            if not headers_text:
                 return False
             for index, column_name in enumerate(db_columns):
                 if column_name in headers_text:

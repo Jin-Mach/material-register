@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QTableView
+from PySide6.QtSql import QSqlTableModel
+from PySide6.QtWidgets import QTableView, QHeaderView
 
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.setup.headers_texts import HeadersTexts
@@ -16,22 +17,24 @@ class CustomersView(QTableView):
 
     def setModel(self, model: "CustomersModel") -> None:
         super().setModel(model)
-        self._setup_ui(model)
+        model.select()
 
-    def _setup_ui(self, model: "CustomersModel") -> None:
+    def setup_ui(self) -> None:
+        model = self.model()
+        if not isinstance(model, QSqlTableModel) or model is None:
+            return
         if not HeadersTexts.set_headers_text(self, model):
             dialog = ErrorDialog()
             dialog.show_dialog("TEXTS_LOAD_FAILED", False)
-        hidden_columns = {
-            "id": True,
-            "notes": True,
-            "created_at": True,
-            "company_normalized": True,
-            "first_name_normalized": True,
-            "last_name_normalized": True,
-            "address_normalized": True,
-        }
-        for index in range(model.columnCount()):
-            name = model.record().fieldName(index)
-            if name in hidden_columns:
-                self.setColumnHidden(index, hidden_columns[name])
+        hidden_columns = ("id", "first_name", "last_name", "notes", "created_at", "company_normalized",
+                          "first_name_normalized", "last_name_normalized", "address_normalized")
+        for name in hidden_columns:
+            index = model.fieldIndex(name)
+            if index >= 0:
+                self.setColumnHidden(index, True)
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        address_column = model.fieldIndex("address")
+        if address_column >= 0:
+            header.setSectionResizeMode(address_column, QHeaderView.ResizeMode.Stretch)
+        self.resizeColumnsToContents()
