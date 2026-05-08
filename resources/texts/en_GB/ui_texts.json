@@ -3,10 +3,10 @@
     "titleText": "Main window title"
   },
   "SidePanel": {
-    "registerButtonText": "Movements",
-    "registerButtonTooltipText": "Displays material movements"
+    "transactionsButtonText": "Movements",
+    "transactionsButtonTooltipText": "Displays material movements"
   },
-  "ActionsWidget": {
+  "TransactionsActionsWidget": {
     "addActionButtonTooltipText": "Add a new record",
     "deleteActionButtonTooltipText": "Delete selected record"
   },

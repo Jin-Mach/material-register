@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from src.material_register.ui.main_window import MainWindow
 
 
-class ActionsWidget(QWidget):
+class TransactionsActionsWidget(QWidget):
     def __init__(self, main_window: "MainWindow") -> None:
         super().__init__(main_window)
         self.setLayout(self.create_ui())

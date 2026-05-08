@@ -6,7 +6,7 @@ from material_register.services.error_handler import ErrorHandler
 
 
 class PathsProvider:
-    PROJECT_NAME = "material-register"
+    PROJECT_NAME = "material-transactions"
 
     root = None
     resources = None

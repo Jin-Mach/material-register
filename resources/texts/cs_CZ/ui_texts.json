@@ -3,10 +3,10 @@
     "titleText": "Titulek hlavního okna"
   },
   "SidePanel": {
-    "registerButtonText": "Pohyby",
-    "registerButtonTooltipText": "Zobrazí pohyby materiálu"
+    "transactionsButtonText": "Pohyby",
+    "transactionsButtonTooltipText": "Zobrazí pohyby materiálu"
   },
-  "ActionsWidget": {
+  "TransactionsActionsWidget": {
     "addActionButtonTooltipText": "Přidat nový záznam",
     "deleteActionButtonTooltipText": "Odstranit označený záznam"
   },

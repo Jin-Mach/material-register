@@ -17,10 +17,10 @@ class LoggerProvider:
             cls.FORMATTER = logging.Formatter(
                 "%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s - %(message)s"
             )
-            cls.app = cls._create_logger("material-register.app", "app")
-            cls.ui = cls._create_logger("material-register.ui", "ui")
-            cls.db = cls._create_logger("material-register.db", "db")
-            cls.error = cls._create_logger("material-register.error","error")
+            cls.app = cls._create_logger("material-transactions.app", "app")
+            cls.ui = cls._create_logger("material-transactions.ui", "ui")
+            cls.db = cls._create_logger("material-transactions.db", "db")
+            cls.error = cls._create_logger("material-transactions.error","error")
             return True
         except Exception as e:
             print(f"{cls.__name__}: {e}")

@@ -19,10 +19,10 @@ class FileProvider:
 
     UI_KEYS = [
         ("MainWindow", "titleText"),
-        ("SidePanel", "registerButtonText"),
-        ("SidePanel", "registerButtonTooltipText"),
-        ("ActionsWidget", "addActionButtonTooltipText"),
-        ("ActionsWidget", "deleteActionButtonTooltipText"),
+        ("SidePanel", "transactionsButtonText"),
+        ("SidePanel", "transactionsButtonTooltipText"),
+        ("TransactionsActionsWidget", "addActionButtonTooltipText"),
+        ("TransactionsActionsWidget", "deleteActionButtonTooltipText"),
         ("ErrorDialog", "closeDialogButtonText"),
         ("ErrorDialog", "closeDialogButtonTooltipText"),
         ("ErrorDialog", "closeAppButtonText"),

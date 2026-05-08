@@ -18,13 +18,13 @@ class SidePanel(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        self.register_button = QPushButton()
-        self.register_button.setObjectName("registerButton")
-        main_layout.addWidget(self.register_button)
+        self.transactions_button = QPushButton()
+        self.transactions_button.setObjectName("transactionsButton")
+        main_layout.addWidget(self.transactions_button)
         main_layout.addStretch()
         return main_layout
 
     def _ui_setup(self) -> None:
-        if not UiTexts.set_ui_texts(self, [self.register_button]):
+        if not UiTexts.set_ui_texts(self, [self.transactions_button]):
             dialog = ErrorDialog()
             dialog.show_dialog("TEXTS_LOAD_FAILED", False)
