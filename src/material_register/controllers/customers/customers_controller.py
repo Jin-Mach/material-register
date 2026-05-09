@@ -2,8 +2,10 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QDialog
 
+from material_register.domain.customers_dataclass import Customer
 from material_register.init.models_init import ModelsSetup
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
+from material_register.utils.normalizer import normalize_text, normalize_whitespace
 
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widget import CustomersWidget
@@ -22,6 +24,18 @@ class CustomersController:
             if customer is None:
                 print("show dialog")
                 return
-            print("customer", customer)
-            return
+            CustomersController._normalize_customer(customer)
+            print("customer:", customer)
             #self.customers_model.add_customer(customer)
+
+    @staticmethod
+    def _normalize_customer(customer: Customer) -> None:
+        customer.company = normalize_whitespace(customer.company)
+        customer.first_name = normalize_whitespace(customer.first_name)
+        customer.last_name = normalize_whitespace(customer.last_name)
+        customer.document_number = normalize_whitespace(customer.document_number)
+        customer.address = normalize_whitespace(customer.address)
+        customer.company_normalized = normalize_text(customer.company)
+        customer.first_name_normalized = normalize_text(customer.first_name)
+        customer.last_name_normalized = normalize_text(customer.last_name)
+        customer.address_normalized = normalize_text(customer.address)
