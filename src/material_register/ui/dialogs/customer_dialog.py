@@ -235,8 +235,7 @@ class CustomerDialog(QDialog):
         document = self.document_type_input.text().strip()
         if not document:
             return False
-        exists = self.customers_widget.customers_model.document_exists(document)
-        return not exists
+        return not self.customers_widget.customers_model.document_exists(document)
 
     def centre_dialog(self) -> None:
         self.adjustSize()

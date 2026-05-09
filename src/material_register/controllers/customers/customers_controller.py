@@ -4,7 +4,9 @@ from PySide6.QtWidgets import QDialog
 
 from material_register.domain.customers_dataclass import Customer
 from material_register.init.models_init import ModelsSetup
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
+from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.utils.normalizer import normalize_text, normalize_whitespace
 
 if TYPE_CHECKING:
@@ -22,11 +24,17 @@ class CustomersController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             customer = dialog.get_customer_data()
             if customer is None:
-                print("show dialog")
+                dialog = ErrorDialog()
+                dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
             CustomersController._normalize_customer(customer)
-            print("customer:", customer)
-            #self.customers_model.add_customer(customer)
+            if not self.customers_model.add_customer(customer):
+                error = self.customers_model.lastError().text()
+                if not error:
+                    error = f"Unknown database error: {self.__class__.__name__}.add_customers"
+                ErrorHandler.handle_error(error, "db", "critical")
+                dialog = ErrorDialog()
+                dialog.show_dialog("DATABASE_ERROR", False)
 
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:

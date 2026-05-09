@@ -16,11 +16,11 @@ class CustomersActionsWidget(QWidget):
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
-        self.add_customer_button = QPushButton("Add Customer")
+        self.add_customer_button = QPushButton("Add")
         self.add_customer_button.setObjectName("addCustomerButton")
-        self.update_customer_button = QPushButton("Update Customer")
+        self.update_customer_button = QPushButton("Update")
         self.update_customer_button.setObjectName("updateCustomerButton")
-        self.active_customer_button = QPushButton("Deactivate Customer")
+        self.active_customer_button = QPushButton("Active")
         self.active_customer_button.setObjectName("activeCustomerButton")
         main_layout.addWidget(self.add_customer_button)
         main_layout.addWidget(self.update_customer_button)

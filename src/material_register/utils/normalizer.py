@@ -1,8 +1,8 @@
 import unicodedata
 
-def normalize_text(text: str) -> str:
+def normalize_text(text: str | None) -> str | None:
     if text is None:
-        return ""
+        return None
     text = str(text).strip()
     text = unicodedata.normalize("NFKD", text)
     result_chars = []
@@ -15,7 +15,7 @@ def normalize_text(text: str) -> str:
     result = " ".join(result.split())
     return result
 
-def normalize_whitespace(text: str) -> str:
+def normalize_whitespace(text: str | None) -> str | None:
     if text is None:
-        return ""
+        return None
     return " ".join(str(text).split())

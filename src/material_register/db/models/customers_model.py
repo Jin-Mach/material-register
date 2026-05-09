@@ -1,7 +1,6 @@
 from dataclasses import fields
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
 from material_register.db.models.base_sql_table_model import BaseSqlTableModel
@@ -13,8 +12,7 @@ class CustomersModel(BaseSqlTableModel):
         super().__init__(database, parent)
         self.database = database
         self.setTable("customers")
-        self.setEditStrategy(QSqlTableModel.EditStrategy.OnFieldChange)
-        self.setFilter(CustomersModel._basic_filter())
+        self.setEditStrategy(QSqlTableModel.EditStrategy.OnManualSubmit)
         self.select()
 
     def data(self, index,  role = Qt.ItemDataRole.DisplayRole):
@@ -31,12 +29,6 @@ class CustomersModel(BaseSqlTableModel):
                     return f"{first_name} {last_name}".strip()
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
-        if role == Qt.ItemDataRole.FontRole:
-            record = self.record(index.row())
-            if record.value("company"):
-                font = QFont()
-                font.setBold(True)
-                return font
         return super().data(index, role)
 
     def add_customer(self, customer: Customer) -> bool:
