@@ -58,15 +58,15 @@ def test_update_customer() -> None:
     model.add_customer(_add_customer())
     row = 0
     row_id = model.data(model.index(row, model.fieldIndex("id")))
-    new_costumer = _update_customer()
-    ok = model.update_customer(row_id, new_costumer)
+    new_customer = _update_customer()
+    ok = model.update_customer(row_id, new_customer)
     assert ok
-    company = model.fieldIndex("company")
     document_number = model.fieldIndex("document_number")
     address = model.fieldIndex("address")
-    assert new_costumer.company == model.data(model.index(row, company))
-    assert new_costumer.document_number == model.data(model.index(row, document_number))
-    assert new_costumer.address == model.data(model.index(row, address))
+    record = model.record(row)
+    assert new_customer.company == record.value("company")
+    assert new_customer.document_number == model.data(model.index(row, document_number))
+    assert new_customer.address == model.data(model.index(row, address))
 
 def test_deactivate_customer() -> None:
     db = _create_test_db()

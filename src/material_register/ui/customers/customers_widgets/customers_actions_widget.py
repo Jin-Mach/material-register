@@ -6,12 +6,11 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.widgets.stacked_widget import StackedWidget
-
+    from material_register.ui.customers.customers_widget import CustomersWidget
 
 class CustomersActionsWidget(QWidget):
-    def __init__(self, stacked_widget: "StackedWidget") -> None:
-        super().__init__(stacked_widget)
+    def __init__(self, customer_widget: "CustomersWidget") -> None:
+        super().__init__(customer_widget)
         self.setLayout(self._create_ui())
         self._ui_setup()
 

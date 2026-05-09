@@ -7,13 +7,13 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.setup.headers_texts import HeadersTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.widgets.stacked_widget import StackedWidget
+    from material_register.ui.customers.customers_widget import CustomersWidget
     from material_register.db.models.customers_model import CustomersModel
 
 
 class CustomersView(QTableView):
-    def __init__(self, stacked_widget: "StackedWidget") -> None:
-        super().__init__(stacked_widget)
+    def __init__(self, customers_widget: "CustomersWidget") -> None:
+        super().__init__(customers_widget)
 
     def setModel(self, model: "CustomersModel") -> None:
         super().setModel(model)

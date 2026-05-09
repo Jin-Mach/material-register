@@ -34,6 +34,21 @@ class FileProvider:
         ("ErrorDialog", "closeDialogButtonTooltipText"),
         ("ErrorDialog", "closeAppButtonText"),
         ("ErrorDialog", "closeAppButtonTooltipText"),
+        ("CustomerDialog", "titleText"),
+        ("CustomerDialog", "subjectTypePlaceholderText"),
+        ("CustomerDialog", "subjectTypeItems"),
+        ("CustomerDialog", "companyLabelText"),
+        ("CustomerDialog", "firstNameLabelText"),
+        ("CustomerDialog", "lastNameLabelText"),
+        ("CustomerDialog", "documentTypeLabelText"),
+        ("CustomerDialog", "addressLabelText"),
+        ("CustomerDialog", "activeLabelText"),
+        ("CustomerDialog", "notesLabelText"),
+        ("CustomerDialog", "notesCountLabelText"),
+        ("CustomerDialog", "saveButtonText"),
+        ("CustomerDialog", "saveButtonTooltipText"),
+        ("CustomerDialog", "closeButtonText"),
+        ("CustomerDialog", "closeButtonTooltipText"),
     ]
 
     HEADERS_KEYS = [

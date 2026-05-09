@@ -22,5 +22,22 @@
     "closeDialogButtonTooltipText": "Zavřít chybový dialog",
     "closeAppButtonText": "Ukončit",
     "closeAppButtonTooltipText": "Ukončit aplikaci"
+  },
+  "CustomerDialog": {
+    "titleText": "Zákazník",
+    "subjectTypePlaceholderText": "Vyber typ zákazníka...",
+    "subjectTypeItems": ["Fyzická osoba", "Právnická osoba"],
+    "companyLabelText": "Firma:",
+    "firstNameLabelText": "Jméno:",
+    "lastNameLabelText": "Příjmení:",
+    "documentTypeLabelText": "Doklad:",
+    "addressLabelText": "Adresa:",
+    "activeLabelText": "Aktivní:",
+    "notesLabelText": "Poznámky:",
+    "notesCountLabelText": "Znaky:",
+    "saveButtonText": "Uložit",
+    "saveButtonTooltipText": "Uloží zákazníka",
+    "closeButtonText": "Zavřít",
+    "closeButtonTooltipText": "Zavře dialog"
   }
 }

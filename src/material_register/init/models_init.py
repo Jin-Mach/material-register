@@ -4,7 +4,7 @@ from material_register.services.error_handler import ErrorHandler
 
 
 class ModelsSetup:
-    customers_model = None
+    customers_model: CustomersModel | None = None
 
     @classmethod
     def models_init(cls) -> tuple[bool, str]:

@@ -2,7 +2,7 @@ from dataclasses import fields
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
-from PySide6.QtSql import QSqlDatabase, QSqlTableModel
+from PySide6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
 from material_register.db.models.base_sql_table_model import BaseSqlTableModel
 from material_register.domain.customers_dataclass import Customer
@@ -11,6 +11,7 @@ from material_register.domain.customers_dataclass import Customer
 class CustomersModel(BaseSqlTableModel):
     def __init__(self, database: QSqlDatabase, parent=None) -> None:
         super().__init__(database, parent)
+        self.database = database
         self.setTable("customers")
         self.setEditStrategy(QSqlTableModel.EditStrategy.OnFieldChange)
         self.setFilter(CustomersModel._basic_filter())
@@ -83,6 +84,14 @@ class CustomersModel(BaseSqlTableModel):
         if not self.submitAll():
             return self._rollback_and_fail()
         return True
+
+    def document_exists(self, document_number: str) -> bool:
+        query = QSqlQuery(self.database)
+        query.prepare("SELECT 1 FROM customers WHERE document_number = ? LIMIT 1")
+        query.addBindValue(document_number)
+        if not query.exec():
+            return False
+        return query.next()
 
     @staticmethod
     def _basic_filter() -> str:

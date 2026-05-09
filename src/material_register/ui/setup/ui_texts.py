@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QComboBox
 
 from material_register.services.error_handler import ErrorHandler
 
@@ -22,11 +22,14 @@ class UiTexts:
                 name = widget.objectName()
                 text = name + "Text"
                 tooltip = name + "TooltipText"
+                placeholder = name + "PlaceholderText"
                 if hasattr(widget, "setText") and text in ui_texts:
                     widget.setText(ui_texts[text])
                 if hasattr(widget, "setToolTip") and tooltip in ui_texts:
                     widget.setToolTip(ui_texts[tooltip])
                     widget.setToolTipDuration(tooltip_duration)
+                if hasattr(widget, "setPlaceholderText") and placeholder in ui_texts:
+                    widget.setPlaceholderText(ui_texts[placeholder])
             return True
         except Exception as e:
             ErrorHandler.handle_error(e, "ui", "warning")
