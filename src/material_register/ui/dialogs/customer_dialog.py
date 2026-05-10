@@ -1,12 +1,13 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QRegularExpression
-from PySide6.QtGui import QRegularExpressionValidator
+from PySide6.QtGui import QRegularExpressionValidator, QShowEvent
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QTextEdit, QHBoxLayout, \
-    QApplication, QDialogButtonBox, QCheckBox
+    QDialogButtonBox, QCheckBox
 
 from material_register.domain.customers_dataclass import Customer
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -238,14 +239,6 @@ class CustomerDialog(QDialog):
             return False
         return not self.customers_widget.customers_model.document_exists(document)
 
-    def centre_dialog(self) -> None:
-        self.adjustSize()
-        self.setFixedSize(self.size())
-        parent = self.customers_widget.parentWidget()
-        if parent:
-            geometry = parent.geometry()
-        else:
-            geometry = QApplication.primaryScreen().availableGeometry()
-        frame = self.frameGeometry()
-        frame.moveCenter(geometry.center())
-        self.move(frame.topLeft())
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        centre_dialog(self)

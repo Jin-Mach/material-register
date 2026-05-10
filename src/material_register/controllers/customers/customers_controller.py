@@ -20,7 +20,6 @@ class CustomersController:
 
     def add_customers(self) -> None:
         dialog = CustomerDialog(self.customers_widget)
-        dialog.centre_dialog()
         if dialog.exec() == QDialog.DialogCode.Accepted:
             customer = dialog.get_customer_data()
             if customer is None:

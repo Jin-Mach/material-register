@@ -1,6 +1,7 @@
 from PySide6.QtGui import QFont, QShowEvent, Qt
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QDialogButtonBox, QApplication
 
+from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.error_texts import ErrorTexts
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -50,14 +51,7 @@ class ErrorDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        parent = QApplication.activeWindow()
-        if parent:
-            geometry = parent.frameGeometry()
-        else:
-            geometry = self.screen().availableGeometry()
-        frame = self.frameGeometry()
-        frame.moveCenter(geometry.center())
-        self.move(frame.topLeft())
+        centre_dialog(self)
 
     @staticmethod
     def _close_app() -> None:
