@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QTableView, QHeaderView
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.customers.customers_widgets.customers_context_menu import CustomersContextMenu
 from material_register.ui.setup.headers_texts import HeadersTexts
 from material_register.db.models.customers_model import CustomersModel
 
@@ -17,6 +19,7 @@ class CustomersView(QTableView):
 
     def __init__(self, customers_widget: "CustomersWidget") -> None:
         super().__init__(customers_widget)
+        self.customers_widget = customers_widget
 
     def setModel(self, model: CustomersModel) -> None:
         super().setModel(model)
@@ -42,12 +45,16 @@ class CustomersView(QTableView):
     def _setup_headers(self, model: CustomersModel) -> None:
         header = self.horizontalHeader()
         address_column = model.fieldIndex("address")
-        active_column = model.fieldIndex("active")
         for col in range(model.columnCount()):
             if col == address_column:
                 header.setSectionResizeMode(col, QHeaderView.ResizeMode.Stretch)
             else:
                 header.setSectionResizeMode(col, QHeaderView.ResizeMode.Fixed)
+        self.update_headers(model)
+
+    def update_headers(self, model: CustomersModel) -> None:
+        address_column = model.fieldIndex("address")
+        active_column = model.fieldIndex("active")
         self.resizeColumnsToContents()
         for col in range(model.columnCount()):
             if col in (address_column, active_column):
@@ -63,3 +70,12 @@ class CustomersView(QTableView):
         self.setSelectionBehavior(QTableView.SelectionBehavior.SelectItems)
         self.setCornerButtonEnabled(False)
         self.setAlternatingRowColors(True)
+        self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+    def open_context_menu(self, position: QPoint) -> None:
+        index = self.indexAt(position)
+        if not index.isValid():
+            return
+        menu = CustomersContextMenu(self, self.customers_widget.customers_controller)
+        menu.set_customer_index(index)
+        menu.exec_(self.mapToGlobal(position))

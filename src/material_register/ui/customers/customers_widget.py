@@ -36,6 +36,7 @@ class CustomersWidget(QWidget):
 
     def _create_connection(self) -> None:
         self.action_widget.add_customer_button.clicked.connect(self.customers_controller.add_customers)
+        self.customers_view.customContextMenuRequested.connect(self.customers_view.open_context_menu)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

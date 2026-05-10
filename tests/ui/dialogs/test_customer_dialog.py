@@ -13,7 +13,7 @@ class FakeCustomersWidget(QWidget):
 
 # noinspection PyMethodMayBeStatic
 class FakeCustomersModel:
-    def document_exists(self, document: str) -> bool:
+    def document_exists(self, document: str, ignored_id: int | None = None) -> bool:
         return False
 
 # noinspection PyTypeChecker

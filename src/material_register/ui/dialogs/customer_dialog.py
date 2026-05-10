@@ -13,13 +13,18 @@ from material_register.ui.setup.ui_texts import UiTexts
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widget import CustomersWidget
 
-
 # noinspection PyTypeChecker,PyMethodMayBeStatic
 class CustomerDialog(QDialog):
+    ADD_MODE = "ADD"
+    UPDATE_MODE = "UPDATE"
     NOTES_LENGTH = 200
+    INDIVIDUAL_INDEX = 0
+    COMPANY_INDEX = 1
 
-    def __init__(self, customers_widget: "CustomersWidget", mode: str = "add") -> None:
+    def __init__(self, customers_widget: "CustomersWidget", mode: str = ADD_MODE, customer_data: "Customer" = None) -> None:
         super().__init__(customers_widget)
+        self.mode = mode
+        self.customer_data = customer_data
         self.setMinimumWidth(400)
         self.customers_widget = customers_widget
         self.mode = mode
@@ -97,9 +102,11 @@ class CustomerDialog(QDialog):
         self.subject_type.clear()
         for index, text in enumerate(items):
             self.subject_type.addItem(text, index)
-        self.subject_type.setCurrentIndex(-1)
+        if self.mode == self.ADD_MODE :
+            self._set_add_mode()
+        if self.mode == self.UPDATE_MODE and self.customer_data:
+            self._set_update_mode(self.customer_data)
         self._set_validators()
-        self._apply_type_state()
 
     def _create_connection(self) -> None:
         for widget in (self.first_name_input, self.last_name_input, self.company_input, self.document_type_input,
@@ -129,14 +136,11 @@ class CustomerDialog(QDialog):
             self.last_name_input.setEnabled(True)
             self.company_input.setEnabled(False)
             self.first_name_input.setFocus()
-            self.company_input.clear()
         elif index == 1:
             self.first_name_input.setEnabled(False)
             self.last_name_input.setEnabled(False)
             self.company_input.setEnabled(True)
             self.company_input.setFocus()
-            self.first_name_input.clear()
-            self.last_name_input.clear()
         else:
             self.first_name_input.setEnabled(False)
             self.last_name_input.setEnabled(False)
@@ -237,7 +241,39 @@ class CustomerDialog(QDialog):
         document = self.document_type_input.text().strip()
         if not document:
             return False
-        return not self.customers_widget.customers_model.document_exists(document)
+        ignored_id = None
+        if self.mode != self.ADD_MODE:
+            ignored_id = self.customer_data.id
+        return not self.customers_widget.customers_model.document_exists(document, ignored_id=ignored_id)
+
+    def _set_add_mode(self) -> None:
+        self.subject_type.setCurrentIndex(-1)
+        self._apply_type_state()
+
+    def _set_update_mode(self, customer_data: Customer) -> None:
+        customer_input_map = {
+            self.company_input: customer_data.company,
+            self.first_name_input: customer_data.first_name,
+            self.last_name_input: customer_data.last_name,
+            self.document_type_input: customer_data.document_number,
+            self.address_input: customer_data.address,
+            self.active_checkbox: customer_data.active,
+            self.notes_input: customer_data.notes,
+        }
+        self.subject_type.blockSignals(True)
+        if customer_data.company is not None:
+            self.subject_type.setCurrentIndex(self.COMPANY_INDEX)
+        else:
+            self.subject_type.setCurrentIndex(self.INDIVIDUAL_INDEX)
+        self.subject_type.blockSignals(False)
+        self._apply_type_state()
+        for widget, value in customer_input_map.items():
+            if isinstance(widget, QLineEdit):
+                widget.setText(value)
+            if isinstance(widget, QCheckBox):
+                widget.setChecked(value)
+            if isinstance(widget, QTextEdit):
+                widget.setPlainText(value)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
