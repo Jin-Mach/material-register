@@ -15,18 +15,25 @@ class CustomersContextMenu(QMenu):
         super().__init__(customers_view)
         self.customers_controller = customers_controller
         self._create_ui()
-        self.create_connections()
+        self.create_connection()
         self.customer_index = None
 
     def _create_ui(self) -> None:
-        self.update_customer_action = QAction("Update", self)
+        self.update_customer_action = QAction("Edit record", self)
         self.update_customer_action.setObjectName("updateCustomerAction")
-        self.active_customer_action = QAction("Active", self)
+        self.active_customer_action = QAction("Activate/Deactivate record", self)
         self.active_customer_action.setObjectName("activeCustomerAction")
         self.addAction(self.update_customer_action)
         self.addAction(self.active_customer_action)
 
-    def create_connections(self) -> None:
+    def set_ui_texts(self, ui_texts: dict[str, str]) -> None:
+        if ui_texts:
+            for widget in self.findChildren(QAction):
+                key = widget.objectName() + "Text"
+                if key in ui_texts:
+                    widget.setText(ui_texts[key])
+
+    def create_connection(self) -> None:
         self.update_customer_action.triggered.connect(self._update_customer)
 
     def set_customer_index(self, index: QModelIndex) -> None:

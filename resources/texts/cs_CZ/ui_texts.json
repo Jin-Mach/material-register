@@ -17,6 +17,10 @@
     "updateCustomerButtonTooltipText": "Upravit existujícího zákazníka",
     "activeCustomerButtonTooltipText": "Aktivovat/Deaktivovat existujícího zákazníka"
   },
+  "CustomersView": {
+    "updateCustomerActionText": "Upravit záznam",
+    "activeCustomerActionText": "Aktivovat/Deaktivovat záznam"
+  },
   "ErrorDialog": {
     "closeDialogButtonText": "Zavřít",
     "closeDialogButtonTooltipText": "Zavřít chybový dialog",

@@ -7,6 +7,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.customers.customers_widgets.customers_context_menu import CustomersContextMenu
 from material_register.ui.setup.headers_texts import HeadersTexts
 from material_register.db.models.customers_model import CustomersModel
+from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widget import CustomersWidget
@@ -32,6 +33,7 @@ class CustomersView(QTableView):
             ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
+        self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self._setup_columns(model)
         self._setup_headers(model)
         self._setup_behavior()
@@ -78,4 +80,9 @@ class CustomersView(QTableView):
             return
         menu = CustomersContextMenu(self, self.customers_widget.customers_controller)
         menu.set_customer_index(index)
+        if not self.menu_texts:
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = True
+            return
+        menu.set_ui_texts(self.menu_texts)
         menu.exec_(self.mapToGlobal(position))

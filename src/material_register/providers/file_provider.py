@@ -30,6 +30,8 @@ class FileProvider:
         ("CustomersActionsWidget", "addCustomerButtonTooltipText"),
         ("CustomersActionsWidget", "updateCustomerButtonTooltipText"),
         ("CustomersActionsWidget", "activeCustomerButtonTooltipText"),
+        ("CustomersView", "updateCustomerActionText"),
+        ("CustomersView", "activeCustomerActionText"),
         ("ErrorDialog", "closeDialogButtonText"),
         ("ErrorDialog", "closeDialogButtonTooltipText"),
         ("ErrorDialog", "closeAppButtonText"),
