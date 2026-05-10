@@ -90,22 +90,12 @@ class CustomerDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
-        self.notes_count_text = UiTexts.UI_TEXTS.get(self.__class__.__name__, {}).get(f"{self.notes_count_label.objectName()}Text", "Count:")
-        if not UiTexts.set_ui_texts(self, [self.subject_type, self.company_label, self.first_name_label,
-                                           self.last_name_label, self.document_type_label, self.address_label, self.active_label,
-                                           self.notes_label, self.notes_count_label, self.save_button, self.close_button]):
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
-        items = UiTexts.UI_TEXTS.get(self.__class__.__name__, {}).get(f"{self.subject_type.objectName()}Items",
-                                                                      ["Individual", "Company"])
-        self.subject_type.clear()
-        for index, text in enumerate(items):
-            self.subject_type.addItem(text, index)
-        if self.mode == self.ADD_MODE :
-            self._set_add_mode()
-        if self.mode == self.UPDATE_MODE and self.customer_data:
-            self._set_update_mode(self.customer_data)
+        widgets = [self.subject_type, self.company_label, self.first_name_label, self.last_name_label,
+                   self.document_type_label, self.address_label, self.active_label, self.notes_label,
+                   self.notes_count_label, self.save_button, self.close_button]
+        self._setup_texts(widgets)
+        self._setup_items()
+        self._setup_mode()
         self._set_validators()
 
     def _create_connection(self) -> None:
@@ -117,6 +107,31 @@ class CustomerDialog(QDialog):
         self.notes_input.textChanged.connect(self._update_notes_count)
         self.save_button.clicked.connect(self.accept)
         self.close_button.clicked.connect(self.reject)
+
+    def _setup_texts(self, widgets: list) -> None:
+        texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.notes_count_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
+    def _setup_items(self) -> None:
+        self.subject_type.clear()
+        texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        items = texts.get(f"{self.subject_type.objectName()}Items", ["Individual", "Company"])
+        if not items:
+            ErrorHandler.handle_error(f"Items texts load failed: {self.__class__.__name__}", "ui", "warning")
+            return
+        for index, text in enumerate(items):
+            self.subject_type.addItem(text, index)
+
+    def _setup_mode(self) -> None:
+        if self.mode == self.ADD_MODE:
+            self._set_add_mode()
+        elif self.mode == self.UPDATE_MODE and self.customer_data:
+            self._set_update_mode(self.customer_data)
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}]{1,30}"))

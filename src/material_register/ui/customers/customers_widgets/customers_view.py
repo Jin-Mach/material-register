@@ -27,13 +27,17 @@ class CustomersView(QTableView):
 
     def setup_ui(self) -> None:
         model = self.model()
+        error = "TEXTS_LOAD_FAILED"
         if not isinstance(model, CustomersModel):
             return
         if not HeadersTexts.set_headers_text(self, model):
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
+            ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = error
         self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        if not self.menu_texts:
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = error
+            self.menu_texts = UiTexts.DEFAULT_TEXTS.get(self.__class__.__name__, {})
         self._setup_columns(model)
         self._setup_headers(model)
         self._setup_behavior()
@@ -83,6 +87,5 @@ class CustomersView(QTableView):
         if not self.menu_texts:
             ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_texts_error = True
-            return
         menu.set_ui_texts(self.menu_texts)
         menu.exec_(self.mapToGlobal(position))

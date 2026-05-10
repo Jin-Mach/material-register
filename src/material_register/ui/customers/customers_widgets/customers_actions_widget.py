@@ -29,8 +29,10 @@ class CustomersActionsWidget(QWidget):
         return main_layout
 
     def _ui_setup(self) -> None:
-        if not UiTexts.set_ui_texts(self, [self.add_customer_button, self.update_customer_button,
-                                           self.active_customer_button]):
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        widgets = [self.add_customer_button, self.update_customer_button,]
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
             return

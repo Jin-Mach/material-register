@@ -1,8 +1,9 @@
 from PySide6.QtWidgets import QWidget
 
-from material_register.services.error_handler import ErrorHandler
+from material_register.config.ui_defaults import DEFAULT_TEXTS
 
 
+# noinspection PyBroadException
 class UiTexts:
     UI_TEXTS = {}
 
@@ -16,6 +17,23 @@ class UiTexts:
             ui_texts = cls.UI_TEXTS.get(parent.__class__.__name__, {})
             if not ui_texts:
                 return False
+            return UiTexts.set_texts(ui_texts, parent, widgets, tooltip_duration)
+        except Exception:
+            return False
+
+    @staticmethod
+    def set_default_texts(parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000) -> bool:
+        try:
+            ui_texts = DEFAULT_TEXTS.get(parent.__class__.__name__, {})
+            if not ui_texts:
+                return False
+            return UiTexts.set_texts(ui_texts, parent, widgets, tooltip_duration)
+        except Exception:
+            return False
+
+    @staticmethod
+    def set_texts(ui_texts: dict[str, str], parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000) -> bool:
+        try:
             if hasattr(parent, "setWindowTitle") and "titleText" in ui_texts:
                 parent.setWindowTitle(ui_texts["titleText"])
             for widget in widgets:
@@ -31,6 +49,5 @@ class UiTexts:
                 if hasattr(widget, "setPlaceholderText") and placeholder in ui_texts:
                     widget.setPlaceholderText(ui_texts[placeholder])
             return True
-        except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+        except Exception:
             return False

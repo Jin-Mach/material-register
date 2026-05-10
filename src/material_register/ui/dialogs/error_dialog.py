@@ -31,13 +31,12 @@ class ErrorDialog(QDialog):
         return main_layout
 
     def _ui_setup(self) -> None:
-        if not UiTexts.set_ui_texts(self, [self.close_dialog_button, self.close_app_button]):
-            self.close_dialog_button.setText("Close")
-            self.close_dialog_button.setToolTip("Close the error dialog")
-            self.close_dialog_button.setToolTipDuration(5000)
-            self.close_app_button.setText("Exit")
-            self.close_app_button.setToolTip("Exit the application")
-            self.close_app_button.setToolTipDuration(5000)
+        widgets = [self.close_dialog_button, self.close_app_button]
+        if not UiTexts.set_ui_texts(self, widgets):
+            return
+        if not UiTexts.set_default_texts(self, widgets):
+            return
+        return
 
     def _create_connection(self) -> None:
         self.close_dialog_button.clicked.connect(self.close)

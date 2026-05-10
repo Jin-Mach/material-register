@@ -31,9 +31,11 @@ class MainWindow(QMainWindow):
         return central_widget
 
     def _ui_setup(self) -> None:
-        if not UiTexts.set_ui_texts(self, []):
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
-            ErrorHandler.ui_texts_error = True
+        if UiTexts.set_ui_texts(self, []):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = True
+        if UiTexts.set_default_texts(self, []):
             return
 
     def _create_connection(self) -> None:

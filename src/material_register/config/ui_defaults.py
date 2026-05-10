@@ -1,0 +1,41 @@
+DEFAULT_TEXTS = {
+  "MainWindow": {
+    "titleText": "Main window title"
+  },
+  "SidePanel": {
+    "registerButtonText": "Movements",
+    "registerButtonTooltipText": "Displays material movements"
+  },
+  "ActionsWidget": {
+    "addTransactionButtonTooltipText": "Add a new record",
+    "deleteTransactionButtonTooltipText": "Delete selected record"
+  },
+  "CustomersActionsWidget": {
+    "addCustomerButtonTooltipText": "Add a new customer",
+    "updateCustomerButtonTooltipText": "Edit an existing customer",
+    "activeCustomerButtonTooltipText": "Activate/Deactivate an existing customer"
+  },
+  "ErrorDialog": {
+  "closeDialogButtonText": "Close",
+  "closeDialogButtonTooltipText": "Close the error dialog",
+  "closeAppButtonText": "Exit",
+  "closeAppButtonTooltipText": "Exit the application"
+  },
+  "CustomerDialog": {
+    "titleText": "Customer",
+    "subjectTypePlaceholderText": "Select customer type...",
+    "subjectTypeItems": ["Individual", "Company"],
+    "companyLabelText": "Company:",
+    "firstNameLabelText": "First name:",
+    "lastNameLabelText": "Last name:",
+    "documentTypeLabelText": "Document:",
+    "addressLabelText": "Address:",
+    "activeLabelText": "Active:",
+    "notesLabelText": "Notes:",
+    "notesCountLabelText": "Characters:",
+    "saveButtonText": "Save",
+    "saveButtonTooltipText": "Saves customer",
+    "closeButtonText": "Close",
+    "closeButtonTooltipText": "Closes dialog"
+  }
+}

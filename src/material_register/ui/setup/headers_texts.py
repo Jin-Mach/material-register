@@ -2,14 +2,12 @@ from PySide6.QtCore import Qt
 from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
-from material_register.services.error_handler import ErrorHandler
-
-
+# noinspection PyBroadException
 class HeadersTexts:
     HEADERS_TEXTS = {}
 
     @classmethod
-    def setup_init(cls, headers_texts: dict[str, str]) -> None:
+    def setup_init(cls, headers_texts: dict[str, dict[str, str]]) -> None:
         cls.HEADERS_TEXTS = headers_texts.copy()
 
     @classmethod
@@ -25,6 +23,5 @@ class HeadersTexts:
                 if column_name in headers_text:
                     model.setHeaderData(index, Qt.Orientation.Horizontal, headers_text[column_name])
             return True
-        except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+        except Exception:
             return False
