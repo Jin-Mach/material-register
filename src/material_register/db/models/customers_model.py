@@ -1,7 +1,8 @@
 from dataclasses import fields
+from typing import Any
 
-from PySide6.QtCore import Qt
-from PySide6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
+from PySide6.QtCore import Qt, QModelIndex
+from PySide6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery, QSqlRecord
 
 from material_register.db.models.base_sql_table_model import BaseSqlTableModel
 from material_register.domain.customers_dataclass import Customer
@@ -15,20 +16,17 @@ class CustomersModel(BaseSqlTableModel):
         self.setEditStrategy(QSqlTableModel.EditStrategy.OnManualSubmit)
         self.select()
 
-    def data(self, index,  role = Qt.ItemDataRole.DisplayRole):
+    def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
         if not index.isValid():
             return None
-        if role == Qt.ItemDataRole.DisplayRole:
-                if index.column() == self.fieldIndex("company"):
-                    record = self.record(index.row())
-                    company = record.value("company")
-                    if company:
-                        return company.capitalize()
-                    first_name = record.value("first_name").capitalize()
-                    last_name = record.value("last_name").capitalize()
-                    return f"{first_name} {last_name}".strip()
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
+        if role != Qt.ItemDataRole.DisplayRole:
+            return super().data(index, role)
+        record = self.record(index.row())
+        column = index.column()
+        if column == self.fieldIndex("company"):
+            return self._set_company_column(record)
         return super().data(index, role)
 
     def add_customer(self, customer: Customer) -> bool:
@@ -84,6 +82,15 @@ class CustomersModel(BaseSqlTableModel):
         if not query.exec():
             return False
         return query.next()
+
+    @staticmethod
+    def _set_company_column(record: QSqlRecord) -> str:
+        company = record.value("company")
+        if company:
+            return company.capitalize()
+        first = record.value("first_name") or ""
+        last = record.value("last_name") or ""
+        return f"{first.capitalize()} {last.capitalize()}".strip()
 
     @staticmethod
     def _basic_filter() -> str:
