@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLab
     QApplication, QDialogButtonBox, QCheckBox
 
 from material_register.domain.customers_dataclass import Customer
-from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -88,8 +88,9 @@ class CustomerDialog(QDialog):
         if not UiTexts.set_ui_texts(self, [self.subject_type, self.company_label, self.first_name_label,
                                            self.last_name_label, self.document_type_label, self.address_label, self.active_label,
                                            self.notes_label, self.notes_count_label, self.save_button, self.close_button]):
-            dialog = ErrorDialog()
-            dialog.show_dialog("TEXTS_LOAD_FAILED", False)
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
         items = UiTexts.UI_TEXTS.get(self.__class__.__name__, {}).get(f"{self.subject_type.objectName()}Items",
                                                                       ["Individual", "Company"])
         self.subject_type.clear()

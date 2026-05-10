@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 
-from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -29,5 +29,6 @@ class SidePanel(QWidget):
 
     def _ui_setup(self) -> None:
         if not UiTexts.set_ui_texts(self, [self.transactions_button, self.customers_button]):
-            dialog = ErrorDialog()
-            dialog.show_dialog("TEXTS_LOAD_FAILED", False)
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return

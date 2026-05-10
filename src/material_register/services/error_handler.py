@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 class ErrorHandler:
     LEVELS = {"warning", "error", "critical"}
     loggers_map = {}
+    ui_texts_error = ""
 
     @classmethod
     def init_handler(cls, logger_provider: type["LoggerProvider"]) -> None:

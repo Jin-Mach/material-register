@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QComboBox
+from PySide6.QtWidgets import QWidget
 
 from material_register.services.error_handler import ErrorHandler
 

@@ -1,6 +1,9 @@
+from calendar import error
+
 from PySide6.QtGui import QShowEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 
+from material_register.services.error_handler import ErrorHandler
 from material_register.services.settings_manager import SettingsManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.setup.ui_texts import UiTexts
@@ -29,8 +32,9 @@ class MainWindow(QMainWindow):
 
     def _ui_setup(self) -> None:
         if not UiTexts.set_ui_texts(self, []):
-            dialog = ErrorDialog()
-            dialog.show_dialog("TEXTS_LOAD_FAILED", False)
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = True
+            return
 
     def _create_connection(self) -> None:
         buttons_map = {
@@ -40,6 +44,13 @@ class MainWindow(QMainWindow):
         for button, index in buttons_map.items():
             button.clicked.connect(lambda _, i=index: self.stacked_widget.setCurrentIndex(i))
 
+    @staticmethod
+    def _handle_startup_errors() -> None:
+        error = ErrorHandler.ui_texts_error
+        if error != "":
+            ErrorDialog().show_dialog(error, False)
+            ErrorHandler.ui_texts_error = ""
+
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
         if not self.settings_manager.load_settings():
@@ -48,6 +59,7 @@ class MainWindow(QMainWindow):
             frame = self.frameGeometry()
             frame.moveCenter(geometry.center())
             self.move(frame.topLeft())
+        MainWindow._handle_startup_errors()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         super().closeEvent(event)

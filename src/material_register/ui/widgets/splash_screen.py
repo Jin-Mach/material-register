@@ -6,9 +6,9 @@ from PySide6.QtWidgets import QWidget, QApplication, QProgressBar, QVBoxLayout, 
 
 
 class SplashScreen(QWidget):
-    def __init__(self, resourrces_path: Path) -> None:
+    def __init__(self, resources_path: Path) -> None:
         super().__init__()
-        self.resources_path = resourrces_path
+        self.resources_path = resources_path
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setLayout(self._create_ui())
 

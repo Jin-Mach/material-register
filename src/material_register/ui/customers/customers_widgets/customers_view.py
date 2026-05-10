@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QTableView, QHeaderView
 
-from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.headers_texts import HeadersTexts
 from material_register.db.models.customers_model import CustomersModel
 
@@ -26,7 +26,9 @@ class CustomersView(QTableView):
         if not isinstance(model, CustomersModel):
             return
         if not HeadersTexts.set_headers_text(self, model):
-            ErrorDialog().show_dialog("TEXTS_LOAD_FAILED", False)
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
         self._setup_columns(model)
         self._setup_headers(model)
         self._setup_behavior()
