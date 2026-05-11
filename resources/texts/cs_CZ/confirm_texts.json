@@ -4,5 +4,11 @@
     "TEXT": "Opravdu upravit vybraného uživatele?",
     "YES": "Uložit",
     "NO": "Zrušit"
+  },
+  "ACTIVE": {
+    "TITLE": "Změna stavu",
+    "TEXT": "Opravdu změnit stav vybraného uživatele?",
+    "YES": "Změnit",
+    "NO": "Zrušit"
   }
 }

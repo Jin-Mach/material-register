@@ -68,7 +68,7 @@ class CustomersModel(BaseSqlTableModel):
             return self._rollback_and_fail()
         return True
 
-    def activate_handler(self, customer_id: int, active: bool = True) -> bool:
+    def set_active(self, customer_id: int, active: bool) -> bool:
         row = self._find_row_by_id(customer_id)
         if row == -1:
             return False

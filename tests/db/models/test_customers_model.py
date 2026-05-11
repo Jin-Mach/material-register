@@ -74,12 +74,12 @@ def test_deactivate_customer() -> None:
     model.add_customer(_add_customer())
     row = 0
     row_id = model.data(model.index(row, model.fieldIndex("id")))
-    ok = model.activate_handler(row_id)
+    ok = model.set_active(row_id, True)
     assert ok
     active_column = model.fieldIndex("active")
     value = model.data(model.index(row, active_column))
     assert value == 1
-    deactivate = model.activate_handler(row_id, active=False)
+    deactivate = model.set_active(row_id, active=False)
     assert deactivate
     value = model.data(model.index(row, active_column))
     assert value == 0

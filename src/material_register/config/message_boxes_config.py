@@ -4,5 +4,11 @@ CONFIRM_TEXTS = {
     "TEXT": "Do you really want to edit the selected user?",
     "YES": "Save",
     "NO": "Cancel"
+  },
+  "ACTIVE": {
+    "TITLE": "Status change",
+    "TEXT": "Do you really want to change the status of the selected user?",
+    "YES": "Change",
+    "NO": "Cancel"
   }
 }

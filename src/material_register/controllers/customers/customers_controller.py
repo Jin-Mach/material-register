@@ -13,6 +13,7 @@ from material_register.utils.normalizer import normalize_text, normalize_whitesp
 
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widget import CustomersWidget
+    from material_register.db.models.customers_model import CustomersModel
 
 
 class CustomersController:
@@ -20,7 +21,7 @@ class CustomersController:
         self.customers_model = ModelsSetup.customers_model
         self.customers_widget = customers_widget
 
-    def add_customers(self) -> None:
+    def add_customer(self) -> None:
         dialog = CustomerDialog(self.customers_widget)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             customer = dialog.get_customer_data()
@@ -30,12 +31,7 @@ class CustomersController:
                 return
             CustomersController._normalize_customer(customer)
             if not self.customers_model.add_customer(customer):
-                error = self.customers_model.lastError().text()
-                if not error:
-                    error = f"Unknown database error: {self.__class__.__name__}.add_customers"
-                ErrorHandler.handle_error(error, "db", "critical")
-                dialog = ErrorDialog()
-                dialog.show_dialog("DATABASE_ERROR", False)
+                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.add_customers")
         self.customers_widget.customers_view.update_headers(self.customers_model)
 
     def update_customer(self, customer_index: QModelIndex) -> None:
@@ -54,13 +50,18 @@ class CustomersController:
                     return
                 CustomersController._normalize_customer(customer)
                 if not self.customers_model.update_customer(customer_id, customer):
-                    error = self.customers_model.lastError().text()
-                    if not error:
-                        error = f"Unknown database error: {self.__class__.__name__}.update_customers"
-                    ErrorHandler.handle_error(error, "db", "critical")
-                    dialog = ErrorDialog()
-                    dialog.show_dialog("DATABASE_ERROR", False)
+                    CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.update_customers")
         self.customers_widget.customers_view.update_headers(self.customers_model)
+
+    def change_customer_active(self, customer_index: QModelIndex) -> None:
+        customer_id = CustomersController._get_id_from_index(customer_index)
+        if customer_id == -1:
+            return
+        customer_data = self.customers_model.get_customer_by_id(customer_id)
+        question = MessageBoxes.show_question(self.customers_widget, "ACTIVE")
+        if question:
+            if not self.customers_model.set_active(customer_id, not customer_data.active):
+                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.set_active")
 
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:
@@ -80,3 +81,12 @@ class CustomersController:
         if customer_id is None or customer_id < 0:
             return -1
         return customer_id
+
+    @staticmethod
+    def _handle_db_error(model: "CustomersModel", method: str) -> None:
+        error = model.lastError().text()
+        if not error:
+            error = f"Unknown database error: {method}"
+        ErrorHandler.handle_error(error, "db", "critical")
+        dialog = ErrorDialog()
+        dialog.show_dialog("DATABASE_ERROR", False)

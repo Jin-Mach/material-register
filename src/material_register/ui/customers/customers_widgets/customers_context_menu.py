@@ -35,6 +35,7 @@ class CustomersContextMenu(QMenu):
 
     def create_connection(self) -> None:
         self.update_customer_action.triggered.connect(self._update_customer)
+        self.active_customer_action.triggered.connect(self._change_customer_active)
 
     def set_customer_index(self, index: QModelIndex) -> None:
         self.customer_index = index
@@ -43,3 +44,8 @@ class CustomersContextMenu(QMenu):
         if self.customer_index is None:
             return
         self.customers_controller.update_customer(self.customer_index)
+
+    def _change_customer_active(self) -> None:
+        if self.customer_index is None:
+            return
+        self.customers_controller.change_customer_active(self.customer_index)
