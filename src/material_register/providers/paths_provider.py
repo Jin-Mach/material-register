@@ -2,12 +2,11 @@ import sys
 
 from pathlib import Path
 
+from material_register.config.paths_config import PROJECT_NAME
 from material_register.services.error_handler import ErrorHandler
 
 
 class PathsProvider:
-    PROJECT_NAME = "material-transactions"
-
     root = None
     resources = None
     database = None
@@ -35,7 +34,7 @@ class PathsProvider:
             if getattr(sys, "frozen", False) or "__compiled__" in globals():
                 return exe.parent
             for parent in current.parents:
-                if parent.name == cls.PROJECT_NAME:
+                if parent.name == PROJECT_NAME:
                     return parent
             return current.parents[3]
         except Exception as e:

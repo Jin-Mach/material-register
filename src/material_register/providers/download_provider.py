@@ -2,32 +2,20 @@ import requests
 
 from pathlib import Path
 
+from material_register.config.download_config import FILES_MAP, ICONS_MAP, FILES_SUFFIXES, ICONS_SUFFIXES
 from material_register.services.error_handler import ErrorHandler
 from material_register.utils.network import is_internet_available
 from material_register.utils.system import is_disk_writable
 
 
 class DownloadProvider:
-    FILES_MAP = {
-        "texts/cs_CZ/ui_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/cs_CZ/ui_texts.json",
-        "texts/en_GB/ui_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/ui_texts.json",
-        "texts/cs_CZ/error_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/cs_CZ/error_texts.json",
-        "texts/en_GB/error_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/error_texts.json"
-    }
-
-    ICONS_MAP = {
-        "images/SplashScreen.jpg": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/SplashScreen.jpg"
-    }
-
-    FILES_SUFFIXES = [".json", ".qss"]
-    ICONS_SUFFIXES = [".png", ".jpg", ".jpeg"]
 
     @classmethod
     def download_files(cls, invalid_files: set[Path], resource_path: Path) -> bool:
         try:
             for invalid_file in invalid_files:
                 relative = invalid_file.relative_to(resource_path)
-                url = cls.FILES_MAP.get(str(relative)) or cls.ICONS_MAP.get(str(relative))
+                url = FILES_MAP.get(str(relative)) or ICONS_MAP.get(str(relative))
                 if url:
                     if not cls._save_file(url, invalid_file):
                         return False
@@ -42,9 +30,9 @@ class DownloadProvider:
             response = requests.get(url, timeout=5)
             response.raise_for_status()
             path.parent.mkdir(parents=True, exist_ok=True)
-            if path.suffix in cls.FILES_SUFFIXES:
+            if path.suffix in FILES_SUFFIXES:
                 path.write_text(response.text)
-            elif path.suffix in cls.ICONS_SUFFIXES:
+            elif path.suffix in ICONS_SUFFIXES:
                 path.write_bytes(response.content)
             return True
         except Exception as e:

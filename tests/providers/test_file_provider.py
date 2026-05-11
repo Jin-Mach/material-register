@@ -3,6 +3,7 @@ import pytest
 
 from pathlib import Path
 
+from material_register.config.file_config import UI_KEYS, HEADERS_KEYS
 from material_register.providers.file_provider import FileProvider
 
 
@@ -16,7 +17,7 @@ def write_image(path: Path) -> None:
 
 def create_valid_ui() -> dict[str, dict[str, str]]:
     data = {}
-    for section, key in FileProvider.UI_KEYS:
+    for section, key in UI_KEYS:
         data.setdefault(section, {})[key] = "x"
     return data
 
@@ -32,7 +33,7 @@ def create_valid_error() -> dict[str, str]:
 
 def create_valid_headers() -> dict[str, dict[str, str]]:
     data = {}
-    for section, key in FileProvider.HEADERS_KEYS:
+    for section, key in HEADERS_KEYS:
         data.setdefault(section, {})[key] = "x"
     return data
 

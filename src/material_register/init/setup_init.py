@@ -23,7 +23,7 @@ class SetupInit:
                     return False, "PERMISSION_ERROR"
                 if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
                     return False, "DOWNLOAD_FAILED"
-            TextsProvider.provider_init(LanguageProvider.current_language, PathsProvider.resources)
+            TextsProvider.provider_init(LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources)
             if not TextsProvider.UI_TEXTS or not TextsProvider.ERROR_TEXTS or not TextsProvider.HEADERS_TEXTS:
                 return False, "TEXTS_LOAD_FAILED"
             UiTexts.setup_init(TextsProvider.UI_TEXTS)

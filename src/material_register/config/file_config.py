@@ -1,0 +1,64 @@
+from pathlib import Path
+
+REQUIRED_JSON_FILES = [
+    Path("cs_CZ") / "ui_texts.json",
+    Path("en_GB") / "ui_texts.json",
+    Path("cs_CZ") / "error_texts.json",
+    Path("en_GB") / "error_texts.json",
+    Path("cs_CZ") / "headers_texts.json",
+    Path("en_GB") / "headers_texts.json",
+]
+
+REQUIRED_IMAGES = [
+    Path("SplashScreen.jpg"),
+]
+
+UI_KEYS = [
+    ("MainWindow", "titleText"),
+    ("SidePanel", "transactionsButtonText"),
+    ("SidePanel", "transactionsButtonTooltipText"),
+    ("SidePanel", "customersButtonText"),
+    ("SidePanel", "customersButtonTooltipText"),
+    ("TransactionsActionsWidget", "addTransactionButtonTooltipText"),
+    ("TransactionsActionsWidget", "deleteTransactionButtonTooltipText"),
+    ("CustomersActionsWidget", "addCustomerButtonTooltipText"),
+    ("CustomersActionsWidget", "updateCustomerButtonTooltipText"),
+    ("CustomersActionsWidget", "activeCustomerButtonTooltipText"),
+    ("CustomersView", "updateCustomerActionText"),
+    ("CustomersView", "activeCustomerActionText"),
+    ("ErrorDialog", "closeDialogButtonText"),
+    ("ErrorDialog", "closeDialogButtonTooltipText"),
+    ("ErrorDialog", "closeAppButtonText"),
+    ("ErrorDialog", "closeAppButtonTooltipText"),
+    ("CustomerDialog", "titleText"),
+    ("CustomerDialog", "subjectTypePlaceholderText"),
+    ("CustomerDialog", "subjectTypeItems"),
+    ("CustomerDialog", "companyLabelText"),
+    ("CustomerDialog", "firstNameLabelText"),
+    ("CustomerDialog", "lastNameLabelText"),
+    ("CustomerDialog", "documentTypeLabelText"),
+    ("CustomerDialog", "addressLabelText"),
+    ("CustomerDialog", "activeLabelText"),
+    ("CustomerDialog", "notesLabelText"),
+    ("CustomerDialog", "notesCountLabelText"),
+    ("CustomerDialog", "saveButtonText"),
+    ("CustomerDialog", "saveButtonTooltipText"),
+    ("CustomerDialog", "closeButtonText"),
+    ("CustomerDialog", "closeButtonTooltipText"),
+]
+
+HEADERS_KEYS = [
+    ("CustomersView", "company"),
+    ("CustomersView", "document_number"),
+    ("CustomersView", "address"),
+    ("CustomersView", "active"),
+]
+
+ERROR_KEYS = [
+    "APP_INIT_FAILED",
+    "RESOURCES_MISSING",
+    "DOWNLOAD_FAILED",
+    "TEXTS_LOAD_FAILED",
+    "CRITICAL_FAILURE",
+    "UNKNOWN_ERROR",
+]
