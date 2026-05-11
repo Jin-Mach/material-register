@@ -1,6 +1,8 @@
 {
-  "UPDATE_CUSTOMER_TITLE": "Edit user",
-  "UPDATE_CUSTOMER_TEXT": "Do you really want to edit the selected user?",
-  "UPDATE_CUSTOMER_YES": "Save",
-  "UPDATE_CUSTOMER_NO": "Cancel"
+  "UPDATE": {
+    "TITLE": "Edit user",
+    "TEXT": "Do you really want to edit the selected user?",
+    "YES": "Save",
+    "NO": "Cancel"
+  }
 }

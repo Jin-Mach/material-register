@@ -3,7 +3,7 @@ import pytest
 
 from pathlib import Path
 
-from material_register.config.file_config import UI_KEYS, HEADERS_KEYS, CONFIRM_KEYS
+from material_register.config.file_config import UI_KEYS, HEADERS_KEYS
 from material_register.providers.file_provider import FileProvider
 
 
@@ -38,10 +38,14 @@ def create_valid_headers() -> dict[str, dict[str, str]]:
     return data
 
 def create_valid_confirm() -> dict[str, dict[str, str]]:
-    data = {}
-    for key in CONFIRM_KEYS:
-        data[key] = "x"
-    return data
+    return {
+        "UPDATE": {
+            "TITLE": "x",
+            "TEXT": "x",
+            "YES": "x",
+            "NO": "x"
+        }
+    }
 
 def create_base_structure(base: Path) -> None:
     ui = create_valid_ui()

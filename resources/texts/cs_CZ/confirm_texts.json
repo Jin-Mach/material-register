@@ -1,6 +1,8 @@
 {
-  "UPDATE_CUSTOMER_TITLE": "Úprava uživatele",
-  "UPDATE_CUSTOMER_TEXT": "Opravdu upravit vybraného uživatele?",
-  "UPDATE_CUSTOMER_YES": "Uložit",
-  "UPDATE_CUSTOMER_NO": "Zrušit"
+  "UPDATE": {
+    "TITLE": "Úprava uživatele",
+    "TEXT": "Opravdu upravit vybraného uživatele?",
+    "YES": "Uložit",
+    "NO": "Zrušit"
+  }
 }

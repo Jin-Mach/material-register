@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from material_register.config.file_config import REQUIRED_JSON_FILES, REQUIRED_IMAGES, UI_KEYS, ERROR_KEYS, \
-    HEADERS_KEYS, CONFIRM_KEYS
+    HEADERS_KEYS, CONFIRM_STRUCTURE
 from material_register.services.error_handler import ErrorHandler
 
 
@@ -90,11 +90,14 @@ class FileProvider:
                 return False
         return True
 
-    @classmethod
-    def _check_confirm_json(cls, data: dict[str, str]) -> bool:
-        for key in CONFIRM_KEYS:
-            if key not in data:
+    @staticmethod
+    def _check_confirm_json(data: dict[str, dict[str, str]]) -> bool:
+        for section, keys in CONFIRM_STRUCTURE.items():
+            if section not in data:
                 return False
-            if not data[key]:
-                return False
+            for key in keys:
+                if key not in data[section]:
+                    return False
+                if not data[section][key]:
+                    return False
         return True

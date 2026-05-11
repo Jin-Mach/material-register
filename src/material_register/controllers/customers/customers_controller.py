@@ -8,6 +8,7 @@ from material_register.init.models_init import ModelsSetup
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.utils.normalizer import normalize_text, normalize_whitespace
 
 if TYPE_CHECKING:
@@ -44,19 +45,21 @@ class CustomersController:
         customer_data = self.customers_model.get_customer_by_id(customer_id)
         dialog = CustomerDialog(self.customers_widget, mode="UPDATE", customer_data=customer_data)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            customer = dialog.get_customer_data()
-            if customer is None:
-                dialog = ErrorDialog()
-                dialog.show_dialog("UNKNOWN_ERROR", False)
-                return
-            CustomersController._normalize_customer(customer)
-            if not self.customers_model.update_customer(customer_id, customer):
-                error = self.customers_model.lastError().text()
-                if not error:
-                    error = f"Unknown database error: {self.__class__.__name__}.update_customers"
-                ErrorHandler.handle_error(error, "db", "critical")
-                dialog = ErrorDialog()
-                dialog.show_dialog("DATABASE_ERROR", False)
+            question = MessageBoxes.show_question(dialog, "UPDATE")
+            if question:
+                customer = dialog.get_customer_data()
+                if customer is None:
+                    dialog = ErrorDialog()
+                    dialog.show_dialog("UNKNOWN_ERROR", False)
+                    return
+                CustomersController._normalize_customer(customer)
+                if not self.customers_model.update_customer(customer_id, customer):
+                    error = self.customers_model.lastError().text()
+                    if not error:
+                        error = f"Unknown database error: {self.__class__.__name__}.update_customers"
+                    ErrorHandler.handle_error(error, "db", "critical")
+                    dialog = ErrorDialog()
+                    dialog.show_dialog("DATABASE_ERROR", False)
         self.customers_widget.customers_view.update_headers(self.customers_model)
 
     @staticmethod
