@@ -7,6 +7,8 @@ REQUIRED_JSON_FILES = [
     Path("en_GB") / "error_texts.json",
     Path("cs_CZ") / "headers_texts.json",
     Path("en_GB") / "headers_texts.json",
+    Path("cs_CZ") / "confirm_texts.json",
+    Path("en_GB") / "confirm_texts.json",
 ]
 
 REQUIRED_IMAGES = [
@@ -61,4 +63,11 @@ ERROR_KEYS = [
     "TEXTS_LOAD_FAILED",
     "CRITICAL_FAILURE",
     "UNKNOWN_ERROR",
+]
+
+CONFIRM_KEYS = [
+    "UPDATE_CUSTOMER_TITLE",
+    "UPDATE_CUSTOMER_TEXT",
+    "UPDATE_CUSTOMER_YES",
+    "UPDATE_CUSTOMER_NO",
 ]

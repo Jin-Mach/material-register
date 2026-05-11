@@ -1,6 +1,7 @@
 from material_register.providers.download_provider import DownloadProvider
 from material_register.providers.file_provider import FileProvider
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.setup.error_texts import ErrorTexts
 from material_register.providers.language_provider import LanguageProvider
 from material_register.providers.paths_provider import PathsProvider
@@ -24,11 +25,12 @@ class SetupInit:
                 if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
                     return False, "DOWNLOAD_FAILED"
             TextsProvider.provider_init(LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources)
-            if not TextsProvider.UI_TEXTS or not TextsProvider.ERROR_TEXTS or not TextsProvider.HEADERS_TEXTS:
+            if not all([TextsProvider.UI_TEXTS, TextsProvider.ERROR_TEXTS, TextsProvider.HEADERS_TEXTS, TextsProvider.CONFIRM_TEXTS]):
                 return False, "TEXTS_LOAD_FAILED"
             UiTexts.setup_init(TextsProvider.UI_TEXTS)
             HeadersTexts.setup_init(TextsProvider.HEADERS_TEXTS)
             ErrorTexts.setup_init(TextsProvider.ERROR_TEXTS)
+            MessageBoxes.setup_init(TextsProvider.CONFIRM_TEXTS)
             return True, ""
         except Exception as e:
             ErrorHandler.handle_error(e, "error", "critical")

@@ -3,7 +3,7 @@ import pytest
 
 from pathlib import Path
 
-from material_register.config.file_config import UI_KEYS, HEADERS_KEYS
+from material_register.config.file_config import UI_KEYS, HEADERS_KEYS, CONFIRM_KEYS
 from material_register.providers.file_provider import FileProvider
 
 
@@ -37,16 +37,25 @@ def create_valid_headers() -> dict[str, dict[str, str]]:
         data.setdefault(section, {})[key] = "x"
     return data
 
+def create_valid_confirm() -> dict[str, dict[str, str]]:
+    data = {}
+    for key in CONFIRM_KEYS:
+        data[key] = "x"
+    return data
+
 def create_base_structure(base: Path) -> None:
     ui = create_valid_ui()
     error = create_valid_error()
     headers = create_valid_headers()
+    confirm = create_valid_confirm()
     write_json(base / "texts" / "cs_CZ" / "ui_texts.json", ui)
     write_json(base / "texts" / "en_GB" / "ui_texts.json", ui)
     write_json(base / "texts" / "cs_CZ" / "error_texts.json", error)
     write_json(base / "texts" / "en_GB" / "error_texts.json", error)
     write_json(base / "texts" / "cs_CZ" / "headers_texts.json", headers)
     write_json(base / "texts" / "en_GB" / "headers_texts.json", headers)
+    write_json(base / "texts" / "cs_CZ" / "confirm_texts.json", confirm)
+    write_json(base / "texts" / "en_GB" / "confirm_texts.json", confirm)
     write_image(base / "images" / "SplashScreen.jpg")
 
 @pytest.mark.parametrize(

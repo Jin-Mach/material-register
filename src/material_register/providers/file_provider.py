@@ -2,7 +2,8 @@ import json
 
 from pathlib import Path
 
-from material_register.config.file_config import REQUIRED_JSON_FILES, REQUIRED_IMAGES, UI_KEYS, ERROR_KEYS, HEADERS_KEYS
+from material_register.config.file_config import REQUIRED_JSON_FILES, REQUIRED_IMAGES, UI_KEYS, ERROR_KEYS, \
+    HEADERS_KEYS, CONFIRM_KEYS
 from material_register.services.error_handler import ErrorHandler
 
 
@@ -49,6 +50,8 @@ class FileProvider:
                 return cls._check_error_json(data)
             if name == "headers_texts":
                 return cls._check_headers_json(data)
+            if name == "confirm_texts":
+                return cls._check_confirm_json(data)
             return False
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")
@@ -84,5 +87,14 @@ class FileProvider:
                 return False
             value = data[section][key]
             if value is None or value == "":
+                return False
+        return True
+
+    @classmethod
+    def _check_confirm_json(cls, data: dict[str, str]) -> bool:
+        for key in CONFIRM_KEYS:
+            if key not in data:
+                return False
+            if not data[key]:
                 return False
         return True
