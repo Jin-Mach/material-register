@@ -1,5 +1,3 @@
-from calendar import error
-
 from PySide6.QtGui import QShowEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 

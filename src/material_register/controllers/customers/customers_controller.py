@@ -3,12 +3,15 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QModelIndex, Qt
 from PySide6.QtWidgets import QDialog
 
+from material_register.core.app_context import AppContext
 from material_register.domain.customers_dataclass import Customer
 from material_register.init.models_init import ModelsSetup
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
+from material_register.ui.dialogs.notification_dialog import NotificationDialog
+from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.normalizer import normalize_text, normalize_whitespace
 
 if TYPE_CHECKING:
@@ -20,6 +23,7 @@ class CustomersController:
     def __init__(self, customers_widget: "CustomersWidget") -> None:
         self.customers_model = ModelsSetup.customers_model
         self.customers_widget = customers_widget
+        self.ui_texts = UiTexts
 
     def add_customer(self) -> None:
         dialog = CustomerDialog(self.customers_widget)
@@ -62,6 +66,9 @@ class CustomersController:
         if question:
             if not self.customers_model.set_active(customer_id, not customer_data.active):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.set_active")
+                return
+        notification = NotificationDialog(AppContext.MAIN_WINDOW, "active changed...")
+        notification.show_notification()
 
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:

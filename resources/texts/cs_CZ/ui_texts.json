@@ -19,7 +19,7 @@
   },
   "CustomersView": {
     "updateCustomerActionText": "Upravit záznam",
-    "activeCustomerActionText": "Aktivovat/Deaktivovat záznam"
+    "activeCustomerActionText": "Aktivovat/Deaktivovat zákazníka"
   },
   "ErrorDialog": {
     "closeDialogButtonText": "Zavřít",
