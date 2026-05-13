@@ -11,6 +11,7 @@ class TextsProvider:
     UI_TEXTS = {}
     HEADERS_TEXTS = {}
     CONFIRM_TEXTS = {}
+    NOTIFICATION_TEXTS = {}
     ERROR_TEXTS = {}
 
     @classmethod
@@ -21,6 +22,7 @@ class TextsProvider:
         cls.HEADERS_TEXTS = cls._load_texts(cls.RESOURCES_PATH, "headers_texts.json")
         cls.ERROR_TEXTS = cls._load_texts(cls.RESOURCES_PATH, "error_texts.json")
         cls.CONFIRM_TEXTS = cls._load_texts(cls.RESOURCES_PATH, "confirm_texts.json")
+        cls.NOTIFICATION_TEXTS = cls._load_texts(cls.RESOURCES_PATH, "notification_texts.json")
 
     @classmethod
     def _load_texts(cls, resources_path: Path, json_file: str) -> dict[str, dict[str, str]]:

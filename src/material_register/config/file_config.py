@@ -9,6 +9,8 @@ REQUIRED_JSON_FILES = [
     Path("en_GB") / "headers_texts.json",
     Path("cs_CZ") / "confirm_texts.json",
     Path("en_GB") / "confirm_texts.json",
+    Path("cs_CZ") / "notification_texts.json",
+    Path("en_GB") / "notification_texts.json"
 ]
 
 REQUIRED_IMAGES = [
@@ -68,3 +70,9 @@ ERROR_KEYS = [
 CONFIRM_STRUCTURE = {
     "UPDATE": ["TITLE", "TEXT", "YES", "NO"],
 }
+
+NOTIFICATION_KEYS = [
+    ("CUSTOMERS", "ADD_CUSTOMER"),
+    ("CUSTOMERS", "UPDATE_CUSTOMER"),
+    ("CUSTOMERS", "CHANGE_ACTIVE")
+]

@@ -27,7 +27,15 @@ class NotificationDialog(QDialog):
     def _setup_texts(self) -> None:
         self.notification_label.setText(self.notification_text)
 
-    def _fade_out_and_close(self, duration: int = 300) -> None:
+    def _fade_in(self, duration: int = 1000) -> None:
+        self.animation = QPropertyAnimation(self, b"windowOpacity")
+        self.animation.setDuration(duration)
+        self.animation.setStartValue(0.0)
+        self.animation.setEndValue(1.0)
+        self.animation.start()
+        QTimer.singleShot(5000, self._fade_out_and_close)
+
+    def _fade_out_and_close(self, duration: int = 1000) -> None:
         self.animation = QPropertyAnimation(self, b"windowOpacity")
         self.animation.setDuration(duration)
         self.animation.setStartValue(1.0)
@@ -39,5 +47,6 @@ class NotificationDialog(QDialog):
         self.adjustSize()
         position = get_notification_position(self)
         self.move(position)
+        self.setWindowOpacity(0.0)
         self.show()
-        QTimer.singleShot(3000, self._fade_out_and_close)
+        self._fade_in()

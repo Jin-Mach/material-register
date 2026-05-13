@@ -9,7 +9,7 @@ class MessageBoxes:
         cls.CONFIRM_TEXTS = confirm_texts
 
     @classmethod
-    def show_question(cls, parent: QWidget, question_key: str) -> bool:
+    def show_question(cls, parent: QWidget, question_key: str, informative_text: str | None = None) -> bool:
         texts = cls.CONFIRM_TEXTS.get(question_key, {})
         if not texts:
             return False
@@ -17,7 +17,9 @@ class MessageBoxes:
         message_box.setIcon(QMessageBox.Icon.Question)
         message_box.setWindowTitle(texts.get("TITLE", ""))
         message_box.setText(texts.get("TEXT", ""))
-        yes_button = message_box.addButton(texts.get("YES", ""), QMessageBox.ButtonRole.YesRole)
-        message_box.addButton(texts.get("NO", ""), QMessageBox.ButtonRole.NoRole)
+        if informative_text is not None:
+            message_box.setInformativeText(informative_text)
+        yes_button = message_box.addButton(texts.get("YES", "Yes"), QMessageBox.ButtonRole.YesRole)
+        message_box.addButton(texts.get("NO", "No"), QMessageBox.ButtonRole.NoRole)
         message_box.exec()
         return message_box.clickedButton() == yes_button

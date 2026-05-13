@@ -6,12 +6,12 @@ from PySide6.QtWidgets import QDialog
 from material_register.core.app_context import AppContext
 from material_register.domain.customers_dataclass import Customer
 from material_register.init.models_init import ModelsSetup
+from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
-from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.normalizer import normalize_text, normalize_whitespace
 
 if TYPE_CHECKING:
@@ -23,7 +23,7 @@ class CustomersController:
     def __init__(self, customers_widget: "CustomersWidget") -> None:
         self.customers_model = ModelsSetup.customers_model
         self.customers_widget = customers_widget
-        self.ui_texts = UiTexts
+        self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("CUSTOMERS", None)
 
     def add_customer(self) -> None:
         dialog = CustomerDialog(self.customers_widget)
@@ -36,7 +36,9 @@ class CustomersController:
             CustomersController._normalize_customer(customer)
             if not self.customers_model.add_customer(customer):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.add_customers")
-        self.customers_widget.customers_view.update_headers(self.customers_model)
+                return
+            self.customers_widget.customers_view.update_headers(self.customers_model)
+            CustomersController._notification_handler(self.notification_texts, "ADD_CUSTOMER", "New customer added")
 
     def update_customer(self, customer_index: QModelIndex) -> None:
         customer_id = CustomersController._get_id_from_index(customer_index)
@@ -45,30 +47,30 @@ class CustomersController:
         customer_data = self.customers_model.get_customer_by_id(customer_id)
         dialog = CustomerDialog(self.customers_widget, mode="UPDATE", customer_data=customer_data)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            question = MessageBoxes.show_question(dialog, "UPDATE")
-            if question:
-                customer = dialog.get_customer_data()
-                if customer is None:
-                    dialog = ErrorDialog()
-                    dialog.show_dialog("UNKNOWN_ERROR", False)
-                    return
-                CustomersController._normalize_customer(customer)
-                if not self.customers_model.update_customer(customer_id, customer):
-                    CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.update_customers")
-        self.customers_widget.customers_view.update_headers(self.customers_model)
+            customer = dialog.get_customer_data()
+            if customer is None:
+                dialog = ErrorDialog()
+                dialog.show_dialog("UNKNOWN_ERROR", False)
+                return
+            CustomersController._normalize_customer(customer)
+            if not self.customers_model.update_customer(customer_id, customer):
+                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.update_customers")
+                return
+            self.customers_widget.customers_view.update_headers(self.customers_model)
+            CustomersController._notification_handler(self.notification_texts, "UPDATE_CUSTOMER", "Record updated")
 
     def change_customer_active(self, customer_index: QModelIndex) -> None:
         customer_id = CustomersController._get_id_from_index(customer_index)
         if customer_id == -1:
             return
         customer_data = self.customers_model.get_customer_by_id(customer_id)
-        question = MessageBoxes.show_question(self.customers_widget, "ACTIVE")
+        customer_name = CustomersController._handle_customer_name(customer_data)
+        question = MessageBoxes.show_question(self.customers_widget, "ACTIVE", customer_name)
         if question:
             if not self.customers_model.set_active(customer_id, not customer_data.active):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.set_active")
                 return
-        notification = NotificationDialog(AppContext.MAIN_WINDOW, "active changed...")
-        notification.show_notification()
+            CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")
 
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:
@@ -97,3 +99,16 @@ class CustomersController:
         ErrorHandler.handle_error(error, "db", "critical")
         dialog = ErrorDialog()
         dialog.show_dialog("DATABASE_ERROR", False)
+
+    @staticmethod
+    def _handle_customer_name(customer: Customer) -> str:
+        if not customer.company:
+            return customer.first_name + " " + customer.last_name
+        return customer.company
+
+    @staticmethod
+    def _notification_handler(notification_texts: dict[str, str], key: str, default: str) -> None:
+        if notification_texts is None:
+            return
+        notification = NotificationDialog(AppContext.MAIN_WINDOW, notification_texts.get(key, default))
+        notification.show_notification()

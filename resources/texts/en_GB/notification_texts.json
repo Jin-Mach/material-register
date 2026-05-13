@@ -1,0 +1,7 @@
+{
+  "CUSTOMERS": {
+    "ADD_CUSTOMER": "Customer added",
+    "UPDATE_CUSTOMER": "Record updated",
+    "CHANGE_ACTIVE": "Status changed"
+  }
+}

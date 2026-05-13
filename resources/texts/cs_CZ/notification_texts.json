@@ -1,0 +1,7 @@
+{
+  "CUSTOMERS": {
+    "ADD_CUSTOMER": "Zákazník přidán",
+    "UPDATE_CUSTOMER": "Záznam upraven",
+    "CHANGE_ACTIVE": "Stav upraven"
+  }
+}
