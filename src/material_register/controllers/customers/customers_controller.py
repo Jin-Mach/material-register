@@ -70,6 +70,23 @@ class CustomersController:
                 return
             CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")
 
+    def set_current_tab_filter(self, index: int) -> None:
+        filters = {
+            0: "",
+            1: "active = 1",
+            2: "active = 0",
+        }
+        self.customers_model.setFilter(filters.get(index, ""))
+        self.customers_model.select()
+        self.update_counts()
+
+    def update_counts(self) -> None:
+        filtered = self.customers_model.rowCount()
+        total = self.customers_model.get_total_count()
+        index = self.customers_widget.tab_widget.currentIndex()
+        tab = self.customers_widget.tab_widget.widget(index)
+        tab.set_count_text(filtered, total)
+
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:
         customer.company = normalize_whitespace(customer.company)

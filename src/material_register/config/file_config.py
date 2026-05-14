@@ -31,6 +31,7 @@ UI_KEYS = [
     ("CustomersWidget", "mainCustomersViewText"),
     ("CustomersWidget", "activeCustomersViewText"),
     ("CustomersWidget", "inactiveCustomersViewText"),
+    ("CustomersTabWidget", "countLabelText"),
     ("CustomersView", "updateCustomerActionText"),
     ("CustomersView", "activeCustomerActionText"),
     ("ErrorDialog", "closeDialogButtonText"),

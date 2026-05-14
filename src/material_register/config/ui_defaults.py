@@ -22,6 +22,9 @@ DEFAULT_TEXTS = {
     "activeCustomersViewText": "Active",
     "inactiveCustomersViewText": "Inactive"
   },
+  "CustomersTabWidget": {
+    "countLabelText": "Displayed:"
+  },
   "CustomersView": {
     "updateCustomerActionText": "Edit record",
     "activeCustomerActionText": "Activate/Deactivate customer"

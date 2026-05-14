@@ -116,6 +116,13 @@ class CustomersModel(BaseSqlTableModel):
             return False
         return query.next()
 
+    def get_total_count(self) -> int:
+        query = QSqlQuery(self.database)
+        query.exec("SELECT COUNT(*) FROM customers")
+        if query.next():
+            return query.value(0)
+        return 0
+
     @staticmethod
     def _set_company_column(record: QSqlRecord) -> str:
         company = record.value("company")
@@ -124,7 +131,3 @@ class CustomersModel(BaseSqlTableModel):
         first = record.value("first_name") or ""
         last = record.value("last_name") or ""
         return f"{first.capitalize()} {last.capitalize()}".strip()
-
-    @staticmethod
-    def _basic_filter() -> str:
-        return "active = 1"
