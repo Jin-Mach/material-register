@@ -3,10 +3,12 @@
     "titleText": "Main window title"
   },
   "SidePanel": {
-    "registerButtonText": "Movements",
-    "registerButtonTooltipText": "Displays material movements"
+    "transactionsButtonText": "Movements",
+    "transactionsButtonTooltipText": "Displays material movements",
+    "customersButtonText": "Customers",
+    "customersButtonTooltipText": "Displays list of customers"
   },
-  "ActionsWidget": {
+  "TransactionsActionsWidget": {
     "addTransactionButtonTooltipText": "Add a new record",
     "deleteTransactionButtonTooltipText": "Delete selected record"
   },
@@ -15,11 +17,20 @@
     "updateCustomerButtonTooltipText": "Edit an existing customer",
     "activeCustomerButtonTooltipText": "Activate/Deactivate an existing customer"
   },
+  "CustomersWidget": {
+    "mainCustomersViewText": "Overview",
+    "activeCustomersViewText": "Active",
+    "inactiveCustomersViewText": "Inactive"
+  },
+  "CustomersView": {
+    "updateCustomerActionText": "Edit record",
+    "activeCustomerActionText": "Activate/Deactivate customer"
+  },
   "ErrorDialog": {
-  "closeDialogButtonText": "Close",
-  "closeDialogButtonTooltipText": "Close the error dialog",
-  "closeAppButtonText": "Exit",
-  "closeAppButtonTooltipText": "Exit the application"
+    "closeDialogButtonText": "Close",
+    "closeDialogButtonTooltipText": "Close the error dialog",
+    "closeAppButtonText": "Exit",
+    "closeAppButtonTooltipText": "Exit the application"
   },
   "CustomerDialog": {
     "titleText": "Customer",

@@ -17,6 +17,11 @@
     "updateCustomerButtonTooltipText": "Upravit existujícího zákazníka",
     "activeCustomerButtonTooltipText": "Aktivovat/Deaktivovat existujícího zákazníka"
   },
+  "CustomersWidget": {
+    "mainCustomersViewText": "Přehled",
+    "activeCustomersViewText": "Aktivní",
+    "inactiveCustomersViewText": "Neaktivní"
+  },
   "CustomersView": {
     "updateCustomerActionText": "Upravit záznam",
     "activeCustomerActionText": "Aktivovat/Deaktivovat zákazníka"

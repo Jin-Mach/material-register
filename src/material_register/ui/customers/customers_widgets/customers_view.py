@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QTableView, QHeaderView
 
+from material_register.config.ui_defaults import DEFAULT_TEXTS
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.customers.customers_widgets.customers_context_menu import CustomersContextMenu
 from material_register.ui.setup.headers_texts import HeadersTexts
@@ -24,6 +25,10 @@ class CustomersView(QTableView):
 
     def setModel(self, model: CustomersModel) -> None:
         super().setModel(model)
+        model.rowsInserted.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
+        model.rowsRemoved.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
+        model.dataChanged.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
+        model.modelReset.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
 
     def setup_ui(self) -> None:
         model = self.model()
@@ -37,7 +42,7 @@ class CustomersView(QTableView):
         if not self.menu_texts:
             ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_texts_error = error
-            self.menu_texts = UiTexts.DEFAULT_TEXTS.get(self.__class__.__name__, {})
+            self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
         self._setup_columns(model)
         self._setup_headers(model)
         self._setup_behavior()
@@ -56,9 +61,14 @@ class CustomersView(QTableView):
                 header.setSectionResizeMode(col, QHeaderView.ResizeMode.Stretch)
             else:
                 header.setSectionResizeMode(col, QHeaderView.ResizeMode.Fixed)
-        self.update_headers(model)
+        self._update_headers(model)
 
-    def update_headers(self, model: CustomersModel) -> None:
+    def _refresh_headers(self, *args: object) -> None:
+        model = self.model()
+        if isinstance(model, CustomersModel):
+            self._update_headers(model)
+
+    def _update_headers(self, model: CustomersModel) -> None:
         address_column = model.fieldIndex("address")
         active_column = model.fieldIndex("active")
         self.resizeColumnsToContents()

@@ -37,7 +37,6 @@ class CustomersController:
             if not self.customers_model.add_customer(customer):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.add_customers")
                 return
-            self.customers_widget.customers_view.update_headers(self.customers_model)
             CustomersController._notification_handler(self.notification_texts, "ADD_CUSTOMER", "New customer added")
 
     def update_customer(self, customer_index: QModelIndex) -> None:
@@ -56,7 +55,6 @@ class CustomersController:
             if not self.customers_model.update_customer(customer_id, customer):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.update_customers")
                 return
-            self.customers_widget.customers_view.update_headers(self.customers_model)
             CustomersController._notification_handler(self.notification_texts, "UPDATE_CUSTOMER", "Record updated")
 
     def change_customer_active(self, customer_index: QModelIndex) -> None:
