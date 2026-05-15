@@ -18,9 +18,7 @@ DEFAULT_TEXTS = {
     "activeCustomerButtonTooltipText": "Activate/Deactivate an existing customer"
   },
   "CustomersWidget": {
-    "mainCustomersViewText": "Overview",
-    "activeCustomersViewText": "Active",
-    "inactiveCustomersViewText": "Inactive"
+    "countLabelText:": "Showing: "
   },
   "CustomersView": {
     "updateCustomerActionText": "Edit record",
