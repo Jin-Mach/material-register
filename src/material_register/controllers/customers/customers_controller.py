@@ -37,6 +37,7 @@ class CustomersController:
             if not self.customers_model.add_customer(customer):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.add_customers")
                 return
+            self.update_counts()
             CustomersController._notification_handler(self.notification_texts, "ADD_CUSTOMER", "New customer added")
 
     def update_customer(self, customer_index: QModelIndex) -> None:
@@ -70,22 +71,10 @@ class CustomersController:
                 return
             CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")
 
-    def set_current_tab_filter(self, index: int) -> None:
-        filters = {
-            0: "",
-            1: "active = 1",
-            2: "active = 0",
-        }
-        self.customers_model.setFilter(filters.get(index, ""))
-        self.customers_model.select()
-        self.update_counts()
-
     def update_counts(self) -> None:
         filtered = self.customers_model.rowCount()
         total = self.customers_model.get_total_count()
-        index = self.customers_widget.tab_widget.currentIndex()
-        tab = self.customers_widget.tab_widget.widget(index)
-        tab.set_count_text(filtered, total)
+        self.customers_widget.set_count_text(filtered, total)
 
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:

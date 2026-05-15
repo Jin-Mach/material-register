@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class CustomersView(QTableView):
-    HIDDEN_COLUMNS = ("id", "first_name", "last_name", "notes", "created_at", "company_normalized",
+    HIDDEN_COLUMNS = ("id", "first_name", "last_name", "notes", "created_at", "active", "company_normalized",
                       "first_name_normalized", "last_name_normalized", "address_normalized")
     HORIZONTAL_PADDING = 50
 
@@ -25,10 +25,9 @@ class CustomersView(QTableView):
 
     def setModel(self, model: CustomersModel) -> None:
         super().setModel(model)
-        model.rowsInserted.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
-        model.rowsRemoved.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
-        model.dataChanged.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
-        model.modelReset.connect(self._refresh_headers, Qt.ConnectionType.UniqueConnection)
+        model.rowsInserted.connect(self._refresh_headers)
+        model.rowsRemoved.connect(self._refresh_headers)
+        model.dataChanged.connect(self._refresh_headers)
 
     def setup_ui(self) -> None:
         model = self.model()

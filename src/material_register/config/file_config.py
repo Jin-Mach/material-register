@@ -31,7 +31,6 @@ UI_KEYS = [
     ("CustomersWidget", "mainCustomersViewText"),
     ("CustomersWidget", "activeCustomersViewText"),
     ("CustomersWidget", "inactiveCustomersViewText"),
-    ("CustomersTabWidget", "countLabelText"),
     ("CustomersView", "updateCustomerActionText"),
     ("CustomersView", "activeCustomerActionText"),
     ("ErrorDialog", "closeDialogButtonText"),
@@ -59,7 +58,6 @@ HEADERS_KEYS = [
     ("CustomersView", "company"),
     ("CustomersView", "document_number"),
     ("CustomersView", "address"),
-    ("CustomersView", "active"),
 ]
 
 ERROR_KEYS = [

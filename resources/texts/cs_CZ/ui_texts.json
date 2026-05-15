@@ -22,9 +22,6 @@
     "activeCustomersViewText": "Aktivní",
     "inactiveCustomersViewText": "Neaktivní"
   },
-  "CustomersTabWidget": {
-    "countLabelText": "Zobrazeno:"
-  },
   "CustomersView": {
     "updateCustomerActionText": "Upravit záznam",
     "activeCustomerActionText": "Aktivovat/Deaktivovat zákazníka"
