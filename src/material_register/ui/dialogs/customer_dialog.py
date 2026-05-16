@@ -32,7 +32,6 @@ class CustomerDialog(QDialog):
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
-        self._update_save_button_state()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -307,6 +306,7 @@ class CustomerDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
+        self._update_save_button_state()
         self.adjustSize()
         self.setFixedSize(self.size())
         centre_dialog(self)

@@ -3,5 +3,9 @@
     "ADD_CUSTOMER": "Zákazník přidán",
     "UPDATE_CUSTOMER": "Záznam upraven",
     "CHANGE_ACTIVE": "Stav upraven"
+  },
+  "CATALOG": {
+    "ADD_CATEGORY": "Kategorie přidána",
+    "UPDATE_CATEGORY": "Kategorie upravena"
   }
 }

@@ -39,7 +39,7 @@ class CustomersController:
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.add_customers")
                 return
             self.update_counts()
-            CustomersController._notification_handler(self.notification_texts, "ADD_CUSTOMER", "New customer added")
+            CustomersController._notification_handler(self.notification_texts, "ADD_CUSTOMER", "Customer added")
 
     def update_customer(self, customer_index: QModelIndex) -> None:
         customer_id = CustomersController._get_id_from_index(customer_index)

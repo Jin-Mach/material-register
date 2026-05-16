@@ -110,10 +110,23 @@ class CategoryDialog(QDialog):
             self.notes_input.setTextCursor(cursor)
         self.notes_count_label.setText(f"{self.notes_count_text} {len(text)}/{self.NOTES_LENGTH}")
 
+    def _update_required_styles(self) -> None:
+        self._set_required_style(self.category_name_input)
+
+    def _set_required_style(self, widget) -> None:
+        text = widget.text().strip()
+        is_empty = not text
+        exists = self.catalog_widget.catalog_controller.category_exists(text) if text else False
+        if widget.isEnabled() and (is_empty or exists):
+            widget.setStyleSheet("QLineEdit { background: #ffdddd; border: 1px solid red; }")
+        else:
+            widget.setStyleSheet("")
+
     def _update_save_button_state(self) -> None:
         self.save_button.setEnabled(self._is_input_valid() and self._is_category_valid())
 
     def _on_form_changed(self) -> None:
+        self._update_required_styles()
         self._update_save_button_state()
 
     def _is_input_valid(self) -> bool:
@@ -136,6 +149,8 @@ class CategoryDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
+        self._update_required_styles()
+        self._update_save_button_state()
         self.adjustSize()
         self.setFixedSize(self.size())
         centre_dialog(self)

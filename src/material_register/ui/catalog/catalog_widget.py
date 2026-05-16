@@ -15,6 +15,7 @@ class CatalogWidget(QWidget):
         super().__init__(stacked_widget)
         self.catalog_controller = CatalogController(self)
         self.setLayout(self._create_ui())
+        self._setup_ui()
         self._create_connection()
 
     def _create_ui(self) -> QHBoxLayout:
@@ -38,5 +39,11 @@ class CatalogWidget(QWidget):
         main_layout.addWidget(self.details_widget, 1)
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._reload_data()
+
     def _create_connection(self) -> None:
         self.add_category_action.clicked.connect(self.catalog_controller.add_category)
+
+    def _reload_data(self) -> None:
+        self.catalog_controller.load_categories_to_tree()
