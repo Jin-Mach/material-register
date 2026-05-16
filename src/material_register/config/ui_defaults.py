@@ -48,5 +48,15 @@ DEFAULT_TEXTS = {
     "saveButtonTooltipText": "Saves customer",
     "closeButtonText": "Close",
     "closeButtonTooltipText": "Closes dialog"
+  },
+  "CategoryDialog": {
+    "titleText": "Category",
+    "categoryNameLabelText": "Category name",
+    "notesLabelText": "Notes",
+    "notesCountLabelText": "Characters:",
+    "saveButtonText": "Save",
+    "saveButtonTooltipText": "Saves the category",
+    "closeButtonText": "Close",
+    "closeButtonTooltipText": "Closes the dialog"
   }
 }

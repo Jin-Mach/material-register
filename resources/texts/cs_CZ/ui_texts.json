@@ -48,5 +48,15 @@
     "saveButtonTooltipText": "Uloží zákazníka",
     "closeButtonText": "Zavřít",
     "closeButtonTooltipText": "Zavře dialog"
+  },
+  "CategoryDialog": {
+    "titleText": "Kategorie",
+    "categoryNameLabelText": "Název kategorie",
+    "notesLabelText": "Poznámky",
+    "notesCountLabelText": "Znaky:",
+    "saveButtonText": "Uložit",
+    "saveButtonTooltipText": "Uloží kategorii",
+    "closeButtonText": "Zavřít",
+    "closeButtonTooltipText": "Zavře dialog"
   }
 }

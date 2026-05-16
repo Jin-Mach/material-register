@@ -24,9 +24,9 @@ class CustomerDialog(QDialog):
 
     def __init__(self, customers_widget: "CustomersWidget", mode: str = ADD_MODE, customer_data: "Customer" = None) -> None:
         super().__init__(customers_widget)
+        self.setMinimumWidth(400)
         self.mode = mode
         self.customer_data = customer_data
-        self.setMinimumWidth(400)
         self.customers_widget = customers_widget
         self.mode = mode
         self.setLayout(self._create_ui())
@@ -307,4 +307,6 @@ class CustomerDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
+        self.adjustSize()
+        self.setFixedSize(self.size())
         centre_dialog(self)
