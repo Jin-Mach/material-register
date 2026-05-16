@@ -14,7 +14,9 @@ REQUIRED_JSON_FILES = [
 ]
 
 REQUIRED_IMAGES = [
-    Path("SplashScreen.jpg"),
+    Path("system") / "SplashScreen.jpg",
+    Path("customers") / "activeIcon.png",
+    Path("customers") / "inactiveIcon.png",
 ]
 
 UI_KEYS = [
@@ -26,8 +28,7 @@ UI_KEYS = [
     ("TransactionsActionsWidget", "addTransactionButtonTooltipText"),
     ("TransactionsActionsWidget", "deleteTransactionButtonTooltipText"),
     ("CustomersActionsWidget", "addCustomerButtonTooltipText"),
-    ("CustomersActionsWidget", "updateCustomerButtonTooltipText"),
-    ("CustomersActionsWidget", "activeCustomerButtonTooltipText"),
+    ("CustomersActionsWidget", "searchLineEditPlaceholderText"),
     ("CustomersWidget", "countLabelText"),
     ("CustomersView", "updateCustomerActionText"),
     ("CustomersView", "activeCustomerActionText"),

@@ -30,7 +30,7 @@ class SplashScreen(QWidget):
         return main_layout
 
     def _load_pixmap(self, pixmap_name: str) -> QPixmap | None:
-        image_path = self.resources_path / "images" / f"{pixmap_name}.jpg"
+        image_path = self.resources_path / "images" / "system" / f"{pixmap_name}.jpg"
         if image_path.exists():
             pixmap = QPixmap(str(image_path))
             pixmap = pixmap.scaled(800, 600, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)

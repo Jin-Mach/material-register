@@ -6,6 +6,7 @@ from PySide6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery, QSqlRecord
 
 from material_register.db.models.base_sql_table_model import BaseSqlTableModel
 from material_register.domain.customers_dataclass import Customer
+from material_register.ui.setup.ui_icons import UiIcons
 
 
 class CustomersModel(BaseSqlTableModel):
@@ -24,8 +25,18 @@ class CustomersModel(BaseSqlTableModel):
             column = index.column()
             if column == self.fieldIndex("company"):
                 return self._set_company_column(record)
+            if column == self.fieldIndex("active"):
+                return None
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
+        if role == Qt.ItemDataRole.DecorationRole:
+            record = self.record(index.row())
+            column = index.column()
+            if column == self.fieldIndex("active"):
+                if record.value("active") == 1:
+                    return UiIcons.ACTIVE_ICON
+                else:
+                    return UiIcons.INACTIVE_ICON
         if role == Qt.ItemDataRole.UserRole:
             record = self.record(index.row())
             return record.value("id")

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLineEdit
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -18,18 +18,17 @@ class CustomersActionsWidget(QWidget):
         main_layout = QHBoxLayout()
         self.add_customer_button = QPushButton("Add")
         self.add_customer_button.setObjectName("addCustomerButton")
-        self.update_customer_button = QPushButton("Update")
-        self.update_customer_button.setObjectName("updateCustomerButton")
-        self.active_customer_button = QPushButton("Active")
-        self.active_customer_button.setObjectName("activeCustomerButton")
+        self.search_line_edit = QLineEdit()
+        self.search_line_edit.setObjectName("searchLineEdit")
+        self.search_line_edit.setMinimumWidth(600)
         main_layout.addWidget(self.add_customer_button)
-        main_layout.addWidget(self.update_customer_button)
-        main_layout.addWidget(self.active_customer_button)
+        main_layout.addStretch()
+        main_layout.addWidget(self.search_line_edit)
         main_layout.addStretch()
         return main_layout
 
     def _ui_setup(self) -> None:
-        widgets = [self.add_customer_button, self.update_customer_button,]
+        widgets = [self.add_customer_button, self.search_line_edit]
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")

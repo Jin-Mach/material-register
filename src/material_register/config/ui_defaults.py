@@ -14,8 +14,7 @@ DEFAULT_TEXTS = {
   },
   "CustomersActionsWidget": {
     "addCustomerButtonTooltipText": "Add a new customer",
-    "updateCustomerButtonTooltipText": "Edit an existing customer",
-    "activeCustomerButtonTooltipText": "Activate/Deactivate an existing customer"
+    "searchLineEditPlaceholderText": "Enter search text..."
   },
   "CustomersWidget": {
     "countLabelText:": "Showing: "

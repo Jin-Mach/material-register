@@ -6,7 +6,9 @@ FILES_MAP = {
 }
 
 ICONS_MAP = {
-    "images/SplashScreen.jpg": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/SplashScreen.jpg"
+    "system/SplashScreen.jpg":"https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/system/SplashScreen.jpg",
+    "customers/activeIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/customers/activeIcon.png",
+    "customers/inactiveIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/customers/inactiveIcon.png",
 }
 
 FILES_SUFFIXES = [".json", ".qss"]

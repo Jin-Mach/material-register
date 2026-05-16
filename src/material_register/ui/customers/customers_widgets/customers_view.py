@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class CustomersView(QTableView):
-    HIDDEN_COLUMNS = ("id", "first_name", "last_name", "notes", "created_at", "active", "company_normalized",
+    HIDDEN_COLUMNS = ("id", "first_name", "last_name", "notes", "created_at", "company_normalized",
                       "first_name_normalized", "last_name_normalized", "address_normalized")
     HORIZONTAL_PADDING = 50
 
@@ -82,7 +82,7 @@ class CustomersView(QTableView):
         self.verticalHeader().hide()
         self.setEditTriggers(QTableView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QTableView.SelectionMode.SingleSelection)
-        self.setSelectionBehavior(QTableView.SelectionBehavior.SelectItems)
+        self.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.setCornerButtonEnabled(False)
         self.setAlternatingRowColors(True)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)

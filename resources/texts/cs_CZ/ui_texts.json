@@ -14,8 +14,7 @@
   },
   "CustomersActionsWidget": {
     "addCustomerButtonTooltipText": "Přidat nového zákazníka",
-    "updateCustomerButtonTooltipText": "Upravit existujícího zákazníka",
-    "activeCustomerButtonTooltipText": "Aktivovat/Deaktivovat existujícího zákazníka"
+    "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
   "CustomersWidget": {
     "countLabelText": "Zobrazeno: "

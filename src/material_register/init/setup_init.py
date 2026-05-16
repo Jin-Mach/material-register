@@ -7,6 +7,7 @@ from material_register.providers.language_provider import LanguageProvider
 from material_register.providers.paths_provider import PathsProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.ui.setup.headers_texts import HeadersTexts
+from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
 
 
@@ -31,6 +32,7 @@ class SetupInit:
             HeadersTexts.setup_init(TextsProvider.HEADERS_TEXTS)
             ErrorTexts.setup_init(TextsProvider.ERROR_TEXTS)
             MessageBoxes.setup_init(TextsProvider.CONFIRM_TEXTS)
+            UiIcons.setup_init(PathsProvider.resources)
             return True, ""
         except Exception as e:
             ErrorHandler.handle_error(e, "error", "critical")

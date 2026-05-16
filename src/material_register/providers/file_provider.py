@@ -33,8 +33,8 @@ class FileProvider:
     @classmethod
     def _check_images(cls, base_path: Path) -> set[Path]:
         invalid_files = set()
-        for file in REQUIRED_IMAGES:
-            image_path = base_path / file
+        for path in REQUIRED_IMAGES:
+            image_path = base_path / path
             if not image_path.exists():
                 invalid_files.add(image_path)
         return invalid_files
