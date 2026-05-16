@@ -31,6 +31,7 @@ DEFAULT_TEXTS = {
   },
   "CustomerDialog": {
     "titleText": "Customer",
+    "createdLabelText": "Created:",
     "subjectTypePlaceholderText": "Select customer type...",
     "subjectTypeItems": ["Individual", "Company"],
     "companyLabelText": "Company:",

@@ -37,6 +37,7 @@ UI_KEYS = [
     ("ErrorDialog", "closeAppButtonText"),
     ("ErrorDialog", "closeAppButtonTooltipText"),
     ("CustomerDialog", "titleText"),
+    ("CustomerDialog", "createdLabelText"),
     ("CustomerDialog", "subjectTypePlaceholderText"),
     ("CustomerDialog", "subjectTypeItems"),
     ("CustomerDialog", "companyLabelText"),

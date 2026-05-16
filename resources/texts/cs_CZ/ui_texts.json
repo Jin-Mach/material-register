@@ -31,6 +31,7 @@
   },
   "CustomerDialog": {
     "titleText": "Zákazník",
+    "createdLabelText": "Založeno:",
     "subjectTypePlaceholderText": "Vyber typ zákazníka...",
     "subjectTypeItems": ["Fyzická osoba", "Právnická osoba"],
     "companyLabelText": "Firma:",

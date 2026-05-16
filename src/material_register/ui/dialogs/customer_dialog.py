@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QRegularExpression
@@ -35,6 +36,9 @@ class CustomerDialog(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        created_layout = QHBoxLayout()
+        self.created_label = QLabel()
+        self.created_label.setObjectName("createdLabel")
         subject_layout = QHBoxLayout()
         self.subject_type = QComboBox()
         self.subject_type.setObjectName("subjectType")
@@ -70,6 +74,9 @@ class CustomerDialog(QDialog):
         self.save_button.setObjectName("saveButton")
         self.close_button = button_box.button(QDialogButtonBox.StandardButton.Close)
         self.close_button.setObjectName("closeButton")
+        created_layout.addStretch()
+        created_layout.addWidget(self.created_label)
+        created_layout.addStretch()
         subject_layout.addStretch()
         subject_layout.addWidget(self.subject_type)
         subject_layout.addStretch()
@@ -83,6 +90,7 @@ class CustomerDialog(QDialog):
         form_layout.addRow(self.notes_input)
         notes_count_layout.addWidget(self.notes_count_label)
         notes_count_layout.addStretch()
+        main_layout.addLayout(created_layout)
         main_layout.addLayout(subject_layout)
         main_layout.addLayout(form_layout)
         main_layout.addLayout(notes_count_layout)
@@ -110,6 +118,7 @@ class CustomerDialog(QDialog):
 
     def _setup_texts(self, widgets: list) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.created_label_text = texts.get(f"{self.created_label.objectName()}Text", "Created:")
         self.notes_count_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
         if UiTexts.set_ui_texts(self, widgets):
             return
@@ -262,6 +271,7 @@ class CustomerDialog(QDialog):
         return not self.customers_widget.customers_model.document_exists(document, ignored_id=ignored_id)
 
     def _set_add_mode(self) -> None:
+        self.created_label.setText(f"{self.created_label_text} {datetime.today().strftime("%d.%m.%Y")}")
         self.subject_type.setCurrentIndex(-1)
         self._apply_type_state()
 
@@ -274,6 +284,7 @@ class CustomerDialog(QDialog):
             self.address_input: customer_data.address,
             self.active_checkbox: customer_data.active,
             self.notes_input: customer_data.notes,
+            self.created_label: customer_data.created_at
         }
         self.subject_type.blockSignals(True)
         if customer_data.company is not None:
@@ -283,12 +294,16 @@ class CustomerDialog(QDialog):
         self.subject_type.blockSignals(False)
         self._apply_type_state()
         for widget, value in customer_input_map.items():
+            if isinstance(widget, QLabel):
+                date = datetime.fromisoformat(value)
+                widget.setText(f"{self.created_label_text} {date.strftime("%d.%m.%Y")}")
             if isinstance(widget, QLineEdit):
                 widget.setText(value)
             if isinstance(widget, QCheckBox):
                 widget.setChecked(value)
             if isinstance(widget, QTextEdit):
                 widget.setPlainText(value)
+                self.notes_count_label.setText(f"{self.notes_count_text} {len(value)}/{self.NOTES_LENGTH}")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
