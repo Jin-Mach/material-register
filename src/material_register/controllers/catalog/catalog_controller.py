@@ -37,6 +37,31 @@ class CatalogController:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.add_category")
                 return
             self.load_categories_to_tree()
+            self._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
+
+    def update_category(self) -> None:
+        item = self.catalog_widget.tree_widget.currentItem()
+        if item is None:
+            return
+        category_id = item.data(0, Qt.ItemDataRole.UserRole)
+        if category_id is None or category_id < 0:
+            return
+        category_data = CatalogQueries.get_category_by_id(self.db_connection, category_id)
+        if category_data is None:
+            ErrorDialog().show_dialog("DATABASE_ERROR", False)
+            return
+        dialog = CategoryDialog(self.catalog_widget, mode="UPDATE", category_data=category_data)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            data = dialog.get_category_data()
+            if data is None:
+                ErrorDialog().show_dialog("UNKNOWN_ERROR", False)
+                return
+            ok, error = CatalogQueries.update_category(self.db_connection, category_id, data["name"], data["notes"])
+            if not ok:
+                CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
+                return
+            self.load_categories_to_tree()
+            CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
     def load_categories_to_tree(self) -> None:
         categories = CatalogQueries.get_categories(self.db_connection)

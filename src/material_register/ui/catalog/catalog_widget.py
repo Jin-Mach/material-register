@@ -44,6 +44,7 @@ class CatalogWidget(QWidget):
 
     def _create_connection(self) -> None:
         self.add_category_action.clicked.connect(self.catalog_controller.add_category)
+        self.update_category_action.clicked.connect(self.catalog_controller.update_category)
 
     def _reload_data(self) -> None:
         self.catalog_controller.load_categories_to_tree()

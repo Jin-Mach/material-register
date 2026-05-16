@@ -4,10 +4,10 @@ from PySide6.QtSql import QSqlQuery, QSqlDatabase
 class CatalogQueries:
 
     @staticmethod
-    def create_category(connection: QSqlDatabase, name: str, notes: str):
+    def create_category(connection: QSqlDatabase, category_name: str, notes: str) -> tuple[bool, str]:
         query = QSqlQuery(connection)
         query.prepare("INSERT INTO categories (name, notes) VALUES (?, ?)")
-        query.addBindValue(name)
+        query.addBindValue(category_name)
         query.addBindValue(notes)
         ok = query.exec()
         error = ""
@@ -16,12 +16,17 @@ class CatalogQueries:
         return ok, error
 
     @staticmethod
-    def update_category(connection: QSqlDatabase, category_id: int, category_name: str) -> bool:
+    def update_category(connection: QSqlDatabase, category_id: int, category_name: str, notes: str) -> tuple[bool, str]:
         query = QSqlQuery(connection)
-        query.prepare("UPDATE categories SET name=? WHERE id=?")
+        query.prepare("UPDATE categories SET name=?, notes=? WHERE id=?")
         query.addBindValue(category_name)
+        query.addBindValue(notes)
         query.addBindValue(category_id)
-        return query.exec()
+        ok = query.exec()
+        error = ""
+        if not ok:
+            error = query.lastError().text()
+        return ok, error
 
     @staticmethod
     def get_categories(connection: QSqlDatabase) -> list[dict[str, int | str]]:
@@ -34,14 +39,25 @@ class CatalogQueries:
         return results
 
     @staticmethod
-    def category_exists(connection: QSqlDatabase, name: str, ignored_id: int | None = None) -> bool:
+    def category_exists(connection: QSqlDatabase, category_name: str, ignored_id: int | None = None) -> bool:
         query = QSqlQuery(connection)
         sql = "SELECT 1 FROM categories WHERE name = ?"
         if ignored_id is not None:
             sql += " AND id != ?"
         query.prepare(sql)
-        query.addBindValue(name)
+        query.addBindValue(category_name)
         if ignored_id is not None:
             query.addBindValue(ignored_id)
         query.exec()
         return query.next()
+
+    @staticmethod
+    def get_category_by_id(connection: QSqlDatabase, category_id: int) -> dict[str, str] | None:
+        query = QSqlQuery(connection)
+        query.prepare("SELECT name, notes FROM categories WHERE id = ?")
+        query.addBindValue(category_id)
+        if not query.exec():
+            return None
+        if not query.next():
+            return None
+        return {"name": query.value(0), "notes": query.value(1)}
