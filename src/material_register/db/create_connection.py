@@ -59,7 +59,10 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
     if not query.exec("""
         CREATE TABLE IF NOT EXISTS categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE
+            name TEXT NOT NULL UNIQUE,
+            notes TEXT,
+        
+            CHECK(name <> '')
         )
     """):
         return False, query
@@ -71,11 +74,15 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             category_id INTEGER,
             unit TEXT DEFAULT 'kg',
             default_price REAL DEFAULT 0,
+            notes TEXT,
             active INTEGER DEFAULT 1,
-
+        
+            CHECK(name <> ''),
+        
             FOREIGN KEY(category_id)
                 REFERENCES categories(id)
-        )
+                ON DELETE RESTRICT
+)
     """):
         return False, query
 
