@@ -25,6 +25,8 @@ UI_KEYS = [
     ("SidePanel", "transactionsButtonTooltipText"),
     ("SidePanel", "customersButtonText"),
     ("SidePanel", "customersButtonTooltipText"),
+    ("SidePanel", "catalogButtonText"),
+    ("SidePanel", "catalogButtonTooltipText"),
     ("TransactionsActionsWidget", "addTransactionButtonTooltipText"),
     ("TransactionsActionsWidget", "deleteTransactionButtonTooltipText"),
     ("CustomersActionsWidget", "addCustomerButtonTooltipText"),

@@ -6,7 +6,9 @@ DEFAULT_TEXTS = {
     "transactionsButtonText": "Movements",
     "transactionsButtonTooltipText": "Displays material movements",
     "customersButtonText": "Customers",
-    "customersButtonTooltipText": "Displays list of customers"
+    "customersButtonTooltipText": "Displays list of customers",
+    "catalogButtonText": "Catalog",
+    "catalogButtonTooltipText": "Displays the item catalog"
   },
   "TransactionsActionsWidget": {
     "addTransactionButtonTooltipText": "Add a new record",

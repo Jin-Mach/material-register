@@ -6,7 +6,9 @@
     "transactionsButtonText": "Pohyby",
     "transactionsButtonTooltipText": "Zobrazí pohyby materiálu",
     "customersButtonText": "Zákazníci",
-    "customersButtonTooltipText": "Zobrazí seznam zákazníků"
+    "customersButtonTooltipText": "Zobrazí seznam zákazníků",
+    "catalogButtonText": "Katalog",
+    "catalogButtonTooltipText": "Zobrazí katalog položek"
   },
   "TransactionsActionsWidget": {
     "addTransactionButtonTooltipText": "Přidat nový záznam",
