@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QDialog, QTreeWidgetItem
 
 from material_register.core.app_context import AppContext
 from material_register.db.queries.catalog_queries import CatalogQueries
+from material_register.domain.category_dataclass import Category
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
@@ -67,10 +68,16 @@ class CatalogController:
         categories = CatalogQueries.get_categories(self.db_connection)
         tree = self.catalog_widget.tree_widget
         tree.clear()
-        for cat in categories:
-            item = QTreeWidgetItem([cat["name"]])
-            item.setData(0, Qt.ItemDataRole.UserRole, cat["id"])
+        for category in categories:
+            item = QTreeWidgetItem([category.name])
+            item.setData(0, Qt.ItemDataRole.UserRole, category)
             tree.addTopLevelItem(item)
+
+    def get_selected_category(self) -> Category | None:
+        category= self.catalog_widget.tree_widget.get_selected_id()
+        if category is None:
+            return None
+        return CatalogQueries.get_category_by_id(self.db_connection, category.id)
 
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return CatalogQueries.category_exists(self.db_connection, name, ignored_id)

@@ -1,5 +1,7 @@
 from PySide6.QtSql import QSqlQuery, QSqlDatabase
 
+from material_register.domain.category_dataclass import Category
+
 
 class CatalogQueries:
 
@@ -29,13 +31,19 @@ class CatalogQueries:
         return ok, error
 
     @staticmethod
-    def get_categories(connection: QSqlDatabase) -> list[dict[str, int | str]]:
+    def get_categories(connection: QSqlDatabase) -> list[Category]:
         query = QSqlQuery(connection)
-        if not query.exec("SELECT id, name notes FROM categories ORDER BY name"):
+        if not query.exec("SELECT id, name, notes FROM categories ORDER BY name"):
             return []
         results = []
         while query.next():
-            results.append({"id": query.value(0), "name": query.value(1)})
+            results.append(
+                Category(
+                    id=query.value(0),
+                    name=query.value(1),
+                    notes=query.value(2),
+                )
+            )
         return results
 
     @staticmethod
@@ -52,7 +60,7 @@ class CatalogQueries:
         return query.next()
 
     @staticmethod
-    def get_category_by_id(connection: QSqlDatabase, category_id: int) -> dict[str, str] | None:
+    def get_category_by_id(connection: QSqlDatabase, category_id: int) -> Category | None:
         query = QSqlQuery(connection)
         query.prepare("SELECT name, notes FROM categories WHERE id = ?")
         query.addBindValue(category_id)
@@ -60,4 +68,8 @@ class CatalogQueries:
             return None
         if not query.next():
             return None
-        return {"name": query.value(0), "notes": query.value(1)}
+        return Category(
+            id=category_id,
+            name=query.value(0),
+            notes=query.value(1)
+        )

@@ -4,7 +4,7 @@ from PySide6.QtCore import QRegularExpression
 from PySide6.QtGui import QShowEvent, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox
 
-
+from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
@@ -19,7 +19,8 @@ class CategoryDialog(QDialog):
     UPDATE_MODE = "UPDATE"
     NOTES_LENGTH = 200
 
-    def __init__(self, catalog_widget: "CatalogWidget", mode: str = ADD_MODE, category_data: dict | None = None) -> None:
+    def __init__(self, catalog_widget: "CatalogWidget", mode: str = ADD_MODE,
+                 category_data: Category | None = None) -> None:
         super().__init__(catalog_widget)
         self.catalog_widget = catalog_widget
         self.mode = mode
@@ -93,9 +94,9 @@ class CategoryDialog(QDialog):
         self.notes_input.clear()
         self._update_notes_count()
 
-    def _set_update_mode(self, category_data: dict) -> None:
-        self.category_name_input.setText(category_data.get("name", ""))
-        self.notes_input.setPlainText(category_data.get("notes", ""))
+    def _set_update_mode(self, category_data: Category) -> None:
+        self.category_name_input.setText(category_data.name or "")
+        self.notes_input.setPlainText(category_data.notes or "")
         self._update_notes_count()
 
     def _update_notes_count(self) -> None:
@@ -139,7 +140,7 @@ class CategoryDialog(QDialog):
             return False
         ignored_id = None
         if self.mode != self.ADD_MODE and self.category_data:
-            ignored_id = self.category_data.get("id")
+            ignored_id = self.category_data.id
         return not self.catalog_widget.catalog_controller.category_exists(category_name, ignored_id=ignored_id)
 
     def get_category_data(self) -> dict | None:

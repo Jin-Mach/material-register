@@ -40,11 +40,16 @@ class CatalogWidget(QWidget):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self.update_category_action.setEnabled(False)
         self._reload_data()
 
     def _create_connection(self) -> None:
+        self.tree_widget.itemSelectionChanged.connect(self._on_selection_changed)
         self.add_category_action.clicked.connect(self.catalog_controller.add_category)
         self.update_category_action.clicked.connect(self.catalog_controller.update_category)
 
     def _reload_data(self) -> None:
         self.catalog_controller.load_categories_to_tree()
+
+    def _on_selection_changed(self) -> None:
+        self.update_category_action.setEnabled(self.tree_widget.has_selection())
