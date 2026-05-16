@@ -69,7 +69,8 @@ ERROR_KEYS = [
 ]
 
 CONFIRM_STRUCTURE = {
-    "UPDATE": ["TITLE", "TEXT", "YES", "NO"],
+    "ACTIVE": ["TITLE", "TEXT", "YES", "NO"],
+    "CUSTOMER_NOT_FOUND": ["TITLE", "TEXT", "CLOSE"],
 }
 
 NOTIFICATION_KEYS = [

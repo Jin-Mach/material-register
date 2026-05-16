@@ -4,5 +4,10 @@
     "TEXT": "Do you really want to change the status of the selected user?",
     "YES": "Change",
     "NO": "Cancel"
+  },
+  "CUSTOMER_NOT_FOUND": {
+    "TITLE": "No Results",
+    "TEXT": "No records found for the entered search term",
+    "CLOSE": "Close"
   }
 }

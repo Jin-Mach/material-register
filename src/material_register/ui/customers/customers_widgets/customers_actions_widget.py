@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLineEdit
 
 from material_register.services.error_handler import ErrorHandler
@@ -11,8 +12,11 @@ if TYPE_CHECKING:
 class CustomersActionsWidget(QWidget):
     def __init__(self, customer_widget: "CustomersWidget") -> None:
         super().__init__(customer_widget)
+        self.customer_widget = customer_widget
         self.setLayout(self._create_ui())
         self._ui_setup()
+        self._create_connection()
+        self._apply_timer()
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
@@ -35,3 +39,18 @@ class CustomersActionsWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
+
+    def _create_connection(self) -> None:
+        self.search_line_edit.textChanged.connect(self._on_text_changed)
+
+    def _on_text_changed(self) -> None:
+        self.filter_timer.start()
+
+    def _apply_filter(self) -> None:
+        self.customer_widget.customers_controller.filter_customers(self.search_line_edit.text().strip())
+
+    def _apply_timer(self) -> None:
+        self.filter_timer =QTimer()
+        self.filter_timer.setSingleShot(True)
+        self.filter_timer.setInterval(300)
+        self.filter_timer.timeout.connect(self._apply_filter)

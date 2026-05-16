@@ -1,8 +1,9 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex, Qt
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QMessageBox
 
+from material_register.controllers.customers.customers_filter_helper import CustomersFilterHelper
 from material_register.core.app_context import AppContext
 from material_register.domain.customers_dataclass import Customer
 from material_register.init.models_init import ModelsSetup
@@ -70,6 +71,17 @@ class CustomersController:
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.set_active")
                 return
             CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")
+
+    def filter_customers(self, search_text: str) -> None:
+        normalized_text = normalize_whitespace(search_text)
+        final_filter = CustomersFilterHelper.get_filter(normalized_text)
+        self.customers_model.setFilter(final_filter)
+        if self.customers_model.rowCount() == 0:
+            self.update_counts()
+            MessageBoxes.show_error(self.customers_widget, "CUSTOMER_NOT_FOUND", QMessageBox.Icon.Warning)
+            self.customers_widget.action_widget.search_line_edit.clear()
+            self.customers_model.setFilter("")
+        self.update_counts()
 
     def update_counts(self) -> None:
         filtered = self.customers_model.rowCount()
