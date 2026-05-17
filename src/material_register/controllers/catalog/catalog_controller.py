@@ -42,22 +42,23 @@ class CatalogController:
 
     def update_category(self) -> None:
         item = self.catalog_widget.tree_widget.currentItem()
-        if item is None:
+        if not item:
             return
-        category_id = item.data(0, Qt.ItemDataRole.UserRole)
-        if category_id is None or category_id < 0:
+        category = item.data(0, Qt.ItemDataRole.UserRole)
+        if not isinstance(category, Category):
             return
-        category_data = CategoryQueries.get_category_by_id(self.db_connection, category_id)
-        if category_data is None:
+        if category.id is None or category.id <= 0:
+            return
+        if category is None:
             ErrorDialog().show_dialog("DATABASE_ERROR", False)
             return
-        dialog = CategoryDialog(self.catalog_widget, mode="UPDATE", category_data=category_data)
+        dialog = CategoryDialog(self.catalog_widget, mode="UPDATE", category_data=category)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             data = dialog.get_category_data()
             if data is None:
                 ErrorDialog().show_dialog("UNKNOWN_ERROR", False)
                 return
-            ok, error = CategoryQueries.update_category(self.db_connection, category_id, data["name"], data["notes"])
+            ok, error = CategoryQueries.update_category(self.db_connection, category.id, data["name"], data["notes"])
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
                 return
