@@ -10,6 +10,7 @@ from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.category_dialog import CategoryDialog
+from material_register.ui.dialogs.commodity_dialog import CommodityDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 
@@ -40,6 +41,15 @@ class CatalogController:
             self.catalog_widget.tree_widget.setCurrentItem(item)
             self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
             self._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
+
+    def add_commodity(self) -> None:
+        category = self.catalog_widget.tree_widget.get_selected_category()
+        if not category:
+            return
+        dialog = CommodityDialog(self.catalog_widget, category.id, category.name)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            commodity_data = dialog.get_commodity_data()
+            print("commodity data:", commodity_data)
 
     def update_category(self) -> None:
         item = self.catalog_widget.tree_widget.currentItem()

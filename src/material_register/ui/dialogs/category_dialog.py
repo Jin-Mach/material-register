@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QRegularExpression, Qt
-from PySide6.QtGui import QShowEvent, QRegularExpressionValidator, QFont
+from PySide6.QtGui import QShowEvent, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox
 
 from material_register.domain.category_dataclass import Category
@@ -117,9 +117,14 @@ class CategoryDialog(QDialog):
 
     def _set_required_style(self, widget) -> None:
         text = widget.text().strip()
-        is_empty = not text
-        exists = self.catalog_widget.catalog_controller.category_exists(text) if text else False
-        if widget.isEnabled() and (is_empty or exists):
+        ignored_id = None
+        if self.mode == self.UPDATE_MODE and self.category_data:
+            ignored_id = self.category_data.id
+        if not text:
+            widget.setStyleSheet("QLineEdit { background: #ffdddd; border: 1px solid red; }")
+            return
+        exists = self.catalog_widget.catalog_controller.category_exists(text, ignored_id=ignored_id)
+        if exists:
             widget.setStyleSheet("QLineEdit { background: #ffdddd; border: 1px solid red; }")
         else:
             widget.setStyleSheet("")

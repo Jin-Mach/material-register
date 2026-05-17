@@ -55,7 +55,6 @@ UI_KEYS = [
     ("CustomerDialog", "closeButtonText"),
     ("CustomerDialog", "closeButtonTooltipText"),
     ("CategoryDialog", "titleText"),
-    ("CategoryDialog", "titleText"),
     ("CategoryDialog", "categoryNameLabelText"),
     ("CategoryDialog", "notesLabelText"),
     ("CategoryDialog", "notesCountLabelText"),
@@ -63,6 +62,18 @@ UI_KEYS = [
     ("CategoryDialog", "saveButtonTooltipText"),
     ("CategoryDialog", "closeButtonText"),
     ("CategoryDialog", "closeButtonTooltipText"),
+    ("CommodityDialog", "titleText"),
+    ("CommodityDialog", "categoryLabelText"),
+    ("CommodityDialog", "nameLabelText"),
+    ("CommodityDialog", "unitLabelText"),
+    ("CommodityDialog", "defaultPriceLabelText"),
+    ("CommodityDialog", "activeLabelText"),
+    ("CommodityDialog", "notesLabelText"),
+    ("CommodityDialog", "notesCountLabelText"),
+    ("CommodityDialog", "saveButtonText"),
+    ("CommodityDialog", "saveButtonTooltipText"),
+    ("CommodityDialog", "closeButtonText"),
+    ("CommodityDialog", "closeButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [

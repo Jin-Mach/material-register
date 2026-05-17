@@ -16,7 +16,7 @@ DEFAULT_TEXTS = {
   },
   "CustomersActionsWidget": {
     "addCustomerButtonTooltipText": "Add a new customer",
-    "searchLineEditPlaceholderText": "Enter search text..."
+    "searchLineEditPlaceholderText": "Enter text to search..."
   },
   "CustomersWidget": {
     "countLabelText:": "Showing: "
@@ -56,6 +56,20 @@ DEFAULT_TEXTS = {
     "notesCountLabelText": "Characters:",
     "saveButtonText": "Save",
     "saveButtonTooltipText": "Saves the category",
+    "closeButtonText": "Close",
+    "closeButtonTooltipText": "Closes the dialog"
+  },
+  "CommodityDialog": {
+    "titleText": "Commodity",
+    "categoryLabelText": "Category:",
+    "nameLabelText": "Name:",
+    "unitLabelText": "Unit:",
+    "defaultPriceLabelText": "Unit price:",
+    "activeLabelText": "Active",
+    "notesLabelText": "Notes",
+    "notesCountLabelText": "Character count:",
+    "saveButtonText": "Save",
+    "saveButtonTooltipText": "Saves the commodity",
     "closeButtonText": "Close",
     "closeButtonTooltipText": "Closes the dialog"
   }
