@@ -8,6 +8,16 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 # noinspection PyTypeChecker
 class ErrorDialog(QDialog):
+    DEFAULT_ERROR_TEXTS = {
+        "APP_INIT_FAILED": "Application failed to start.",
+        "RESOURCES_MISSING": "Required application resources are missing.",
+        "CONNECTION_ERROR": "No internet connection available.",
+        "PERMISSION_ERROR": "Application has no permission to write to disk.",
+        "DOWNLOAD_FAILED": "Failed to download required application files.",
+        "TEXTS_LOAD_FAILED": "Failed to load application text resources.",
+        "UNKNOWN_ERROR": "An unexpected error occurred."
+    }
+
     def __init__(self) -> None:
         super().__init__()
         self.setLayout(self._create_ui())
@@ -43,7 +53,8 @@ class ErrorDialog(QDialog):
         self.close_app_button.clicked.connect(ErrorDialog._close_app)
 
     def show_dialog(self, error_key: str, close_app: bool) -> None:
-        ErrorTexts.set_error_text(error_key, self.error_text_label)
+        text = ErrorTexts.ERROR_TEXTS.get(error_key, self.DEFAULT_ERROR_TEXTS.get(error_key, "UNKNOWN_ERROR"))
+        self.error_text_label.setText(text)
         self.close_dialog_button.setVisible(not close_app)
         self.close_app_button.setVisible(close_app)
         self.exec()

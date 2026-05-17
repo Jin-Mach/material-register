@@ -19,7 +19,7 @@ DEFAULT_TEXTS = {
     "searchLineEditPlaceholderText": "Enter text to search..."
   },
   "CustomersWidget": {
-    "countLabelText:": "Showing: "
+    "countLabelText": "Showing: "
   },
   "CustomersView": {
     "updateCustomerActionText": "Edit record",

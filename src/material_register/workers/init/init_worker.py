@@ -19,6 +19,10 @@ class InitWorker(QObject):
         if not app_ok:
             self.error_signal.emit(app_error)
             return
+        setup_ok, setup_error = SetupInit.setup_init()
+        if not setup_ok:
+            self.error_signal.emit(setup_error)
+            return
         db_ok, db_error = DbInit.db_init()
         if not db_ok:
             self.error_signal.emit(db_error)
@@ -26,9 +30,5 @@ class InitWorker(QObject):
         models_ok, models_error = ModelsSetup.models_init()
         if not models_ok:
             self.error_signal.emit(models_error)
-            return
-        setup_ok, setup_error = SetupInit.setup_init()
-        if not setup_ok:
-            self.error_signal.emit(setup_error)
             return
         self.finished_signal.emit()
