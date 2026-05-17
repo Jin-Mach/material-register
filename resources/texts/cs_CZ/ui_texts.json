@@ -67,7 +67,7 @@
     "categoryLabelText": "Kategorie:",
     "nameLabelText": "Název:",
     "unitLabelText": "Jednotka:",
-    "defaultPriceLabelText": "Jednotková cena:",
+    "defaultPriceLabelText": "Jednotková cena (Kč):",
     "activeLabelText": "Aktivní",
     "notesLabelText": "Poznámky",
     "notesCountLabelText": "Počet znaků:",

@@ -124,8 +124,8 @@ class CommodityDialog(QDialog):
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-\/]{1,30}"))
-        unit_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 ./%\-]{1,15}"))
-        price_validator = QRegularExpressionValidator(QRegularExpression(r"^\d+([.,]\d{0,2})?$"))
+        unit_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 ./%\-]{1,10}"))
+        price_validator = QRegularExpressionValidator(QRegularExpression(r"^\d{1,6}([.,]\d{0,2})?$"))
         self.name_input.setValidator(name_validator)
         self.unit_input.setValidator(unit_validator)
         self.price_input.setValidator(price_validator)

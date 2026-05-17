@@ -64,7 +64,7 @@
     "categoryLabelText": "Category:",
     "nameLabelText": "Name:",
     "unitLabelText": "Unit:",
-    "defaultPriceLabelText": "Unit price:",
+    "defaultPriceLabelText": "Unit price (£):",
     "activeLabelText": "Active",
     "notesLabelText": "Notes",
     "notesCountLabelText": "Character count:",
