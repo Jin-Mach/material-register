@@ -31,13 +31,14 @@ class CatalogController:
                 dialog = ErrorDialog()
                 dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
-            name = category_data.get("name")
-            notes = category_data.get("notes")
-            ok, error = CategoryQueries.create_category(self.db_connection, name, notes)
+            ok, error = CategoryQueries.create_category(self.db_connection, category_data.name, category_data.notes)
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.add_category")
                 return
-            self.load_categories_to_tree()
+            item = self.catalog_widget.tree_widget.create_category_item(category_data)
+            self.catalog_widget.tree_widget.addTopLevelItem(item)
+            self.catalog_widget.tree_widget.setCurrentItem(item)
+            self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
             self._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
 
     def update_category(self) -> None:
@@ -54,15 +55,17 @@ class CatalogController:
             return
         dialog = CategoryDialog(self.catalog_widget, mode="UPDATE", category_data=category)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            data = dialog.get_category_data()
-            if data is None:
+            category_data = dialog.get_category_data()
+            if category_data is None:
                 ErrorDialog().show_dialog("UNKNOWN_ERROR", False)
                 return
-            ok, error = CategoryQueries.update_category(self.db_connection, category.id, data["name"], data["notes"])
+            ok, error = CategoryQueries.update_category(self.db_connection, category.id, category_data.name,
+                                                        category_data.notes)
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
                 return
             self.load_categories_to_tree()
+            self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
     def load_categories_to_tree(self) -> None:
@@ -73,12 +76,6 @@ class CatalogController:
             item = QTreeWidgetItem([category.name])
             item.setData(0, Qt.ItemDataRole.UserRole, category)
             tree.addTopLevelItem(item)
-
-    def get_selected_category(self) -> Category | None:
-        category= self.catalog_widget.tree_widget.get_selected_id()
-        if category is None:
-            return None
-        return CategoryQueries.get_category_by_id(self.db_connection, category.id)
 
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return CategoryQueries.category_exists(self.db_connection, name, ignored_id)

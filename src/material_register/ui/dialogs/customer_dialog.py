@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QRegularExpression
+from PySide6.QtCore import QRegularExpression, Qt
 from PySide6.QtGui import QRegularExpressionValidator, QShowEvent
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QTextEdit, QHBoxLayout, \
     QDialogButtonBox, QCheckBox
@@ -35,9 +35,9 @@ class CustomerDialog(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        created_layout = QHBoxLayout()
         self.created_label = QLabel()
         self.created_label.setObjectName("createdLabel")
+        self.created_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         subject_layout = QHBoxLayout()
         self.subject_type = QComboBox()
         self.subject_type.setObjectName("subjectType")
@@ -73,9 +73,6 @@ class CustomerDialog(QDialog):
         self.save_button.setObjectName("saveButton")
         self.close_button = button_box.button(QDialogButtonBox.StandardButton.Close)
         self.close_button.setObjectName("closeButton")
-        created_layout.addStretch()
-        created_layout.addWidget(self.created_label)
-        created_layout.addStretch()
         subject_layout.addStretch()
         subject_layout.addWidget(self.subject_type)
         subject_layout.addStretch()
@@ -89,7 +86,7 @@ class CustomerDialog(QDialog):
         form_layout.addRow(self.notes_input)
         notes_count_layout.addWidget(self.notes_count_label)
         notes_count_layout.addStretch()
-        main_layout.addLayout(created_layout)
+        main_layout.addWidget(self.created_label)
         main_layout.addLayout(subject_layout)
         main_layout.addLayout(form_layout)
         main_layout.addLayout(notes_count_layout)

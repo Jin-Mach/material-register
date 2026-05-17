@@ -53,3 +53,9 @@ class CatalogWidget(QWidget):
 
     def _on_selection_changed(self) -> None:
         self.update_category_action.setEnabled(self.tree_widget.has_selection())
+        self.setup_category_details_widget()
+
+    def setup_category_details_widget(self) -> None:
+        category = self.tree_widget.get_selected_category()
+        if category:
+            self.details_widget.category_detail_widget.set_category_texts(category)

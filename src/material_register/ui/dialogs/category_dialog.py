@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QRegularExpression
-from PySide6.QtGui import QShowEvent, QRegularExpressionValidator
+from PySide6.QtCore import QRegularExpression, Qt
+from PySide6.QtGui import QShowEvent, QRegularExpressionValidator, QFont
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox
 
 from material_register.domain.category_dataclass import Category
@@ -34,6 +34,7 @@ class CategoryDialog(QDialog):
         main_layout = QVBoxLayout()
         self.category_name_label = QLabel()
         self.category_name_label.setObjectName("categoryNameLabel")
+        self.category_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.category_name_input = QLineEdit()
         self.category_name_input.setObjectName("categoryNameInput")
         self.notes_label = QLabel()
@@ -143,10 +144,13 @@ class CategoryDialog(QDialog):
             ignored_id = self.category_data.id
         return not self.catalog_widget.catalog_controller.category_exists(category_name, ignored_id=ignored_id)
 
-    def get_category_data(self) -> dict | None:
+    def get_category_data(self) -> Category | None:
         if not self._is_input_valid():
             return None
-        return {"name": self.category_name_input.text().strip(), "notes": self.notes_input.toPlainText().strip(),}
+        return Category(
+            name=self.category_name_input.text().strip(),
+            notes=self.notes_input.toPlainText()
+        )
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QTreeWidget
+from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem
+
+from material_register.domain.category_dataclass import Category
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -15,8 +17,14 @@ class CatalogTreeWidget(QTreeWidget):
     def has_selection(self) -> bool:
         return self.selectionModel().hasSelection()
 
-    def get_selected_id(self) -> int | None:
+    def get_selected_category(self) -> int | None:
         item = self.currentItem()
         if item is None:
             return None
         return item.data(0, Qt.ItemDataRole.UserRole)
+
+    @staticmethod
+    def create_category_item(category: Category) -> QTreeWidgetItem:
+        item = QTreeWidgetItem([category.name])
+        item.setData(0, Qt.ItemDataRole.UserRole, category)
+        return item
