@@ -3,7 +3,7 @@ from PySide6.QtSql import QSqlQuery, QSqlDatabase
 from material_register.domain.category_dataclass import Category
 
 
-class CatalogQueries:
+class CategoryQueries:
 
     @staticmethod
     def create_category(connection: QSqlDatabase, category_name: str, notes: str) -> tuple[bool, str]:

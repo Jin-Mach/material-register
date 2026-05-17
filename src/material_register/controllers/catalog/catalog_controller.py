@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog, QTreeWidgetItem
 
 from material_register.core.app_context import AppContext
-from material_register.db.queries.catalog_queries import CatalogQueries
+from material_register.db.queries.category_queries import CategoryQueries
 from material_register.domain.category_dataclass import Category
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
@@ -33,7 +33,7 @@ class CatalogController:
                 return
             name = category_data.get("name")
             notes = category_data.get("notes")
-            ok, error = CatalogQueries.create_category(self.db_connection, name, notes)
+            ok, error = CategoryQueries.create_category(self.db_connection, name, notes)
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.add_category")
                 return
@@ -47,7 +47,7 @@ class CatalogController:
         category_id = item.data(0, Qt.ItemDataRole.UserRole)
         if category_id is None or category_id < 0:
             return
-        category_data = CatalogQueries.get_category_by_id(self.db_connection, category_id)
+        category_data = CategoryQueries.get_category_by_id(self.db_connection, category_id)
         if category_data is None:
             ErrorDialog().show_dialog("DATABASE_ERROR", False)
             return
@@ -57,7 +57,7 @@ class CatalogController:
             if data is None:
                 ErrorDialog().show_dialog("UNKNOWN_ERROR", False)
                 return
-            ok, error = CatalogQueries.update_category(self.db_connection, category_id, data["name"], data["notes"])
+            ok, error = CategoryQueries.update_category(self.db_connection, category_id, data["name"], data["notes"])
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
                 return
@@ -65,7 +65,7 @@ class CatalogController:
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
     def load_categories_to_tree(self) -> None:
-        categories = CatalogQueries.get_categories(self.db_connection)
+        categories = CategoryQueries.get_categories(self.db_connection)
         tree = self.catalog_widget.tree_widget
         tree.clear()
         for category in categories:
@@ -77,10 +77,10 @@ class CatalogController:
         category= self.catalog_widget.tree_widget.get_selected_id()
         if category is None:
             return None
-        return CatalogQueries.get_category_by_id(self.db_connection, category.id)
+        return CategoryQueries.get_category_by_id(self.db_connection, category.id)
 
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
-        return CatalogQueries.category_exists(self.db_connection, name, ignored_id)
+        return CategoryQueries.category_exists(self.db_connection, name, ignored_id)
 
     @staticmethod
     def _handle_db_error(error: str, method: str) -> None:

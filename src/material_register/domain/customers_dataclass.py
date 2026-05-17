@@ -2,12 +2,12 @@ from dataclasses import dataclass
 
 @dataclass
 class Customer:
+    document_number: str
+    address: str
     id: int | None = None
     company: str | None = None
     first_name: str | None = None
     last_name: str | None = None
-    document_number: str | None = None
-    address: str | None = None
     notes: str | None = None
     created_at: str | None = None
     active: int = 1
