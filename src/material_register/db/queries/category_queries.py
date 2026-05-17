@@ -6,10 +6,10 @@ from material_register.domain.category_dataclass import Category
 class CategoryQueries:
 
     @staticmethod
-    def create_category(connection: QSqlDatabase, category_name: str, notes: str) -> tuple[bool, str]:
+    def create_category(connection: QSqlDatabase, name: str, notes: str) -> tuple[bool, str]:
         query = QSqlQuery(connection)
         query.prepare("INSERT INTO categories (name, notes) VALUES (?, ?)")
-        query.addBindValue(category_name)
+        query.addBindValue(name)
         query.addBindValue(notes)
         ok = query.exec()
         error = ""
@@ -18,10 +18,10 @@ class CategoryQueries:
         return ok, error
 
     @staticmethod
-    def update_category(connection: QSqlDatabase, category_id: int, category_name: str, notes: str) -> tuple[bool, str]:
+    def update_category(connection: QSqlDatabase, category_id: int, name: str, notes: str) -> tuple[bool, str]:
         query = QSqlQuery(connection)
         query.prepare("UPDATE categories SET name=?, notes=? WHERE id=?")
-        query.addBindValue(category_name)
+        query.addBindValue(name)
         query.addBindValue(notes)
         query.addBindValue(category_id)
         ok = query.exec()
@@ -47,16 +47,17 @@ class CategoryQueries:
         return results
 
     @staticmethod
-    def category_exists(connection: QSqlDatabase, category_name: str, ignored_id: int | None = None) -> bool:
+    def category_exists(connection: QSqlDatabase, name: str, ignored_id: int | None = None) -> bool:
         query = QSqlQuery(connection)
         sql = "SELECT 1 FROM categories WHERE name = ?"
         if ignored_id is not None:
             sql += " AND id != ?"
         query.prepare(sql)
-        query.addBindValue(category_name)
+        query.addBindValue(name)
         if ignored_id is not None:
             query.addBindValue(ignored_id)
-        query.exec()
+        if not query.exec():
+            return False
         return query.next()
 
     @staticmethod
