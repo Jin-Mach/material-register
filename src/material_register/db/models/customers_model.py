@@ -20,19 +20,19 @@ class CustomersModel(BaseSqlTableModel):
     def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
         if not index.isValid():
             return None
+        column = index.column()
         if role == Qt.ItemDataRole.DisplayRole:
             record = self.record(index.row())
-            column = index.column()
             if column == self.fieldIndex("company"):
                 return self._set_company_column(record)
             if column == self.fieldIndex("active"):
-                return None
+                return ""
+            return super().data(index, role)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
         if role == Qt.ItemDataRole.DecorationRole:
-            record = self.record(index.row())
-            column = index.column()
             if column == self.fieldIndex("active"):
+                record = self.record(index.row())
                 if record.value("active") == 1:
                     return UiIcons.ACTIVE_ICON
                 else:

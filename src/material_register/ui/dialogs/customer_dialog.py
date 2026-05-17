@@ -155,10 +155,13 @@ class CustomerDialog(QDialog):
             self.first_name_input.setEnabled(True)
             self.last_name_input.setEnabled(True)
             self.company_input.setEnabled(False)
+            self.company_input.clear()
             self.first_name_input.setFocus()
         elif index == 1:
             self.first_name_input.setEnabled(False)
+            self.first_name_input.clear()
             self.last_name_input.setEnabled(False)
+            self.last_name_input.clear()
             self.company_input.setEnabled(True)
             self.company_input.setFocus()
         else:
