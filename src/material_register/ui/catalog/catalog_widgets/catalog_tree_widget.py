@@ -23,6 +23,14 @@ class CatalogTreeWidget(QTreeWidget):
             return None
         return item.data(0, Qt.ItemDataRole.UserRole)
 
+    def find_item_by_id(self, category_id: int) -> QTreeWidgetItem | None:
+        for i in range(self.topLevelItemCount()):
+            item = self.topLevelItem(i)
+            category = item.data(0, Qt.ItemDataRole.UserRole)
+            if category and category.id == category_id:
+                return item
+        return None
+
     @staticmethod
     def create_category_item(category: Category) -> QTreeWidgetItem:
         item = QTreeWidgetItem([category.name])

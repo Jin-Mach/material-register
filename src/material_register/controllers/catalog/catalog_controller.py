@@ -75,6 +75,9 @@ class CatalogController:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
                 return
             self.load_categories_to_tree()
+            item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
+            if item is not None:
+                self.catalog_widget.tree_widget.setCurrentItem(item)
             self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
