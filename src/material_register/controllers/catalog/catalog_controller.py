@@ -92,21 +92,35 @@ class CatalogController:
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
                 return
-            self.load_categories_to_tree()
+            self.reload_catalog_tree()
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
             if item is not None:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
             self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
-    def load_categories_to_tree(self) -> None:
+    def reload_catalog_tree(self) -> None:
         categories = CategoryQueries.get_categories(self.db_connection)
+        commodities = CommoditiesQueries.get_commodities(self.db_connection)
         tree = self.catalog_widget.tree_widget
-        tree.clear()
-        for category in categories:
-            item = QTreeWidgetItem([category.name])
-            item.setData(0, Qt.ItemDataRole.UserRole, category)
-            tree.addTopLevelItem(item)
+        tree.blockSignals(True)
+        tree.setUpdatesEnabled(False)
+        try:
+            tree.clear()
+            for category in categories:
+                category_item = QTreeWidgetItem([category.name])
+                category_item.setData(0, Qt.ItemDataRole.UserRole, category)
+                tree.addTopLevelItem(category_item)
+                for commodity in commodities:
+                    if category.id == commodity.category_id:
+                        item = QTreeWidgetItem(category_item)
+                        item.setText(0, commodity.name)
+                        item.setData(0, Qt.ItemDataRole.UserRole, commodity)
+        except Exception as e:
+            ErrorHandler.handle_error(e, "ui", "warning")
+        finally:
+            tree.blockSignals(False)
+            tree.setUpdatesEnabled(True)
 
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return CategoryQueries.category_exists(self.db_connection, name, ignored_id)

@@ -49,7 +49,7 @@ class CatalogWidget(QWidget):
         self.update_category_action.clicked.connect(self.catalog_controller.update_category)
 
     def _reload_data(self) -> None:
-        self.catalog_controller.load_categories_to_tree()
+        self.catalog_controller.reload_catalog_tree()
 
     def _on_selection_changed(self) -> None:
         self.update_category_action.setEnabled(self.tree_widget.has_selection())
