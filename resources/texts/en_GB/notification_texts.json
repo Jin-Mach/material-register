@@ -6,6 +6,8 @@
   },
   "CATALOG": {
     "ADD_CATEGORY": "Category added",
-    "UPDATE_CATEGORY": "Category updated"
+    "UPDATE_CATEGORY": "Category updated",
+    "ADD_COMMODITY": "Item added",
+    "UPDATE_COMMODITY": "Item updated"
   }
 }

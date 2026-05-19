@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem
 
 from material_register.domain.category_dataclass import Category
+from material_register.domain.commodities_dataclass import Commodity
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -30,6 +31,16 @@ class CatalogTreeWidget(QTreeWidget):
             if category and category.id == category_id:
                 return item
         return None
+
+    def create_commodity_item(self, commodity: Commodity) -> tuple[QTreeWidgetItem | None, QTreeWidgetItem | None]:
+        category_id = commodity.category_id
+        parent_item = self.find_item_by_id(category_id)
+        if not parent_item:
+            return None, None
+        item = QTreeWidgetItem(parent_item)
+        item.setText(0, commodity.name)
+        item.setData(0, Qt.ItemDataRole.UserRole, commodity)
+        return parent_item, item
 
     @staticmethod
     def create_category_item(category: Category) -> QTreeWidgetItem:

@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QDialog, QTreeWidgetItem
 
 from material_register.core.app_context import AppContext
 from material_register.db.queries.category_queries import CategoryQueries
+from material_register.db.queries.commodities_queries import CommoditiesQueries
 from material_register.domain.category_dataclass import Category
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
@@ -49,7 +50,24 @@ class CatalogController:
         dialog = CommodityDialog(self.catalog_widget, category.id, category.name)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             commodity_data = dialog.get_commodity_data()
-            print("commodity data:", commodity_data)
+            if not commodity_data:
+                dialog = ErrorDialog()
+                dialog.show_dialog("UNKNOWN_ERROR", False)
+                return
+            ok, error = CommoditiesQueries.create_commodity(self.db_connection, commodity_data.name, category.id,
+                                                            commodity_data.unit, commodity_data.default_price,
+                                                            commodity_data.notes, commodity_data.active)
+            if not ok:
+                CatalogController._handle_db_error(error, f"{self.__class__.__name__}.add_commodity")
+                return
+            parent_item, item = self.catalog_widget.tree_widget.create_commodity_item(commodity_data)
+            if parent_item is None or item is None:
+                dialog = ErrorDialog()
+                dialog.show_dialog("UNKNOWN_ERROR", False)
+                return
+            self.catalog_widget.tree_widget.setCurrentItem(item)
+            parent_item.setExpanded(True)
+            self._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
     def update_category(self) -> None:
         item = self.catalog_widget.tree_widget.currentItem()
