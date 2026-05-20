@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QDialog, QTreeWidgetItem
+from PySide6.QtWidgets import QDialog
 
 from material_register.core.app_context import AppContext
 from material_register.db.queries.category_queries import CategoryQueries
@@ -24,12 +24,14 @@ class CatalogController:
         self.catalog_widget = catalog_widget
         self.db_connection = DbInit.db_connection
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("CATALOG", None)
+        self.categories = CategoryQueries.get_categories(self.db_connection)
+        self.commodities = CommoditiesQueries.get_commodities(self.db_connection)
 
     def add_category(self) -> None:
         dialog = CategoryDialog(self.catalog_widget)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             category_data = dialog.get_category_data()
-            if not category_data:
+            if category_data is None:
                 dialog = ErrorDialog()
                 dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
@@ -41,11 +43,12 @@ class CatalogController:
             self.catalog_widget.tree_widget.addTopLevelItem(item)
             self.catalog_widget.tree_widget.setCurrentItem(item)
             self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
+            self._refresh_cache()
             self._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
 
     def add_commodity(self) -> None:
         category = self.catalog_widget.tree_widget.get_selected_category()
-        if not category:
+        if category is None:
             return
         dialog = CommodityDialog(self.catalog_widget, category.id, category.name)
         if dialog.exec() == QDialog.DialogCode.Accepted:
@@ -67,6 +70,7 @@ class CatalogController:
                 return
             self.catalog_widget.tree_widget.setCurrentItem(item)
             parent_item.setExpanded(True)
+            self._refresh_cache()
             self._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
     def update_category(self) -> None:
@@ -77,9 +81,6 @@ class CatalogController:
         if not isinstance(category, Category):
             return
         if category.id is None or category.id <= 0:
-            return
-        if category is None:
-            ErrorDialog().show_dialog("DATABASE_ERROR", False)
             return
         dialog = CategoryDialog(self.catalog_widget, mode="UPDATE", category_data=category)
         if dialog.exec() == QDialog.DialogCode.Accepted:
@@ -92,6 +93,7 @@ class CatalogController:
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
                 return
+            self._refresh_cache()
             self.reload_catalog_tree()
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
             if item is not None:
@@ -100,30 +102,14 @@ class CatalogController:
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
     def reload_catalog_tree(self) -> None:
-        categories = CategoryQueries.get_categories(self.db_connection)
-        commodities = CommoditiesQueries.get_commodities(self.db_connection)
-        tree = self.catalog_widget.tree_widget
-        tree.blockSignals(True)
-        tree.setUpdatesEnabled(False)
-        try:
-            tree.clear()
-            for category in categories:
-                category_item = QTreeWidgetItem([category.name])
-                category_item.setData(0, Qt.ItemDataRole.UserRole, category)
-                tree.addTopLevelItem(category_item)
-                for commodity in commodities:
-                    if category.id == commodity.category_id:
-                        item = QTreeWidgetItem(category_item)
-                        item.setText(0, commodity.name)
-                        item.setData(0, Qt.ItemDataRole.UserRole, commodity)
-        except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
-        finally:
-            tree.blockSignals(False)
-            tree.setUpdatesEnabled(True)
+        self.catalog_widget.tree_widget.reload_tree(self.categories, self.commodities)
 
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return CategoryQueries.category_exists(self.db_connection, name, ignored_id)
+
+    def _refresh_cache(self) -> None:
+        self.categories = CategoryQueries.get_categories(self.db_connection)
+        self.commodities = CommoditiesQueries.get_commodities(self.db_connection)
 
     @staticmethod
     def _handle_db_error(error: str, method: str) -> None:

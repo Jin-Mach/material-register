@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem
 
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
+from material_register.services.error_handler import ErrorHandler
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -14,6 +15,26 @@ class CatalogTreeWidget(QTreeWidget):
     def __init__(self, catalog_widget: "CatalogWidget") -> None:
         super().__init__(catalog_widget)
         self.setHeaderHidden(True)
+
+    def reload_tree(self, categories: list[Category], commodities: list[Commodity]) -> None:
+        self.blockSignals(True)
+        self.setUpdatesEnabled(False)
+        try:
+            self.clear()
+            for category in categories:
+                category_item = QTreeWidgetItem([category.name])
+                category_item.setData(0, Qt.ItemDataRole.UserRole, category)
+                self.addTopLevelItem(category_item)
+                for commodity in commodities:
+                    if category.id == commodity.category_id:
+                        item = QTreeWidgetItem(category_item)
+                        item.setText(0, commodity.name)
+                        item.setData(0, Qt.ItemDataRole.UserRole, commodity)
+        except Exception as e:
+            ErrorHandler.handle_error(e, "ui", "warning")
+        finally:
+            self.blockSignals(False)
+            self.setUpdatesEnabled(True)
 
     def has_selection(self) -> bool:
         return self.selectionModel().hasSelection()
