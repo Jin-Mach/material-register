@@ -7,6 +7,7 @@ from material_register.core.app_context import AppContext
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.db.queries.commodities_queries import CommoditiesQueries
 from material_register.domain.category_dataclass import Category
+from material_register.domain.commodities_dataclass import Commodity
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
@@ -110,6 +111,24 @@ class CatalogController:
     def _refresh_cache(self) -> None:
         self.categories = CategoryQueries.get_categories(self.db_connection)
         self.commodities = CommoditiesQueries.get_commodities(self.db_connection)
+
+    def setup_details_widget(self) -> None:
+        category, commodity = self.catalog_widget.tree_widget.get_selected_data()
+        if category is None:
+            print("default state")
+            return
+        commodities = self._get_commodities_for_category(category.id)
+        if commodity is None:
+            print("category, commodities, commodity=None:", category, commodities, None)
+            return
+        print("category, commodities=None, commodity", category, None, commodity)
+
+    def _get_commodities_for_category(self, category_id: int) -> list[Commodity]:
+        commodities = []
+        for commodity in self.commodities:
+            if commodity.category_id == category_id:
+                commodities.append(commodity)
+        return commodities
 
     @staticmethod
     def _handle_db_error(error: str, method: str) -> None:

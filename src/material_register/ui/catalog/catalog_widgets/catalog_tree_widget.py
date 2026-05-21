@@ -39,11 +39,15 @@ class CatalogTreeWidget(QTreeWidget):
     def has_selection(self) -> bool:
         return self.selectionModel().hasSelection()
 
-    def get_selected_category(self) -> int | None:
+    def get_selected_data(self) -> tuple[Category | None, Commodity | None]:
         item = self.currentItem()
         if item is None:
-            return None
-        return item.data(0, Qt.ItemDataRole.UserRole)
+            return None, None
+        if item.parent() is None:
+            return item.data(0, Qt.ItemDataRole.UserRole), None
+        category_item = item.parent()
+        return (category_item.data(0, Qt.ItemDataRole.UserRole),
+                item.data(0, Qt.ItemDataRole.UserRole))
 
     def find_item_by_id(self, category_id: int) -> QTreeWidgetItem | None:
         for i in range(self.topLevelItemCount()):
