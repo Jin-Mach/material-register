@@ -1,18 +1,13 @@
-from typing import TYPE_CHECKING
-
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit
 
 from material_register.domain.category_dataclass import Category
 
-if TYPE_CHECKING:
-    from material_register.ui.catalog.catalog_widgets.catalog_details_widget import CatalogDetailsWidget
-
 
 class CategoryDetailWidget(QWidget):
-    def __init__(self, catalog_detail_widget: "CatalogDetailsWidget") -> None:
-        super().__init__(catalog_detail_widget)
+    def __init__(self, parent: QWidget=None) -> None:
+        super().__init__(parent)
         self.setLayout(self._create_ui())
 
     def _create_ui(self) -> QVBoxLayout:

@@ -99,7 +99,7 @@ class CatalogController:
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
             if item is not None:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
-            self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
+            self.catalog_widget.details_widget.refresh_category_data(category_data)
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
     def reload_catalog_tree(self) -> None:
@@ -115,13 +115,15 @@ class CatalogController:
     def setup_details_widget(self) -> None:
         category, commodity = self.catalog_widget.tree_widget.get_selected_data()
         if category is None:
-            print("default state")
+            self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(0)
             return
         commodities = self._get_commodities_for_category(category.id)
         if commodity is None:
-            print("category, commodities, commodity=None:", category, commodities, None)
+            self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(1)
+            self.catalog_widget.details_widget.category_with_commodities_widget.setup_ui(category, commodities)
             return
-        print("category, commodities=None, commodity", category, None, commodity)
+        self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(2)
+        self.catalog_widget.details_widget.category_with_commodity_widget.setup_ui(category, commodity)
 
     def _get_commodities_for_category(self, category_id: int) -> list[Commodity]:
         commodities = []

@@ -36,7 +36,7 @@ class CatalogWidget(QWidget):
         tree_layout.addLayout(actions_layout)
         tree_layout.addWidget(self.tree_widget)
         main_layout.addLayout(tree_layout, 1)
-        main_layout.addWidget(self.details_widget, 1)
+        main_layout.addWidget(self.details_widget, 2)
         return main_layout
 
     def _setup_ui(self) -> None:
