@@ -5,8 +5,10 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel
 
 from material_register.controllers.catalog.catalog_controller import CatalogController
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.catalog.catalog_widgets.catalog_details_widget import CatalogDetailsWidget
 from material_register.ui.catalog.catalog_widgets.catalog_tree_widget import CatalogTreeWidget
+from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
     from material_register.ui.widgets.stacked_widget import StackedWidget
@@ -23,9 +25,9 @@ class CatalogWidget(QWidget):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         top_layout = QHBoxLayout()
-        self.add_category_button = QPushButton("Add Category")
+        self.add_category_button = QPushButton()
         self.add_category_button.setObjectName("addCategoryButton")
-        self.catalog_title_label = QLabel("Catalog Title")
+        self.catalog_title_label = QLabel()
         self.catalog_title_label.setObjectName("catalogTitleLabel")
         self.catalog_title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         font = QFont()
@@ -45,7 +47,17 @@ class CatalogWidget(QWidget):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
         self._reload_data()
+
+    def _setup_texts(self)-> None:
+        widgets = [self.add_category_button, self.catalog_title_label, self.details_widget]
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
 
     def _create_connection(self) -> None:
         self.tree_widget.itemSelectionChanged.connect(self._on_selection_changed)

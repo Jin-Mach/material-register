@@ -15,6 +15,7 @@ DEFAULT_TEXTS = {
     "deleteTransactionButtonTooltipText": "Delete selected record"
   },
   "CustomersActionsWidget": {
+    "addCustomersButtonText": "Add customer",
     "addCustomerButtonTooltipText": "Add a new customer",
     "searchLineEditPlaceholderText": "Enter text to search..."
   },
@@ -64,6 +65,7 @@ DEFAULT_TEXTS = {
     "categoryLabelText": "Category:",
     "nameLabelText": "Name:",
     "unitLabelText": "Unit:",
+    "unitInputItems": ["kg", "pcs"],
     "defaultPriceLabelText": "Unit price (£):",
     "activeLabelText": "Active",
     "notesLabelText": "Notes",
@@ -72,5 +74,33 @@ DEFAULT_TEXTS = {
     "saveButtonTooltipText": "Saves the commodity",
     "closeButtonText": "Close",
     "closeButtonTooltipText": "Closes the dialog"
+  },
+  "CatalogWidget": {
+    "addCategoryButtonText": "Add category",
+    "addCategoryButtonTooltipText": "Creates a new category",
+    "catalogTitleLabelText": "Item catalog"
+  },
+  "CatalogDefaultWidget": {
+    "titleLabelText": "Item details",
+    "subtitleLabelText": "Select a category to display items"
+  },
+  "CategoryDetailWidget": {
+    "categoryGroupBoxText": "Category",
+    "notesLabelText": "Notes",
+    "updateCategoryButtonText": "Edit category",
+    "updateCategoryButtonTooltipText": "Edits the currently selected category",
+    "addCommodityButtonText": "Add item",
+    "addCommodityButtonTooltipText": "Creates a new item in the currently selected category"
+  },
+  "CommoditiesGridWidget": {
+    "commoditiesGroupBoxText": "Category items"
+  },
+  "CommodityCardWidget": {
+    "unitLabelText": "Unit:",
+    "defaultPriceLabelText": "Unit price (£):",
+    "activeLabelText": "Active:",
+    "notesLabelText": "Notes",
+    "updateCommodityButtonText": "Edit item",
+    "updateCommodityButtonTooltipText": "Edits the selected item"
   }
 }

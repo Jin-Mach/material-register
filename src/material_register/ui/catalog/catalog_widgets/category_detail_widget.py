@@ -5,6 +5,8 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit, QGroupBox, QFormLayout, QHBoxLayout, QPushButton
 
 from material_register.domain.category_dataclass import Category
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import CategoryWithCommoditiesWidget
@@ -15,11 +17,12 @@ class CategoryDetailWidget(QWidget):
         super().__init__(category_with_commodities_widget)
         self.category_with_commodities_widget = category_with_commodities_widget
         self.setLayout(self._create_ui())
+        self._setup_texts()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        self.category_group_box = QGroupBox("Category")
-        self.category_group_box.setObjectName("CategoryGroupBox")
+        self.category_group_box = QGroupBox()
+        self.category_group_box.setObjectName("categoryGroupBox")
         box_layout = QVBoxLayout()
         self.name_label = QLabel()
         self.name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -27,14 +30,14 @@ class CategoryDetailWidget(QWidget):
         font.setBold(True)
         self.name_label.setFont(font)
         notes_layout = QFormLayout()
-        self.notes_label = QLabel("Notes:")
+        self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
         self.notes_value = QTextEdit()
         self.notes_value.setReadOnly(True)
         button_layout = QHBoxLayout()
-        self.update_category_button = QPushButton("Update")
+        self.update_category_button = QPushButton()
         self.update_category_button.setObjectName("updateCategoryButton")
-        self.add_commodity_button = QPushButton("Add Commodity")
+        self.add_commodity_button = QPushButton()
         self.add_commodity_button.setObjectName("addCommodityButton")
         notes_layout.addRow(self.notes_label)
         notes_layout.addRow(self.notes_value)
@@ -47,6 +50,15 @@ class CategoryDetailWidget(QWidget):
         self.category_group_box.setLayout(box_layout)
         main_layout.addWidget(self.category_group_box)
         return main_layout
+
+    def _setup_texts(self)-> None:
+        widgets = [self.category_group_box, self.notes_label, self.update_category_button, self.add_commodity_button]
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
 
     def set_category_texts(self, category: Category) -> None:
         self.name_label.setText(category.name)

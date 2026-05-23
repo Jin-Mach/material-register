@@ -15,6 +15,7 @@
     "deleteTransactionButtonTooltipText": "Odstranit označený záznam"
   },
   "CustomersActionsWidget": {
+    "addCustomerButtonText": "Přidat zákazníka",
     "addCustomerButtonTooltipText": "Přidat nového zákazníka",
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
@@ -67,6 +68,7 @@
     "categoryLabelText": "Kategorie:",
     "nameLabelText": "Název:",
     "unitLabelText": "Jednotka:",
+    "unitInputItems": ["kg", "kus"],
     "defaultPriceLabelText": "Jednotková cena (Kč):",
     "activeLabelText": "Aktivní",
     "notesLabelText": "Poznámky",
@@ -75,5 +77,33 @@
     "saveButtonTooltipText": "Uloží komoditu",
     "closeButtonText": "Zavřít",
     "closeButtonTooltipText": "Zavře dialog"
+  },
+  "CatalogWidget": {
+    "addCategoryButtonText": "Přidat kategorii",
+    "addCategoryButtonTooltipText": "Vytvoří novou kategorii",
+    "catalogTitleLabelText": "Katalog položek"
+  },
+  "CatalogDefaultWidget": {
+    "titleLabelText": "Detail položek",
+    "subtitleLabelText": "Pro zobrazení seznamu položek vyber kategorii"
+  },
+  "CategoryDetailWidget": {
+    "categoryGroupBoxText": "Kategorie",
+    "notesLabelText": "Poznámky",
+    "updateCategoryButtonText": "Upravit kategorii",
+    "updateCategoryButtonTooltipText": "Upraví aktuálně zvolenou kategorii",
+    "addCommodityButtonText": "Přidat položku",
+    "addCommodityButtonTooltipText": "Vytvoří novou položku v aktuálně zvolené kategorii"
+  },
+  "CommoditiesGridWidget": {
+    "commoditiesGroupBoxText": "Položky kategorie"
+  },
+  "CommodityCardWidget": {
+    "unitLabelText": "Jednotka:",
+    "defaultPriceLabelText": "Jednotková cena (Kč):",
+    "activeLabelText": "Aktivní:",
+    "notesLabelText": "Poznámky",
+    "updateCommodityButtonText": "Upravit položku",
+    "updateCommodityButtonTooltipText": "Upraví vybranou položku"
   }
 }

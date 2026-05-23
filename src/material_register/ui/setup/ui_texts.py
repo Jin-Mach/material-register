@@ -41,6 +41,8 @@ class UiTexts:
                 text = name + "Text"
                 tooltip = name + "TooltipText"
                 placeholder = name + "PlaceholderText"
+                if hasattr(widget, "setTitle") and text in ui_texts:
+                    widget.setTitle(ui_texts[text])
                 if hasattr(widget, "setText") and text in ui_texts:
                     widget.setText(ui_texts[text])
                 if hasattr(widget, "setToolTip") and tooltip in ui_texts:

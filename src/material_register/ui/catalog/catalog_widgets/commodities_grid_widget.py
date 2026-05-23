@@ -4,7 +4,9 @@ from PySide6.QtGui import QResizeEvent, Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QGridLayout, QLabel, QGroupBox
 
 from material_register.domain.commodities_dataclass import Commodity
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.catalog.catalog_widgets.commodity_card_widget import CommodityCardWidget
+from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import CategoryWithCommoditiesWidget
@@ -18,12 +20,13 @@ class CommoditiesGridWidget(QWidget):
         self.category_with_commodities_widget = category_with_commodities_widget
         self.catalog_controller = catalog_controller
         self.setLayout(self._create_ui())
+        self._setup_texts()
         self.commodities_cards = []
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        self.commodities_group_box = QGroupBox("Commodities")
-        self.commodities_group_box.setObjectName("CommoditiesGroupBox")
+        self.commodities_group_box = QGroupBox()
+        self.commodities_group_box.setObjectName("commoditiesGroupBox")
         box_layout = QVBoxLayout()
         self.scroll_area = QScrollArea()
         self.scroll_area.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -44,8 +47,18 @@ class CommoditiesGridWidget(QWidget):
         main_layout.addWidget(self.commodities_group_box)
         return main_layout
 
+    def _setup_texts(self)-> None:
+        widgets = [self.commodities_group_box]
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
     def set_commodities(self, commodities: list[Commodity]) -> None:
         self.commodities_cards = []
+        card_texts = UiTexts.UI_TEXTS.get("CommodityCardWidget", {})
         if not commodities:
             self.scroll_area.setVisible(False)
             self.no_commodities_label.setVisible(True)
@@ -53,6 +66,7 @@ class CommoditiesGridWidget(QWidget):
             return
         for commodity in commodities:
             card = CommodityCardWidget(self)
+            card.setup_texts(card_texts)
             card.set_commodity_details(commodity)
             card.create_connection(commodity, self.catalog_controller.update_commodity)
             self.commodities_cards.append(card)
