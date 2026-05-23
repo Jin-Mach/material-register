@@ -36,15 +36,17 @@ class CatalogController:
                 error_dialog = ErrorDialog()
                 error_dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
-            ok, error = CategoryQueries.create_category(self.db_connection, category_data.name, category_data.notes)
+            ok, error, category_id = CategoryQueries.create_category(self.db_connection, category_data.name, category_data.notes)
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.add_category")
                 return
-            item = self.catalog_widget.tree_widget.create_category_item(category_data)
-            self.catalog_widget.tree_widget.addTopLevelItem(item)
-            self.catalog_widget.tree_widget.setCurrentItem(item)
-            self.catalog_widget.details_widget.refresh_category_data(category_data)
+            category_data.id = category_id
             self._refresh_cache()
+            self.reload_catalog_tree()
+            self.catalog_widget.details_widget.refresh_category_data(category_data)
+            item = self.catalog_widget.tree_widget.find_item_by_id(category_id)
+            if item:
+                self.catalog_widget.tree_widget.setCurrentItem(item)
             CatalogController._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
 
     def add_commodity(self) -> None:
@@ -81,8 +83,6 @@ class CatalogController:
             return
         category = item.data(0, Qt.ItemDataRole.UserRole)
         if not isinstance(category, Category):
-            return
-        if category.id is None or category.id <= 0:
             return
         dialog = CategoryDialog(self.catalog_widget, mode="UPDATE", category_data=category)
         if dialog.exec() == QDialog.DialogCode.Accepted:

@@ -40,8 +40,8 @@ def dialog(qtbot):
 
 def test_commodity_valid(dialog):
     dialog.name_input.setText("Steel")
-    dialog.unit_input.setText("kg")
-    dialog.price_input.setText("10.5")
+    dialog.unit_input.setCurrentText("kg")
+    dialog.price_input.setValue(10.5)
     dialog.notes_input.setText("notes")
     assert dialog._is_input_valid() is True
     data = dialog.get_commodity_data()
@@ -55,13 +55,5 @@ def test_commodity_valid(dialog):
 
 def test_commodity_invalid_missing_fields(dialog):
     dialog.name_input.setText("")
-    dialog.unit_input.setText("")
-    dialog.price_input.setText("")
     assert dialog._is_input_valid() is False
     assert dialog.get_commodity_data() is None
-
-def test_commodity_invalid_price(dialog):
-    dialog.name_input.setText("Steel")
-    dialog.unit_input.setText("kg")
-    dialog.price_input.setText("abc")
-    assert dialog._is_input_valid() is False

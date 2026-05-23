@@ -24,9 +24,11 @@ def schema(connection) -> None:
     """)
 
 def test_create_category(connection, schema) -> None:
-    ok, error = CategoryQueries.create_category(connection, "test", "note")
+    ok, error, category_id = CategoryQueries.create_category(connection, "test", "note")
     assert ok is True
     assert error == ""
+    assert category_id is not None
+    assert isinstance(category_id, int)
     query = QSqlQuery(connection)
     query.exec("SELECT name, notes FROM categories")
     assert query.next()

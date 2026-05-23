@@ -6,16 +6,19 @@ from material_register.domain.category_dataclass import Category
 class CategoryQueries:
 
     @staticmethod
-    def create_category(connection: QSqlDatabase, name: str, notes: str) -> tuple[bool, str]:
+    def create_category(connection: QSqlDatabase, name: str, notes: str) -> tuple[bool, str, int | None]:
         query = QSqlQuery(connection)
         query.prepare("INSERT INTO categories (name, notes) VALUES (?, ?)")
         query.addBindValue(name)
         query.addBindValue(notes)
         ok = query.exec()
         error = ""
-        if not ok:
+        category_id = None
+        if ok:
+            category_id = query.lastInsertId()
+        else:
             error = query.lastError().text()
-        return ok, error
+        return ok, error, category_id
 
     @staticmethod
     def update_category(connection: QSqlDatabase, category_id: int, name: str, notes: str) -> tuple[bool, str]:
