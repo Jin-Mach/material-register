@@ -48,7 +48,7 @@ class CatalogController:
             self._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
 
     def add_commodity(self) -> None:
-        category = self.catalog_widget.tree_widget.get_selected_category()
+        category, _ = self.catalog_widget.tree_widget.get_selected_data()
         if category is None:
             return
         dialog = CommodityDialog(self.catalog_widget, category.id, category.name)
@@ -72,6 +72,7 @@ class CatalogController:
             self.catalog_widget.tree_widget.setCurrentItem(item)
             parent_item.setExpanded(True)
             self._refresh_cache()
+            self.setup_details_widget()
             self._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
     def update_category(self) -> None:

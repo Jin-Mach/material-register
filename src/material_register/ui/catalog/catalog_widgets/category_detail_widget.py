@@ -1,13 +1,19 @@
+from typing import TYPE_CHECKING
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit, QGroupBox, QFormLayout, QHBoxLayout, QPushButton
 
 from material_register.domain.category_dataclass import Category
 
+if TYPE_CHECKING:
+    from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import CategoryWithCommoditiesWidget
+
 
 class CategoryDetailWidget(QWidget):
-    def __init__(self, parent: QWidget=None) -> None:
-        super().__init__(parent)
+    def __init__(self, category_with_commodities_widget: "CategoryWithCommoditiesWidget") -> None:
+        super().__init__(category_with_commodities_widget)
+        self.category_with_commodities_widget = category_with_commodities_widget
         self.setLayout(self._create_ui())
 
     def _create_ui(self) -> QVBoxLayout:
@@ -26,11 +32,15 @@ class CategoryDetailWidget(QWidget):
         self.notes_value = QTextEdit()
         self.notes_value.setReadOnly(True)
         button_layout = QHBoxLayout()
-        self.update_button = QPushButton("Update")
+        self.update_category_button = QPushButton("Update")
+        self.update_category_button.setObjectName("updateCategoryButton")
+        self.add_commodity_button = QPushButton("Add Commodity")
+        self.add_commodity_button.setObjectName("addCommodityButton")
         notes_layout.addRow(self.notes_label)
         notes_layout.addRow(self.notes_value)
         button_layout.addStretch()
-        button_layout.addWidget(self.update_button)
+        button_layout.addWidget(self.update_category_button)
+        button_layout.addWidget(self.add_commodity_button)
         box_layout.addWidget(self.name_label)
         box_layout.addLayout(notes_layout)
         box_layout.addLayout(button_layout)

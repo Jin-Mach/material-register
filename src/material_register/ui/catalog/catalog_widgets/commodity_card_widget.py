@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class CommodityCardWidget(QTabWidget):
     def __init__(self,  commodities_grid_widget: "CommoditiesGridWidget") -> None:
         super().__init__(commodities_grid_widget)
-        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.detail_widget = self._create_ui()
         self.addTab(self.detail_widget, "")
 
