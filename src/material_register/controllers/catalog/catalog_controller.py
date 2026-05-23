@@ -43,7 +43,7 @@ class CatalogController:
             item = self.catalog_widget.tree_widget.create_category_item(category_data)
             self.catalog_widget.tree_widget.addTopLevelItem(item)
             self.catalog_widget.tree_widget.setCurrentItem(item)
-            self.catalog_widget.details_widget.category_detail_widget.set_category_texts(category_data)
+            self.catalog_widget.details_widget.refresh_category_data(category_data)
             self._refresh_cache()
             self._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
 
@@ -113,24 +113,20 @@ class CatalogController:
         self.commodities = CommoditiesQueries.get_commodities(self.db_connection)
 
     def setup_details_widget(self) -> None:
-        category, commodity = self.catalog_widget.tree_widget.get_selected_data()
+        category, _ = self.catalog_widget.tree_widget.get_selected_data()
         if category is None:
             self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(0)
             return
         commodities = self._get_commodities_for_category(category.id)
-        if commodity is None:
-            self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(1)
-            self.catalog_widget.details_widget.category_with_commodities_widget.setup_ui(category, commodities)
-            return
-        self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(2)
-        self.catalog_widget.details_widget.category_with_commodity_widget.setup_ui(category, commodity)
+        self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(1)
+        self.catalog_widget.details_widget.category_with_commodities_widget.setup_ui(category, commodities)
 
     def _get_commodities_for_category(self, category_id: int) -> list[Commodity]:
         commodities = []
         for commodity in self.commodities:
             if commodity.category_id == category_id:
                 commodities.append(commodity)
-        return commodities
+        return sorted(commodities, key=lambda commodity_item: commodity_item.name.lower())
 
     @staticmethod
     def _handle_db_error(error: str, method: str) -> None:

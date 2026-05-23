@@ -20,8 +20,8 @@ class CategoryWithCommoditiesWidget(QWidget):
         main_layout = QVBoxLayout()
         self.category_detail_widget = CategoryDetailWidget(self)
         self.commodities_grid_widget = CommoditiesGridWidget(self)
-        main_layout.addWidget(self.category_detail_widget)
-        main_layout.addWidget(self.commodities_grid_widget)
+        main_layout.addWidget(self.category_detail_widget, 1)
+        main_layout.addWidget(self.commodities_grid_widget, 3)
         return main_layout
 
     def setup_ui(self, category: Category, commodities: list[Commodity]) -> None:
