@@ -1,12 +1,10 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog
 
 from material_register.core.app_context import AppContext
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.db.queries.commodities_queries import CommoditiesQueries
-from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
@@ -78,11 +76,8 @@ class CatalogController:
             CatalogController._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
     def update_category(self) -> None:
-        item = self.catalog_widget.tree_widget.currentItem()
-        if not item:
-            return
-        category = item.data(0, Qt.ItemDataRole.UserRole)
-        if not isinstance(category, Category):
+        category, _ = self.catalog_widget.tree_widget.get_selected_data()
+        if not category:
             return
         dialog = CategoryDialog(self.catalog_widget, mode="UPDATE", category_data=category)
         if dialog.exec() == QDialog.DialogCode.Accepted:

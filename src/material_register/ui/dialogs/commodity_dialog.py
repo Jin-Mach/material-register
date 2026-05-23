@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 class CommodityDialog(QDialog):
     ADD_MODE = "ADD"
     UPDATE_MODE = "UPDATE"
-    NOTES_LENGTH = 100
+    NOTES_LENGTH = 50
 
     def __init__(self, catalog_widget: "CatalogWidget", category_id: int, category_name: str, mode: str = ADD_MODE,
                  commodity_data: Commodity | None = None) -> None:

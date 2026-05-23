@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class CategoryDialog(QDialog):
     ADD_MODE = "ADD"
     UPDATE_MODE = "UPDATE"
-    NOTES_LENGTH = 200
+    NOTES_LENGTH = 100
 
     def __init__(self, catalog_widget: "CatalogWidget", mode: str = ADD_MODE,
                  category_data: Category | None = None) -> None:
