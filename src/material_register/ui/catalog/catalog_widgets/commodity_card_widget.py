@@ -55,7 +55,7 @@ class CommodityCardWidget(QTabWidget):
     def set_commodity_details(self, commodity: Commodity) -> None:
         self.setTabText(0, commodity.name)
         self.unit_value.setText(commodity.unit)
-        self.default_price_value.setText(str(commodity.default_price))
+        self.default_price_value.setText(f"{commodity.default_price:.1f}")
         self.active_value.setChecked(bool(commodity.active))
         self.notes_value.setPlainText(commodity.notes)
 

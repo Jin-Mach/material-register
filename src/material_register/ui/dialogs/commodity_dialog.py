@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QRegularExpression
 from PySide6.QtGui import QShowEvent, QRegularExpressionValidator, QFont
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox,
-                               QCheckBox, QFormLayout)
+                               QCheckBox, QFormLayout, QDoubleSpinBox, QComboBox)
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
@@ -48,10 +48,16 @@ class CommodityDialog(QDialog):
         self.name_input = QLineEdit()
         self.unit_label = QLabel()
         self.unit_label.setObjectName("unitLabel")
-        self.unit_input = QLineEdit()
+        self.unit_input = QComboBox()
+        self.unit_input.setObjectName("unitInput")
         self.default_price_label = QLabel()
         self.default_price_label.setObjectName("defaultPriceLabel")
-        self.price_input = QLineEdit()
+        self.price_input = QDoubleSpinBox()
+        self.price_input.setMinimum(0.0)
+        self.price_input.setMaximum(1000.0)
+        self.price_input.setDecimals(1)
+        self.price_input.setSingleStep(0.1)
+        self.price_input.setValue(0.0)
         self.active_label = QLabel()
         self.active_label.setObjectName("activeLabel")
         self.active_checkbox = QCheckBox()
@@ -100,8 +106,6 @@ class CommodityDialog(QDialog):
 
     def _create_connection(self) -> None:
         self.name_input.textChanged.connect(self._on_form_changed)
-        self.unit_input.textChanged.connect(self._on_form_changed)
-        self.price_input.textChanged.connect(self._on_form_changed)
         self.notes_input.textChanged.connect(self._update_notes_count)
         self.save_button.clicked.connect(self.accept)
         self.close_button.clicked.connect(self.reject)
@@ -109,7 +113,9 @@ class CommodityDialog(QDialog):
     def _setup_texts(self, widgets: list) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.category_value.setText(self.category_name)
+        self.units_items = texts.get(f"{self.unit_input.objectName()}Items", ["kg", "pcs"])
         self.notes_count_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
+        self.unit_input.addItems(self.units_items)
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
@@ -124,24 +130,19 @@ class CommodityDialog(QDialog):
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-\/]{1,30}"))
-        unit_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 ./%\-]{1,10}"))
-        price_validator = QRegularExpressionValidator(QRegularExpression(r"^\d{1,6}([.,]\d{0,2})?$"))
         self.name_input.setValidator(name_validator)
-        self.unit_input.setValidator(unit_validator)
-        self.price_input.setValidator(price_validator)
 
     def _set_add_mode(self) -> None:
         self.name_input.clear()
-        self.unit_input.setText("kg")
-        self.price_input.setText("0.0")
+        self.unit_input.setCurrentIndex(0)
         self.notes_input.clear()
         self.active_checkbox.setChecked(True)
         self._update_notes_count()
 
     def _set_update_mode(self, commodity: Commodity) -> None:
         self.name_input.setText(commodity.name or "")
-        self.unit_input.setText(commodity.unit or "kg")
-        self.price_input.setText(str(commodity.default_price or 0.0))
+        self.unit_input.setCurrentText(commodity.unit or "kg")
+        self.price_input.setValue(float(commodity.default_price or 0.0))
         self.notes_input.setPlainText(commodity.notes or "")
         self.active_checkbox.setChecked(bool(commodity.active))
         self.category_value.setText(str(self.category_name))
@@ -161,14 +162,9 @@ class CommodityDialog(QDialog):
 
     def _update_required_styles(self) -> None:
         self._set_required_style(self.name_input)
-        self._set_required_style(self.unit_input)
-        self._set_required_style(self.price_input)
 
     def _set_required_style(self, widget) -> None:
-        if widget == self.name_input:
-            invalid = not self._is_commodity_valid()
-        else:
-            invalid = not widget.text().strip()
+        invalid = not widget.text().strip()
         if invalid:
             widget.setStyleSheet("background-color: #ffdddd; border: 1px solid red;")
         else:
@@ -183,13 +179,7 @@ class CommodityDialog(QDialog):
 
     def _is_input_valid(self) -> bool:
         name = self.name_input.text().strip()
-        unit = self.unit_input.text().strip()
-        price = self.price_input.text().strip()
-        if not name or not unit or not price:
-            return False
-        try:
-            float(price.replace(",", "."))
-        except ValueError:
+        if not name:
             return False
         return True
 
@@ -212,8 +202,8 @@ class CommodityDialog(QDialog):
             id=commodity_id,
             name=self.name_input.text().strip(),
             category_id=self.category_id,
-            unit=self.unit_input.text().strip(),
-            default_price=float(self.price_input.text().replace(",", ".")),
+            unit=self.unit_input.currentText(),
+            default_price=self.price_input.value(),
             notes=self.notes_input.toPlainText().strip(),
             active=int(self.active_checkbox.isChecked())
         )
