@@ -93,7 +93,8 @@ DEFAULT_TEXTS = {
     "addCommodityButtonTooltipText": "Creates a new item in the currently selected category"
   },
   "CommoditiesGridWidget": {
-    "commoditiesGroupBoxText": "Category items"
+    "commoditiesGroupBoxText": "Category items",
+    "noCommoditiesLabelText": "There are no items in this category"
   },
   "CommodityCardWidget": {
     "unitLabelText": "Unit:",

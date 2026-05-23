@@ -39,7 +39,8 @@ class CommoditiesGridWidget(QWidget):
         self.grid_layout.setContentsMargins(10, 10, 10, 10)
         container.setLayout(self.grid_layout)
         self.scroll_area.setWidget(container)
-        self.no_commodities_label = QLabel("No commodities")
+        self.no_commodities_label = QLabel()
+        self.no_commodities_label.setObjectName("noCommoditiesLabel")
         self.no_commodities_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         box_layout.addWidget(self.scroll_area)
         box_layout.addWidget(self.no_commodities_label)
@@ -48,7 +49,7 @@ class CommoditiesGridWidget(QWidget):
         return main_layout
 
     def _setup_texts(self)-> None:
-        widgets = [self.commodities_group_box]
+        widgets = [self.commodities_group_box, self.no_commodities_label]
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")

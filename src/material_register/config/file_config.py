@@ -88,6 +88,7 @@ UI_KEYS = [
     ("CategoryDetailWidget", "addCommodityButtonText"),
     ("CategoryDetailWidget", "addCommodityButtonTooltipText"),
     ("CommoditiesGridWidget", "commoditiesGroupBoxText"),
+    ("CommoditiesGridWidget", "noCommoditiesLabelText"),
     ("CommodityCardWidget", "unitLabelText"),
     ("CommodityCardWidget", "defaultPriceLabelText"),
     ("CommodityCardWidget", "activeLabelText"),

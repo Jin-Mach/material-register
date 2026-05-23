@@ -96,7 +96,8 @@
     "addCommodityButtonTooltipText": "Vytvoří novou položku v aktuálně zvolené kategorii"
   },
   "CommoditiesGridWidget": {
-    "commoditiesGroupBoxText": "Položky kategorie"
+    "commoditiesGroupBoxText": "Položky kategorie",
+    "noCommoditiesLabelText": "V této kategorii nejsou žádné položky"
   },
   "CommodityCardWidget": {
     "unitLabelText": "Jednotka:",
