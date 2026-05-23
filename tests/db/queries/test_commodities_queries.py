@@ -112,3 +112,8 @@ def test_get_commodities(connection, schema) -> None:
         Commodity(id=1, name="A", category_id=1, unit="kg", default_price=10.0, notes="n1", active=1),
         Commodity(id=2, name="B", category_id=2, unit="pcs", default_price=20.0, notes="n2", active=0),
     ]
+
+def test_commodity_exists(connection, schema) -> None:
+    CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "note", 1)
+    assert CommoditiesQueries.commodity_exists(connection, "A") is True
+    assert CommoditiesQueries.commodity_exists(connection, "B") is False

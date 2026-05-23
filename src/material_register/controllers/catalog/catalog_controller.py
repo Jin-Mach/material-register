@@ -139,6 +139,9 @@ class CatalogController:
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return CategoryQueries.category_exists(self.db_connection, name, ignored_id)
 
+    def commodity_exists(self, name: str, ignored_id: int | None = None) -> bool:
+        return CommoditiesQueries.commodity_exists(self.db_connection, name, ignored_id)
+
     def _refresh_cache(self) -> None:
         self.categories = CategoryQueries.get_categories(self.db_connection)
         self.commodities = CommoditiesQueries.get_commodities(self.db_connection)

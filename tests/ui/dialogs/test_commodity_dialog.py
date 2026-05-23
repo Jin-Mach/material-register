@@ -15,6 +15,8 @@ class FakeCatalogWidget(QWidget):
 class FakeCatalogController:
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return False
+    def commodity_exists(self, name: str, ignored_id: int | None = None) -> bool:
+        return False
 
 # noinspection PyTypeChecker
 @pytest.fixture

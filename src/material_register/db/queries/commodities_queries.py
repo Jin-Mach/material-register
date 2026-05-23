@@ -87,3 +87,17 @@ class CommoditiesQueries:
                     active=query.value(6)
                 ))
         return results
+
+    @staticmethod
+    def commodity_exists(connection: QSqlDatabase, name: str, ignored_id: int | None = None) -> bool:
+        query = QSqlQuery(connection)
+        sql = "SELECT 1 FROM commodities WHERE name = ?"
+        if ignored_id is not None:
+            sql += " AND id != ?"
+        query.prepare(sql)
+        query.addBindValue(name)
+        if ignored_id is not None:
+            query.addBindValue(ignored_id)
+        if not query.exec():
+            return False
+        return query.next()

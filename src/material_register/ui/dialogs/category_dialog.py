@@ -112,28 +112,23 @@ class CategoryDialog(QDialog):
             self.notes_input.setTextCursor(cursor)
         self.notes_count_label.setText(f"{self.notes_count_text} {len(text)}/{self.NOTES_LENGTH}")
 
-    def _update_required_styles(self) -> None:
-        self._set_required_style(self.category_name_input)
-
-    def _set_required_style(self, widget) -> None:
-        text = widget.text().strip()
-        ignored_id = None
-        if self.mode == self.UPDATE_MODE and self.category_data:
-            ignored_id = self.category_data.id
-        if not text:
-            widget.setStyleSheet("QLineEdit { background: #ffdddd; border: 1px solid red; }")
-            return
-        exists = self.catalog_widget.catalog_controller.category_exists(text, ignored_id=ignored_id)
-        if exists:
-            widget.setStyleSheet("QLineEdit { background: #ffdddd; border: 1px solid red; }")
-        else:
-            widget.setStyleSheet("")
-
     def _update_save_button_state(self) -> None:
         self.save_button.setEnabled(self._is_input_valid() and self._is_category_valid())
 
+    def _set_required_style(self, widget) -> None:
+        text = widget.text().strip()
+        if widget == self.category_name_input:
+            invalid = (not text) or self.catalog_widget.catalog_controller.category_exists(
+                text, ignored_id=self.category_data.id if self.mode == self.UPDATE_MODE else None)
+        else:
+            invalid = not text
+        if invalid:
+            widget.setStyleSheet("background-color: #ffdddd; border: 1px solid red;")
+        else:
+            widget.setStyleSheet("")
+
     def _on_form_changed(self) -> None:
-        self._update_required_styles()
+        self._set_required_style(self.category_name_input)
         self._update_save_button_state()
 
     def _is_input_valid(self) -> bool:
@@ -141,13 +136,13 @@ class CategoryDialog(QDialog):
         return bool(category_name)
 
     def _is_category_valid(self) -> bool:
-        category_name = self.category_name_input.text().strip()
-        if not category_name:
+        name = self.category_name_input.text().strip()
+        if not name:
             return False
         ignored_id = None
-        if self.mode != self.ADD_MODE and self.category_data:
+        if self.mode == self.UPDATE_MODE and self.category_data:
             ignored_id = self.category_data.id
-        return not self.catalog_widget.catalog_controller.category_exists(category_name, ignored_id=ignored_id)
+        return not self.catalog_widget.catalog_controller.category_exists(name, ignored_id=ignored_id)
 
     def get_category_data(self) -> Category | None:
         if not self._is_input_valid():
@@ -159,7 +154,7 @@ class CategoryDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        self._update_required_styles()
+        self._set_required_style(self.category_name_input)
         self._update_save_button_state()
         self.adjustSize()
         self.setFixedSize(self.size())

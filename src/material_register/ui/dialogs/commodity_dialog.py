@@ -165,9 +165,11 @@ class CommodityDialog(QDialog):
         self._set_required_style(self.price_input)
 
     def _set_required_style(self, widget) -> None:
-        text = widget.text().strip()
-        is_empty = not text
-        if widget.isEnabled() and is_empty:
+        if widget == self.name_input:
+            invalid = not self._is_commodity_valid()
+        else:
+            invalid = not widget.text().strip()
+        if invalid:
             widget.setStyleSheet("background-color: #ffdddd; border: 1px solid red;")
         else:
             widget.setStyleSheet("")
@@ -177,7 +179,7 @@ class CommodityDialog(QDialog):
         self._update_save_button_state()
 
     def _update_save_button_state(self) -> None:
-        self.save_button.setEnabled(self._is_input_valid())
+        self.save_button.setEnabled(self._is_input_valid() and self._is_commodity_valid())
 
     def _is_input_valid(self) -> bool:
         name = self.name_input.text().strip()
@@ -190,6 +192,15 @@ class CommodityDialog(QDialog):
         except ValueError:
             return False
         return True
+
+    def _is_commodity_valid(self) -> bool:
+        name = self.name_input.text().strip()
+        if not name:
+            return False
+        ignored_id = None
+        if self.mode == self.UPDATE_MODE and self.commodity_data:
+            ignored_id = self.commodity_data.id
+        return not self.catalog_widget.catalog_controller.commodity_exists(name, ignored_id)
 
     def get_commodity_data(self) -> Commodity | None:
         if not self._is_input_valid():
