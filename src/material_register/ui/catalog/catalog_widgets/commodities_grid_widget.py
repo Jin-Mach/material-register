@@ -8,12 +8,15 @@ from material_register.ui.catalog.catalog_widgets.commodity_card_widget import C
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import CategoryWithCommoditiesWidget
+    from material_register.controllers.catalog.catalog_controller import CatalogController
 
 
 class CommoditiesGridWidget(QWidget):
-    def __init__(self, category_with_commodities_widget: "CategoryWithCommoditiesWidget") -> None:
+    def __init__(self, category_with_commodities_widget: "CategoryWithCommoditiesWidget",
+                 catalog_controller: "CatalogController") -> None:
         super().__init__(category_with_commodities_widget)
         self.category_with_commodities_widget = category_with_commodities_widget
+        self.catalog_controller = catalog_controller
         self.setLayout(self._create_ui())
         self.commodities_cards = []
 
@@ -51,6 +54,7 @@ class CommoditiesGridWidget(QWidget):
         for commodity in commodities:
             card = CommodityCardWidget(self)
             card.set_commodity_details(commodity)
+            card.create_connection(commodity, self.catalog_controller.update_commodity)
             self.commodities_cards.append(card)
         self._reload_commodities()
         self.scroll_area.setVisible(True)

@@ -59,5 +59,8 @@ class CommodityCardWidget(QTabWidget):
         self.active_value.setChecked(bool(commodity.active))
         self.notes_value.setPlainText(commodity.notes)
 
+    def create_connection(self, commodity: Commodity, on_update_clicked) -> None:
+        self.update_commodity_button.clicked.connect(lambda: on_update_clicked(commodity))
+
     def sizeHint(self) -> QSize:
         return QSize(250, 180)

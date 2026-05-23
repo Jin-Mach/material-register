@@ -144,7 +144,7 @@ class CommodityDialog(QDialog):
         self.price_input.setText(str(commodity.default_price or 0.0))
         self.notes_input.setPlainText(commodity.notes or "")
         self.active_checkbox.setChecked(bool(commodity.active))
-        self.category_label.setText(str(commodity.category_id))
+        self.category_value.setText(str(self.category_name))
         self._update_notes_count()
 
     def _update_notes_count(self) -> None:

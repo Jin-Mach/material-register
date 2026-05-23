@@ -8,12 +8,14 @@ from material_register.ui.catalog.catalog_widgets.category_with_commodities_widg
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
+    from material_register.controllers.catalog.catalog_controller import CatalogController
 
 
 class CatalogDetailsWidget(QWidget):
-    def __init__(self, catalog_widget: "CatalogWidget") -> None:
+    def __init__(self, catalog_widget: "CatalogWidget", catalog_controller: "CatalogController") -> None:
         super().__init__(catalog_widget)
         self.catalog_widget = catalog_widget
+        self.catalog_controller = catalog_controller
         self.setLayout(self._create_ui())
         self._setup_init()
 
@@ -21,7 +23,7 @@ class CatalogDetailsWidget(QWidget):
         main_layout = QVBoxLayout()
         self.stacked_widget = QStackedWidget()
         self.catalog_default_widget = CatalogDefaultWidget(self)
-        self.category_with_commodities_widget = CategoryWithCommoditiesWidget(self)
+        self.category_with_commodities_widget = CategoryWithCommoditiesWidget(self, self.catalog_controller)
         main_layout.addWidget(self.stacked_widget)
         return main_layout
 

@@ -33,8 +33,8 @@ class CatalogController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             category_data = dialog.get_category_data()
             if category_data is None:
-                dialog = ErrorDialog()
-                dialog.show_dialog("UNKNOWN_ERROR", False)
+                error_dialog = ErrorDialog()
+                error_dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
             ok, error = CategoryQueries.create_category(self.db_connection, category_data.name, category_data.notes)
             if not ok:
@@ -45,7 +45,7 @@ class CatalogController:
             self.catalog_widget.tree_widget.setCurrentItem(item)
             self.catalog_widget.details_widget.refresh_category_data(category_data)
             self._refresh_cache()
-            self._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
+            CatalogController._notification_handler(self.notification_texts, "ADD_CATEGORY", "Category added")
 
     def add_commodity(self) -> None:
         category, _ = self.catalog_widget.tree_widget.get_selected_data()
@@ -55,8 +55,8 @@ class CatalogController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             commodity_data = dialog.get_commodity_data()
             if not commodity_data:
-                dialog = ErrorDialog()
-                dialog.show_dialog("UNKNOWN_ERROR", False)
+                error_dialog = ErrorDialog()
+                error_dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
             ok, error = CommoditiesQueries.create_commodity(self.db_connection, commodity_data.name, category.id,
                                                             commodity_data.unit, commodity_data.default_price,
@@ -66,14 +66,14 @@ class CatalogController:
                 return
             parent_item, item = self.catalog_widget.tree_widget.create_commodity_item(commodity_data)
             if parent_item is None or item is None:
-                dialog = ErrorDialog()
-                dialog.show_dialog("UNKNOWN_ERROR", False)
+                error_dialog = ErrorDialog()
+                error_dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
             self.catalog_widget.tree_widget.setCurrentItem(item)
             parent_item.setExpanded(True)
             self._refresh_cache()
             self.setup_details_widget()
-            self._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
+            CatalogController._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
     def update_category(self) -> None:
         item = self.catalog_widget.tree_widget.currentItem()
@@ -88,7 +88,8 @@ class CatalogController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             category_data = dialog.get_category_data()
             if category_data is None:
-                ErrorDialog().show_dialog("UNKNOWN_ERROR", False)
+                error_dialog = ErrorDialog()
+                error_dialog.show_dialog("UNKNOWN_ERROR", False)
                 return
             ok, error = CategoryQueries.update_category(self.db_connection, category.id, category_data.name,
                                                         category_data.notes)
@@ -97,11 +98,40 @@ class CatalogController:
                 return
             self._refresh_cache()
             self.reload_catalog_tree()
+            self.catalog_widget.details_widget.refresh_category_data(category_data)
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
             if item is not None:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
-            self.catalog_widget.details_widget.refresh_category_data(category_data)
+                item.setExpanded(True)
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
+
+    def update_commodity(self, commodity: Commodity) -> None:
+        category, _ = self.catalog_widget.tree_widget.get_selected_data()
+        if category is None:
+            return
+        dialog = CommodityDialog(self.catalog_widget, commodity.category_id, category.name, mode="UPDATE",
+                                 commodity_data=commodity)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            commodity_data = dialog.get_commodity_data()
+            if not commodity_data:
+                error_dialog = ErrorDialog()
+                error_dialog.show_dialog("UNKNOWN_ERROR", False)
+                return
+            ok, error = CommoditiesQueries.update_commodity(self.db_connection, commodity_data.id, commodity_data.name,
+                                                            commodity_data.category_id, commodity_data.unit,
+                                                            commodity_data.default_price, commodity_data.notes,
+                                                            commodity_data.active)
+            if not ok:
+                CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_commodity")
+                return
+            self._refresh_cache()
+            self.reload_catalog_tree()
+            self.setup_details_widget()
+            item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
+            if item is not None:
+                self.catalog_widget.tree_widget.setCurrentItem(item)
+                item.setExpanded(True)
+            CatalogController._notification_handler(self.notification_texts, "UPDATE_COMMODITY", "Item updated")
 
     def reload_catalog_tree(self) -> None:
         self.catalog_widget.tree_widget.reload_tree(self.categories, self.commodities)

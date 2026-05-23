@@ -33,7 +33,7 @@ class CatalogWidget(QWidget):
         self.catalog_title_label.setFont(font)
         bottom_layout = QHBoxLayout()
         self.tree_widget = CatalogTreeWidget(self)
-        self.details_widget = CatalogDetailsWidget(self)
+        self.details_widget = CatalogDetailsWidget(self, self.catalog_controller)
         top_layout.addWidget(self.add_category_button)
         top_layout.addStretch()
         top_layout.addWidget(self.catalog_title_label)
