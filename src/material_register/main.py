@@ -3,7 +3,7 @@ import sys
 from PySide6.QtWidgets import QApplication
 
 from material_register.config.logging_congig import LOG_STRUCTURE
-from material_register.controllers.init.init_controller import InitController
+from material_register.controllers.init_controller import InitController
 from material_register.providers.paths_provider import PathsProvider
 
 

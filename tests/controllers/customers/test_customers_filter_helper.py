@@ -1,6 +1,6 @@
 import pytest
 
-from material_register.controllers.customers.customers_filter_helper import CustomersFilterHelper
+from material_register.db.utils.customers_filter_helper import CustomersFilterHelper
 
 
 @pytest.mark.parametrize("text, expected", [

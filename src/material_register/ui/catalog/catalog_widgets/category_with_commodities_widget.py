@@ -9,7 +9,7 @@ from material_register.ui.catalog.catalog_widgets.commodities_grid_widget import
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widgets.catalog_details_widget import CatalogDetailsWidget
-    from material_register.controllers.catalog.catalog_controller import CatalogController
+    from material_register.controllers.catalog_controller import CatalogController
 
 
 class CategoryWithCommoditiesWidget(QWidget):

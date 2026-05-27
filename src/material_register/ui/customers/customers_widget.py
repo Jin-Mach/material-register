@@ -4,7 +4,7 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
-from material_register.controllers.customers.customers_controller import CustomersController
+from material_register.controllers.customers_controller import CustomersController
 from material_register.init.models_init import ModelsSetup
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.customers.customers_widgets.customers_actions_widget import CustomersActionsWidget

@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QMenu
 
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widgets.customers_view import CustomersView
-    from material_register.controllers.customers.customers_controller import CustomersController
+    from material_register.controllers.customers_controller import CustomersController
 
 
 class CustomersContextMenu(QMenu):

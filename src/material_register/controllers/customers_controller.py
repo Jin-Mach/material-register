@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QModelIndex, Qt
 from PySide6.QtWidgets import QDialog, QMessageBox
 
-from material_register.controllers.customers.customers_filter_helper import CustomersFilterHelper
+from material_register.db.utils.customers_filter_helper import CustomersFilterHelper
 from material_register.core.app_context import AppContext
 from material_register.domain.customers_dataclass import Customer
 from material_register.init.models_init import ModelsSetup

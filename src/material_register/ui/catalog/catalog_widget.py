@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel
 
-from material_register.controllers.catalog.catalog_controller import CatalogController
+from material_register.controllers.catalog_controller import CatalogController
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.catalog.catalog_widgets.catalog_details_widget import CatalogDetailsWidget
 from material_register.ui.catalog.catalog_widgets.catalog_tree_widget import CatalogTreeWidget

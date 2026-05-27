@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 
-from material_register.controllers.transactions.transactions_controller import TransactionsController
+from material_register.controllers.transactions_controller import TransactionsController
 from material_register.ui.transactions.transactions_widgets.transactions_view import TransactionsView
 from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import TransactionsActionsWidget
 
