@@ -14,7 +14,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 class SetupInit:
 
     @classmethod
-    def setup_init(cls) -> tuple[bool, str]:
+    def init_setup(cls) -> tuple[bool, str]:
         try:
             invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
             if invalid_files:

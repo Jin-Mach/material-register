@@ -5,7 +5,7 @@ from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
 from material_register.controllers.customers_controller import CustomersController
-from material_register.init.models_init import ModelsSetup
+from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.customers.customers_widgets.customers_actions_widget import CustomersActionsWidget
 from material_register.ui.customers.customers_widgets.customers_view import CustomersView
@@ -31,7 +31,7 @@ class CustomersWidget(QWidget):
         main_layout = QVBoxLayout()
         self.action_widget = CustomersActionsWidget(self)
         self.customers_view = CustomersView(self)
-        self.customers_model = ModelsSetup.customers_model
+        self.customers_model = DataInit.customers_model
         count_layout = QHBoxLayout()
         self.count_label = QLabel()
         self.count_label.setObjectName("countLabel")

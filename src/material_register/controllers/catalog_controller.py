@@ -8,6 +8,7 @@ from material_register.db.queries.commodities_queries import CommoditiesQueries
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
+from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.category_dialog import CategoryDialog
 from material_register.ui.dialogs.commodity_dialog import CommodityDialog
@@ -23,8 +24,6 @@ class CatalogController:
         self.catalog_widget = catalog_widget
         self.db_connection = DbInit.db_connection
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("CATALOG", None)
-        self.categories = CategoryQueries.get_categories(self.db_connection)
-        self.commodities = CommoditiesQueries.get_commodities(self.db_connection)
 
     def add_category(self) -> None:
         dialog = CategoryDialog(self.catalog_widget)
@@ -39,7 +38,7 @@ class CatalogController:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.add_category")
                 return
             category_data.id = category_id
-            self._refresh_cache()
+            CatalogController._refresh_cache()
             self.reload_catalog_tree()
             self.catalog_widget.details_widget.refresh_category_data(category_data)
             item = self.catalog_widget.tree_widget.find_item_by_id(category_id)
@@ -71,7 +70,7 @@ class CatalogController:
                 return
             self.catalog_widget.tree_widget.setCurrentItem(item)
             parent_item.setExpanded(True)
-            self._refresh_cache()
+            CatalogController._refresh_cache()
             self.setup_details_widget()
             CatalogController._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
@@ -91,7 +90,7 @@ class CatalogController:
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_category")
                 return
-            self._refresh_cache()
+            CatalogController._refresh_cache()
             self.reload_catalog_tree()
             self.catalog_widget.details_widget.refresh_category_data(category_data)
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
@@ -119,7 +118,7 @@ class CatalogController:
             if not ok:
                 CatalogController._handle_db_error(error, f"{self.__class__.__name__}.update_commodity")
                 return
-            self._refresh_cache()
+            CatalogController._refresh_cache()
             self.reload_catalog_tree()
             self.setup_details_widget()
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
@@ -129,7 +128,7 @@ class CatalogController:
             CatalogController._notification_handler(self.notification_texts, "UPDATE_COMMODITY", "Item updated")
 
     def reload_catalog_tree(self) -> None:
-        self.catalog_widget.tree_widget.reload_tree(self.categories, self.commodities)
+        self.catalog_widget.tree_widget.reload_tree(DbCache.categories, DbCache.commodities)
 
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return CategoryQueries.category_exists(self.db_connection, name, ignored_id)
@@ -137,22 +136,23 @@ class CatalogController:
     def commodity_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return CommoditiesQueries.commodity_exists(self.db_connection, name, ignored_id)
 
-    def _refresh_cache(self) -> None:
-        self.categories = CategoryQueries.get_categories(self.db_connection)
-        self.commodities = CommoditiesQueries.get_commodities(self.db_connection)
-
     def setup_details_widget(self) -> None:
         category, _ = self.catalog_widget.tree_widget.get_selected_data()
         if category is None:
             self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(0)
             return
-        commodities = self._get_commodities_for_category(category.id)
+        commodities = CatalogController._get_commodities_for_category(category.id)
         self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(1)
         self.catalog_widget.details_widget.category_with_commodities_widget.setup_ui(category, commodities)
 
-    def _get_commodities_for_category(self, category_id: int) -> list[Commodity]:
+    @staticmethod
+    def _refresh_cache() -> None:
+        DbCache.refresh_catalog_data()
+
+    @staticmethod
+    def _get_commodities_for_category(category_id: int) -> list[Commodity]:
         commodities = []
-        for commodity in self.commodities:
+        for commodity in DbCache.commodities:
             if commodity.category_id == category_id:
                 commodities.append(commodity)
         return sorted(commodities, key=lambda commodity_item: commodity_item.name.lower())

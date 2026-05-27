@@ -1,15 +1,17 @@
 from material_register.db.models.customers_model import CustomersModel
 from material_register.init.db_init import DbInit
+from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 
 
-class ModelsSetup:
+class DataInit:
     customers_model: CustomersModel | None = None
 
     @classmethod
-    def models_init(cls) -> tuple[bool, str]:
+    def init_data(cls) -> tuple[bool, str]:
         try:
             cls.customers_model = CustomersModel(DbInit.db_connection)
+            DbCache.setup_init(DbInit.db_connection)
             return True, ""
         except Exception as e:
             ErrorHandler.handle_error(e, "db", "critical")

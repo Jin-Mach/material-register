@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QDialog, QMessageBox
 from material_register.db.utils.customers_filter_helper import CustomersFilterHelper
 from material_register.core.app_context import AppContext
 from material_register.domain.customers_dataclass import Customer
-from material_register.init.models_init import ModelsSetup
+from material_register.init.data_init import DataInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 class CustomersController:
     def __init__(self, customers_widget: "CustomersWidget") -> None:
-        self.customers_model = ModelsSetup.customers_model
+        self.customers_model = DataInit.customers_model
         self.customers_widget = customers_widget
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("CUSTOMERS", None)
 

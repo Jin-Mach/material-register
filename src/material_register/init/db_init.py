@@ -8,7 +8,7 @@ class DbInit:
     db_connection = None
 
     @classmethod
-    def db_init(cls) -> tuple[bool, str]:
+    def init_db(cls) -> tuple[bool, str]:
         try:
             cls.db_connection = create_connection(PathsProvider.database, cls.DATABASE_NAME)
             if cls.db_connection is None:
