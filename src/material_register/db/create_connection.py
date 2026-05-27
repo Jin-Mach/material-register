@@ -101,11 +101,12 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
     if not query.exec("""
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            type TEXT NOT NULL CHECK(type IN ('IN', 'OUT')),
+            type TEXT NOT NULL,
             customer_id INTEGER,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
             payment_type TEXT NOT NULL,
             
+            CHECK(type IN ('IN', 'OUT')),
             CHECK(payment_type IN ('CASH', 'TRANSFER')),
 
             FOREIGN KEY(customer_id)
