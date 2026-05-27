@@ -73,7 +73,7 @@ class CustomersController:
             CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")
 
     def filter_customers(self, search_text: str) -> None:
-        normalized_text = normalize_whitespace(search_text)
+        normalized_text = normalize_text(search_text)
         final_filter = CustomersFilterHelper.get_filter(normalized_text)
         self.customers_model.setFilter(final_filter)
         if self.customers_model.rowCount() == 0:
