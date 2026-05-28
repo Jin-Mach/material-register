@@ -8,6 +8,7 @@ from material_register.core.app_context import AppContext
 from material_register.domain.customers_dataclass import Customer
 from material_register.init.data_init import DataInit
 from material_register.providers.texts_provider import TextsProvider
+from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -38,6 +39,7 @@ class CustomersController:
             if not self.customers_model.add_customer(customer):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.add_customers")
                 return
+            CustomersController._refresh_cache()
             self.update_counts()
             CustomersController._notification_handler(self.notification_texts, "ADD_CUSTOMER", "Customer added")
 
@@ -57,6 +59,7 @@ class CustomersController:
             if not self.customers_model.update_customer(customer_id, customer):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.update_customers")
                 return
+            CustomersController._refresh_cache()
             CustomersController._notification_handler(self.notification_texts, "UPDATE_CUSTOMER", "Record updated")
 
     def change_customer_active(self, customer_index: QModelIndex) -> None:
@@ -70,6 +73,7 @@ class CustomersController:
             if not self.customers_model.set_active(customer_id, not customer_data.active):
                 CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.set_active")
                 return
+            CustomersController._refresh_cache()
             CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")
 
     def filter_customers(self, search_text: str) -> None:
@@ -87,6 +91,10 @@ class CustomersController:
         filtered = self.customers_model.rowCount()
         total = self.customers_model.get_total_count()
         self.customers_widget.set_count_text(filtered, total)
+
+    @staticmethod
+    def _refresh_cache() -> None:
+        DbCache.refresh_catalog_data()
 
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:
