@@ -95,6 +95,17 @@ UI_KEYS = [
     ("CommodityCardWidget", "notesLabelText"),
     ("CommodityCardWidget", "updateCommodityButtonText"),
     ("CommodityCardWidget", "updateCommodityButtonTooltipText"),
+    ("CreateTransactionDialog", "transactionTypeLabelText"),
+    ("CreateTransactionDialog", "transactionTypeComboboxItems"),
+    ("CreateTransactionDialog", "paymentTypeLabelText"),
+    ("CreateTransactionDialog", "paymentTypeComboboxItems"),
+    ("CreateTransactionDialog", "customerNameLabelText"),
+    ("CreateTransactionDialog", "customerDocumentNumberLabelText"),
+    ("CreateTransactionDialog", "customerAddressLabelText"),
+    ("CreateTransactionDialog", "continueTransactionButtonText"),
+    ("CreateTransactionDialog", "continueTransactionButtonTooltipText"),
+    ("CreateTransactionDialog", "cancelTransactionButtonText"),
+    ("CreateTransactionDialog", "cancelTransactionButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [

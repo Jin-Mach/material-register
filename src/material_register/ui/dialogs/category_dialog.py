@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit
 
 from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -123,7 +124,7 @@ class CategoryDialog(QDialog):
         else:
             invalid = not text
         if invalid:
-            widget.setStyleSheet("background-color: #ffdddd; border: 1px solid red;")
+            widget.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             widget.setStyleSheet("")
 

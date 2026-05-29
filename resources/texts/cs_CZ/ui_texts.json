@@ -106,5 +106,18 @@
     "notesLabelText": "Poznámky",
     "updateCommodityButtonText": "Upravit položku",
     "updateCommodityButtonTooltipText": "Upraví vybranou položku"
+  },
+  "CreateTransactionDialog": {
+    "transactionTypeLabelText": "Transakce:",
+    "transactionTypeComboboxItems": ["Výkup", "Výdej"],
+    "paymentTypeLabelText": "Platba:",
+    "paymentTypeComboboxItems": ["Hotovost", "Převod na účet"],
+    "customerNameLabelText": "Zákazník:",
+    "customerDocumentNumberLabelText": "Doklad:",
+    "customerAddressLabelText": "Adresa:",
+    "continueTransactionButtonText": "Založit transakci",
+    "continueTransactionButtonTooltipText": "Založí novou transakci pro vybraného zákazníka",
+    "cancelTransactionButtonText": "Zrušit",
+    "cancelTransactionButtonTooltipText": "Zavře dialog"
   }
 }

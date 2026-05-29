@@ -1,0 +1,1 @@
+INVALID_INPUT_STYLE = "background-color: #ffdddd; border: 1px solid red;"

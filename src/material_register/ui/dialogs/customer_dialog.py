@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLab
 
 from material_register.domain.customers_dataclass import Customer
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -101,6 +102,7 @@ class CustomerDialog(QDialog):
         self._setup_items()
         self._setup_mode()
         self._set_validators()
+        self._update_save_button_state()
 
     def _create_connection(self) -> None:
         for widget in (self.first_name_input, self.last_name_input, self.company_input, self.document_type_input,
@@ -112,7 +114,7 @@ class CustomerDialog(QDialog):
         self.save_button.clicked.connect(self.accept)
         self.close_button.clicked.connect(self.reject)
 
-    def _setup_texts(self, widgets: list) -> None:
+    def _setup_texts(self, widgets: list[QLineEdit]) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.created_label_text = texts.get(f"{self.created_label.objectName()}Text", "Created:")
         self.notes_count_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
@@ -195,7 +197,7 @@ class CustomerDialog(QDialog):
 
     def _set_required_style(self, widget) -> None:
         if widget.isEnabled() and not widget.text().strip():
-            widget.setStyleSheet("QLineEdit { background: #ffdddd; border: 1px solid red; }")
+            widget.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             widget.setStyleSheet("")
 
@@ -203,7 +205,7 @@ class CustomerDialog(QDialog):
         if self._is_document_valid():
             self.document_type_input.setStyleSheet("")
         else:
-            self.document_type_input.setStyleSheet("QLineEdit { background: #ffdddd; border: 1px solid red; }")
+            self.document_type_input.setStyleSheet(INVALID_INPUT_STYLE)
 
     def _update_save_button_state(self) -> None:
         type_index = self.subject_type.currentIndex()
@@ -306,7 +308,6 @@ class CustomerDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        self._update_save_button_state()
         self.adjustSize()
         self.setFixedSize(self.size())
         centre_dialog(self)

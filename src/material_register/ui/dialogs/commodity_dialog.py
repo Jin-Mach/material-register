@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdi
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -166,7 +167,7 @@ class CommodityDialog(QDialog):
     def _set_required_style(self, widget) -> None:
         invalid = not widget.text().strip()
         if invalid:
-            widget.setStyleSheet("background-color: #ffdddd; border: 1px solid red;")
+            widget.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             widget.setStyleSheet("")
 

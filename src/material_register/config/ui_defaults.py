@@ -103,5 +103,18 @@ DEFAULT_TEXTS = {
     "notesLabelText": "Notes",
     "updateCommodityButtonText": "Edit item",
     "updateCommodityButtonTooltipText": "Edits the selected item"
+  },
+  "CreateTransactionDialog": {
+    "transactionTypeLabelText": "Transaction:",
+    "transactionTypeComboboxItems": ["Purchase", "Issue"],
+    "paymentTypeLabelText": "Payment:",
+    "paymentTypeComboboxItems": ["Cash", "Bank Transfer"],
+    "customerNameLabelText": "Customer:",
+    "customerDocumentNumberLabelText": "Document:",
+    "customerAddressLabelText": "Address:",
+    "continueTransactionButtonText": "Create Transaction",
+    "continueTransactionButtonTooltipText": "Creates a new transaction for the selected customer",
+    "cancelTransactionButtonText": "Cancel",
+    "cancelTransactionButtonTooltipText": "Closes the dialog"
   }
 }

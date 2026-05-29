@@ -1,53 +1,62 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtGui import QShowEvent
+from PySide6.QtCore import QRegularExpression
+from PySide6.QtGui import QShowEvent, Qt, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QDialogButtonBox, \
-    QSizePolicy, QHBoxLayout
+    QSizePolicy, QHBoxLayout, QCompleter, QWidget
+
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
+from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
+    from material_register.db.models.customers_completer_model import CustomersCompleterModel
 
 
 # noinspection PyTypeChecker
 class CreateTransactionDialog(QDialog):
-    def __init__(self, transactions_widget: "TransactionsWidget") -> None:
+    def __init__(self, transactions_widget: "TransactionsWidget", completer_model: "CustomersCompleterModel") -> None:
         super().__init__(transactions_widget)
+        self.completer_model = completer_model
+        self.selected_customer = None
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._setup_completer(self.completer_model)
         self._create_connection()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         type_layout = QHBoxLayout()
         type_form_layout = QFormLayout()
-        self.transaction_type_label = QLabel("Transaction:")
+        self.transaction_type_label = QLabel()
         self.transaction_type_label.setObjectName("transactionTypeLabel")
         self.transaction_type_combobox = QComboBox()
         self.transaction_type_combobox.setObjectName("transactionTypeCombobox")
-        self.payment_label = QLabel("Payment")
-        self.payment_label.setObjectName("paymentLabel")
-        self.payment_combobox = QComboBox()
-        self.payment_combobox.setObjectName("paymentCombobox")
+        self.payment_type_label = QLabel()
+        self.payment_type_label.setObjectName("paymentTypeLabel")
+        self.payment_type_combobox = QComboBox()
+        self.payment_type_combobox.setObjectName("paymentTypeCombobox")
         customer_form_layout = QFormLayout()
-        self.customer_name_label = QLabel("Customer:")
+        self.customer_name_label = QLabel()
         self.customer_name_label.setObjectName("customerNameLabel")
         self.customer_name_input = QLineEdit()
         self.customer_name_input.setObjectName("customerNameInput")
         self.customer_name_input.setMinimumWidth(300)
         self.customer_name_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self.customer_document_number_label = QLabel("Document:")
+        self.customer_document_number_label = QLabel()
         self.customer_document_number_label.setObjectName("customerDocumentNumberLabel")
-        self.customer_document_number = QLabel("document number (max 30 letters)")
-        self.customer_address_label = QLabel("Address:")
+        self.customer_document_number = QLabel()
+        self.customer_address_label = QLabel()
         self.customer_address_label.setObjectName("customerAddressLabel")
-        self.customer_address = QLabel("very long address (max 50 letters)....")
+        self.customer_address = QLabel()
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         self.continue_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.continue_transaction_button.setObjectName("continueTransactionButton")
         self.cancel_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
         type_form_layout.addRow(self.transaction_type_label, self.transaction_type_combobox)
-        type_form_layout.addRow(self.payment_label, self.payment_combobox)
+        type_form_layout.addRow(self.payment_type_label, self.payment_type_combobox)
         customer_form_layout.addRow(self.customer_name_label, self.customer_name_input)
         customer_form_layout.addRow(self.customer_document_number_label, self.customer_document_number)
         customer_form_layout.addRow(self.customer_address_label, self.customer_address)
@@ -60,27 +69,93 @@ class CreateTransactionDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
-        self.transaction_type_combobox.addItem("In", "IN")
-        self.transaction_type_combobox.addItem("Out", "OUT")
-        self.payment_combobox.addItem("Cash", "CASH")
-        self.payment_combobox.addItem("Transfer", "TRANSFER")
+        widgets = [self.transaction_type_label, self.payment_type_label, self.customer_name_label,
+                   self.customer_document_number_label, self.customer_address_label,
+                   self.continue_transaction_button, self.cancel_transaction_button]
+        self._setup_texts(widgets)
+        self._setup_items()
+        self._set_validators()
+        self._set_required_style()
+        self._update_continue_button_state()
 
     def _create_connection(self) -> None:
         self.continue_transaction_button.clicked.connect(self.accept)
         self.cancel_transaction_button.clicked.connect(self.reject)
+        self.completer.activated.connect(self._on_customer_selected)
+        self.customer_name_input.textEdited.connect(self._customer_name_edited)
+
+    def _setup_texts(self, widgets: list[QWidget]) -> None:
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
+    def _setup_items(self) -> None:
+        transaction_values = ["IN", "OUT"]
+        payment_values = ["CASH", "TRANSFER"]
+        texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        transaction_items = texts.get(f"{self.transaction_type_combobox.objectName()}Items", ["In", "Out"])
+        payment_items = texts.get(f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"])
+        for text, value in zip(transaction_items, transaction_values):
+            self.transaction_type_combobox.addItem(text, value)
+        for text, value in zip(payment_items, payment_values):
+            self.payment_type_combobox.addItem(text, value)
+
+    def _set_validators(self) -> None:
+        customer_validator = QRegularExpressionValidator(QRegularExpression(r"^[\p{L}0-9 .,&\-]{1,50}$"))
+        self.customer_name_input.setValidator(customer_validator)
 
     def _set_dialog_size(self, width: int = 500) -> None:
         self.setFixedWidth(width)
         self.adjustSize()
         self.setFixedSize(width, self.size().height())
 
+    def _setup_completer(self, completer_model: "CustomersCompleterModel") -> None:
+        self.completer = QCompleter()
+        self.completer.setModel(completer_model)
+        self.completer.setCompletionRole(Qt.ItemDataRole.UserRole + 10)
+        self.completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        self.completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        self.customer_name_input.setCompleter(self.completer)
+
+    def _on_customer_selected(self, text: str) -> None:
+        customer = self.completer_model.get_customer_by_text(text)
+        if customer is None:
+            return
+        self.selected_customer = customer
+        self.customer_document_number.setText(self.selected_customer.document_number)
+        self.customer_address.setText(self.selected_customer.address)
+        self._set_required_style()
+        self._update_continue_button_state()
+
+    def _customer_name_edited(self) -> None:
+        self.selected_customer = None
+        self.customer_document_number.clear()
+        self.customer_address.clear()
+        self._set_required_style()
+        self._update_continue_button_state()
+
+    def _update_continue_button_state(self) -> None:
+        self.continue_transaction_button.setEnabled(self.selected_customer is not None)
+
+    def _set_required_style(self) -> None:
+        if self.selected_customer is None:
+            self.customer_name_input.setStyleSheet(INVALID_INPUT_STYLE)
+        else:
+            self.customer_name_input.setStyleSheet("")
+
     def get_transaction_data(self) -> dict[str, str]:
         return {
+            "transactionText": self.transaction_type_combobox.currentText(),
             "transactionType": self.transaction_type_combobox.currentData(),
-            "payment": self.payment_combobox.currentData(),
+            "paymentText": self.payment_type_combobox.currentText(),
+            "paymentType": self.payment_type_combobox.currentData(),
+            "customerId": self.selected_customer.id,
             "customer": self.customer_name_input.text().strip(),
-            "documentNumber": self.customer_document_number_label.text(),
-            "address": self.customer_address_label.text()
+            "documentNumber": self.customer_document_number.text(),
+            "address": self.customer_address.text()
         }
 
     def showEvent(self, event: QShowEvent) -> None:
