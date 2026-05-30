@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QDialog
 
 from material_register.init.data_init import DataInit
 from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
+from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialog
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -14,6 +15,10 @@ class TransactionsController:
         self.transactions_widget = transactions_widget
 
     def create_transaction(self) -> None:
-        create_transaction_dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model)
-        if create_transaction_dialog.exec() == QDialog.DialogCode.Accepted:
-            print("create data:", create_transaction_dialog.get_transaction_data())
+        create_dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model)
+        if create_dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        create_data = create_dialog.get_transaction_data()
+        items_dialog = TransactionItemsDialog(create_data, self.transactions_widget)
+        if items_dialog.exec() == QDialog.DialogCode.Accepted:
+            print("OK")
