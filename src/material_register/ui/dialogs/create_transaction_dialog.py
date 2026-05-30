@@ -146,7 +146,9 @@ class CreateTransactionDialog(QDialog):
         else:
             self.customer_name_input.setStyleSheet("")
 
-    def get_create_data(self) -> dict[str, str]:
+    def get_create_data(self) -> dict[str, str | int | None] | None:
+        if self.selected_customer is None:
+            return None
         return {
             "transactionText": self.transaction_type_combobox.currentText(),
             "transactionType": self.transaction_type_combobox.currentData(),

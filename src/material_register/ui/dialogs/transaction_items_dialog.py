@@ -10,18 +10,22 @@ from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
+    from material_register.controllers.transactions_controller import TransactionsController
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
 
 
 class TransactionItemsDialog(QDialog):
-    def __init__(self, create_data: dict[str, str], transactions_widget: "TransactionsWidget") -> None:
+    def __init__(self, transactions_controller: "TransactionsController", create_data: dict[str, str | int],
+                 transactions_widget: "TransactionsWidget") -> None:
         super().__init__(transactions_widget)
         self.setMinimumSize(800, 500)
+        self.transactions_controller = transactions_controller
         self.create_data = create_data
         self.transactions_widget = transactions_widget
         self.setLayout(self._create_ui())
         self._setup_ui()
         self.set_create_data(create_data)
+        self._create_connection()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -51,12 +55,15 @@ class TransactionItemsDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
-    def set_create_data(self, create_data: dict[str, str | int | None]) -> None:
+    def _create_connection(self) -> None:
+        self.transaction_info_widget.update_transaction_info_button.clicked.connect(self._update_create_data)
+
+    def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)
         self.transaction_info_widget.set_create_data(self.transaction_text, self.payment_text, self.customer,
                                                      self.document_number, self.address)
 
-    def _setup_create_data(self, create_data: dict[str, str | int | None]) -> None:
+    def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
         self.transaction_text = create_data.get("transactionText", "")
         self.transaction_type = create_data.get("transactionType", None)
         self.payment_text = create_data.get("paymentText", "")
@@ -65,6 +72,12 @@ class TransactionItemsDialog(QDialog):
         self.customer = create_data.get("customer", "")
         self.document_number = create_data.get("documentNumber", "")
         self.address = create_data.get("address", "")
+
+    def _update_create_data(self) -> None:
+        new_data = self.transactions_controller.create_transaction_data()
+        if new_data is None:
+            return
+        self.set_create_data(new_data)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

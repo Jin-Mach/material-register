@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QDialog
 
 from material_register.init.data_init import DataInit
 from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
+from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialog
 
 if TYPE_CHECKING:
@@ -15,10 +16,25 @@ class TransactionsController:
         self.transactions_widget = transactions_widget
 
     def create_transaction(self) -> None:
-        create_dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model)
-        if create_dialog.exec() != QDialog.DialogCode.Accepted:
-            return
-        create_data = create_dialog.get_create_data()
-        items_dialog = TransactionItemsDialog(create_data, self.transactions_widget)
+        create_data = self.create_transaction_data()
+        if create_data is None or not TransactionsController._check_create_data(create_data):
+            if create_data is None:
+                dialog = ErrorDialog()
+                dialog.show_dialog("UNKNOWN_ERROR", False)
+                return
+        items_dialog = TransactionItemsDialog(self, create_data, self.transactions_widget)
         if items_dialog.exec() == QDialog.DialogCode.Accepted:
             print("OK")
+
+    def create_transaction_data(self) -> dict[str, str | int | None] | None:
+        dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.get_create_data()
+
+    @staticmethod
+    def _check_create_data(create_data: dict[str, str | int | None]) -> bool:
+        for key, value in create_data.items():
+            if value is None:
+                return False
+        return True
