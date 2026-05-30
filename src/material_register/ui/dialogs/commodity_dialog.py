@@ -104,7 +104,8 @@ class CommodityDialog(QDialog):
         self._setup_texts(widgets)
         self._setup_mode()
         self._set_validators()
-        self._on_form_changed()
+        self._update_required_styles()
+        self._update_save_button_state()
 
     def _create_connection(self) -> None:
         self.name_input.textChanged.connect(self._on_form_changed)
@@ -157,7 +158,7 @@ class CommodityDialog(QDialog):
         self._set_required_style(self.name_input)
 
     def _set_required_style(self, widget) -> None:
-        invalid = not widget.text().strip()
+        invalid = not self._is_input_valid() or not self._is_commodity_valid()
         if invalid:
             widget.setStyleSheet(INVALID_INPUT_STYLE)
         else:
@@ -203,7 +204,6 @@ class CommodityDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        self._update_save_button_state()
         self.adjustSize()
         self.setFixedSize(self.size())
         centre_dialog(self)

@@ -30,7 +30,6 @@ class CategoryDialog(QDialog):
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
-        self._update_save_button_state()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -66,6 +65,8 @@ class CategoryDialog(QDialog):
         self._setup_texts(widgets)
         self._setup_mode()
         self._set_validators()
+        self._set_required_style(self.category_name_input)
+        self._update_save_button_state()
 
     def _create_connection(self) -> None:
         self.category_name_input.textChanged.connect(self._on_form_changed)
@@ -147,8 +148,6 @@ class CategoryDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        self._set_required_style(self.category_name_input)
-        self._update_save_button_state()
         self.adjustSize()
         self.setFixedSize(self.size())
         centre_dialog(self)
