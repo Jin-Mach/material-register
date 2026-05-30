@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdi
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
@@ -115,7 +116,7 @@ class CommodityDialog(QDialog):
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.category_value.setText(self.category_name)
         self.units_items = texts.get(f"{self.unit_input.objectName()}Items", ["kg", "pcs"])
-        self.notes_count_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
+        self.notes_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
         self.unit_input.addItems(self.units_items)
         if UiTexts.set_ui_texts(self, widgets):
             return
@@ -150,16 +151,7 @@ class CommodityDialog(QDialog):
         self._update_notes_count()
 
     def _update_notes_count(self) -> None:
-        text = self.notes_input.toPlainText()
-        if len(text) > self.NOTES_LENGTH:
-            text = text[:self.NOTES_LENGTH]
-            self.notes_input.blockSignals(True)
-            self.notes_input.setPlainText(text)
-            self.notes_input.blockSignals(False)
-            cursor = self.notes_input.textCursor()
-            cursor.movePosition(cursor.MoveOperation.End)
-            self.notes_input.setTextCursor(cursor)
-        self.notes_count_label.setText(f"{len(text)}/{self.NOTES_LENGTH}")
+        check_notes_length(self.notes_input, self.notes_count_label, self.notes_text, self.NOTES_LENGTH)
 
     def _update_required_styles(self) -> None:
         self._set_required_style(self.name_input)

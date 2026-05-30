@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, Q
                                QSizePolicy, QFrame)
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -12,11 +13,14 @@ if TYPE_CHECKING:
 
 
 class TransactionInfoWidget(QWidget):
+    NOTES_LENGTH = 200
+
     def __init__(self, transaction_item_dialog: "TransactionItemsDialog") -> None:
         super().__init__(transaction_item_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._create_connection()
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
@@ -82,6 +86,12 @@ class TransactionInfoWidget(QWidget):
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        self.notes.textChanged.connect(self._update_notes_count)
+
+    def _update_notes_count(self) -> None:
+        check_notes_length(self.notes, self.notes_count_label, self.notes_count_text, self.NOTES_LENGTH)
 
     def set_create_data(self, transaction_text: str, payment_text: str, customer: str, document_number: str,
                         address: str) -> None:

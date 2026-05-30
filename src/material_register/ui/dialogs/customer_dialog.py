@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLab
 
 from material_register.domain.customers_dataclass import Customer
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
@@ -178,18 +179,7 @@ class CustomerDialog(QDialog):
         self.notes_input.setEnabled(enabled)
 
     def _update_notes_count(self) -> None:
-        text = self.notes_input.toPlainText()
-        if len(text) > self.NOTES_LENGTH:
-            text = text[:self.NOTES_LENGTH]
-            self.notes_input.blockSignals(True)
-            self.notes_input.setPlainText(text)
-            self.notes_input.blockSignals(False)
-            cursor = self.notes_input.textCursor()
-            cursor.movePosition(cursor.MoveOperation.End)
-            self.notes_input.setTextCursor(cursor)
-        self.notes_count_label.setText(
-            f"{self.notes_count_text} {len(text)}/{self.NOTES_LENGTH}"
-        )
+        check_notes_length(self.notes_input, self.notes_count_label, self.notes_count_text, self.NOTES_LENGTH)
 
     def _update_required_styles(self) -> None:
         for widget in (self.first_name_input, self.last_name_input, self.company_input, self.address_input):

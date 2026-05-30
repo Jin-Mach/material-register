@@ -105,6 +105,7 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             customer_id INTEGER,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
             payment_type TEXT NOT NULL,
+            notes TEXT,
             
             CHECK(type IN ('IN', 'OUT')),
             CHECK(payment_type IN ('CASH', 'TRANSFER')),
