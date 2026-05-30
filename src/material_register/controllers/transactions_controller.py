@@ -18,7 +18,7 @@ class TransactionsController:
         create_dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model)
         if create_dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        create_data = create_dialog.get_transaction_data()
+        create_data = create_dialog.get_create_data()
         items_dialog = TransactionItemsDialog(create_data, self.transactions_widget)
         if items_dialog.exec() == QDialog.DialogCode.Accepted:
             print("OK")

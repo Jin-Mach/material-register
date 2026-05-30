@@ -119,5 +119,28 @@
     "continueTransactionButtonTooltipText": "Založí novou transakci pro vybraného zákazníka",
     "cancelTransactionButtonText": "Zrušit",
     "cancelTransactionButtonTooltipText": "Zavře dialog"
+  },
+  "TransactionItemsDialog": {
+    "saveTransactionButtonText": "Uložit transakci",
+    "saveTransactionButtonTooltipText": "Uloží transakci do databáze",
+    "cancelTransactionButtonText": "Zrušit transakci",
+    "cancelTransactionButtonTooltipText": "Zruší transakci a zavře dialog"
+  },
+  "TransactionInfoWidget": {
+    "customerNameLabelText": "Zákazník:",
+    "documentNumberLabelText": "Doklad:",
+    "addressLabelText": "Adresa:",
+    "updateTransactionInfoButtonText": "Upravit zákazníka",
+    "updateTransactionInfoButtonTooltipText": "Otevře dialog pro znovu zadání zákazníka",
+    "notesCountLabelText": "Počet znaků:"
+  },
+  "TransactionsItemsWidget": {
+    "addItemButtonText": "Přidat položku",
+    "addItemButtonTooltipText": "Otevře dialog pro přidání nové položky",
+    "updateItemButtonText": "Upravit položku",
+    "updateItemButtonTooltipText": "Otevře dialog úpravy označené položky",
+    "deleteButtonText": "Smazat položku",
+    "deleteButtonTooltipText": "Smaže označenou položku ze seznamu",
+    "totalPriceLabelText": "Celková cena:"
   }
 }

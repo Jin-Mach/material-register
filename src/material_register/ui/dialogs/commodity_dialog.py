@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QRegularExpression
 from PySide6.QtGui import QShowEvent, QRegularExpressionValidator, QFont
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox,
-                               QCheckBox, QFormLayout, QDoubleSpinBox, QComboBox)
+                               QCheckBox, QFormLayout, QDoubleSpinBox, QComboBox, QWidget)
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
@@ -111,7 +111,7 @@ class CommodityDialog(QDialog):
         self.save_button.clicked.connect(self.accept)
         self.close_button.clicked.connect(self.reject)
 
-    def _setup_texts(self, widgets: list) -> None:
+    def _setup_texts(self, widgets: list[QWidget]) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.category_value.setText(self.category_name)
         self.units_items = texts.get(f"{self.unit_input.objectName()}Items", ["kg", "pcs"])

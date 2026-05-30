@@ -1,11 +1,13 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QWidget
 
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.transaction_widgets.transaction_info_widget import TransactionInfoWidget
 from material_register.ui.dialogs.transaction_widgets.transactions_items_widget import TransactionsItemsWidget
 from material_register.ui.helpers.window_positioning import centre_dialog
+from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -18,23 +20,51 @@ class TransactionItemsDialog(QDialog):
         self.create_data = create_data
         self.transactions_widget = transactions_widget
         self.setLayout(self._create_ui())
+        self._setup_ui()
+        self.set_create_data(create_data)
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         self.transaction_info_widget = TransactionInfoWidget(self)
         self.transactions_items_widget = TransactionsItemsWidget(self)
         buttons_layout = QHBoxLayout()
-        self.save_transactions_button = QPushButton("Save")
-        self.save_transactions_button.setObjectName("saveTransactionsButton")
-        self.cancel_button = QPushButton("Cancel")
-        self.cancel_button.setObjectName("cancelButton")
+        self.save_transaction_button = QPushButton("Save")
+        self.save_transaction_button.setObjectName("saveTransactionButton")
+        self.cancel_transaction_button = QPushButton("Cancel")
+        self.cancel_transaction_button.setObjectName("cancelTransactionButton")
         buttons_layout.addStretch()
-        buttons_layout.addWidget(self.save_transactions_button)
-        buttons_layout.addWidget(self.cancel_button)
+        buttons_layout.addWidget(self.save_transaction_button)
+        buttons_layout.addWidget(self.cancel_transaction_button)
         main_layout.addWidget(self.transaction_info_widget)
         main_layout.addWidget(self.transactions_items_widget)
         main_layout.addLayout(buttons_layout)
         return main_layout
+
+    def _setup_ui(self) -> None:
+        widgets = [self.save_transaction_button, self.cancel_transaction_button]
+        self._setup_texts(widgets)
+
+    def _setup_texts(self, widgets: list[QWidget]) -> None:
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
+    def set_create_data(self, create_data: dict[str, str | int | None]) -> None:
+        self._setup_create_data(create_data)
+        self.transaction_info_widget.set_create_data(self.transaction_text, self.payment_text, self.customer,
+                                                     self.document_number, self.address)
+
+    def _setup_create_data(self, create_data: dict[str, str | int | None]) -> None:
+        self.transaction_text = create_data.get("transactionText", "")
+        self.transaction_type = create_data.get("transactionType", None)
+        self.payment_text = create_data.get("paymentText", "")
+        self.payment_type = create_data.get("paymentType", None)
+        self.customer_id = create_data.get("customerId", None)
+        self.customer = create_data.get("customer", "")
+        self.document_number = create_data.get("documentNumber", "")
+        self.address = create_data.get("address", "")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

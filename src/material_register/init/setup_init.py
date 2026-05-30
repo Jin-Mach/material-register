@@ -15,16 +15,20 @@ class SetupInit:
 
     @classmethod
     def init_setup(cls) -> tuple[bool, str]:
+        # DEV ONLY: disable download + file validation during development
+        # TODO: remove DEV mode before release and restore full validation + download flow
+        DEV_MODE = True
         try:
-            invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
-            if invalid_files:
-                state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
-                if not state["internet"]:
-                    return False, "CONNECTION_ERROR"
-                if not state["writable"]:
-                    return False, "PERMISSION_ERROR"
-                if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
-                    return False, "DOWNLOAD_FAILED"
+            if DEV_MODE:
+                invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
+                if invalid_files:
+                    state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
+                    if not state["internet"]:
+                        return False, "CONNECTION_ERROR"
+                    if not state["writable"]:
+                        return False, "PERMISSION_ERROR"
+                    if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
+                        return False, "DOWNLOAD_FAILED"
             TextsProvider.provider_init(LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources)
             if not all([TextsProvider.UI_TEXTS, TextsProvider.ERROR_TEXTS, TextsProvider.HEADERS_TEXTS, TextsProvider.CONFIRM_TEXTS]):
                 return False, "TEXTS_LOAD_FAILED"

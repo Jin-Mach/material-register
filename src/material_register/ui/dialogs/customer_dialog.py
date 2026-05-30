@@ -141,8 +141,8 @@ class CustomerDialog(QDialog):
             self._set_update_mode(self.customer_data)
 
     def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}]{1,30}"))
-        company_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-]{1,50}"))
+        name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}]{1,20}"))
+        company_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}"))
         document_validator = QRegularExpressionValidator(QRegularExpression(r"[0-9A-Za-z \-/]{1,30}"))
         address_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,\-/]{1,50}"))
         self.first_name_input.setValidator(name_validator)
@@ -177,7 +177,7 @@ class CustomerDialog(QDialog):
         self.active_checkbox.setEnabled(enabled)
         self.notes_input.setEnabled(enabled)
 
-    def _update_notes_count(self):
+    def _update_notes_count(self) -> None:
         text = self.notes_input.toPlainText()
         if len(text) > self.NOTES_LENGTH:
             text = text[:self.NOTES_LENGTH]
