@@ -64,7 +64,7 @@
     "closeButtonTooltipText": "Zavře dialog"
   },
   "CommodityDialog": {
-    "titleText": "Komodita",
+    "titleText": "Položka",
     "categoryLabelText": "Kategorie:",
     "nameLabelText": "Název:",
     "unitLabelText": "Jednotka:",
@@ -108,6 +108,7 @@
     "updateCommodityButtonTooltipText": "Upraví vybranou položku"
   },
   "CreateTransactionDialog": {
+    "titleText": "Nová transakce",
     "transactionTypeLabelText": "Transakce:",
     "transactionTypeComboboxItems": ["Výkup", "Výdej"],
     "paymentTypeLabelText": "Platba:",
@@ -121,6 +122,7 @@
     "cancelTransactionButtonTooltipText": "Zavře dialog"
   },
   "TransactionItemsDialog": {
+    "titleText": "Transakce",
     "saveTransactionButtonText": "Uložit transakci",
     "saveTransactionButtonTooltipText": "Uloží transakci do databáze",
     "cancelTransactionButtonText": "Zrušit transakci",
@@ -130,7 +132,7 @@
     "customerNameLabelText": "Zákazník:",
     "documentNumberLabelText": "Doklad:",
     "addressLabelText": "Adresa:",
-    "updateTransactionInfoButtonText": "Upravit zákazníka",
+    "updateTransactionInfoButtonText": "Upravit",
     "updateTransactionInfoButtonTooltipText": "Otevře dialog pro znovu zadání zákazníka",
     "notesCountLabelText": "Počet znaků:"
   },
@@ -142,5 +144,17 @@
     "deleteButtonText": "Smazat položku",
     "deleteButtonTooltipText": "Smaže označenou položku ze seznamu",
     "totalPriceLabelText": "Celková cena:"
+  },
+  "CategoryCommodityDialog": {
+    "titleText": "Nová položka",
+    "categoryLabelText": "Kategorie:",
+    "categoryLabelPlaceholderText": "Vyber kategorii...",
+    "commodityLabelText": "Položka:",
+    "unitLabelText": "Celkový počet:",
+    "priceLabelText": "Jednotková cena (Kč):",
+    "addButtonText": "Přidat položku",
+    "addButtonTooltipText": "Přidá položku do transakce",
+    "cancelButtonText": "Zrušit",
+    "cancelButtonTooltipText": "Zavře dialog"
   }
 }

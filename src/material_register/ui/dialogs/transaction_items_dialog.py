@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QWidget
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QWidget, QDialogButtonBox
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.transaction_widgets.transaction_info_widget import TransactionInfoWidget
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
 
 
+# noinspection PyTypeChecker
 class TransactionItemsDialog(QDialog):
     def __init__(self, transactions_controller: "TransactionsController", create_data: dict[str, str | int],
                  transactions_widget: "TransactionsWidget") -> None:
@@ -31,17 +32,14 @@ class TransactionItemsDialog(QDialog):
         main_layout = QVBoxLayout()
         self.transaction_info_widget = TransactionInfoWidget(self)
         self.transactions_items_widget = TransactionsItemsWidget(self)
-        buttons_layout = QHBoxLayout()
-        self.save_transaction_button = QPushButton("Save")
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        self.save_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.save_transaction_button.setObjectName("saveTransactionButton")
-        self.cancel_transaction_button = QPushButton("Cancel")
+        self.cancel_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
-        buttons_layout.addStretch()
-        buttons_layout.addWidget(self.save_transaction_button)
-        buttons_layout.addWidget(self.cancel_transaction_button)
         main_layout.addWidget(self.transaction_info_widget)
         main_layout.addWidget(self.transactions_items_widget)
-        main_layout.addLayout(buttons_layout)
+        main_layout.addWidget(button_box)
         return main_layout
 
     def _setup_ui(self) -> None:
@@ -57,6 +55,7 @@ class TransactionItemsDialog(QDialog):
 
     def _create_connection(self) -> None:
         self.transaction_info_widget.update_transaction_info_button.clicked.connect(self._update_create_data)
+        self.transactions_items_widget.add_item_button.clicked.connect(self._add_transaction_item)
 
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)
@@ -78,6 +77,13 @@ class TransactionItemsDialog(QDialog):
         if new_data is None:
             return
         self.set_create_data(new_data)
+
+    def _add_transaction_item(self) -> None:
+        new_item_data = self.transactions_controller.create_category_commodity_data()
+        print("data1:", new_item_data)
+        if new_item_data is None:
+            return
+        print("data ok")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
