@@ -80,10 +80,8 @@ class TransactionItemsDialog(QDialog):
 
     def _add_transaction_item(self) -> None:
         new_item_data = self.transactions_controller.create_category_commodity_data()
-        print("data1:", new_item_data)
         if new_item_data is None:
             return
-        print("data ok")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

@@ -148,9 +148,10 @@
   "CategoryCommodityDialog": {
     "titleText": "Nová položka",
     "categoryLabelText": "Kategorie:",
-    "categoryLabelPlaceholderText": "Vyber kategorii...",
+    "categoryComboBoxPlaceholderText": "Vyber kategorii...",
     "commodityLabelText": "Položka:",
-    "unitLabelText": "Celkový počet:",
+    "commodityComboBoxPlaceholderText": "Vyber položku...",
+    "unitLabelText": "Celkové množství:",
     "priceLabelText": "Jednotková cena (Kč):",
     "addButtonText": "Přidat položku",
     "addButtonTooltipText": "Přidá položku do transakce",

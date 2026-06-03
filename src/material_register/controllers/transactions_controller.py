@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QDialog
 
 from material_register.init.data_init import DataInit
+from material_register.services.db_cache import DbCache
 from material_register.ui.dialogs.category_commodity_dialog import CategoryCommodityDialog
 from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -35,7 +36,7 @@ class TransactionsController:
         return dialog.get_create_data()
 
     def create_category_commodity_data(self)-> dict[str, str | int | float | None] | None:
-        dialog = CategoryCommodityDialog(self.items_dialog)
+        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         return dialog.get_category_commodity_data()

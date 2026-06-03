@@ -20,6 +20,8 @@ if TYPE_CHECKING:
 class CommodityDialog(QDialog):
     ADD_MODE = "ADD"
     UPDATE_MODE = "UPDATE"
+    MIN_VALUE = 0.0
+    MAX_PRICE_VALUE = 1000
     NOTES_LENGTH = 50
 
     def __init__(self, catalog_widget: "CatalogWidget", category_id: int, category_name: str, mode: str = ADD_MODE,
@@ -55,11 +57,12 @@ class CommodityDialog(QDialog):
         self.default_price_label = QLabel()
         self.default_price_label.setObjectName("defaultPriceLabel")
         self.price_input = QDoubleSpinBox()
-        self.price_input.setMinimum(0.0)
-        self.price_input.setMaximum(1000.0)
+        self.price_input.setMinimum(self.MIN_VALUE)
+        self.price_input.setMaximum(self.MAX_PRICE_VALUE)
         self.price_input.setDecimals(1)
         self.price_input.setSingleStep(0.1)
-        self.price_input.setValue(0.0)
+        self.price_input.setGroupSeparatorShown(True)
+        self.price_input.setValue(self.MIN_VALUE)
         self.active_label = QLabel()
         self.active_label.setObjectName("activeLabel")
         self.active_checkbox = QCheckBox()
