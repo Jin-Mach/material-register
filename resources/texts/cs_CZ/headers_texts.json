@@ -4,5 +4,13 @@
     "document_number": "Číslo dokladu",
     "address": "Adresa",
     "active": "Stav"
+  },
+  "TransactionView": {
+    "category": "Kategorie",
+    "commodity": "Položka",
+    "commodityId": "Id položky",
+    "unitCount": "Celkové množství",
+    "pricePerUnit": "Jednotková cena (Kč)",
+    "totalPrice": "Celková částka"
   }
 }

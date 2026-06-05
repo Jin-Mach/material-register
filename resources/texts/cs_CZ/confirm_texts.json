@@ -9,5 +9,10 @@
     "TITLE": "Chyba",
     "TEXT": "Hledanému výrazu neodpovidají žádné záznamy",
     "CLOSE": "Zavřít"
+  },
+  "ITEMS_DATA_FAILED": {
+    "TITLE": "Chyba",
+    "TEXT": "Nepodařilo se načíst data položky transakce",
+    "CLOSE": "Zavřít"
   }
 }

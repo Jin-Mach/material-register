@@ -143,7 +143,8 @@
     "updateItemButtonTooltipText": "Otevře dialog úpravy označené položky",
     "deleteButtonText": "Smazat položku",
     "deleteButtonTooltipText": "Smaže označenou položku ze seznamu",
-    "totalPriceLabelText": "Celková cena:"
+    "totalPriceLabelText": "Celková cena:",
+    "priceSuffix": "Kč"
   },
   "CategoryCommodityDialog": {
     "titleText": "Nová položka",

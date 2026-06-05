@@ -140,8 +140,9 @@ class CategoryCommodityDialog(QDialog):
             return
         for commodity in self.commodities:
             if commodity.id == commodity_id:
+                self.commodity_suffix = commodity.unit
                 self.unit_spinbox.setValue(self.MIN_VALUE)
-                self.unit_spinbox.setSuffix(f"  {commodity.unit}")
+                self.unit_spinbox.setSuffix(f"  {self.commodity_suffix}")
                 self.price_spinbox.setValue(commodity.default_price)
                 break
         CategoryCommodityDialog._setup_enable_state(enabled=[self.unit_spinbox, self.price_spinbox])
@@ -208,6 +209,7 @@ class CategoryCommodityDialog(QDialog):
         return {
             "category": self.category_combo_box.currentText(),
             "commodity": self.commodity_combo_box.currentText(),
+            "commoditySuffix": self.commodity_suffix,
             "commodityId": commodity_id,
             "unitCount": self._normalize_value(self.unit_spinbox.value()),
             "pricePerUnit": self._normalize_value(self.price_spinbox.value())

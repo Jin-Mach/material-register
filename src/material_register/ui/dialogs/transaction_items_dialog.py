@@ -82,6 +82,7 @@ class TransactionItemsDialog(QDialog):
         new_item_data = self.transactions_controller.create_category_commodity_data()
         if new_item_data is None:
             return
+        self.transactions_items_widget.add_item(new_item_data)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

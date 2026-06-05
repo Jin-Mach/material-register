@@ -1,6 +1,7 @@
 import pytest
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QStandardItemModel
 from PySide6.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PySide6.QtWidgets import QTableView
 from material_register.ui.setup.headers_texts import HeadersTexts
@@ -68,3 +69,21 @@ def test_set_headers_text_invalid_key(qtbot, sql_model):
     })
     result = HeadersTexts.set_headers_text(view, sql_model)
     assert result is True
+
+def test_set_headers_text_standard_item_model(qtbot):
+    view = QTableView()
+    qtbot.addWidget(view)
+    model = QStandardItemModel()
+    model.setColumnCount(3)
+    HeadersTexts.setup_init({
+        "QTableView": {
+            "column1": "First Column",
+            "column2": "Second Column",
+            "column3": "Third Column"
+        }
+    })
+    result = HeadersTexts.set_headers_text(view, model)
+    assert result is True
+    assert model.headerData(0, Qt.Orientation.Horizontal) == "First Column"
+    assert model.headerData(1, Qt.Orientation.Horizontal) == "Second Column"
+    assert model.headerData(2, Qt.Orientation.Horizontal) == "Third Column"

@@ -19,9 +19,7 @@ class TransactionsController:
 
     def create_transaction(self) -> None:
         create_data = self.create_transaction_data()
-        if create_data is None:
-            return
-        if not TransactionsController._check_create_data(create_data):
+        if not TransactionsController._check_data(create_data):
             dialog = ErrorDialog()
             dialog.show_dialog("UNKNOWN_ERROR", False)
             return
@@ -35,15 +33,19 @@ class TransactionsController:
             return None
         return dialog.get_create_data()
 
-    def create_category_commodity_data(self)-> dict[str, str | int | float | None] | None:
+    def create_category_commodity_data(self)-> dict[str, str | int | float] | None:
         dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog)
         if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        if not TransactionsController._check_data(dialog.get_category_commodity_data()):
             return None
         return dialog.get_category_commodity_data()
 
     @staticmethod
-    def _check_create_data(create_data: dict[str, str | int | None]) -> bool:
-        for key, value in create_data.items():
-            if value is None:
+    def _check_data(data: dict[str, str | int | float | None] | None) -> bool:
+        if not data:
+            return False
+        for value in data.values():
+            if value is None or value == "":
                 return False
         return True
