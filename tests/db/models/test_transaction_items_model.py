@@ -27,7 +27,7 @@ def test_add_item(model, item) -> None:
 
 def test_total_price_calculation(model, item) -> None:
     model.add_item(item)
-    assert model.total_count == 20.0
+    assert model._calculate_total_price() == 20.0
 
 def test_display_total_price(model, item) -> None:
     model.add_item(item)

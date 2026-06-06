@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QMessageBox
 
@@ -47,10 +48,14 @@ class TransactionsItemsWidget(QWidget):
 
     def _setup_ui(self) -> None:
         widgets = [self.add_item_button, self.update_item_button, self.delete_item_button, self.total_price_label]
+        disabled_buttons = [self.update_item_button, self.delete_item_button]
+        for button in disabled_buttons:
+            button.setEnabled(False)
         self._setup_texts(widgets)
         self._setup_style()
         self._setup_model()
         self.transactions_items_view.setup_ui()
+        self._create_connection()
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS
@@ -72,9 +77,30 @@ class TransactionsItemsWidget(QWidget):
         self.transaction_item_model = TransactionItemsModel(self.price_suffix)
         self.transactions_items_view.setModel(self.transaction_item_model)
 
+    def _create_connection(self) -> None:
+        self.transactions_items_view.selectionModel().selectionChanged.connect(self._update_buttons_state)
+
+    def _check_selection(self) -> bool:
+        return self.transactions_items_view.selectionModel().hasSelection()
+
+    def _update_buttons_state(self) -> None:
+        state = self._check_selection()
+        self.update_item_button.setEnabled(state)
+        self.delete_item_button.setEnabled(state)
+
+    def get_selected_index(self) -> QModelIndex | None:
+        index = self.transactions_items_view.selectionModel().currentIndex()
+        if not index.isValid():
+            return None
+        return index
+
     def add_item(self, new_item_data:  dict[str, str | int | float] | None) -> None:
         if new_item_data is None:
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", QMessageBox.Icon.Warning)
             return
         self.transaction_item_model.add_item(new_item_data)
+        self.total_price.setText(self.transaction_item_model.return_total_price())
+
+    def delete_item(self, index: QModelIndex) -> None:
+        self.transaction_item_model.delete_item(index)
         self.total_price.setText(self.transaction_item_model.return_total_price())

@@ -10,7 +10,6 @@ class TransactionItemsModel(QStandardItemModel):
     def __init__(self, price_suffix: str) -> None:
         super().__init__()
         self.price_suffix = price_suffix
-        self.total_count = 0.0
         self._setup_model()
 
     def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
@@ -42,22 +41,39 @@ class TransactionItemsModel(QStandardItemModel):
         items_list = []
         for key in columns:
             value = TransactionItemsModel._create_item(transaction_item[key])
+            if key == "category":
+                value.setData(transaction_item, Qt.ItemDataRole.UserRole)
             if key == "unitCount":
+                value.setData(transaction_item["unitCount"], Qt.ItemDataRole.UserRole)
                 value.setData(transaction_item["commoditySuffix"], Qt.ItemDataRole.UserRole + 1)
             items_list.append(value)
-        total = self._get_total_count(transaction_item["unitCount"], transaction_item["pricePerUnit"])
+        total = TransactionItemsModel.get_item_total_count(transaction_item["unitCount"], transaction_item["pricePerUnit"])
         items_list.append(total)
         self.appendRow(items_list)
 
+    def delete_item(self, index: QModelIndex) -> None:
+        self.removeRow(index.row())
+
     def return_total_price(self) -> str:
-        return f"{self.total_count} {self.price_suffix}"
+        total_count = self._calculate_total_price()
+        return f"{total_count} {self.price_suffix}"
+
+    def get_transaction_item_data(self, index: QModelIndex) -> dict[str, str | int | float]:
+        return self.item(index.row(), 0).data(Qt.ItemDataRole.UserRole)
+
+    def _calculate_total_price(self) -> float:
+        total_count = 0.0
+        for row in range(self.rowCount()):
+            item_data = self.item(row, 0).data(Qt.ItemDataRole.UserRole)
+            total_count += item_data["unitCount"] * item_data["pricePerUnit"]
+        return round(total_count, 2)
 
     def _setup_model(self) -> None:
         self.setColumnCount(len(self.COLUMNS))
 
-    def _get_total_count(self, unit: int | float, price_per_unit: int | float) -> QStandardItem:
+    @staticmethod
+    def get_item_total_count(unit: int | float, price_per_unit: int | float) -> QStandardItem:
         total = round(unit * price_per_unit, 2)
-        self.total_count += total
         item = QStandardItem(str(total))
         item.setData(total, Qt.ItemDataRole.UserRole)
         return item
@@ -75,5 +91,4 @@ class TransactionItemsModel(QStandardItemModel):
     @staticmethod
     def _create_item(value: str) -> QStandardItem:
         item = QStandardItem(str(value))
-        item.setData(value, Qt.ItemDataRole.UserRole)
         return item

@@ -19,9 +19,7 @@ class TransactionsController:
 
     def create_transaction(self) -> None:
         create_data = self.create_transaction_data()
-        if not TransactionsController._check_data(create_data):
-            dialog = ErrorDialog()
-            dialog.show_dialog("UNKNOWN_ERROR", False)
+        if create_data is None:
             return
         self.items_dialog = TransactionItemsDialog(self, create_data, self.transactions_widget)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
@@ -31,7 +29,12 @@ class TransactionsController:
         dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
-        return dialog.get_create_data()
+        data = dialog.get_create_data()
+        if not TransactionsController._check_data(data):
+            dialog = ErrorDialog()
+            dialog.show_dialog("UNKNOWN_ERROR", False)
+            return None
+        return data
 
     def create_category_commodity_data(self)-> dict[str, str | int | float] | None:
         dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog)

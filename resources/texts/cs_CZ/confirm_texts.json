@@ -14,5 +14,11 @@
     "TITLE": "Chyba",
     "TEXT": "Nepodařilo se načíst data položky transakce",
     "CLOSE": "Zavřít"
+  },
+  "DELETE_TRANSACTION_ITEM": {
+    "TITLE": "Smazat položku",
+    "TEXT": "Opravdu smazat položku transakce?",
+    "YES": "Smazat",
+    "NO": "Zrušit"
   }
 }

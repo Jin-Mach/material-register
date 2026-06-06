@@ -4,6 +4,7 @@ from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QWidget, QDialogButtonBox
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_info_widget import TransactionInfoWidget
 from material_register.ui.dialogs.transaction_widgets.transactions_items_widget import TransactionsItemsWidget
 from material_register.ui.helpers.window_positioning import centre_dialog
@@ -56,6 +57,7 @@ class TransactionItemsDialog(QDialog):
     def _create_connection(self) -> None:
         self.transaction_info_widget.update_transaction_info_button.clicked.connect(self._update_create_data)
         self.transactions_items_widget.add_item_button.clicked.connect(self._add_transaction_item)
+        self.transactions_items_widget.delete_item_button.clicked.connect(self._delete_transaction_item)
 
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)
@@ -83,6 +85,21 @@ class TransactionItemsDialog(QDialog):
         if new_item_data is None:
             return
         self.transactions_items_widget.add_item(new_item_data)
+
+    def _delete_transaction_item(self) -> None:
+        index = self.transactions_items_widget.get_selected_index()
+        if index is None or not index.isValid():
+            return
+        data = self.transactions_items_widget.transaction_item_model.get_transaction_item_data(index)
+        informative_text = ""
+        if data:
+            total = round(data["unitCount"] * data["pricePerUnit"], 2)
+            informative_text = (
+                f"{data['category']} / {data['commodity']}: {total}"
+            )
+        question = MessageBoxes.show_question(self, "DELETE_TRANSACTION_ITEM", informative_text,)
+        if question:
+            self.transactions_items_widget.delete_item(index)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
