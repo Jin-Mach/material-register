@@ -19,7 +19,7 @@ class SetupInit:
         # TODO: remove DEV mode before release and restore full validation + download flow
         DEV_MODE = True
         try:
-            if DEV_MODE:
+            if not DEV_MODE:
                 invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
                 if invalid_files:
                     state = DownloadProvider.is_ready_for_download(PathsProvider.resources)

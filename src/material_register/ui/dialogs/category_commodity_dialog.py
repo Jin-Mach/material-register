@@ -112,8 +112,9 @@ class CategoryCommodityDialog(QDialog):
     def _setup_categories_items(self) -> None:
         self.category_combo_box.clear()
         for index, category in enumerate(self.categories):
-            self.category_combo_box.addItem(category.name)
-            self.category_combo_box.setItemData(index, category.id, Qt.ItemDataRole.UserRole)
+            if self._has_commodity(category):
+                self.category_combo_box.addItem(category.name)
+                self.category_combo_box.setItemData(index, category.id, Qt.ItemDataRole.UserRole)
         self.category_combo_box.setCurrentIndex(-1)
         QTimer.singleShot(0, lambda: CategoryCommodityDialog._adjust_combo_view_width(self.category_combo_box))
 
@@ -155,6 +156,12 @@ class CategoryCommodityDialog(QDialog):
     def _on_value_changed(self) -> None:
         self._set_required_style()
         self._update_button_state()
+
+    def _has_commodity(self, category: Category) -> bool:
+        for commodity in self.commodities:
+            if commodity.category_id == category.id:
+                return True
+        return False
 
     def _update_button_state(self) -> None:
         valid = self._is_valid()
