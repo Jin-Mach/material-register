@@ -25,6 +25,24 @@ def test_add_item(model, item) -> None:
     assert model.rowCount() == 1
     assert model.columnCount() == 6
 
+def test_update_item(model, item) -> None:
+    model.add_item(item)
+    updated_item = {
+        "category": "Food",
+        "commodity": "Apple",
+        "commodityId": 1,
+        "unitCount": 5,
+        "pricePerUnit": 12,
+        "commoditySuffix": "kg"
+    }
+    model.update_item(0, updated_item)
+    index_unit = model.index(0, model.COLUMNS.index("unitCount"))
+    assert model.data(index_unit, Qt.ItemDataRole.DisplayRole) == "5 kg"
+    index_price = model.index(0, model.COLUMNS.index("pricePerUnit"))
+    assert model.data(index_price, Qt.ItemDataRole.DisplayRole) == 12
+    index_total = model.index(0, model.COLUMNS.index("totalPrice"))
+    assert model.data(index_total, Qt.ItemDataRole.DisplayRole) == "60 £"
+
 def test_total_price_calculation(model, item) -> None:
     model.add_item(item)
     assert model._calculate_total_price() == 20.0

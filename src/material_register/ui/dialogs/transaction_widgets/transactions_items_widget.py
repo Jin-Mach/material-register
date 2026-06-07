@@ -101,6 +101,14 @@ class TransactionsItemsWidget(QWidget):
         self.transaction_item_model.add_item(new_item_data)
         self.total_price.setText(self.transaction_item_model.return_total_price())
 
+    def update_item(self, index: QModelIndex, item_data: dict[str, str | int | float]) -> None:
+        if item_data is None:
+            MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
+            return
+        row = index.row()
+        self.transaction_item_model.update_item(row, item_data)
+        self.total_price.setText(self.transaction_item_model.return_total_price())
+
     def delete_item(self, index: QModelIndex) -> None:
         self.transaction_item_model.delete_item(index)
         self.total_price.setText(self.transaction_item_model.return_total_price())

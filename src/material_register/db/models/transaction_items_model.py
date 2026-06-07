@@ -51,6 +51,23 @@ class TransactionItemsModel(QStandardItemModel):
         items_list.append(total)
         self.appendRow(items_list)
 
+    def update_item(self, row: int, data: dict[str, str | int | float]) -> None:
+        for column, key in enumerate(self.COLUMNS):
+            index = self.index(row, column)
+            if key == "category":
+                self.setData(index, data, Qt.ItemDataRole.UserRole)
+                self.setData(index, data["category"], Qt.ItemDataRole.DisplayRole)
+            elif key == "unitCount":
+                self.setData(index, data["unitCount"], Qt.ItemDataRole.UserRole)
+                self.setData(index, data["commoditySuffix"], Qt.ItemDataRole.UserRole + 1)
+                self.setData(index, data["unitCount"], Qt.ItemDataRole.DisplayRole)
+            elif key == "totalPrice":
+                total = self._calculate_total_count(data["unitCount"], data["pricePerUnit"])
+                self.setData(index, total, Qt.ItemDataRole.UserRole)
+                self.setData(index, total, Qt.ItemDataRole.DisplayRole)
+            else:
+                self.setData(index, data[key], Qt.ItemDataRole.DisplayRole)
+
     def delete_item(self, index: QModelIndex) -> None:
         self.removeRow(index.row())
 
@@ -73,10 +90,14 @@ class TransactionItemsModel(QStandardItemModel):
 
     @staticmethod
     def get_item_total_count(unit: int | float, price_per_unit: int | float) -> QStandardItem:
-        total = round(unit * price_per_unit, 2)
+        total = TransactionItemsModel._calculate_total_count(unit, price_per_unit)
         item = QStandardItem(str(total))
         item.setData(total, Qt.ItemDataRole.UserRole)
         return item
+
+    @staticmethod
+    def _calculate_total_count(unit: int | float, price_per_unit: int | float) -> float:
+        return round(unit * price_per_unit, 2)
 
     @staticmethod
     def get_columns_map() -> dict[str, int]:

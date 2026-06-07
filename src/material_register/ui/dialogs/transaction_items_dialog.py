@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QWidget, QDialogButtonBox
 
@@ -57,6 +58,7 @@ class TransactionItemsDialog(QDialog):
     def _create_connection(self) -> None:
         self.transaction_info_widget.update_transaction_info_button.clicked.connect(self._update_create_data)
         self.transactions_items_widget.add_item_button.clicked.connect(self._add_transaction_item)
+        self.transactions_items_widget.update_item_button.clicked.connect(self._update_transaction_item)
         self.transactions_items_widget.delete_item_button.clicked.connect(self._delete_transaction_item)
 
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
@@ -86,19 +88,31 @@ class TransactionItemsDialog(QDialog):
             return
         self.transactions_items_widget.add_item(new_item_data)
 
+    def _update_transaction_item(self) -> None:
+        index, item_data = self._get_item_data()
+        if item_data:
+            update_item_data = self.transactions_controller.update_category_commodity_data(item_data)
+            if update_item_data is None:
+                return
+            self.transactions_items_widget.update_item(index, update_item_data)
+
     def _delete_transaction_item(self) -> None:
-        index = self.transactions_items_widget.get_selected_index()
-        if index is None or not index.isValid():
-            return
-        data = self.transactions_items_widget.transaction_item_model.get_transaction_item_data(index)
+        index, item_data = self._get_item_data()
         informative_text = ""
-        if data:
+        if item_data:
             informative_text = (
-                f"{data["commodity"]}\n({data["unitCount"]}{data["commoditySuffix"]})"
+                f"{item_data["commodity"]}\n({item_data["unitCount"]}{item_data["commoditySuffix"]})"
             )
-        question = MessageBoxes.show_question(self, "DELETE_TRANSACTION_ITEM", informative_text,)
+        question = MessageBoxes.show_question(self, "DELETE_TRANSACTION_ITEM", informative_text)
         if question:
             self.transactions_items_widget.delete_item(index)
+
+    def _get_item_data(self) -> tuple[QModelIndex | None, dict[str, str | int | float] | None]:
+        index = self.transactions_items_widget.get_selected_index()
+        if index is None or not index.isValid():
+            return index, None
+        data = self.transactions_items_widget.transaction_item_model.get_transaction_item_data(index)
+        return index, data
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

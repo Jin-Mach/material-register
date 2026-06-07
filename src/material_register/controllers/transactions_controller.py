@@ -40,9 +40,20 @@ class TransactionsController:
         dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
-        if not TransactionsController._check_data(dialog.get_category_commodity_data()):
+        data = dialog.get_category_commodity_data()
+        if not TransactionsController._check_data(data):
             return None
-        return dialog.get_category_commodity_data()
+        return data
+
+    def update_category_commodity_data(self, item_data: dict[str, str | int | float]) -> dict[str, str | int | float] | None:
+        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog)
+        dialog.setup_update(item_data)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        data = dialog.get_category_commodity_data()
+        if not TransactionsController._check_data(data):
+            return None
+        return data
 
     @staticmethod
     def _check_data(data: dict[str, str | int | float | None] | None) -> bool:
