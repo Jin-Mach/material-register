@@ -104,6 +104,7 @@ class CustomerDialog(QDialog):
         self._setup_mode()
         self._set_validators()
         self._update_save_button_state()
+        self._update_notes_count()
 
     def _create_connection(self) -> None:
         for widget in (self.first_name_input, self.last_name_input, self.company_input, self.document_type_input,

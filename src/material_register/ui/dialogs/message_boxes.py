@@ -1,4 +1,6 @@
-from PySide6.QtWidgets import QWidget, QMessageBox
+from PySide6.QtWidgets import QWidget, QDialog
+
+from material_register.ui.dialogs.messagebox_dialog import MessageBoxDialog
 
 
 class MessageBoxes:
@@ -13,25 +15,18 @@ class MessageBoxes:
         texts = cls.CONFIRM_TEXTS.get(question_key, {})
         if not texts:
             return False
-        message_box = QMessageBox(parent)
-        message_box.setIcon(QMessageBox.Icon.Question)
-        message_box.setWindowTitle(texts.get("TITLE", ""))
-        message_box.setText(texts.get("TEXT", ""))
-        if informative_text is not None:
-            message_box.setInformativeText(informative_text)
-        yes_button = message_box.addButton(texts.get("YES", "Yes"), QMessageBox.ButtonRole.YesRole)
-        message_box.addButton(texts.get("NO", "No"), QMessageBox.ButtonRole.NoRole)
-        message_box.exec()
-        return message_box.clickedButton() == yes_button
+        dialog = MessageBoxDialog(parent)
+        dialog.setup_icon("QUESTION")
+        dialog.setup_texts(texts.get("TITLE", ""), texts.get("TEXT", ""), ok_button=texts.get("YES", "Yes"),
+                           cancel_button=texts.get("NO", "No"), informative_text=informative_text)
+        return dialog.exec() == QDialog.DialogCode.Accepted
 
     @classmethod
-    def show_error(cls, parent: QWidget, error_key: str, icon: QMessageBox.Icon) -> None:
+    def show_error(cls, parent: QWidget, error_key: str, icon_key: str=None) -> None:
         texts = cls.CONFIRM_TEXTS.get(error_key, {})
         if not texts:
             return
-        message_box = QMessageBox(parent)
-        message_box.setIcon(icon)
-        message_box.setWindowTitle(texts.get("TITLE", ""))
-        message_box.setText(texts.get("TEXT", ""))
-        message_box.addButton(texts.get("CLOSE", "Close"), QMessageBox.ButtonRole.AcceptRole)
-        message_box.exec()
+        dialog = MessageBoxDialog(parent)
+        dialog.setup_icon(icon_key)
+        dialog.setup_texts(texts.get("TITLE", ""), texts.get("TEXT", ""), cancel_button=texts.get("CLOSE", "Close"))
+        dialog.exec()

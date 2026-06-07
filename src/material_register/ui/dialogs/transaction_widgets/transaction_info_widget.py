@@ -77,6 +77,7 @@ class TransactionInfoWidget(QWidget):
         widgets = [self.customer_name_label, self.document_number_label, self.address_label, self.notes_count_label,
                    self.update_transaction_info_button]
         self._setup_texts(widgets)
+        self._update_notes_count()
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})

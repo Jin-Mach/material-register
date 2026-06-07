@@ -93,9 +93,8 @@ class TransactionItemsDialog(QDialog):
         data = self.transactions_items_widget.transaction_item_model.get_transaction_item_data(index)
         informative_text = ""
         if data:
-            total = round(data["unitCount"] * data["pricePerUnit"], 2)
             informative_text = (
-                f"{data['category']} / {data['commodity']}: {total}"
+                f"{data["commodity"]}\n({data["unitCount"]}{data["commoditySuffix"]})"
             )
         question = MessageBoxes.show_question(self, "DELETE_TRANSACTION_ITEM", informative_text,)
         if question:

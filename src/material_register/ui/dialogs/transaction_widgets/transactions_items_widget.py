@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QMessageBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
 
 from material_register.db.models.transaction_items_model import TransactionItemsModel
 from material_register.services.error_handler import ErrorHandler
@@ -96,7 +96,7 @@ class TransactionsItemsWidget(QWidget):
 
     def add_item(self, new_item_data:  dict[str, str | int | float] | None) -> None:
         if new_item_data is None:
-            MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", QMessageBox.Icon.Warning)
+            MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
         self.transaction_item_model.add_item(new_item_data)
         self.total_price.setText(self.transaction_item_model.return_total_price())
