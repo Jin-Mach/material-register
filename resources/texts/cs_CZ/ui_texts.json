@@ -3,16 +3,18 @@
     "titleText": "Titulek hlavního okna"
   },
   "SidePanel": {
-    "transactionsButtonText": "Pohyby",
-    "transactionsButtonTooltipText": "Zobrazí pohyby materiálu",
+    "transactionsButtonText": "Transakce",
+    "transactionsButtonTooltipText": "Zobrazí seznam transkací",
     "customersButtonText": "Zákazníci",
     "customersButtonTooltipText": "Zobrazí seznam zákazníků",
     "catalogButtonText": "Katalog",
     "catalogButtonTooltipText": "Zobrazí katalog položek"
   },
   "TransactionsActionsWidget": {
-    "addTransactionButtonTooltipText": "Přidat nový záznam",
-    "deleteTransactionButtonTooltipText": "Odstranit označený záznam"
+    "inTransactionButtonText": "Přidat výkup",
+    "inTransactionButtonTooltipText": "Přidat nový výkup do transakcí",
+    "outTransactionButtonText": "Přidat vývoz",
+    "outTransactionButtonTooltipText": "Přidat nový vývoz do transakcí"
   },
   "CustomersActionsWidget": {
     "addCustomerButtonText": "Přidat zákazníka",

@@ -28,7 +28,7 @@ class TransactionsWidget(QWidget):
         return main_layout
 
     def _create_connection(self) -> None:
-        self.actions_widget.add_transaction_button.clicked.connect(self.transactions_controller.create_transaction)
+        self.actions_widget.in_transaction_button.clicked.connect(self.transactions_controller.create_transaction)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
