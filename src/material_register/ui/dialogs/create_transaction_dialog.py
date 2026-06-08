@@ -16,9 +16,10 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker
 class CreateTransactionDialog(QDialog):
-    def __init__(self, transactions_widget: "TransactionsWidget", completer_model: "CustomersCompleterModel") -> None:
+    def __init__(self, transactions_widget: "TransactionsWidget", completer_model: "CustomersCompleterModel", transfer_type: str) -> None:
         super().__init__(transactions_widget)
         self.completer_model = completer_model
+        self.transfer_type = transfer_type
         self.selected_customer = None
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -29,10 +30,6 @@ class CreateTransactionDialog(QDialog):
         main_layout = QVBoxLayout()
         type_layout = QHBoxLayout()
         type_form_layout = QFormLayout()
-        self.transaction_type_label = QLabel()
-        self.transaction_type_label.setObjectName("transactionTypeLabel")
-        self.transaction_type_combobox = QComboBox()
-        self.transaction_type_combobox.setObjectName("transactionTypeCombobox")
         self.payment_type_label = QLabel()
         self.payment_type_label.setObjectName("paymentTypeLabel")
         self.payment_type_combobox = QComboBox()
@@ -55,7 +52,6 @@ class CreateTransactionDialog(QDialog):
         self.continue_transaction_button.setObjectName("continueTransactionButton")
         self.cancel_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
-        type_form_layout.addRow(self.transaction_type_label, self.transaction_type_combobox)
         type_form_layout.addRow(self.payment_type_label, self.payment_type_combobox)
         customer_form_layout.addRow(self.customer_name_label, self.customer_name_input)
         customer_form_layout.addRow(self.customer_document_number_label, self.customer_document_number)
@@ -69,14 +65,14 @@ class CreateTransactionDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
-        widgets = [self.transaction_type_label, self.payment_type_label, self.customer_name_label,
+        widgets = [self.payment_type_label, self.customer_name_label,
                    self.customer_document_number_label, self.customer_address_label,
                    self.continue_transaction_button, self.cancel_transaction_button]
         self._setup_texts(widgets)
-        self._setup_items()
         self._set_validators()
         self._set_required_style()
         self._update_continue_button_state()
+        self._apply_transfer_type()
 
     def _create_connection(self) -> None:
         self.continue_transaction_button.clicked.connect(self.accept)
@@ -92,19 +88,22 @@ class CreateTransactionDialog(QDialog):
         UiTexts.set_default_texts(self, widgets)
 
     def _setup_items(self) -> None:
-        transaction_values = ["IN", "OUT"]
         payment_values = ["CASH", "TRANSFER"]
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        transaction_items = texts.get(f"{self.transaction_type_combobox.objectName()}Items", ["In", "Out"])
         payment_items = texts.get(f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"])
-        for text, value in zip(transaction_items, transaction_values):
-            self.transaction_type_combobox.addItem(text, value)
         for text, value in zip(payment_items, payment_values):
             self.payment_type_combobox.addItem(text, value)
 
     def _set_validators(self) -> None:
         customer_validator = QRegularExpressionValidator(QRegularExpression(r"^[\p{L}0-9 .,&\-]{1,50}$"))
         self.customer_name_input.setValidator(customer_validator)
+
+    def _apply_transfer_type(self) -> None:
+        if self.transfer_type == "OUT":
+            self.payment_type_label.hide()
+            self.payment_type_combobox.hide()
+            return
+        self._setup_items()
 
     def _set_dialog_size(self, width: int = 500) -> None:
         self.setFixedWidth(width)
@@ -149,11 +148,14 @@ class CreateTransactionDialog(QDialog):
     def get_create_data(self) -> dict[str, str | int | None] | None:
         if self.selected_customer is None:
             return None
+        payment_text = "N/A"
+        payment_type = "NONE"
+        if self.transfer_type == "IN":
+            payment_text = self.payment_type_combobox.currentText()
+            payment_type = self.payment_type_combobox.currentData()
         return {
-            "transactionText": self.transaction_type_combobox.currentText(),
-            "transactionType": self.transaction_type_combobox.currentData(),
-            "paymentText": self.payment_type_combobox.currentText(),
-            "paymentType": self.payment_type_combobox.currentData(),
+            "paymentText": payment_text,
+            "paymentType": payment_type,
             "customerId": self.selected_customer.id,
             "customer": self.customer_name_input.text().strip(),
             "documentNumber": self.customer_document_number.text(),

@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit,
                                QSizePolicy, QFrame)
 
@@ -9,13 +10,13 @@ from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialog
+    from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialogIn
 
 
 class TransactionInfoWidget(QWidget):
     NOTES_LENGTH = 200
 
-    def __init__(self, transaction_item_dialog: "TransactionItemsDialog") -> None:
+    def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn") -> None:
         super().__init__(transaction_item_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.setLayout(self._create_ui())
@@ -25,9 +26,9 @@ class TransactionInfoWidget(QWidget):
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
         type_layout = QHBoxLayout()
-        self.transaction_info = QLabel()
-        self.transaction_info.setObjectName("transactionInfo")
-        self.transaction_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.payment_info = QLabel()
+        self.payment_info.setObjectName("paymentInfo")
+        self.payment_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         customer_frame = QFrame()
         customer_frame.setFrameShape(QFrame.Shape.StyledPanel)
         customer_frame.setMinimumWidth(300)
@@ -54,7 +55,7 @@ class TransactionInfoWidget(QWidget):
         count_layout = QHBoxLayout()
         self.notes_count_label = QLabel()
         self.notes_count_label.setObjectName("notesCountLabel")
-        type_layout.addWidget(self.transaction_info)
+        type_layout.addWidget(self.payment_info)
         customer_form_layout.addRow(self.customer_name_label, self.customer_name)
         customer_form_layout.addRow(self.document_number_label, self.document_number)
         customer_form_layout.addRow(self.address_label, self.address)
@@ -77,6 +78,7 @@ class TransactionInfoWidget(QWidget):
         widgets = [self.customer_name_label, self.document_number_label, self.address_label, self.notes_count_label,
                    self.update_transaction_info_button]
         self._setup_texts(widgets)
+        self._setup_style()
         self._update_notes_count()
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
@@ -88,15 +90,20 @@ class TransactionInfoWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
+    def _setup_style(self) -> None:
+        font = QFont()
+        font.setBold(True)
+        self.payment_info.setFont(font)
+
     def _create_connection(self) -> None:
         self.notes.textChanged.connect(self._update_notes_count)
 
     def _update_notes_count(self) -> None:
         check_notes_length(self.notes, self.notes_count_label, self.notes_count_text, self.NOTES_LENGTH)
 
-    def set_create_data(self, transaction_text: str, payment_text: str, customer: str, document_number: str,
+    def set_create_data(self, payment_text: str, customer: str, document_number: str,
                         address: str) -> None:
-        self.transaction_info.setText(f"{transaction_text} | {payment_text}")
+        self.payment_info.setText(payment_text)
         self.customer_name.setText(customer)
         self.document_number.setText(document_number)
         self.address.setText(address)

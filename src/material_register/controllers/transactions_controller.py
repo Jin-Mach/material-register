@@ -9,7 +9,7 @@ from material_register.services.db_cache import DbCache
 from material_register.ui.dialogs.category_commodity_dialog import CategoryCommodityDialog
 from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
-from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialog
+from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialogIn
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -21,22 +21,25 @@ class TransactionsController:
         self.db_connection = DbInit.db_connection
         self.customers_model = DataInit.customers_model
 
-    def create_transaction(self) -> None:
-        create_data = self.create_transaction_data()
+    def create_transaction(self, transfer_type: str) -> None:
+        create_data = self.create_transaction_data(transfer_type)
         if create_data is None:
             return
-        self.items_dialog = TransactionItemsDialog(self, create_data, self.transactions_widget)
+        if transfer_type == "IN":
+            self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transfer_type)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             print("OK")
 
-    def create_transaction_data(self) -> dict[str, str | int | None] | None:
+    def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:
             MessageBoxes.show_error(self.transactions_widget, "NO_CUSTOMERS", "INFORMATION")
             return None
-        dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model)
+        dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model, transfer_type)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         data = dialog.get_create_data()
+        if transfer_type == "OUT":
+            data.pop("paymentType", None)
         if not TransactionsController._check_data(data):
             MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
             return None

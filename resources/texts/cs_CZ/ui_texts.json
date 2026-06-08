@@ -111,8 +111,6 @@
   },
   "CreateTransactionDialog": {
     "titleText": "Nová transakce",
-    "transactionTypeLabelText": "Transakce:",
-    "transactionTypeComboboxItems": ["Výkup", "Výdej"],
     "paymentTypeLabelText": "Platba:",
     "paymentTypeComboboxItems": ["Hotovost", "Převod na účet"],
     "customerNameLabelText": "Zákazník:",
@@ -123,12 +121,12 @@
     "cancelTransactionButtonText": "Zrušit",
     "cancelTransactionButtonTooltipText": "Zavře dialog"
   },
-  "TransactionItemsDialog": {
-    "titleText": "Transakce",
-    "saveTransactionButtonText": "Uložit transakci",
-    "saveTransactionButtonTooltipText": "Uloží transakci do databáze",
-    "cancelTransactionButtonText": "Zrušit transakci",
-    "cancelTransactionButtonTooltipText": "Zruší transakci a zavře dialog"
+  "TransactionItemsDialogIn": {
+    "titleText": "Výkup",
+    "saveTransactionButtonText": "Uložit výkup",
+    "saveTransactionButtonTooltipText": "Uloží výkup do databáze",
+    "cancelTransactionButtonText": "Zrušit výkop",
+    "cancelTransactionButtonTooltipText": "Zruší výkup a zavře dialog"
   },
   "TransactionInfoWidget": {
     "customerNameLabelText": "Zákazník:",

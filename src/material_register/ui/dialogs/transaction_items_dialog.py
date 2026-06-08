@@ -17,14 +17,15 @@ if TYPE_CHECKING:
 
 
 # noinspection PyTypeChecker
-class TransactionItemsDialog(QDialog):
+class TransactionItemsDialogIn(QDialog):
     def __init__(self, transactions_controller: "TransactionsController", create_data: dict[str, str | int],
-                 transactions_widget: "TransactionsWidget") -> None:
+                 transactions_widget: "TransactionsWidget", transfer_type: str) -> None:
         super().__init__(transactions_widget)
         self.setMinimumSize(800, 500)
         self.transactions_controller = transactions_controller
         self.create_data = create_data
         self.transactions_widget = transactions_widget
+        self.transfer_type = transfer_type
         self.setLayout(self._create_ui())
         self._setup_ui()
         self.set_create_data(create_data)
@@ -63,12 +64,10 @@ class TransactionItemsDialog(QDialog):
 
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)
-        self.transaction_info_widget.set_create_data(self.transaction_text, self.payment_text, self.customer,
+        self.transaction_info_widget.set_create_data(self.payment_text, self.customer,
                                                      self.document_number, self.address)
 
     def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
-        self.transaction_text = create_data.get("transactionText", "")
-        self.transaction_type = create_data.get("transactionType", None)
         self.payment_text = create_data.get("paymentText", "")
         self.payment_type = create_data.get("paymentType", None)
         self.customer_id = create_data.get("customerId", None)
@@ -77,7 +76,7 @@ class TransactionItemsDialog(QDialog):
         self.address = create_data.get("address", "")
 
     def _update_create_data(self) -> None:
-        new_data = self.transactions_controller.create_transaction_data()
+        new_data = self.transactions_controller.create_transaction_data(self.transfer_type)
         if new_data is None:
             return
         self.set_create_data(new_data)

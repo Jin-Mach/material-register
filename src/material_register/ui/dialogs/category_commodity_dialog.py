@@ -13,7 +13,7 @@ from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialog
+    from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialogIn
 
 
 # noinspection PyTypeChecker,SpellCheckingInspection
@@ -23,7 +23,7 @@ class CategoryCommodityDialog(QDialog):
     MAX_PRICE_VALUE = 1000.0
 
     def __init__(self, categories: list[Category], commodities: list[Commodity],
-                 transaction_items_dialog: "TransactionItemsDialog") -> None:
+                 transaction_items_dialog: "TransactionItemsDialogIn") -> None:
         super().__init__(transaction_items_dialog)
         self.categories = categories
         self.commodities = commodities
