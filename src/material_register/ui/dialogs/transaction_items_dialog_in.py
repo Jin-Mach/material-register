@@ -110,7 +110,7 @@ class TransactionItemsDialogIn(QDialog):
         index = self.transactions_items_widget.get_selected_index()
         if index is None or not index.isValid():
             return index, None
-        data = self.transactions_items_widget.transaction_item_model.get_transaction_item_data(index)
+        data = self.transactions_items_widget.transaction_item_model_in.get_transaction_item_data(index)
         return index, data
 
     def showEvent(self, event: QShowEvent) -> None:

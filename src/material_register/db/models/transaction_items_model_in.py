@@ -1,10 +1,10 @@
 from typing import Any
 
 from PySide6.QtCore import Qt, QModelIndex
-from PySide6.QtGui import QStandardItemModel, QStandardItem
+from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 
-class TransactionItemsModel(QStandardItemModel):
+class TransactionItemsModelIn(QStandardItemModel):
     COLUMNS = ["category", "commodity", "commodityId", "unitCount", "pricePerUnit", "totalPrice"]
 
     def __init__(self, price_suffix: str) -> None:
@@ -40,14 +40,14 @@ class TransactionItemsModel(QStandardItemModel):
         columns = ["category", "commodity", "commodityId", "unitCount", "pricePerUnit"]
         items_list = []
         for key in columns:
-            value = TransactionItemsModel._create_item(transaction_item[key])
+            value = TransactionItemsModelIn._create_item(transaction_item[key])
             if key == "category":
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
             if key == "unitCount":
                 value.setData(transaction_item["unitCount"], Qt.ItemDataRole.UserRole)
                 value.setData(transaction_item["commoditySuffix"], Qt.ItemDataRole.UserRole + 1)
             items_list.append(value)
-        total = TransactionItemsModel.get_item_total_count(transaction_item["unitCount"], transaction_item["pricePerUnit"])
+        total = TransactionItemsModelIn.get_item_total_count(transaction_item["unitCount"], transaction_item["pricePerUnit"])
         items_list.append(total)
         self.appendRow(items_list)
 
@@ -90,7 +90,7 @@ class TransactionItemsModel(QStandardItemModel):
 
     @staticmethod
     def get_item_total_count(unit: int | float, price_per_unit: int | float) -> QStandardItem:
-        total = TransactionItemsModel._calculate_total_count(unit, price_per_unit)
+        total = TransactionItemsModelIn._calculate_total_count(unit, price_per_unit)
         item = QStandardItem(str(total))
         item.setData(total, Qt.ItemDataRole.UserRole)
         return item

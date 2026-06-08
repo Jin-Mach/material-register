@@ -4,7 +4,7 @@ from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
 
-from material_register.db.models.transaction_items_model import TransactionItemsModel
+from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_view import TransactionView
@@ -75,8 +75,8 @@ class TransactionsItemsWidget(QWidget):
         self.total_price.setFont(font)
 
     def _setup_model(self) -> None:
-        self.transaction_item_model = TransactionItemsModel(self.price_suffix)
-        self.transactions_items_view.setModel(self.transaction_item_model)
+        self.transaction_item_model_in = TransactionItemsModelIn(self.price_suffix)
+        self.transactions_items_view.setModel(self.transaction_item_model_in)
 
     def _create_connection(self) -> None:
         self.transactions_items_view.selectionModel().selectionChanged.connect(self._update_buttons_state)
@@ -99,17 +99,17 @@ class TransactionsItemsWidget(QWidget):
         if new_item_data is None:
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
-        self.transaction_item_model.add_item(new_item_data)
-        self.total_price.setText(self.transaction_item_model.return_total_price())
+        self.transaction_item_model_in.add_item(new_item_data)
+        self.total_price.setText(self.transaction_item_model_in.return_total_price())
 
     def update_item(self, index: QModelIndex, item_data: dict[str, str | int | float]) -> None:
         if item_data is None:
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
         row = index.row()
-        self.transaction_item_model.update_item(row, item_data)
-        self.total_price.setText(self.transaction_item_model.return_total_price())
+        self.transaction_item_model_in.update_item(row, item_data)
+        self.total_price.setText(self.transaction_item_model_in.return_total_price())
 
     def delete_item(self, index: QModelIndex) -> None:
-        self.transaction_item_model.delete_item(index)
-        self.total_price.setText(self.transaction_item_model.return_total_price())
+        self.transaction_item_model_in.delete_item(index)
+        self.total_price.setText(self.transaction_item_model_in.return_total_price())

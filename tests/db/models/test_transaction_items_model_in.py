@@ -2,12 +2,12 @@ import pytest
 
 from PySide6.QtCore import Qt
 
-from material_register.db.models.transaction_items_model import TransactionItemsModel
+from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 
 
 @pytest.fixture
-def model() -> TransactionItemsModel:
-    return TransactionItemsModel(price_suffix="£")
+def model() -> TransactionItemsModelIn:
+    return TransactionItemsModelIn(price_suffix="£")
 
 @pytest.fixture
 def item() -> dict[str, str | int | float]:
