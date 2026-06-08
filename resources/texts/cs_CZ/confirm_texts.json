@@ -10,6 +10,16 @@
     "TEXT": "Hledanému výrazu neodpovidají žádné záznamy",
     "CLOSE": "Zavřít"
   },
+  "NO_CUSTOMERS": {
+    "TITLE": "Chyba",
+    "TEXT": "Žádný aktivní zákazník\n(Vytvořte nebo aktivujte alespoň jednoho zákazníka)",
+    "CLOSE": "Zavřít"
+  },
+  "NO_CATEGORY": {
+    "TITLE": "Chyba",
+    "TEXT": "Žádná kategorie\n(Vytvořte alespoň jednu kategorii)",
+    "CLOSE": "Zavřít"
+  },
   "ITEMS_DATA_FAILED": {
     "TITLE": "Chyba",
     "TEXT": "Nepodařilo se načíst data položky transakce",

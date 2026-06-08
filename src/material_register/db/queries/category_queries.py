@@ -77,3 +77,11 @@ class CategoryQueries:
             name=query.value(0),
             notes=query.value(1)
         )
+
+    @staticmethod
+    def get_total_count(connection: QSqlDatabase) -> int:
+        query = QSqlQuery(connection)
+        query.exec("SELECT COUNT(*) FROM categories")
+        if query.next():
+            return query.value(0)
+        return 0

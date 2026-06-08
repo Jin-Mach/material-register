@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex, Qt
-from PySide6.QtWidgets import QDialog, QMessageBox
+from PySide6.QtWidgets import QDialog
 
 from material_register.db.utils.customers_filter_helper import CustomersFilterHelper
 from material_register.core.app_context import AppContext
