@@ -20,6 +20,16 @@
     "TEXT": "Žádná kategorie\n(Vytvořte alespoň jednu kategorii)",
     "CLOSE": "Zavřít"
   },
+  "TREE_ITEM_CREATION_FAILED": {
+    "TITLE": "Chyba",
+    "TEXT": "Nepodařilo se vytvořit položku v katalogu.",
+    "CLOSE": "Zavřít"
+  },
+  "INVALID_DATA": {
+    "TITLE": "Chyba",
+    "TEXT": "Došlo k neočekávané chybě při zpracování dat.",
+    "CLOSE": "Zavřít"
+  },
   "ITEMS_DATA_FAILED": {
     "TITLE": "Chyba",
     "TEXT": "Nepodařilo se načíst data položky transakce",

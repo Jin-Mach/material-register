@@ -13,6 +13,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.category_dialog import CategoryDialog
 from material_register.ui.dialogs.commodity_dialog import CommodityDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 
 if TYPE_CHECKING:
@@ -30,8 +31,7 @@ class CatalogController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             category_data = dialog.get_category_data()
             if category_data is None:
-                error_dialog = ErrorDialog()
-                error_dialog.show_dialog("UNKNOWN_ERROR", False)
+                MessageBoxes.show_error(self.catalog_widget, "INVALID_DATA")
                 return
             ok, error, category_id = CategoryQueries.create_category(self.db_connection, category_data.name, category_data.notes)
             if not ok:
@@ -54,8 +54,7 @@ class CatalogController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             commodity_data = dialog.get_commodity_data()
             if not commodity_data:
-                error_dialog = ErrorDialog()
-                error_dialog.show_dialog("UNKNOWN_ERROR", False)
+                MessageBoxes.show_error(self.catalog_widget, "INVALID_DATA")
                 return
             ok, error = CommoditiesQueries.create_commodity(self.db_connection, commodity_data.name, category.id,
                                                             commodity_data.unit, commodity_data.default_price,
@@ -65,8 +64,7 @@ class CatalogController:
                 return
             parent_item, item = self.catalog_widget.tree_widget.create_commodity_item(commodity_data)
             if parent_item is None or item is None:
-                error_dialog = ErrorDialog()
-                error_dialog.show_dialog("UNKNOWN_ERROR", False)
+                MessageBoxes.show_error(self.catalog_widget, "TREE_ITEM_CREATION_FAILED")
                 return
             self.catalog_widget.tree_widget.setCurrentItem(item)
             parent_item.setExpanded(True)
@@ -82,8 +80,7 @@ class CatalogController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             category_data = dialog.get_category_data()
             if category_data is None:
-                error_dialog = ErrorDialog()
-                error_dialog.show_dialog("UNKNOWN_ERROR", False)
+                MessageBoxes.show_error(self.catalog_widget, "INVALID_DATA")
                 return
             ok, error = CategoryQueries.update_category(self.db_connection, category.id, category_data.name,
                                                         category_data.notes)
@@ -108,8 +105,7 @@ class CatalogController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             commodity_data = dialog.get_commodity_data()
             if not commodity_data:
-                error_dialog = ErrorDialog()
-                error_dialog.show_dialog("UNKNOWN_ERROR", False)
+                MessageBoxes.show_error(self.catalog_widget, "INVALID_DATA")
                 return
             ok, error = CommoditiesQueries.update_commodity(self.db_connection, commodity_data.id, commodity_data.name,
                                                             commodity_data.category_id, commodity_data.unit,

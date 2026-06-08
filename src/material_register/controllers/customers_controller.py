@@ -32,8 +32,7 @@ class CustomersController:
         if dialog.exec() == QDialog.DialogCode.Accepted:
             customer = dialog.get_customer_data()
             if customer is None:
-                dialog = ErrorDialog()
-                dialog.show_dialog("UNKNOWN_ERROR", False)
+                MessageBoxes.show_error(self.customers_widget, "INVALID_DATA")
                 return
             CustomersController._normalize_customer(customer)
             if not self.customers_model.add_customer(customer):
@@ -46,14 +45,14 @@ class CustomersController:
     def update_customer(self, customer_index: QModelIndex) -> None:
         customer_id = CustomersController._get_id_from_index(customer_index)
         if customer_id == -1:
+            ErrorHandler.handle_error(f"Invalid customer selection index: {self.__class__.__name__}", "ui", "debug")
             return
         customer_data = self.customers_model.get_customer_by_id(customer_id)
         dialog = CustomerDialog(self.customers_widget, mode="UPDATE", customer_data=customer_data)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             customer = dialog.get_customer_data()
             if customer is None:
-                dialog = ErrorDialog()
-                dialog.show_dialog("UNKNOWN_ERROR", False)
+                MessageBoxes.show_error(self.customers_widget, "INVALID_DATA")
                 return
             CustomersController._normalize_customer(customer)
             if not self.customers_model.update_customer(customer_id, customer):

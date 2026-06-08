@@ -8,7 +8,6 @@ from material_register.init.db_init import DbInit
 from material_register.services.db_cache import DbCache
 from material_register.ui.dialogs.category_commodity_dialog import CategoryCommodityDialog
 from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
-from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialog
 
@@ -39,8 +38,7 @@ class TransactionsController:
             return None
         data = dialog.get_create_data()
         if not TransactionsController._check_data(data):
-            dialog = ErrorDialog()
-            dialog.show_dialog("UNKNOWN_ERROR", False)
+            MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
             return None
         return data
 
