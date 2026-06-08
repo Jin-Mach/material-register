@@ -12,11 +12,12 @@ from material_register.ui.helpers.styles import PRICE_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialogIn
+    from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
+    from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
 
 
 class TransactionsItemsWidget(QWidget):
-    def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn"):
+    def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut"):
         super().__init__(transaction_item_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setLayout(self._create_ui())

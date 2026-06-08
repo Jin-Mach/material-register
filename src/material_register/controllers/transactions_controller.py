@@ -9,7 +9,8 @@ from material_register.services.db_cache import DbCache
 from material_register.ui.dialogs.category_commodity_dialog import CategoryCommodityDialog
 from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
-from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialogIn
+from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
+from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -27,6 +28,8 @@ class TransactionsController:
             return
         if transfer_type == "IN":
             self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transfer_type)
+        if transfer_type == "OUT":
+            self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transfer_type)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             print("OK")
 

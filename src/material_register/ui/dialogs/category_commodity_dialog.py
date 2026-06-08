@@ -13,7 +13,7 @@ from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.dialogs.transaction_items_dialog import TransactionItemsDialogIn
+    from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
 
 
 # noinspection PyTypeChecker,SpellCheckingInspection

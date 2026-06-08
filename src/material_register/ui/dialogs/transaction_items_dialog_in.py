@@ -33,7 +33,7 @@ class TransactionItemsDialogIn(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        self.transaction_info_widget = TransactionInfoWidget(self)
+        self.transaction_info_widget = TransactionInfoWidget(self, self.transfer_type)
         self.transactions_items_widget = TransactionsItemsWidget(self)
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         self.save_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
@@ -41,7 +41,7 @@ class TransactionItemsDialogIn(QDialog):
         self.cancel_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
         main_layout.addWidget(self.transaction_info_widget)
-        main_layout.addWidget(self.transactions_items_widget)
+        main_layout.addWidget(self.transactions_items_widget, 3)
         main_layout.addWidget(button_box)
         return main_layout
 
