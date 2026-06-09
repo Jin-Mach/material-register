@@ -11,26 +11,32 @@ from material_register.ui.dialogs.create_transaction_dialog import CreateTransac
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
 from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
+from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
 
 
 class TransactionsController:
+    TRANSFER_IN = "IN"
+    TRANSFER_OUT = "OUT"
+
     def __init__(self, transactions_widget: "TransactionsWidget") -> None:
         self.transactions_widget = transactions_widget
         self.db_connection = DbInit.db_connection
         self.customers_model = DataInit.customers_model
+        self.active_commodity_unit = None
 
     def create_transaction(self, transfer_type: str) -> None:
         create_data = self.create_transaction_data(transfer_type)
         if create_data is None:
             return
-        if transfer_type == "IN":
+        if transfer_type == self.TRANSFER_IN:
             self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transfer_type)
-        if transfer_type == "OUT":
+        if transfer_type == self.TRANSFER_OUT:
             self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transfer_type)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
+            self.active_commodity_unit = None
             print("OK")
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
@@ -41,7 +47,7 @@ class TransactionsController:
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         data = dialog.get_create_data()
-        if transfer_type == "OUT":
+        if transfer_type == self.TRANSFER_OUT:
             data.pop("paymentType", None)
         if not TransactionsController._check_data(data):
             MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
@@ -59,6 +65,14 @@ class TransactionsController:
         data = dialog.get_category_commodity_data()
         if not TransactionsController._check_data(data):
             return None
+        if transfer_type == self.TRANSFER_OUT:
+            unit = data["commoditySuffix"]
+            if self.active_commodity_unit is None:
+                self.active_commodity_unit = unit
+            elif self.active_commodity_unit != unit:
+                MessageBoxes.show_error(
+                    self.transactions_widget, "INVALID_COMMODITY_UNIT", "WARNING")
+                return None
         return data
 
     def update_category_commodity_data(self, item_data: dict[str, str | int | float], transfer_type: str) -> dict[str, str | int | float] | None:
@@ -69,6 +83,15 @@ class TransactionsController:
         data = dialog.get_category_commodity_data()
         if not TransactionsController._check_data(data):
             return None
+        model = self.items_dialog.transactions_items_widget.current_model
+        if isinstance(model, TransactionItemsModelOut):
+            unit = data["commoditySuffix"]
+            if model.rowCount() == 1:
+                self.active_commodity_unit = unit
+                return data
+            if self.active_commodity_unit != unit:
+                MessageBoxes.show_error(self.transactions_widget, "INVALID_COMMODITY_UNIT", "WARNING")
+                return None
         return data
 
     @staticmethod

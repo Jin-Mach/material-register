@@ -35,6 +35,11 @@
     "TEXT": "Nepodařilo se načíst data položky transakce",
     "CLOSE": "Zavřít"
   },
+  "INVALID_COMMODITY_UNIT": {
+    "TITLE": "Chyba",
+    "TEXT": "Všechny položky v transakci musí mít stejnou jednotku.",
+    "CLOSE": "Zavřít"
+  },
   "DELETE_TRANSACTION_ITEM": {
     "TITLE": "Smazat položku",
     "TEXT": "Opravdu smazat položku transakce?",
