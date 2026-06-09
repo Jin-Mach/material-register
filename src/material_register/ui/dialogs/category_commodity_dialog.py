@@ -5,6 +5,8 @@ from PySide6.QtGui import QShowEvent, Qt, QFontMetrics
 from PySide6.QtWidgets import (QWidget, QDialog, QVBoxLayout, QFormLayout, QLabel, QComboBox, QDoubleSpinBox,
                                QDialogButtonBox)
 
+from material_register.config.app_maps import (TRANSFER_OUT, CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
+                                               CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE, CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE)
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
@@ -18,11 +20,6 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker,SpellCheckingInspection
 class CategoryCommodityDialog(QDialog):
-    TRANSFER_OUT = "OUT"
-    MIN_VALUE = 0.0
-    MAX_UNIT_VALUE = 99_999_999.9
-    MAX_PRICE_VALUE = 1000.0
-
     def __init__(self, categories: list[Category], commodities: list[Commodity],
                  transaction_items_dialog: "TransactionItemsDialogIn", transfer_type: str) -> None:
         super().__init__(transaction_items_dialog)
@@ -92,7 +89,7 @@ class CategoryCommodityDialog(QDialog):
     def _setup_widgets(self) -> None:
         for widget in (self.commodity_combo_box, self.unit_spinbox, self.price_spinbox, self.add_button):
             widget.setEnabled(False)
-        if self.transfer_type == self.TRANSFER_OUT:
+        if self.transfer_type == TRANSFER_OUT:
             self.price_label.hide()
             self.price_spinbox.hide()
 
@@ -101,15 +98,15 @@ class CategoryCommodityDialog(QDialog):
         self._setup_price_spinbox()
 
     def _setup_unit_spinbox(self) -> None:
-        self.unit_spinbox.setMinimum(self.MIN_VALUE)
-        self.unit_spinbox.setMaximum(self.MAX_UNIT_VALUE)
+        self.unit_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
+        self.unit_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE)
         self.unit_spinbox.setDecimals(1)
         self.unit_spinbox.setSingleStep(0.1)
         self.unit_spinbox.setGroupSeparatorShown(True)
 
     def _setup_price_spinbox(self) -> None:
-        self.price_spinbox.setMinimum(self.MIN_VALUE)
-        self.price_spinbox.setMaximum(self.MAX_PRICE_VALUE)
+        self.price_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
+        self.price_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE)
         self.price_spinbox.setDecimals(1)
         self.price_spinbox.setSingleStep(0.1)
         self.price_spinbox.setGroupSeparatorShown(True)
@@ -147,7 +144,7 @@ class CategoryCommodityDialog(QDialog):
         for commodity in self.commodities:
             if commodity.id == commodity_id:
                 self.commodity_suffix = commodity.unit
-                self.unit_spinbox.setValue(self.MIN_VALUE)
+                self.unit_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
                 self.unit_spinbox.setSuffix(f"  {self.commodity_suffix}")
                 self.price_spinbox.setValue(commodity.default_price)
                 break
@@ -162,9 +159,9 @@ class CategoryCommodityDialog(QDialog):
         self.price_spinbox.setValue(item_data["pricePerUnit"])
 
     def _reset_spinboxes_values(self) -> None:
-        self.unit_spinbox.setValue(self.MIN_VALUE)
+        self.unit_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
         self.unit_spinbox.setSuffix("")
-        self.price_spinbox.setValue(self.MIN_VALUE)
+        self.price_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
 
     def _on_value_changed(self) -> None:
         self._set_required_style()
@@ -217,7 +214,7 @@ class CategoryCommodityDialog(QDialog):
                 widget.setEnabled(False)
 
     def _is_valid_value(self, value: float) -> bool:
-        return self._normalize_value(value) > self.MIN_VALUE
+        return self._normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE
 
     def _valid_values(self) -> bool:
         return self._is_valid_value(self.unit_spinbox.value()) and self._is_valid_value(self.price_spinbox.value())

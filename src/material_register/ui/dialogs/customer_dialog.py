@@ -6,6 +6,8 @@ from PySide6.QtGui import QRegularExpressionValidator, QShowEvent
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QTextEdit, QHBoxLayout, \
     QDialogButtonBox, QCheckBox
 
+from material_register.config.app_maps import ADD_MODE, UPDATE_MODE, CUSTOMERS_DIALOG_NOTES_LENGTH, \
+    CUSTOMERS_DIALOG_COMPANY_INDEX, CUSTOMERS_DIALOG_INDIVIDUAL_INDEX
 from material_register.domain.customers_dataclass import Customer
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
@@ -18,12 +20,6 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker,PyMethodMayBeStatic
 class CustomerDialog(QDialog):
-    ADD_MODE = "ADD"
-    UPDATE_MODE = "UPDATE"
-    NOTES_LENGTH = 200
-    INDIVIDUAL_INDEX = 0
-    COMPANY_INDEX = 1
-
     def __init__(self, customers_widget: "CustomersWidget", mode: str = ADD_MODE, customer_data: "Customer" = None) -> None:
         super().__init__(customers_widget)
         self.setMinimumWidth(400)
@@ -137,9 +133,9 @@ class CustomerDialog(QDialog):
             self.subject_type.addItem(text, index)
 
     def _setup_mode(self) -> None:
-        if self.mode == self.ADD_MODE:
+        if self.mode == ADD_MODE:
             self._set_add_mode()
-        elif self.mode == self.UPDATE_MODE and self.customer_data:
+        elif self.mode == UPDATE_MODE and self.customer_data:
             self._set_update_mode(self.customer_data)
 
     def _set_validators(self) -> None:
@@ -180,7 +176,8 @@ class CustomerDialog(QDialog):
         self.notes_input.setEnabled(enabled)
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes_input, self.notes_count_label, self.notes_count_text, self.NOTES_LENGTH)
+        check_notes_length(self.notes_input, self.notes_count_label, self.notes_count_text,
+                           CUSTOMERS_DIALOG_NOTES_LENGTH)
 
     def _update_required_styles(self) -> None:
         for widget in (self.first_name_input, self.last_name_input, self.company_input, self.address_input):
@@ -258,7 +255,7 @@ class CustomerDialog(QDialog):
         if not document:
             return False
         ignored_id = None
-        if self.mode != self.ADD_MODE:
+        if self.mode != ADD_MODE:
             ignored_id = self.customer_data.id
         return not self.customers_widget.customers_model.document_exists(document, ignored_id=ignored_id)
 
@@ -280,9 +277,9 @@ class CustomerDialog(QDialog):
         }
         self.subject_type.blockSignals(True)
         if customer_data.company is not None:
-            self.subject_type.setCurrentIndex(self.COMPANY_INDEX)
+            self.subject_type.setCurrentIndex(CUSTOMERS_DIALOG_COMPANY_INDEX)
         else:
-            self.subject_type.setCurrentIndex(self.INDIVIDUAL_INDEX)
+            self.subject_type.setCurrentIndex(CUSTOMERS_DIALOG_INDIVIDUAL_INDEX)
         self.subject_type.blockSignals(False)
         self._apply_type_state()
         for widget, value in customer_input_map.items():
@@ -295,7 +292,9 @@ class CustomerDialog(QDialog):
                 widget.setChecked(value)
             if isinstance(widget, QTextEdit):
                 widget.setPlainText(value)
-                self.notes_count_label.setText(f"{self.notes_count_text} {len(value)}/{self.NOTES_LENGTH}")
+                self.notes_count_label.setText(
+                    f"{self.notes_count_text} {len(value)}/{CUSTOMERS_DIALOG_NOTES_LENGTH}"
+                )
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

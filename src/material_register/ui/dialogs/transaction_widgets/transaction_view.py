@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QTableView, QHeaderView
 
+from material_register.config.app_maps import TRANSACTION_VIEW_HIDDEN_COLUMNS
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
 from material_register.services.error_handler import ErrorHandler
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
@@ -12,8 +13,6 @@ if TYPE_CHECKING:
 
 
 class TransactionView(QTableView):
-    HIDDEN_COLUMNS = ["commodityId"]
-
     def __init__(self, transaction_items_widget: "TransactionsItemsWidget"):
         super().__init__(transaction_items_widget)
 
@@ -34,7 +33,7 @@ class TransactionView(QTableView):
 
     def _setup_columns(self, model: TransactionItemsModelIn| TransactionItemsModelOut) -> None:
         column_map = model.get_columns_map()
-        for name in self.HIDDEN_COLUMNS:
+        for name in TRANSACTION_VIEW_HIDDEN_COLUMNS:
             index = column_map.get(name)
             if index is not None:
                 self.setColumnHidden(index, True)

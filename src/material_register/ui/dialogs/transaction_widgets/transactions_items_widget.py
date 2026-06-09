@@ -4,6 +4,7 @@ from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
 
+from material_register.config.app_maps import TRANSFER_OUT, TRANSFER_IN
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
 from material_register.services.error_handler import ErrorHandler
@@ -18,9 +19,6 @@ if TYPE_CHECKING:
 
 
 class TransactionsItemsWidget(QWidget):
-    TRANSFER_IN = "IN"
-    TRANSFER_OUT = "OUT"
-
     def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut", transfer_type: str):
         super().__init__(transaction_item_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -57,7 +55,7 @@ class TransactionsItemsWidget(QWidget):
         disabled_buttons = [self.update_item_button, self.delete_item_button]
         for button in disabled_buttons:
             button.setEnabled(False)
-        if self.transfer_type == self.TRANSFER_OUT:
+        if self.transfer_type == TRANSFER_OUT:
             self.total_price_label.hide()
             self.total_price.hide()
         self._setup_texts(widgets)
@@ -83,11 +81,11 @@ class TransactionsItemsWidget(QWidget):
         self.total_price.setFont(font)
 
     def _setup_model(self, transfer_type: str) -> None:
-        if transfer_type == self.TRANSFER_IN:
+        if transfer_type == TRANSFER_IN:
             self.transaction_item_model_in = TransactionItemsModelIn(self.price_suffix)
             self.transactions_items_view.setModel(self.transaction_item_model_in)
             self.current_model = self.transaction_item_model_in
-        elif transfer_type == self.TRANSFER_OUT:
+        elif transfer_type == TRANSFER_OUT:
             self.transaction_item_model_out = TransactionItemsModelOut()
             self.transactions_items_view.setModel(self.transaction_item_model_out)
             self.current_model = self.transaction_item_model_out
@@ -129,5 +127,5 @@ class TransactionsItemsWidget(QWidget):
         self._setup_total_price(self.current_model)
 
     def _setup_total_price(self, current_model: TransactionItemsModelIn | TransactionItemsModelOut) -> None:
-        if self.transfer_type == self.TRANSFER_IN:
+        if self.transfer_type == TRANSFER_IN:
             self.total_price.setText(current_model.return_total_price())

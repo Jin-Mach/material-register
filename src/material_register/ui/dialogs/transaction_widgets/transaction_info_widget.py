@@ -5,6 +5,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit,
                                QSizePolicy, QFrame)
 
+from material_register.config.app_maps import TRANSFER_OUT, TRANSACTION_INFO_WIDGET_NOTES_LENGTH
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.setup.ui_texts import UiTexts
@@ -15,9 +16,6 @@ if TYPE_CHECKING:
 
 
 class TransactionInfoWidget(QWidget):
-    TRANSFER_OUT = "OUT"
-    NOTES_LENGTH = 200
-
     def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut", transfer_type: str) -> None:
         super().__init__(transaction_item_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -102,10 +100,11 @@ class TransactionInfoWidget(QWidget):
         self.notes.textChanged.connect(self._update_notes_count)
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes, self.notes_count_label, self.notes_count_text, self.NOTES_LENGTH)
+        check_notes_length(self.notes, self.notes_count_label, self.notes_count_text,
+                           TRANSACTION_INFO_WIDGET_NOTES_LENGTH)
 
     def _apply_transfer_type(self, payment_text: str) -> None:
-        if self.transfer_type == self.TRANSFER_OUT:
+        if self.transfer_type == TRANSFER_OUT:
             self.payment_info.hide()
         self.payment_info.setText(payment_text)
 

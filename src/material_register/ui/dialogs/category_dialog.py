@@ -4,6 +4,7 @@ from PySide6.QtCore import QRegularExpression, Qt
 from PySide6.QtGui import QShowEvent, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox
 
+from material_register.config.app_maps import ADD_MODE, UPDATE_MODE, CATEGORY_DIALOG_NOTES_LENGTH
 from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
@@ -17,10 +18,6 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker
 class CategoryDialog(QDialog):
-    ADD_MODE = "ADD"
-    UPDATE_MODE = "UPDATE"
-    NOTES_LENGTH = 100
-
     def __init__(self, catalog_widget: "CatalogWidget", mode: str = ADD_MODE,
                  category_data: Category | None = None) -> None:
         super().__init__(catalog_widget)
@@ -84,9 +81,9 @@ class CategoryDialog(QDialog):
         UiTexts.set_default_texts(self, widgets)
 
     def _setup_mode(self) -> None:
-        if self.mode == self.ADD_MODE:
+        if self.mode == ADD_MODE:
             self._set_add_mode()
-        elif self.mode == self.UPDATE_MODE and self.category_data:
+        elif self.mode == UPDATE_MODE and self.category_data:
             self._set_update_mode(self.category_data)
 
     def _set_validators(self) -> None:
@@ -104,7 +101,7 @@ class CategoryDialog(QDialog):
         self._update_notes_count()
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes_input, self.notes_count_label, self.notes_count_text, self.NOTES_LENGTH)
+        check_notes_length(self.notes_input, self.notes_count_label, self.notes_count_text, CATEGORY_DIALOG_NOTES_LENGTH)
 
     def _update_save_button_state(self) -> None:
         self.save_button.setEnabled(self._is_input_valid() and self._is_category_valid())
@@ -113,7 +110,7 @@ class CategoryDialog(QDialog):
         text = widget.text().strip()
         if widget == self.category_name_input:
             invalid = (not text) or self.catalog_widget.catalog_controller.category_exists(
-                text, ignored_id=self.category_data.id if self.mode == self.UPDATE_MODE else None)
+                text, ignored_id=self.category_data.id if self.mode == UPDATE_MODE else None)
         else:
             invalid = not text
         if invalid:
@@ -134,7 +131,7 @@ class CategoryDialog(QDialog):
         if not name:
             return False
         ignored_id = None
-        if self.mode == self.UPDATE_MODE and self.category_data:
+        if self.mode == UPDATE_MODE and self.category_data:
             ignored_id = self.category_data.id
         return not self.catalog_widget.catalog_controller.category_exists(name, ignored_id=ignored_id)
 

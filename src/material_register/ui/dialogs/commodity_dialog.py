@@ -5,6 +5,8 @@ from PySide6.QtGui import QShowEvent, QRegularExpressionValidator, QFont
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox,
                                QCheckBox, QFormLayout, QDoubleSpinBox, QComboBox, QWidget)
 
+from material_register.config.app_maps import (ADD_MODE, UPDATE_MODE, COMMODITY_DIALOG_MIN_VALUE,
+                                               COMMODITY_DIALOG_MAX_PRICE_VALUE, COMMODITY_DIALOG_NOTES_LENGTH)
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
@@ -18,12 +20,6 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker,PyMethodMayBeStatic
 class CommodityDialog(QDialog):
-    ADD_MODE = "ADD"
-    UPDATE_MODE = "UPDATE"
-    MIN_VALUE = 0.0
-    MAX_PRICE_VALUE = 1000
-    NOTES_LENGTH = 50
-
     def __init__(self, catalog_widget: "CatalogWidget", category_id: int, category_name: str, mode: str = ADD_MODE,
                  commodity_data: Commodity | None = None) -> None:
         super().__init__(catalog_widget)
@@ -57,12 +53,12 @@ class CommodityDialog(QDialog):
         self.default_price_label = QLabel()
         self.default_price_label.setObjectName("defaultPriceLabel")
         self.price_input = QDoubleSpinBox()
-        self.price_input.setMinimum(self.MIN_VALUE)
-        self.price_input.setMaximum(self.MAX_PRICE_VALUE)
+        self.price_input.setMinimum(COMMODITY_DIALOG_MIN_VALUE)
+        self.price_input.setMaximum(COMMODITY_DIALOG_MAX_PRICE_VALUE)
         self.price_input.setDecimals(1)
         self.price_input.setSingleStep(0.1)
         self.price_input.setGroupSeparatorShown(True)
-        self.price_input.setValue(self.MIN_VALUE)
+        self.price_input.setValue(COMMODITY_DIALOG_MIN_VALUE)
         self.active_label = QLabel()
         self.active_label.setObjectName("activeLabel")
         self.active_checkbox = QCheckBox()
@@ -129,9 +125,9 @@ class CommodityDialog(QDialog):
         UiTexts.set_default_texts(self, widgets)
 
     def _setup_mode(self) -> None:
-        if self.mode == self.ADD_MODE:
+        if self.mode == ADD_MODE:
             self._set_add_mode()
-        elif self.mode == self.UPDATE_MODE and self.commodity_data:
+        elif self.mode == UPDATE_MODE and self.commodity_data:
             self._set_update_mode(self.commodity_data)
 
     def _set_validators(self) -> None:
@@ -155,7 +151,7 @@ class CommodityDialog(QDialog):
         self._update_notes_count()
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes_input, self.notes_count_label, self.notes_text, self.NOTES_LENGTH)
+        check_notes_length(self.notes_input, self.notes_count_label, self.notes_text, COMMODITY_DIALOG_NOTES_LENGTH)
 
     def _update_required_styles(self) -> None:
         self._set_required_style(self.name_input)
@@ -185,7 +181,7 @@ class CommodityDialog(QDialog):
         if not name:
             return False
         ignored_id = None
-        if self.mode == self.UPDATE_MODE and self.commodity_data:
+        if self.mode == UPDATE_MODE and self.commodity_data:
             ignored_id = self.commodity_data.id
         return not self.catalog_widget.catalog_controller.commodity_exists(name, ignored_id)
 
