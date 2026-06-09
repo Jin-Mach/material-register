@@ -20,7 +20,7 @@ class CustomersActionsWidget(QWidget):
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
-        self.add_customer_button = QPushButton("Add")
+        self.add_customer_button = QPushButton()
         self.add_customer_button.setObjectName("addCustomerButton")
         self.search_line_edit = QLineEdit()
         self.search_line_edit.setObjectName("searchLineEdit")

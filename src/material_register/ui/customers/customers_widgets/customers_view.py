@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QTableView, QHeaderView
 
+from material_register.config.app_maps import CUSTOMERS_HORIZONTAL_PADDING, CUSTOMERS_HIDDEN_COLUMNS
 from material_register.config.ui_defaults import DEFAULT_TEXTS
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.customers.customers_widgets.customers_context_menu import CustomersContextMenu
@@ -15,10 +16,6 @@ if TYPE_CHECKING:
 
 
 class CustomersView(QTableView):
-    HIDDEN_COLUMNS = ("id", "first_name", "last_name", "notes", "created_at", "company_normalized",
-                      "first_name_normalized", "last_name_normalized", "address_normalized")
-    HORIZONTAL_PADDING = 50
-
     def __init__(self, customers_widget: "CustomersWidget") -> None:
         super().__init__(customers_widget)
         self.customers_widget = customers_widget
@@ -47,7 +44,7 @@ class CustomersView(QTableView):
         self._setup_behavior()
 
     def _setup_columns(self, model: CustomersModel) -> None:
-        for name in self.HIDDEN_COLUMNS:
+        for name in CUSTOMERS_HIDDEN_COLUMNS:
             index = model.fieldIndex(name)
             if index >= 0:
                 self.setColumnHidden(index, True)
@@ -74,7 +71,7 @@ class CustomersView(QTableView):
         for col in range(model.columnCount()):
             if col in (address_column, active_column):
                 continue
-            self.setColumnWidth(col, self.columnWidth(col) + self.HORIZONTAL_PADDING)
+            self.setColumnWidth(col, self.columnWidth(col) + CUSTOMERS_HORIZONTAL_PADDING)
 
     def _setup_behavior(self) -> None:
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)

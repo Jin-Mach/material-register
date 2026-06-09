@@ -19,9 +19,9 @@ class CustomersContextMenu(QMenu):
         self.customer_index = None
 
     def _create_ui(self) -> None:
-        self.update_customer_action = QAction("Edit record", self)
+        self.update_customer_action = QAction(self)
         self.update_customer_action.setObjectName("updateCustomerAction")
-        self.active_customer_action = QAction("Activate/Deactivate record", self)
+        self.active_customer_action = QAction(self)
         self.active_customer_action.setObjectName("activeCustomerAction")
         self.addAction(self.update_customer_action)
         self.addAction(self.active_customer_action)

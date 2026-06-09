@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 
+from material_register.config.app_maps import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
 from material_register.ui.transactions.transactions_widgets.transactions_view import TransactionsView
 from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import TransactionsActionsWidget
@@ -12,9 +13,6 @@ if TYPE_CHECKING:
 
 
 class TransactionsWidget(QWidget):
-    TRANSFER_IN = "IN"
-    TRANSFER_OUT = "OUT"
-
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
         self.stacked_widget = stacked_widget
@@ -31,8 +29,8 @@ class TransactionsWidget(QWidget):
         return main_layout
 
     def _create_connection(self) -> None:
-        self.actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(self.TRANSFER_IN))
-        self.actions_widget.out_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(self.TRANSFER_OUT))
+        self.actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_IN))
+        self.actions_widget.out_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_OUT))
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
