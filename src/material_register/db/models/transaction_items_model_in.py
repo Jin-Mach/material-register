@@ -3,10 +3,10 @@ from typing import Any
 from PySide6.QtCore import Qt, QModelIndex
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
+from material_register.config.app_maps import IN_MODEL_COLUMNS
+
 
 class TransactionItemsModelIn(QStandardItemModel):
-    COLUMNS = ["category", "commodity", "commodityId", "unitCount", "pricePerUnit", "totalPrice"]
-
     def __init__(self, price_suffix: str) -> None:
         super().__init__()
         self.price_suffix = price_suffix
@@ -16,14 +16,14 @@ class TransactionItemsModelIn(QStandardItemModel):
         if not index.isValid():
             return None
         column = index.column()
-        total_column = self.COLUMNS.index("totalPrice")
+        total_column = IN_MODEL_COLUMNS.index("totalPrice")
         if role == Qt.ItemDataRole.DisplayRole:
             if column == total_column:
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 if value is None:
                     return ""
                 return f"{value} {self.price_suffix}"
-            if column == self.COLUMNS.index("unitCount"):
+            if column == IN_MODEL_COLUMNS.index("unitCount"):
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 commodity_suffix = self.data(index, Qt.ItemDataRole.UserRole + 1)
                 if value is None:
@@ -52,7 +52,7 @@ class TransactionItemsModelIn(QStandardItemModel):
         self.appendRow(items_list)
 
     def update_item(self, row: int, data: dict[str, str | int | float]) -> None:
-        for column, key in enumerate(self.COLUMNS):
+        for column, key in enumerate(IN_MODEL_COLUMNS):
             index = self.index(row, column)
             if key == "category":
                 self.setData(index, data, Qt.ItemDataRole.UserRole)
@@ -86,7 +86,7 @@ class TransactionItemsModelIn(QStandardItemModel):
         return round(total_count, 2)
 
     def _setup_model(self) -> None:
-        self.setColumnCount(len(self.COLUMNS))
+        self.setColumnCount(len(IN_MODEL_COLUMNS))
 
     @staticmethod
     def get_item_total_count(unit: int | float, price_per_unit: int | float) -> QStandardItem:

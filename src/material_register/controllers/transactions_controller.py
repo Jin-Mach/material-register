@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QDialog
 
+from material_register.config.app_maps import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
@@ -18,9 +19,6 @@ if TYPE_CHECKING:
 
 
 class TransactionsController:
-    TRANSFER_IN = "IN"
-    TRANSFER_OUT = "OUT"
-
     def __init__(self, transactions_widget: "TransactionsWidget") -> None:
         self.transactions_widget = transactions_widget
         self.db_connection = DbInit.db_connection
@@ -31,9 +29,9 @@ class TransactionsController:
         create_data = self.create_transaction_data(transfer_type)
         if create_data is None:
             return
-        if transfer_type == self.TRANSFER_IN:
+        if transfer_type == TRANSFER_IN:
             self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transfer_type)
-        if transfer_type == self.TRANSFER_OUT:
+        if transfer_type == TRANSFER_OUT:
             self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transfer_type)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
@@ -47,7 +45,7 @@ class TransactionsController:
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         data = dialog.get_create_data()
-        if transfer_type == self.TRANSFER_OUT:
+        if transfer_type == TRANSFER_OUT:
             data.pop("paymentType", None)
         if not TransactionsController._check_data(data):
             MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
@@ -65,7 +63,7 @@ class TransactionsController:
         data = dialog.get_category_commodity_data()
         if not TransactionsController._check_data(data):
             return None
-        if transfer_type == self.TRANSFER_OUT:
+        if transfer_type == TRANSFER_OUT:
             unit = data["commoditySuffix"]
             if self.active_commodity_unit is None:
                 self.active_commodity_unit = unit

@@ -1,16 +1,13 @@
+from material_register.config.app_maps import NORMALIZED_COLUMNS
+
+
 class CustomersFilterHelper:
 
     @staticmethod
     def get_filter(text: str) -> str:
         text = CustomersFilterHelper.escape(text)
         conditions = []
-        for field in [
-            "company_normalized",
-            "first_name_normalized",
-            "last_name_normalized",
-            "document_number",
-            "address_normalized",
-        ]:
+        for field in NORMALIZED_COLUMNS:
             conditions.append(f"{field} LIKE '%{text}%'")
         return " OR ".join(conditions)
 

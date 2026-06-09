@@ -3,10 +3,10 @@ from typing import Any
 from PySide6.QtCore import Qt, QModelIndex
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
+from material_register.config.app_maps import OUT_MODEL_COLUMNS
+
 
 class TransactionItemsModelOut(QStandardItemModel):
-    COLUMNS = ["category", "commodity", "commodityId", "unitCount"]
-
     def __init__(self) -> None:
         super().__init__()
         self._setup_model()
@@ -15,7 +15,7 @@ class TransactionItemsModelOut(QStandardItemModel):
         if not index.isValid():
             return None
         column = index.column()
-        unit_column = self.COLUMNS.index("unitCount")
+        unit_column = OUT_MODEL_COLUMNS.index("unitCount")
         if role == Qt.ItemDataRole.DisplayRole:
             if column == unit_column:
                 value = self.data(index, Qt.ItemDataRole.UserRole)
@@ -29,9 +29,8 @@ class TransactionItemsModelOut(QStandardItemModel):
         return super().data(index, role)
 
     def add_item(self, transaction_item: dict[str, str | int]) -> None:
-        columns = ["category", "commodity", "commodityId", "unitCount"]
         items_list = []
-        for key in columns:
+        for key in OUT_MODEL_COLUMNS:
             value = self._create_item(transaction_item[key])
             if key == "category":
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
@@ -42,7 +41,7 @@ class TransactionItemsModelOut(QStandardItemModel):
         self.appendRow(items_list)
 
     def update_item(self, row: int, data: dict[str, str | int]) -> None:
-        for column, key in enumerate(self.COLUMNS):
+        for column, key in enumerate(OUT_MODEL_COLUMNS):
             index = self.index(row, column)
             if key == "category":
                 self.setData(index, data, Qt.ItemDataRole.UserRole)
@@ -61,7 +60,7 @@ class TransactionItemsModelOut(QStandardItemModel):
         return self.item(index.row(), 0).data(Qt.ItemDataRole.UserRole)
 
     def _setup_model(self) -> None:
-        self.setColumnCount(len(self.COLUMNS))
+        self.setColumnCount(len(OUT_MODEL_COLUMNS))
 
     @staticmethod
     def _create_item(value: str) -> QStandardItem:
