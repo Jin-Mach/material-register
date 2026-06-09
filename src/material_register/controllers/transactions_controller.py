@@ -92,6 +92,13 @@ class TransactionsController:
                 return None
         return data
 
+    def on_item_deleted(self, transfer_type: str) -> None:
+        if transfer_type != TRANSFER_OUT:
+            return
+        model = self.items_dialog.transactions_items_widget.current_model
+        if isinstance(model, TransactionItemsModelOut) and model.rowCount() == 0:
+            self.active_commodity_unit = None
+
     @staticmethod
     def _check_data(data: dict[str, str | int | float | None] | None) -> bool:
         if not data:

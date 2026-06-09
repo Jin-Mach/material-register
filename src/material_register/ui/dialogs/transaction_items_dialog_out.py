@@ -105,6 +105,7 @@ class TransactionItemsDialogOut(QDialog):
         question = MessageBoxes.show_question(self, "DELETE_TRANSACTION_ITEM", informative_text)
         if question:
             self.transactions_items_widget.delete_item(index)
+            self.transactions_controller.on_item_deleted(self.transfer_type)
 
     def _get_item_data(self) -> tuple[QModelIndex | None, dict[str, str | int | float] | None]:
         index = self.transactions_items_widget.get_selected_index()
