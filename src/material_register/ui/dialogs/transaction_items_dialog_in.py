@@ -34,7 +34,7 @@ class TransactionItemsDialogIn(QDialog):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         self.transaction_info_widget = TransactionInfoWidget(self, self.transfer_type)
-        self.transactions_items_widget = TransactionsItemsWidget(self)
+        self.transactions_items_widget = TransactionsItemsWidget(self, self.transfer_type)
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         self.save_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.save_transaction_button.setObjectName("saveTransactionButton")
@@ -82,7 +82,7 @@ class TransactionItemsDialogIn(QDialog):
         self.set_create_data(new_data)
 
     def _add_transaction_item(self) -> None:
-        new_item_data = self.transactions_controller.create_category_commodity_data()
+        new_item_data = self.transactions_controller.create_category_commodity_data(self.transfer_type)
         if new_item_data is None:
             return
         self.transactions_items_widget.add_item(new_item_data)
@@ -90,7 +90,7 @@ class TransactionItemsDialogIn(QDialog):
     def _update_transaction_item(self) -> None:
         index, item_data = self._get_item_data()
         if item_data:
-            update_item_data = self.transactions_controller.update_category_commodity_data(item_data)
+            update_item_data = self.transactions_controller.update_category_commodity_data(item_data, self.transfer_type)
             if update_item_data is None:
                 return
             self.transactions_items_widget.update_item(index, update_item_data)

@@ -18,15 +18,17 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker,SpellCheckingInspection
 class CategoryCommodityDialog(QDialog):
+    TRANSFER_OUT = "OUT"
     MIN_VALUE = 0.0
     MAX_UNIT_VALUE = 99_999_999.9
     MAX_PRICE_VALUE = 1000.0
 
     def __init__(self, categories: list[Category], commodities: list[Commodity],
-                 transaction_items_dialog: "TransactionItemsDialogIn") -> None:
+                 transaction_items_dialog: "TransactionItemsDialogIn", transfer_type: str) -> None:
         super().__init__(transaction_items_dialog)
         self.categories = categories
         self.commodities = commodities
+        self.transfer_type = transfer_type
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -90,6 +92,9 @@ class CategoryCommodityDialog(QDialog):
     def _setup_widgets(self) -> None:
         for widget in (self.commodity_combo_box, self.unit_spinbox, self.price_spinbox, self.add_button):
             widget.setEnabled(False)
+        if self.transfer_type == self.TRANSFER_OUT:
+            self.price_label.hide()
+            self.price_spinbox.hide()
 
     def _setup_spinboxes(self) -> None:
         self._setup_unit_spinbox()

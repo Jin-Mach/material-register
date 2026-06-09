@@ -70,7 +70,7 @@
     "categoryLabelText": "Kategorie:",
     "nameLabelText": "Název:",
     "unitLabelText": "Jednotka:",
-    "unitInputItems": ["kg", "kus"],
+    "unitInputItems": ["kg", "ks"],
     "defaultPriceLabelText": "Jednotková cena (Kč):",
     "activeLabelText": "Aktivní",
     "notesLabelText": "Poznámky",

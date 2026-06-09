@@ -48,12 +48,12 @@ class TransactionsController:
             return None
         return data
 
-    def create_category_commodity_data(self)-> dict[str, str | int | float] | None:
+    def create_category_commodity_data(self, transfer_type: str)-> dict[str, str | int | float] | None:
         categories_count = CategoryQueries.get_total_count(self.db_connection)
         if categories_count == 0:
             MessageBoxes.show_error(self.transactions_widget, "NO_CATEGORY", "INFORMATION")
             return None
-        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog)
+        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         data = dialog.get_category_commodity_data()
@@ -61,8 +61,8 @@ class TransactionsController:
             return None
         return data
 
-    def update_category_commodity_data(self, item_data: dict[str, str | int | float]) -> dict[str, str | int | float] | None:
-        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog)
+    def update_category_commodity_data(self, item_data: dict[str, str | int | float], transfer_type: str) -> dict[str, str | int | float] | None:
+        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type)
         dialog.setup_update(item_data)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None

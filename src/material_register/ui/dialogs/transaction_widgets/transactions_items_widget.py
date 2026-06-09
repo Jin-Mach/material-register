@@ -5,6 +5,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
 
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
+from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_view import TransactionView
@@ -17,9 +18,13 @@ if TYPE_CHECKING:
 
 
 class TransactionsItemsWidget(QWidget):
-    def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut"):
+    TRANSFER_IN = "IN"
+    TRANSFER_OUT = "OUT"
+
+    def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut", transfer_type: str):
         super().__init__(transaction_item_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.transfer_type = transfer_type
         self.setLayout(self._create_ui())
         self._setup_ui()
 
@@ -52,9 +57,12 @@ class TransactionsItemsWidget(QWidget):
         disabled_buttons = [self.update_item_button, self.delete_item_button]
         for button in disabled_buttons:
             button.setEnabled(False)
+        if self.transfer_type == self.TRANSFER_OUT:
+            self.total_price_label.hide()
+            self.total_price.hide()
         self._setup_texts(widgets)
         self._setup_style()
-        self._setup_model()
+        self._setup_model(self.transfer_type)
         self.transactions_items_view.setup_ui()
         self._create_connection()
 
@@ -74,9 +82,15 @@ class TransactionsItemsWidget(QWidget):
         self.total_price.setStyleSheet(PRICE_STYLE)
         self.total_price.setFont(font)
 
-    def _setup_model(self) -> None:
-        self.transaction_item_model_in = TransactionItemsModelIn(self.price_suffix)
-        self.transactions_items_view.setModel(self.transaction_item_model_in)
+    def _setup_model(self, transfer_type: str) -> None:
+        if transfer_type == self.TRANSFER_IN:
+            self.transaction_item_model_in = TransactionItemsModelIn(self.price_suffix)
+            self.transactions_items_view.setModel(self.transaction_item_model_in)
+            self.current_model = self.transaction_item_model_in
+        elif transfer_type == self.TRANSFER_OUT:
+            self.transaction_item_model_out = TransactionItemsModelOut()
+            self.transactions_items_view.setModel(self.transaction_item_model_out)
+            self.current_model = self.transaction_item_model_out
 
     def _create_connection(self) -> None:
         self.transactions_items_view.selectionModel().selectionChanged.connect(self._update_buttons_state)
@@ -95,21 +109,25 @@ class TransactionsItemsWidget(QWidget):
             return None
         return index
 
-    def add_item(self, new_item_data:  dict[str, str | int | float] | None) -> None:
+    def add_item(self, new_item_data: dict[str, str | int | float] | None) -> None:
         if new_item_data is None:
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
-        self.transaction_item_model_in.add_item(new_item_data)
-        self.total_price.setText(self.transaction_item_model_in.return_total_price())
+        self.current_model.add_item(new_item_data)
+        self._setup_total_price(self.current_model)
 
     def update_item(self, index: QModelIndex, item_data: dict[str, str | int | float]) -> None:
         if item_data is None:
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
         row = index.row()
-        self.transaction_item_model_in.update_item(row, item_data)
-        self.total_price.setText(self.transaction_item_model_in.return_total_price())
+        self.current_model.update_item(row, item_data)
+        self._setup_total_price(self.current_model)
 
     def delete_item(self, index: QModelIndex) -> None:
-        self.transaction_item_model_in.delete_item(index)
-        self.total_price.setText(self.transaction_item_model_in.return_total_price())
+        self.current_model.delete_item(index)
+        self._setup_total_price(self.current_model)
+
+    def _setup_total_price(self, current_model: TransactionItemsModelIn | TransactionItemsModelOut) -> None:
+        if self.transfer_type == self.TRANSFER_IN:
+            self.total_price.setText(current_model.return_total_price())
