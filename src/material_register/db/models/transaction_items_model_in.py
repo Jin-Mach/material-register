@@ -40,7 +40,6 @@ class TransactionItemsModelIn(QStandardItemModel):
     def add_item(self, transaction_item: dict[str, str | int | float]) -> None:
         items_list = []
         for key in IN_MODEL_ITEMS_LIST_COLUMNS:
-            print(key)
             value = TransactionItemsModelIn._create_item(transaction_item[key])
             if key == "category":
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
@@ -72,7 +71,7 @@ class TransactionItemsModelIn(QStandardItemModel):
     def delete_item(self, index: QModelIndex) -> None:
         self.removeRow(index.row())
 
-    def return_total_price(self) -> str:
+    def return_total(self) -> str:
         total_count = self._calculate_total_price()
         return f"{total_count} {self.price_suffix}"
 

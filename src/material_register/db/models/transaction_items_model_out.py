@@ -56,8 +56,21 @@ class TransactionItemsModelOut(QStandardItemModel):
     def delete_item(self, index: QModelIndex) -> None:
         self.removeRow(index.row())
 
+    def return_total(self) -> str:
+        total_count, unit_suffix = self._calculate_total_unit()
+        return f"{total_count} {unit_suffix}"
+
     def get_transaction_item_data(self, index: QModelIndex) -> dict[str, str | int]:
         return self.item(index.row(), 0).data(Qt.ItemDataRole.UserRole)
+
+    def _calculate_total_unit(self) -> tuple[int, str]:
+        total_count = 0
+        unit_suffix = ""
+        for row in range(self.rowCount()):
+            item_data = self.item(row, 0).data(Qt.ItemDataRole.UserRole)
+            total_count += item_data["unitCount"]
+            unit_suffix = item_data.get("commoditySuffix", unit_suffix)
+        return total_count, unit_suffix
 
     def _setup_model(self) -> None:
         self.setColumnCount(len(OUT_MODEL_COLUMNS))

@@ -39,13 +39,13 @@ class TransactionsItemsWidget(QWidget):
         self.delete_item_button.setObjectName("deleteButton")
         self.total_price_label = QLabel()
         self.total_price_label.setObjectName("totalPriceLabel")
-        self.total_price = QLabel()
+        self.total_value_label = QLabel()
         buttons_price_layout.addWidget(self.add_item_button)
         buttons_price_layout.addWidget(self.update_item_button)
         buttons_price_layout.addWidget(self.delete_item_button)
         buttons_price_layout.addStretch()
         buttons_price_layout.addWidget(self.total_price_label)
-        buttons_price_layout.addWidget(self.total_price)
+        buttons_price_layout.addWidget(self.total_value_label)
         main_layout.addWidget(self.transactions_items_view)
         main_layout.addLayout(buttons_price_layout)
         return main_layout
@@ -55,9 +55,6 @@ class TransactionsItemsWidget(QWidget):
         disabled_buttons = [self.update_item_button, self.delete_item_button]
         for button in disabled_buttons:
             button.setEnabled(False)
-        if self.transfer_type == TRANSFER_OUT:
-            self.total_price_label.hide()
-            self.total_price.hide()
         self._setup_texts(widgets)
         self._setup_style()
         self._setup_model(self.transfer_type)
@@ -67,7 +64,6 @@ class TransactionsItemsWidget(QWidget):
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS
         self.price_suffix = ui_texts.get(self.__class__.__name__, {}).get("priceSuffix", "")
-        self.total_price.setText(f"{0} {self.price_suffix}")
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
@@ -77,8 +73,8 @@ class TransactionsItemsWidget(QWidget):
     def _setup_style(self) -> None:
         font = QFont()
         font.setBold(True)
-        self.total_price.setStyleSheet(PRICE_STYLE)
-        self.total_price.setFont(font)
+        self.total_value_label.setStyleSheet(PRICE_STYLE)
+        self.total_value_label.setFont(font)
 
     def _setup_model(self, transfer_type: str) -> None:
         if transfer_type == TRANSFER_IN:
@@ -127,5 +123,4 @@ class TransactionsItemsWidget(QWidget):
         self._setup_total_price(self.current_model)
 
     def _setup_total_price(self, current_model: TransactionItemsModelIn | TransactionItemsModelOut) -> None:
-        if self.transfer_type == TRANSFER_IN:
-            self.total_price.setText(current_model.return_total_price())
+        self.total_value_label.setText(current_model.return_total())
