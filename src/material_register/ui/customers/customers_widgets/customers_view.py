@@ -3,8 +3,9 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QTableView, QHeaderView
 
-from material_register.config.app_maps import CUSTOMERS_HORIZONTAL_PADDING, CUSTOMERS_HIDDEN_COLUMNS
+from material_register.config.app_constants import CUSTOMERS_HORIZONTAL_PADDING
 from material_register.config.ui_defaults import DEFAULT_TEXTS
+from material_register.db.config.model_constants import CUSTOMERS_HIDDEN_COLUMNS
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.customers.customers_widgets.customers_context_menu import CustomersContextMenu
 from material_register.ui.setup.headers_texts import HeadersTexts

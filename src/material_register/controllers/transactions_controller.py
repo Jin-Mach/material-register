@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QDialog
 
-from material_register.config.app_maps import TRANSFER_IN, TRANSFER_OUT
+from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit

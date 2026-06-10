@@ -5,7 +5,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit,
                                QSizePolicy, QFrame)
 
-from material_register.config.app_maps import TRANSFER_OUT, TRANSACTION_INFO_WIDGET_NOTES_LENGTH
+from material_register.config.app_constants import TRANSFER_OUT, TRANSACTION_INFO_WIDGET_NOTES_LENGTH
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.setup.ui_texts import UiTexts

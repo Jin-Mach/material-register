@@ -3,7 +3,8 @@ from typing import Any
 from PySide6.QtCore import Qt, QModelIndex
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from material_register.config.app_maps import IN_MODEL_COLUMNS, IN_MODEL_ITEMS_LIST_COLUMNS
+from material_register.db.config.model_constants import (IN_MODEL_COLUMNS, IN_MODEL_ITEMS_LIST_COLUMNS,
+                                                         IN_MODEL_COLUMNS_MAP)
 
 
 class TransactionItemsModelIn(QStandardItemModel):
@@ -101,13 +102,7 @@ class TransactionItemsModelIn(QStandardItemModel):
 
     @staticmethod
     def get_columns_map() -> dict[str, int]:
-        return {"category": 0,
-                "commodity": 1,
-                "commodityId": 2,
-                "unitCount": 3,
-                "pricePerUnit": 4,
-                "totalPrice": 5
-                }
+        return IN_MODEL_COLUMNS_MAP
 
     @staticmethod
     def _create_item(value: str) -> QStandardItem:

@@ -1,4 +1,4 @@
-from material_register.config.app_maps import NORMALIZED_COLUMNS
+from material_register.db.config.model_constants import NORMALIZED_COLUMNS
 
 
 class CustomersFilterHelper:

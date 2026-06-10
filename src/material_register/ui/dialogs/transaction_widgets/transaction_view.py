@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QTableView, QHeaderView
 
-from material_register.config.app_maps import TRANSACTION_VIEW_HIDDEN_COLUMNS
+from material_register.db.config.model_constants import TRANSACTION_VIEW_HIDDEN_COLUMNS
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
 from material_register.services.error_handler import ErrorHandler
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn

@@ -4,7 +4,7 @@ from PySide6.QtCore import QRegularExpression, Qt
 from PySide6.QtGui import QShowEvent, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox
 
-from material_register.config.app_maps import ADD_MODE, UPDATE_MODE, CATEGORY_DIALOG_NOTES_LENGTH
+from material_register.config.app_constants import ADD_MODE, UPDATE_MODE, CATEGORY_DIALOG_NOTES_LENGTH
 from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length

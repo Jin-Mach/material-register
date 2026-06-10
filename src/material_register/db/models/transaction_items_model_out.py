@@ -3,7 +3,7 @@ from typing import Any
 from PySide6.QtCore import Qt, QModelIndex
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from material_register.config.app_maps import OUT_MODEL_COLUMNS
+from material_register.db.config.model_constants import OUT_MODEL_COLUMNS, OUT_MODEL_COLUMNS_MAP
 
 
 class TransactionItemsModelOut(QStandardItemModel):
@@ -68,9 +68,4 @@ class TransactionItemsModelOut(QStandardItemModel):
 
     @staticmethod
     def get_columns_map() -> dict[str, int]:
-        return {
-            "category": 0,
-            "commodity": 1,
-            "commodityId": 2,
-            "unitCount": 3,
-        }
+        return OUT_MODEL_COLUMNS_MAP
