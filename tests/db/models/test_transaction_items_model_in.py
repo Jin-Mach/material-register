@@ -59,3 +59,11 @@ def test_display_unit_with_suffix(model, item) -> None:
     index = model.index(0, IN_MODEL_COLUMNS.index("unitCount"))
     value = model.data(index, Qt.ItemDataRole.DisplayRole)
     assert value == "2 kg"
+
+def test_get_data(model, item) -> None:
+    model.add_item(item)
+    result = model.get_data()
+    assert len(result) == 1
+    assert result[0].commodityId == 1
+    assert result[0].unitCount == 2
+    assert result[0].pricePerUnit == 10

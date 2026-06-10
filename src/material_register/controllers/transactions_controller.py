@@ -29,7 +29,7 @@ class TransactionsController:
     def create_transaction(self, transfer_type: str) -> None:
         create_data = self.create_transaction_data(transfer_type)
         if create_data is None:
-            return None
+            return
         if transfer_type == TRANSFER_IN:
             self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transfer_type)
         if transfer_type == TRANSFER_OUT:
@@ -40,9 +40,10 @@ class TransactionsController:
             model = self.items_dialog.transactions_items_widget.current_model
             if not TransactionsController._check_transaction_data(dialog_data, model):
                 MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
-                return None
-            print("OK")
-        return None
+                return
+            print("dialog_data: ", dialog_data)
+            print("model: ", model.get_data())
+        return
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:
@@ -116,13 +117,12 @@ class TransactionsController:
         return True
 
     @staticmethod
-    def _check_transaction_data(dialog_data: dict[str, str | int | None],
-                                model: TransactionItemsModelIn | TransactionItemsModelOut) -> bool:
+    def _check_transaction_data(dialog_data, model) -> bool:
         if not TransactionsController._is_dialog_data_valid(dialog_data):
             return False
         if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
             return False
-        return True
+        return bool(model.get_data())
 
     @staticmethod
     def _is_dialog_data_valid(dialog_data: dict[str, str | int | None]) -> bool:

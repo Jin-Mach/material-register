@@ -5,6 +5,7 @@ from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from material_register.db.config.model_constants import (IN_MODEL_COLUMNS, IN_MODEL_ITEMS_LIST_COLUMNS,
                                                          IN_MODEL_COLUMNS_MAP)
+from material_register.domain.transaction_item_dataclass import TransactionItem
 
 
 class TransactionItemsModelIn(QStandardItemModel):
@@ -77,6 +78,17 @@ class TransactionItemsModelIn(QStandardItemModel):
 
     def get_transaction_item_data(self, index: QModelIndex) -> dict[str, str | int | float]:
         return self.item(index.row(), 0).data(Qt.ItemDataRole.UserRole)
+
+    def get_data(self) -> list[TransactionItem]:
+        transaction_items = []
+        for row in range(self.rowCount()):
+            item = self.item(row, 0).data(Qt.ItemDataRole.UserRole)
+            transaction_items.append(TransactionItem(
+                commodityId=item["commodityId"],
+                unitCount=item["unitCount"],
+                pricePerUnit=item["pricePerUnit"]
+            ))
+        return transaction_items
 
     def _calculate_total_price(self) -> float:
         total_count = 0.0

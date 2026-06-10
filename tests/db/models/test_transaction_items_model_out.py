@@ -71,3 +71,11 @@ def test_get_transaction_item_data(model, item) -> None:
     data = model.get_transaction_item_data(index)
     assert data["commodity"] == "Apple"
     assert data["unitCount"] == 2
+
+def test_get_data(model, item) -> None:
+    model.add_item(item)
+    result = model.get_data()
+    assert len(result) == 1
+    assert result[0].commodityId == 1
+    assert result[0].unitCount == 2
+    assert result[0].pricePerUnit == 0
