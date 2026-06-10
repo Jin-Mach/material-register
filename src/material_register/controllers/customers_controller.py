@@ -70,7 +70,7 @@ class CustomersController:
         question = MessageBoxes.show_question(self.customers_widget, "ACTIVE", customer_name)
         if question:
             if not self.customers_model.set_active(customer_id, not customer_data.active):
-                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.set_active")
+                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.change_customer_active")
                 return
             CustomersController._refresh_cache()
             CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")

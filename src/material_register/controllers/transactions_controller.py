@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QDialog
 
-from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PAYMENT_VALUES
+from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
@@ -28,15 +29,20 @@ class TransactionsController:
     def create_transaction(self, transfer_type: str) -> None:
         create_data = self.create_transaction_data(transfer_type)
         if create_data is None:
-            return
+            return None
         if transfer_type == TRANSFER_IN:
             self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transfer_type)
         if transfer_type == TRANSFER_OUT:
             self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transfer_type)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
-            data = self.items_dialog.return_transaction_data()
-            print("data", data)
+            dialog_data = self.items_dialog.return_transaction_data()
+            model = self.items_dialog.transactions_items_widget.current_model
+            if not TransactionsController._check_transaction_data(dialog_data, model):
+                MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
+                return None
+            print("OK")
+        return None
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:
@@ -105,6 +111,28 @@ class TransactionsController:
         if not data:
             return False
         for value in data.values():
+            if value is None or value == "":
+                return False
+        return True
+
+    @staticmethod
+    def _check_transaction_data(dialog_data: dict[str, str | int | None],
+                                model: TransactionItemsModelIn | TransactionItemsModelOut) -> bool:
+        if not TransactionsController._is_dialog_data_valid(dialog_data):
+            return False
+        if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
+            return False
+        return True
+
+    @staticmethod
+    def _is_dialog_data_valid(dialog_data: dict[str, str | int | None]) -> bool:
+        for key, value in dialog_data.items():
+            if key == "notes":
+                continue
+            if key == "payment_type":
+                if value is not None and value not in PAYMENT_VALUES:
+                    return False
+                continue
             if value is None or value == "":
                 return False
         return True

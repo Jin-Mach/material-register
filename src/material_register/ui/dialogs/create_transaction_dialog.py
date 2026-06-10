@@ -5,7 +5,7 @@ from PySide6.QtGui import QShowEvent, Qt, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QDialogButtonBox, \
     QSizePolicy, QHBoxLayout, QCompleter, QWidget
 
-from material_register.config.app_constants import CREATE_TRANSACTION_DIALOG_PAYMENT_VALUES, TRANSFER_OUT, TRANSFER_IN
+from material_register.config.app_constants import PAYMENT_VALUES, TRANSFER_OUT, TRANSFER_IN
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
@@ -89,7 +89,7 @@ class CreateTransactionDialog(QDialog):
         UiTexts.set_default_texts(self, widgets)
 
     def _setup_items(self) -> None:
-        payment_values = CREATE_TRANSACTION_DIALOG_PAYMENT_VALUES
+        payment_values = PAYMENT_VALUES
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         payment_items = texts.get(f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"])
         for text, value in zip(payment_items, payment_values):
