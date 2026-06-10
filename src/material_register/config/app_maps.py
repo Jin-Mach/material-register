@@ -2,6 +2,7 @@ NORMALIZED_COLUMNS = ["company_normalized", "first_name_normalized", "last_name_
                       "address_normalized"]
 
 IN_MODEL_COLUMNS = ["category", "commodity", "commodityId", "unitCount", "pricePerUnit", "totalPrice"]
+IN_MODEL_ITEMS_LIST_COLUMNS = ["category", "commodity", "commodityId", "unitCount", "pricePerUnit"]
 
 OUT_MODEL_COLUMNS = ["category", "commodity", "commodityId", "unitCount"]
 
@@ -34,3 +35,6 @@ CREATE_TRANSACTION_DIALOG_PAYMENT_VALUES = ["CASH", "TRANSFER"]
 CUSTOMERS_DIALOG_NOTES_LENGTH = 200
 CUSTOMERS_DIALOG_INDIVIDUAL_INDEX = 0
 CUSTOMERS_DIALOG_COMPANY_INDEX = 1
+
+INTEGER_SUFFIXES = ["ks", "pcs"]
+DECIMAL_SUFFIXES = ["kg"]

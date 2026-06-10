@@ -6,10 +6,12 @@ from PySide6.QtWidgets import (QWidget, QDialog, QVBoxLayout, QFormLayout, QLabe
                                QDialogButtonBox)
 
 from material_register.config.app_maps import (TRANSFER_OUT, CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
-                                               CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE, CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE)
+                                               CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
+                                               CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE, INTEGER_SUFFIXES)
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.spinbox_setup import set_suffix_mode
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
@@ -146,6 +148,7 @@ class CategoryCommodityDialog(QDialog):
                 self.commodity_suffix = commodity.unit
                 self.unit_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
                 self.unit_spinbox.setSuffix(f"  {self.commodity_suffix}")
+                set_suffix_mode(self.unit_spinbox, self.commodity_suffix)
                 self.price_spinbox.setValue(commodity.default_price)
                 break
         CategoryCommodityDialog._setup_enable_state(enabled=[self.unit_spinbox, self.price_spinbox])
@@ -187,6 +190,15 @@ class CategoryCommodityDialog(QDialog):
     def _normalize_value(self, value: float) -> float:
         return round(value, self.unit_spinbox.decimals())
 
+    def _normalize_unit_price_values(self) -> tuple[int | float, int | float]:
+        unit = self._normalize_value(self.unit_spinbox.value())
+        price = self._normalize_value(self.price_spinbox.value())
+        if self.commodity_suffix in INTEGER_SUFFIXES:
+            unit = int(unit)
+        if self.transfer_type == TRANSFER_OUT:
+            return unit, 0
+        return unit, price
+
     def _is_valid(self) -> bool:
         return (
                 self.category_combo_box.currentIndex() != -1
@@ -223,13 +235,14 @@ class CategoryCommodityDialog(QDialog):
         commodity_id = self.commodity_combo_box.currentData(Qt.ItemDataRole.UserRole)
         if commodity_id is None or not self._valid_values():
             return None
+        unit_count, price_per_unit = self._normalize_unit_price_values()
         return {
             "category": self.category_combo_box.currentText(),
             "commodity": self.commodity_combo_box.currentText(),
             "commoditySuffix": self.commodity_suffix,
             "commodityId": commodity_id,
-            "unitCount": self._normalize_value(self.unit_spinbox.value()),
-            "pricePerUnit": self._normalize_value(self.price_spinbox.value())
+            "unitCount": unit_count,
+            "pricePerUnit": price_per_unit,
         }
 
     def showEvent(self, event: QShowEvent) -> None:

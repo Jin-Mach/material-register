@@ -3,7 +3,7 @@ from typing import Any
 from PySide6.QtCore import Qt, QModelIndex
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from material_register.config.app_maps import IN_MODEL_COLUMNS
+from material_register.config.app_maps import IN_MODEL_COLUMNS, IN_MODEL_ITEMS_LIST_COLUMNS
 
 
 class TransactionItemsModelIn(QStandardItemModel):
@@ -37,9 +37,9 @@ class TransactionItemsModelIn(QStandardItemModel):
         return super().data(index, role)
 
     def add_item(self, transaction_item: dict[str, str | int | float]) -> None:
-        columns = ["category", "commodity", "commodityId", "unitCount", "pricePerUnit"]
         items_list = []
-        for key in columns:
+        for key in IN_MODEL_ITEMS_LIST_COLUMNS:
+            print(key)
             value = TransactionItemsModelIn._create_item(transaction_item[key])
             if key == "category":
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
