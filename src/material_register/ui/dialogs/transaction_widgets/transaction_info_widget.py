@@ -114,3 +114,6 @@ class TransactionInfoWidget(QWidget):
         self.customer_name.setText(customer)
         self.document_number.setText(document_number)
         self.address.setText(address)
+
+    def get_notes(self) -> str:
+        return self.notes.toPlainText().strip()

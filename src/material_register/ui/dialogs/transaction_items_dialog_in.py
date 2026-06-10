@@ -57,6 +57,8 @@ class TransactionItemsDialogIn(QDialog):
         UiTexts.set_default_texts(self, widgets)
 
     def _create_connection(self) -> None:
+        self.save_transaction_button.clicked.connect(self.accept)
+        self.cancel_transaction_button.clicked.connect(self.reject)
         self.transaction_info_widget.update_transaction_info_button.clicked.connect(self._update_create_data)
         self.transactions_items_widget.add_item_button.clicked.connect(self._add_transaction_item)
         self.transactions_items_widget.update_item_button.clicked.connect(self._update_transaction_item)
@@ -112,6 +114,14 @@ class TransactionItemsDialogIn(QDialog):
             return index, None
         data = self.transactions_items_widget.transaction_item_model_in.get_transaction_item_data(index)
         return index, data
+
+    def return_transaction_data(self) -> dict[str, str | int]:
+        return {
+            "type": self.transfer_type,
+            "customer_id": self.customer_id,
+            "payment_type": self.payment_type,
+            "notes": self.transaction_info_widget.get_notes()
+        }
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

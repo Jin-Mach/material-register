@@ -104,11 +104,15 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             type TEXT NOT NULL,
             customer_id INTEGER,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-            payment_type TEXT NOT NULL,
+            payment_type TEXT,
             notes TEXT,
             
             CHECK(type IN ('IN', 'OUT')),
-            CHECK(payment_type IN ('CASH', 'TRANSFER')),
+            CHECK (
+                (type = 'IN' AND payment_type IN ('CASH', 'TRANSFER')) 
+                OR 
+                (type = 'OUT' AND payment_type IS NULL)
+            ),
 
             FOREIGN KEY(customer_id)
                 REFERENCES customers(id)
@@ -122,8 +126,11 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             transaction_id INTEGER NOT NULL,
             commodity_id INTEGER NOT NULL,
-            weight REAL NOT NULL,
+            unit_count REAL NOT NULL,
             price_per_unit REAL NOT NULL,
+            
+            CHECK(unit_count > 0),
+            CHECK(price_per_unit >= 0),
 
             FOREIGN KEY(transaction_id)
                 REFERENCES transactions(id)

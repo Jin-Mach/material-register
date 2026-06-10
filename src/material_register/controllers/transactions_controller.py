@@ -35,7 +35,8 @@ class TransactionsController:
             self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transfer_type)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
-            print("OK")
+            data = self.items_dialog.return_transaction_data()
+            print("data", data)
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:
