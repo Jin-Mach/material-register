@@ -45,5 +45,10 @@
     "TEXT": "Opravdu smazat položku transakce?",
     "YES": "Smazat",
     "NO": "Zrušit"
+  },
+  "DATABASE_ERROR": {
+    "TITLE": "Chyba",
+    "TEXT": "Operaci se nepodařilo dokončit",
+    "CLOSE": "Zavřít"
   }
 }

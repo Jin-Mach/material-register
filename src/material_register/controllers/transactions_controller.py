@@ -3,14 +3,20 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QDialog
 
 from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PAYMENT_VALUES
+from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
+from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
+from material_register.services.error_handler import ErrorHandler
+from material_register.services.transactions_service import TransactionsService
 from material_register.ui.dialogs.category_commodity_dialog import CategoryCommodityDialog
 from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
+from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
+from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
 from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
@@ -24,6 +30,7 @@ class TransactionsController:
         self.transactions_widget = transactions_widget
         self.db_connection = DbInit.db_connection
         self.customers_model = DataInit.customers_model
+        self.notification_text = TextsProvider.NOTIFICATION_TEXTS.get("TRANSACTIONS", None)
         self.active_commodity_unit = None
 
     def create_transaction(self, transfer_type: str) -> None:
@@ -41,8 +48,12 @@ class TransactionsController:
             if not TransactionsController._check_transaction_data(dialog_data, model):
                 MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
                 return
-            print("dialog_data: ", dialog_data)
-            print("model: ", model.get_data())
+            ok, error = TransactionsService.insert_new_transaction(self.db_connection, dialog_data, model.get_data())
+            if not ok:
+                TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.create_transaction")
+                return
+            TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
+                                                         "Transaction added")
         return
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
@@ -117,7 +128,8 @@ class TransactionsController:
         return True
 
     @staticmethod
-    def _check_transaction_data(dialog_data, model) -> bool:
+    def _check_transaction_data(dialog_data: dict[str, str | int | None],
+                                model: TransactionItemsModelIn | TransactionItemsModelOut) -> bool:
         if not TransactionsController._is_dialog_data_valid(dialog_data):
             return False
         if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
@@ -136,3 +148,18 @@ class TransactionsController:
             if value is None or value == "":
                 return False
         return True
+
+    @staticmethod
+    def _handle_db_error(error: str, method: str) -> None:
+        if not error:
+            error = f"Unknown database error: {method}"
+        ErrorHandler.handle_error(error, "db", "critical")
+        dialog = ErrorDialog()
+        dialog.show_dialog("DATABASE_ERROR", False)
+
+    @staticmethod
+    def _notification_handler(notification_texts: dict[str, str], key: str, default: str) -> None:
+        if notification_texts is None:
+            return
+        notification = NotificationDialog(AppContext.MAIN_WINDOW, notification_texts.get(key, default))
+        notification.show_notification()
