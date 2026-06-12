@@ -3,6 +3,9 @@ from PySide6.QtGui import QStandardItemModel
 from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
+from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
+
+
 # noinspection PyBroadException
 class HeadersTexts:
     HEADERS_TEXTS = {}
@@ -27,6 +30,19 @@ class HeadersTexts:
             elif isinstance(model, QStandardItemModel):
                 for column, text in enumerate(headers_text.values()):
                     model.setHeaderData(column, Qt.Orientation.Horizontal, text)
+            return True
+        except Exception:
+            return False
+
+    @classmethod
+    def set_transactions_headers_text(cls, view: QTableView, model: TransactionsLoadModelIn) -> bool:
+        try:
+            headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {}).get("headers_texts", {})
+            if not headers_texts:
+                return False
+            for index, text in headers_texts.items():
+                model.headers[int(index)] = text
+            model.headerDataChanged.emit(Qt.Orientation.Horizontal, 0, model.columnCount() - 1)
             return True
         except Exception:
             return False

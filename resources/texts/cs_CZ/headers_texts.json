@@ -12,5 +12,14 @@
     "unitCount": "Celkové množství",
     "pricePerUnit": "Jednotková cena (Kč)",
     "totalPrice": "Celková částka"
+  },
+  "TransactionsView": {
+    "headers_texts": {
+      "0": "Datum",
+      "1": "Zákazník",
+      "2": "Doklad",
+      "3": "Adresa",
+      "4": "Celkem"
+    }
   }
 }

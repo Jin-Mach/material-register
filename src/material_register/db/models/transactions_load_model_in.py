@@ -15,6 +15,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         self.db_connection = db_connection
         self.suffix = ""
         self.transaction_data = []
+        self.headers = {}
 
     def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
         if not index.isValid():
@@ -29,9 +30,15 @@ class TransactionsLoadModelIn(QAbstractTableModel):
             return getattr(transaction, column, None)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == "total":
-                return Qt.AlignmentFlag.AlignRight
+                return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
         return None
+
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
+        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
+            return self.headers.get(section)
+
+        return super().headerData(section, orientation, role)
 
     def rowCount(self, parent=QModelIndex()) -> int:
         if not self.transaction_data:

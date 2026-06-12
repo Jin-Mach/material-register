@@ -10,11 +10,18 @@
     "catalogButtonText": "Katalog",
     "catalogButtonTooltipText": "Zobrazí katalog položek"
   },
+  "TransactionsWidget": {
+    "modelInSuffix": "Kč"
+  },
   "TransactionsActionsWidget": {
     "inTransactionButtonText": "Přidat výkup",
     "inTransactionButtonTooltipText": "Přidat nový výkup do transakcí",
     "outTransactionButtonText": "Přidat vývoz",
     "outTransactionButtonTooltipText": "Přidat nový vývoz do transakcí"
+  },
+  "TransactionsTabWidget": {
+    "inTabTitleText": "Výkup",
+    "outTabTitleText": "Vývoz"
   },
   "CustomersActionsWidget": {
     "addCustomerButtonText": "Přidat zákazníka",
