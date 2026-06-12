@@ -3,7 +3,7 @@ from typing import Any
 from PySide6.QtCore import Qt, QModelIndex
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from material_register.db.config.model_constants import OUT_MODEL_COLUMNS, OUT_MODEL_COLUMNS_MAP
+from material_register.db.config.model_constants import ITEM_MODEL_OUT_COLUMNS, ITEM_MODEL_OUT_COLUMNS_MAP
 from material_register.domain.transaction_item_dataclass import TransactionItem
 
 
@@ -16,7 +16,7 @@ class TransactionItemsModelOut(QStandardItemModel):
         if not index.isValid():
             return None
         column = index.column()
-        unit_column = OUT_MODEL_COLUMNS.index("unitCount")
+        unit_column = ITEM_MODEL_OUT_COLUMNS.index("unitCount")
         if role == Qt.ItemDataRole.DisplayRole:
             if column == unit_column:
                 value = self.data(index, Qt.ItemDataRole.UserRole)
@@ -31,7 +31,7 @@ class TransactionItemsModelOut(QStandardItemModel):
 
     def add_item(self, transaction_item: dict[str, str | int]) -> None:
         items_list = []
-        for key in OUT_MODEL_COLUMNS:
+        for key in ITEM_MODEL_OUT_COLUMNS:
             value = self._create_item(transaction_item[key])
             if key == "category":
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
@@ -42,7 +42,7 @@ class TransactionItemsModelOut(QStandardItemModel):
         self.appendRow(items_list)
 
     def update_item(self, row: int, data: dict[str, str | int]) -> None:
-        for column, key in enumerate(OUT_MODEL_COLUMNS):
+        for column, key in enumerate(ITEM_MODEL_OUT_COLUMNS):
             index = self.index(row, column)
             if key == "category":
                 self.setData(index, data, Qt.ItemDataRole.UserRole)
@@ -85,7 +85,7 @@ class TransactionItemsModelOut(QStandardItemModel):
         return total_count, unit_suffix
 
     def _setup_model(self) -> None:
-        self.setColumnCount(len(OUT_MODEL_COLUMNS))
+        self.setColumnCount(len(ITEM_MODEL_OUT_COLUMNS))
 
     @staticmethod
     def _create_item(value: str) -> QStandardItem:
@@ -93,4 +93,4 @@ class TransactionItemsModelOut(QStandardItemModel):
 
     @staticmethod
     def get_columns_map() -> dict[str, int]:
-        return OUT_MODEL_COLUMNS_MAP
+        return ITEM_MODEL_OUT_COLUMNS_MAP

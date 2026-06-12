@@ -2,7 +2,7 @@ import pytest
 
 from PySide6.QtCore import Qt
 
-from material_register.db.config.model_constants import OUT_MODEL_COLUMNS
+from material_register.db.config.model_constants import ITEM_MODEL_OUT_COLUMNS
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
 
 
@@ -24,7 +24,7 @@ def item() -> dict[str, str | int | float]:
 def test_add_item(model, item) -> None:
     model.add_item(item)
     assert model.rowCount() == 1
-    assert model.columnCount() == len(OUT_MODEL_COLUMNS)
+    assert model.columnCount() == len(ITEM_MODEL_OUT_COLUMNS)
 
 def test_update_item(model, item) -> None:
     model.add_item(item)
@@ -37,14 +37,14 @@ def test_update_item(model, item) -> None:
         "commoditySuffix": "kg"
     }
     model.update_item(0, updated_item)
-    index_unit = model.index(0, OUT_MODEL_COLUMNS.index("unitCount"))
+    index_unit = model.index(0, ITEM_MODEL_OUT_COLUMNS.index("unitCount"))
     assert model.data(index_unit, Qt.ItemDataRole.DisplayRole) == "5 kg"
-    index_category = model.index(0, OUT_MODEL_COLUMNS.index("category"))
+    index_category = model.index(0, ITEM_MODEL_OUT_COLUMNS.index("category"))
     assert model.data(index_category, Qt.ItemDataRole.DisplayRole) == "Food"
 
 def test_display_unit_with_suffix(model, item) -> None:
     model.add_item(item)
-    index = model.index(0, OUT_MODEL_COLUMNS.index("unitCount"))
+    index = model.index(0, ITEM_MODEL_OUT_COLUMNS.index("unitCount"))
     value = model.data(index, Qt.ItemDataRole.DisplayRole)
     assert value == "2 kg"
 

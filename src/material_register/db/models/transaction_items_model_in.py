@@ -3,8 +3,8 @@ from typing import Any
 from PySide6.QtCore import Qt, QModelIndex
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from material_register.db.config.model_constants import (IN_MODEL_COLUMNS, IN_MODEL_ITEMS_LIST_COLUMNS,
-                                                         IN_MODEL_COLUMNS_MAP)
+from material_register.db.config.model_constants import (ITEM_MODEL_IN_COLUMNS, ITEM_MODEL_IN_LIST_COLUMNS,
+                                                         ITEM_MODEL_IN_COLUMNS_MAP)
 from material_register.domain.transaction_item_dataclass import TransactionItem
 
 
@@ -18,14 +18,14 @@ class TransactionItemsModelIn(QStandardItemModel):
         if not index.isValid():
             return None
         column = index.column()
-        total_column = IN_MODEL_COLUMNS.index("totalPrice")
+        total_column = ITEM_MODEL_IN_COLUMNS.index("totalPrice")
         if role == Qt.ItemDataRole.DisplayRole:
             if column == total_column:
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 if value is None:
                     return ""
                 return f"{value} {self.price_suffix}"
-            if column == IN_MODEL_COLUMNS.index("unitCount"):
+            if column == ITEM_MODEL_IN_COLUMNS.index("unitCount"):
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 commodity_suffix = self.data(index, Qt.ItemDataRole.UserRole + 1)
                 if value is None:
@@ -40,7 +40,7 @@ class TransactionItemsModelIn(QStandardItemModel):
 
     def add_item(self, transaction_item: dict[str, str | int | float]) -> None:
         items_list = []
-        for key in IN_MODEL_ITEMS_LIST_COLUMNS:
+        for key in ITEM_MODEL_IN_LIST_COLUMNS:
             value = TransactionItemsModelIn._create_item(transaction_item[key])
             if key == "category":
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
@@ -53,7 +53,7 @@ class TransactionItemsModelIn(QStandardItemModel):
         self.appendRow(items_list)
 
     def update_item(self, row: int, data: dict[str, str | int | float]) -> None:
-        for column, key in enumerate(IN_MODEL_COLUMNS):
+        for column, key in enumerate(ITEM_MODEL_IN_COLUMNS):
             index = self.index(row, column)
             if key == "category":
                 self.setData(index, data, Qt.ItemDataRole.UserRole)
@@ -98,7 +98,7 @@ class TransactionItemsModelIn(QStandardItemModel):
         return round(total_count, 2)
 
     def _setup_model(self) -> None:
-        self.setColumnCount(len(IN_MODEL_COLUMNS))
+        self.setColumnCount(len(ITEM_MODEL_IN_COLUMNS))
 
     @staticmethod
     def get_item_total_count(unit: int | float, price_per_unit: int | float) -> QStandardItem:
@@ -113,7 +113,7 @@ class TransactionItemsModelIn(QStandardItemModel):
 
     @staticmethod
     def get_columns_map() -> dict[str, int]:
-        return IN_MODEL_COLUMNS_MAP
+        return ITEM_MODEL_IN_COLUMNS_MAP
 
     @staticmethod
     def _create_item(value: str) -> QStandardItem:
