@@ -6,6 +6,7 @@ from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PA
 from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries
+from material_register.db.queries.transactions_load_queries import TransactionsLoadQueries
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
@@ -54,6 +55,10 @@ class TransactionsController:
                 return
             TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
                                                          "Transaction added")
+        in_data = TransactionsLoadQueries.load_transaction_in(self.db_connection)
+        print("data:", in_data)
+        out_data = TransactionsLoadQueries.load_transactions_out(self.db_connection)
+        print("out:", out_data)
         return
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
