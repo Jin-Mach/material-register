@@ -24,7 +24,10 @@ TRANSACTIONS_QUERY_IN = """
                 LEFT JOIN customers cust ON cust.id = trans.customer_id
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 
-                WHERE trans.type = 'IN'
+                WHERE 
+                    trans.type = 'IN' 
+                    AND transaction_created_at >= date('now') 
+                    AND transaction_created_at < date('now', '+1 day')
                 
                 GROUP BY trans.id
                 ORDER BY trans.id ASC
@@ -59,7 +62,10 @@ TRANSACTIONS_QUERY_OUT = """
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 LEFT JOIN commodities con ON con.id = items.commodity_id  
                               
-                WHERE trans.type = 'OUT'
+                WHERE 
+                    trans.type = 'OUT' 
+                    AND transaction_created_at >= date('now') 
+                    AND transaction_created_at < date('now', '+1 day')
                 
                 GROUP BY trans.id
                 ORDER BY trans.id ASC
