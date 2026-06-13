@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout
 from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
 from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
+from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -22,6 +23,7 @@ class TransactionsWidget(QWidget):
         self.stacked_widget = stacked_widget
         self.db_connection = DbInit.db_connection
         self.transactions_load_model_in = TransactionsLoadModelIn(self.db_connection)
+        self.transactions_load_model_out = TransactionsLoadModelOut(self.db_connection)
         self.transactions_controller = TransactionsController(self)
         self.setLayout(self.create_ui())
         self._setup_ui()
@@ -49,6 +51,7 @@ class TransactionsWidget(QWidget):
 
     def _setup_model(self) -> None:
         self._setup_in_model()
+        self._setup_out_model()
 
     def _create_connection(self) -> None:
         self.actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_IN))
@@ -59,6 +62,11 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transaction_in_view.setup_texts()
         self.transactions_load_model_in.set_suffix(self.model_in_suffix)
         self.transactions_load_model_in.reload_transaction_data()
+
+    def _setup_out_model(self) -> None:
+        self.transactions_tab_widget.transactions_out_view.setModel(self.transactions_load_model_out)
+        self.transactions_tab_widget.transactions_out_view.setup_texts()
+        self.transactions_load_model_out.reload_transaction_data()
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

@@ -4,9 +4,10 @@ from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
 from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
+from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
 
 
-# noinspection PyBroadException
+# noinspection PyBroadException, PyUnresolvedReferences
 class HeadersTexts:
     HEADERS_TEXTS = {}
 
@@ -35,13 +36,14 @@ class HeadersTexts:
             return False
 
     @classmethod
-    def set_transactions_headers_text(cls, view: QTableView, model: TransactionsLoadModelIn) -> bool:
+    def set_transactions_headers_text(cls, view: QTableView, model: TransactionsLoadModelIn | TransactionsLoadModelOut) -> bool:
         try:
             headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {}).get("headers_texts", {})
             if not headers_texts:
                 return False
             for index, text in headers_texts.items():
                 model.headers[int(index)] = text
+            model.layoutChanged.emit()
             model.headerDataChanged.emit(Qt.Orientation.Horizontal, 0, model.columnCount() - 1)
             return True
         except Exception:

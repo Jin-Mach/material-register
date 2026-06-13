@@ -9,7 +9,7 @@ from material_register.db.queries.transactions_load_queries import TransactionsL
 from material_register.domain.transaction_dataclass import Transaction
 
 
-class TransactionsLoadModelIn(QAbstractTableModel):
+class TransactionsLoadModelOut(QAbstractTableModel):
     def __init__(self, db_connection: QSqlDatabase) -> None:
         super().__init__()
         self.db_connection = db_connection
@@ -24,9 +24,9 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         column = LOAD_MODEL_IN_COLUMNS[index.column()]
         if role == Qt.ItemDataRole.DisplayRole:
             if column == "transaction_created_at":
-                return TransactionsLoadModelIn._format_datetime(transaction.transaction_created_at)
+                return TransactionsLoadModelOut._format_datetime(transaction.transaction_created_at)
             if column == "total":
-                return f"{transaction.total} {self.suffix}"
+                return f"{transaction.total} {transaction.suffix}"
             return getattr(transaction, column, None)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == "total":
@@ -49,12 +49,9 @@ class TransactionsLoadModelIn(QAbstractTableModel):
 
     def reload_transaction_data(self) -> list[Transaction]:
         self.beginResetModel()
-        self.transaction_data = TransactionsLoadQueries.load_transaction_in(self.db_connection)
+        self.transaction_data = TransactionsLoadQueries.load_transactions_out(self.db_connection)
         self.endResetModel()
         return self.transaction_data
-
-    def set_suffix(self, suffix: str) -> None:
-        self.suffix = suffix
 
     @staticmethod
     def _format_datetime(created: str) -> str:

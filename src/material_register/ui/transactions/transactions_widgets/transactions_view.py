@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QTableView, QHeaderView, QSizePolicy
 
 from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
+from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.headers_texts import HeadersTexts
 
@@ -23,12 +23,11 @@ class TransactionsView(QTableView):
     def setup_texts(self) -> None:
         model = self.model()
         error = "TEXTS_LOAD_FAILED"
-        if not isinstance(model, TransactionsLoadModelIn):
+        if not isinstance(model, (TransactionsLoadModelIn, TransactionsLoadModelOut)):
             return
         if not HeadersTexts.set_transactions_headers_text(self, model):
             ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_texts_error = error
-        model.headerDataChanged.emit(Qt.Orientation.Horizontal, 0, model.columnCount() - 1)
 
     def _setup_behavior(self) -> None:
         header = self.horizontalHeader()
