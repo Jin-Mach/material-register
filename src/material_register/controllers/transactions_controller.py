@@ -1,14 +1,13 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QDialog
 
 from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PAYMENT_VALUES
 from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries
-from material_register.db.queries.transactions_load_queries import TransactionsLoadQueries
 from material_register.init.data_init import DataInit
-from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
@@ -24,12 +23,18 @@ from material_register.db.models.transaction_items_model_out import TransactionI
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
+    from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
+    from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
 
 
 class TransactionsController:
-    def __init__(self, transactions_widget: "TransactionsWidget") -> None:
+    def __init__(self, transactions_widget: "TransactionsWidget", db_connection: QSqlDatabase,
+                 transactions_model_in: "TransactionsLoadModelIn",
+                 transactions_model_out: "TransactionsLoadModelOut") -> None:
         self.transactions_widget = transactions_widget
-        self.db_connection = DbInit.db_connection
+        self.db_connection = db_connection
+        self.transactions_model_in = transactions_model_in
+        self.transactions_model_out = transactions_model_out
         self.customers_model = DataInit.customers_model
         self.notification_text = TextsProvider.NOTIFICATION_TEXTS.get("TRANSACTIONS", None)
         self.active_commodity_unit = None
@@ -53,13 +58,9 @@ class TransactionsController:
             if not ok:
                 TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.create_transaction")
                 return
+            self._refresh_models_data(transfer_type=transfer_type)
             TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
                                                          "Transaction added")
-        in_data = TransactionsLoadQueries.load_transaction_in(self.db_connection)
-        print("data:", in_data)
-        out_data = TransactionsLoadQueries.load_transactions_out(self.db_connection)
-        print("out:", out_data)
-        return
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:
@@ -122,6 +123,12 @@ class TransactionsController:
         model = self.items_dialog.transactions_items_widget.current_model
         if isinstance(model, TransactionItemsModelOut) and model.rowCount() == 0:
             self.active_commodity_unit = None
+
+    def _refresh_models_data(self, transfer_type: str) -> None:
+        if transfer_type == TRANSFER_IN:
+            self.transactions_model_in.reload_transaction_data()
+        if transfer_type == TRANSFER_OUT:
+            self.transactions_model_out.reload_transaction_data()
 
     @staticmethod
     def _check_data(data: dict[str, str | int | float | None] | None) -> bool:

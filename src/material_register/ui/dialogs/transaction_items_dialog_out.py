@@ -47,6 +47,7 @@ class TransactionItemsDialogOut(QDialog):
 
     def _setup_ui(self) -> None:
         widgets = [self.save_transaction_button, self.cancel_transaction_button]
+        self.save_transaction_button.setEnabled(False)
         self._setup_texts(widgets)
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:

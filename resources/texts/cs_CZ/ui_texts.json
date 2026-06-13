@@ -132,7 +132,7 @@
     "titleText": "Výkup",
     "saveTransactionButtonText": "Uložit výkup",
     "saveTransactionButtonTooltipText": "Uloží výkup do databáze",
-    "cancelTransactionButtonText": "Zrušit výkop",
+    "cancelTransactionButtonText": "Zrušit výkup",
     "cancelTransactionButtonTooltipText": "Zruší výkup a zavře dialog"
   },
   "TransactionItemsDialogOut": {

@@ -19,9 +19,10 @@ if TYPE_CHECKING:
 
 
 class TransactionsItemsWidget(QWidget):
-    def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut", transfer_type: str):
-        super().__init__(transaction_item_dialog)
+    def __init__(self, transaction_items_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut", transfer_type: str):
+        super().__init__(transaction_items_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.transaction_items_dialog = transaction_items_dialog
         self.transfer_type = transfer_type
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -87,7 +88,12 @@ class TransactionsItemsWidget(QWidget):
             self.current_model = self.transaction_item_model_out
 
     def _create_connection(self) -> None:
-        self.transactions_items_view.selectionModel().selectionChanged.connect(self._update_buttons_state)
+        selection_model = self.transactions_items_view.selectionModel()
+        if selection_model:
+            selection_model.selectionChanged.connect(self._update_buttons_state)
+        self.current_model.rowsInserted.connect(self._update_save_button_state)
+        self.current_model.rowsRemoved.connect(self._update_save_button_state)
+        self.current_model.modelReset.connect(self._update_save_button_state)
 
     def _check_selection(self) -> bool:
         return self.transactions_items_view.selectionModel().hasSelection()
@@ -96,6 +102,10 @@ class TransactionsItemsWidget(QWidget):
         state = self._check_selection()
         self.update_item_button.setEnabled(state)
         self.delete_item_button.setEnabled(state)
+
+    def _update_save_button_state(self) -> None:
+        state = self.current_model.rowCount() > 0
+        self.transaction_items_dialog.save_transaction_button.setEnabled(state)
 
     def get_selected_index(self) -> QModelIndex | None:
         index = self.transactions_items_view.selectionModel().currentIndex()

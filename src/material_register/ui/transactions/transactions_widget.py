@@ -24,7 +24,9 @@ class TransactionsWidget(QWidget):
         self.db_connection = DbInit.db_connection
         self.transactions_load_model_in = TransactionsLoadModelIn(self.db_connection)
         self.transactions_load_model_out = TransactionsLoadModelOut(self.db_connection)
-        self.transactions_controller = TransactionsController(self)
+        self.transactions_controller = TransactionsController(self, self.db_connection,
+                                                              self.transactions_load_model_in,
+                                                              self.transactions_load_model_out)
         self.setLayout(self.create_ui())
         self._setup_ui()
         self._create_connection()
