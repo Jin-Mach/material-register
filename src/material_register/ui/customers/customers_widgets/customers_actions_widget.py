@@ -50,7 +50,7 @@ class CustomersActionsWidget(QWidget):
         self.customer_widget.customers_controller.filter_customers(self.search_line_edit.text().strip())
 
     def _apply_timer(self) -> None:
-        self.filter_timer =QTimer()
+        self.filter_timer = QTimer()
         self.filter_timer.setSingleShot(True)
         self.filter_timer.setInterval(300)
         self.filter_timer.timeout.connect(self._apply_filter)

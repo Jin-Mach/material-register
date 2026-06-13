@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 
@@ -33,9 +34,9 @@ class TransactionsWidget(QWidget):
 
     def create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        self.actions_widget = TransactionsActionsWidget(self.stacked_widget)
+        self.transactions_actions_widget = TransactionsActionsWidget(self.stacked_widget)
         self.transactions_tab_widget = TransactionsTabWidget(self.stacked_widget)
-        main_layout.addWidget(self.actions_widget)
+        main_layout.addWidget(self.transactions_actions_widget)
         main_layout.addWidget(self.transactions_tab_widget)
         return main_layout
 
@@ -56,8 +57,9 @@ class TransactionsWidget(QWidget):
         self._setup_out_model()
 
     def _create_connection(self) -> None:
-        self.actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_IN))
-        self.actions_widget.out_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_OUT))
+        self.transactions_actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_IN))
+        self.transactions_actions_widget.out_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_OUT))
+        self.transactions_actions_widget.search_line_edit.textChanged.connect(self.transactions_controller.set_transactions_filter)
 
     def _setup_in_model(self) -> None:
         self.transactions_tab_widget.transaction_in_view.setModel(self.transactions_load_model_in)
@@ -69,6 +71,18 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transactions_out_view.setModel(self.transactions_load_model_out)
         self.transactions_tab_widget.transactions_out_view.setup_texts()
         self.transactions_load_model_out.reload_transaction_data()
+
+    def _on_text_changed(self) -> None:
+        self.filter_timer.start()
+
+    def _apply_filter(self) -> None:
+        self.transactions_controller.set_transactions_filter()
+
+    def _apply_timer(self) -> None:
+        self.filter_timer = QTimer()
+        self.filter_timer.setSingleShot(True)
+        self.filter_timer.setInterval(300)
+        self.filter_timer.timeout.connect(self._apply_filter)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

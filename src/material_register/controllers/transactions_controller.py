@@ -38,6 +38,10 @@ class TransactionsController:
         self.customers_model = DataInit.customers_model
         self.notification_text = TextsProvider.NOTIFICATION_TEXTS.get("TRANSACTIONS", None)
         self.active_commodity_unit = None
+        self._models_map = {
+            0: (self.transactions_model_in, TRANSFER_IN),
+            1: (self.transactions_model_out, TRANSFER_OUT)
+        }
 
     def create_transaction(self, transfer_type: str) -> None:
         create_data = self.create_transaction_data(transfer_type)
@@ -123,6 +127,15 @@ class TransactionsController:
         model = self.items_dialog.transactions_items_widget.current_model
         if isinstance(model, TransactionItemsModelOut) and model.rowCount() == 0:
             self.active_commodity_unit = None
+
+    def set_transactions_filter(self) -> None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        tab_context = self._models_map.get(current_tab)
+        if tab_context is None:
+            return
+        model, transfer = tab_context
+        print("model", model)
+        print("transfer", transfer)
 
     def _refresh_models_data(self, transfer_type: str) -> None:
         if transfer_type == TRANSFER_IN:

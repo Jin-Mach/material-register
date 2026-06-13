@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLineEdit
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -21,13 +21,18 @@ class TransactionsActionsWidget(QWidget):
         self.in_transaction_button.setObjectName("inTransactionButton")
         self.out_transaction_button = QPushButton()
         self.out_transaction_button.setObjectName("outTransactionButton")
+        self.search_line_edit = QLineEdit()
+        self.search_line_edit.setObjectName("searchLineEdit")
+        self.search_line_edit.setMinimumWidth(600)
         main_layout.addWidget(self.in_transaction_button)
         main_layout.addWidget(self.out_transaction_button)
+        main_layout.addStretch()
+        main_layout.addWidget(self.search_line_edit)
         main_layout.addStretch()
         return main_layout
 
     def _ui_setup(self) -> None:
-        widgets = [self.in_transaction_button, self.out_transaction_button]
+        widgets = [self.in_transaction_button, self.out_transaction_button, self.search_line_edit]
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")

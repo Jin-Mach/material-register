@@ -17,7 +17,8 @@
     "inTransactionButtonText": "Přidat výkup",
     "inTransactionButtonTooltipText": "Přidat nový výkup do transakcí",
     "outTransactionButtonText": "Přidat vývoz",
-    "outTransactionButtonTooltipText": "Přidat nový vývoz do transakcí"
+    "outTransactionButtonTooltipText": "Přidat nový vývoz do transakcí",
+    "searchLineEditPlaceholderText": "Zadej text pro vyhledávání..."
   },
   "TransactionsTabWidget": {
     "inTabTitleText": "Výkup",
