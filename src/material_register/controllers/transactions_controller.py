@@ -148,6 +148,14 @@ class TransactionsController:
             model.reload_transaction_data()
             return
 
+    def reset_model_data(self) -> None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        if current_tab == 0:
+            self.transactions_model_out.reload_transaction_data()
+        elif current_tab == 1:
+            self.transactions_model_in.reload_transaction_data()
+        self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
+
     def _refresh_models_data(self, transfer_type: str) -> None:
         if transfer_type == TRANSFER_IN:
             self.transactions_model_in.reload_transaction_data()

@@ -60,6 +60,7 @@ class TransactionsWidget(QWidget):
         self.transactions_actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_IN))
         self.transactions_actions_widget.out_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_OUT))
         self.transactions_actions_widget.search_line_edit.textChanged.connect(self._on_text_changed)
+        self.transactions_tab_widget.currentChanged.connect(self.transactions_controller.reset_model_data)
 
     def _setup_in_model(self) -> None:
         self.transactions_tab_widget.transaction_in_view.setModel(self.transactions_load_model_in)
