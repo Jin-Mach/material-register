@@ -16,6 +16,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         self.suffix = ""
         self.transaction_data = []
         self.headers = {}
+        self.total_count = 0
 
     def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
         if not index.isValid():
@@ -51,6 +52,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         self.beginResetModel()
         self.transaction_data = TransactionsLoadQueries.load_transaction_in(self.db_connection)
         self.endResetModel()
+        self.total_count = len(self.transaction_data)
         return self.transaction_data
 
     def set_basic_filter(self, filtered_data: list[Transaction]) -> None:

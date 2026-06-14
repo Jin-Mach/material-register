@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
 
 from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
@@ -36,13 +36,20 @@ class TransactionsWidget(QWidget):
         main_layout = QVBoxLayout()
         self.transactions_actions_widget = TransactionsActionsWidget(self.stacked_widget)
         self.transactions_tab_widget = TransactionsTabWidget(self.stacked_widget)
+        count_layout = QHBoxLayout()
+        self.count_label = QLabel()
+        self.count_label.setObjectName("countLabel")
+        count_layout.addWidget(self.count_label)
+        count_layout.addStretch()
         main_layout.addWidget(self.transactions_actions_widget)
         main_layout.addWidget(self.transactions_tab_widget)
+        main_layout.addLayout(count_layout)
         return main_layout
 
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_model()
+        self.set_count_text(self.transactions_load_model_in.rowCount(), self.transactions_load_model_in.total_count)
 
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
@@ -51,6 +58,7 @@ class TransactionsWidget(QWidget):
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.model_in_suffix = ui_texts.get("modelInSuffix", "")
+        self.count_text = ui_texts.get("countLabelText", "Count:")
 
     def _setup_model(self) -> None:
         self._setup_in_model()
@@ -84,6 +92,9 @@ class TransactionsWidget(QWidget):
         self.filter_timer.setSingleShot(True)
         self.filter_timer.setInterval(500)
         self.filter_timer.timeout.connect(self._apply_filter)
+
+    def set_count_text(self, filtered: int, total: int) -> None:
+        self.count_label.setText(f"{self.count_text} {filtered}/{total}")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

@@ -62,7 +62,7 @@ class CustomersWidget(QWidget):
         self.count_text = ui_texts.get("countLabelText", "Count: ")
 
     def set_count_text(self, filtered: int, total: int) -> None:
-        self.count_label.setText(f"{self.count_text}{filtered}/{total}")
+        self.count_label.setText(f"{self.count_text} {filtered}/{total}")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

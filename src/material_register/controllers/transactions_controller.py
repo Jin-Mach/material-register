@@ -147,20 +147,30 @@ class TransactionsController:
             MessageBoxes.show_error(self.transactions_widget, "NO_RESULTS", "WARNING")
             model.reload_transaction_data()
             return
+        self._update_counts(model)
 
     def reset_model_data(self) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
         if current_tab == 0:
             self.transactions_model_out.reload_transaction_data()
+            self._update_counts(self.transactions_model_in)
         elif current_tab == 1:
             self.transactions_model_in.reload_transaction_data()
+            self._update_counts(self.transactions_model_out)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
 
     def _refresh_models_data(self, transfer_type: str) -> None:
         if transfer_type == TRANSFER_IN:
             self.transactions_model_in.reload_transaction_data()
+            self._update_counts(self.transactions_model_in)
         if transfer_type == TRANSFER_OUT:
             self.transactions_model_out.reload_transaction_data()
+            self._update_counts(self.transactions_model_out)
+
+    def _update_counts(self, model: "TransactionsLoadModelIn | TransactionsLoadModelOut") -> None:
+        filtered = model.rowCount()
+        total = model.total_count
+        self.transactions_widget.set_count_text(filtered, total)
 
     @staticmethod
     def _check_data(data: dict[str, str | int | float | None] | None) -> bool:

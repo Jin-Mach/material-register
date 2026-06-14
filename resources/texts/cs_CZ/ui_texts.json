@@ -11,7 +11,8 @@
     "catalogButtonTooltipText": "Zobrazí katalog položek"
   },
   "TransactionsWidget": {
-    "modelInSuffix": "Kč"
+    "modelInSuffix": "Kč",
+    "countLabelText": "Zobrazeno:"
   },
   "TransactionsActionsWidget": {
     "inTransactionButtonText": "Přidat výkup",
@@ -30,7 +31,7 @@
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
   "CustomersWidget": {
-    "countLabelText": "Zobrazeno: "
+    "countLabelText": "Zobrazeno:"
   },
   "CustomersView": {
     "updateCustomerActionText": "Upravit záznam",
