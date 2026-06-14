@@ -1,10 +1,13 @@
+from typing import TYPE_CHECKING
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItemModel
 from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
-from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
-from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
+if TYPE_CHECKING:
+    from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
+    from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
 
 
 # noinspection PyBroadException, PyUnresolvedReferences
@@ -36,7 +39,7 @@ class HeadersTexts:
             return False
 
     @classmethod
-    def set_transactions_headers_text(cls, view: QTableView, model: TransactionsLoadModelIn | TransactionsLoadModelOut) -> bool:
+    def set_transactions_headers_text(cls, view: QTableView, model: "TransactionsLoadModelIn | TransactionsLoadModelOut") -> bool:
         try:
             headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {}).get("headers_texts", {})
             if not headers_texts:

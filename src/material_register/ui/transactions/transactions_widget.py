@@ -6,8 +6,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout
 
 from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
-from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
-from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
+from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -23,8 +22,8 @@ class TransactionsWidget(QWidget):
         super().__init__(stacked_widget)
         self.stacked_widget = stacked_widget
         self.db_connection = DbInit.db_connection
-        self.transactions_load_model_in = TransactionsLoadModelIn(self.db_connection)
-        self.transactions_load_model_out = TransactionsLoadModelOut(self.db_connection)
+        self.transactions_load_model_in = DataInit.transactions_load_model_in
+        self.transactions_load_model_out = DataInit.transactions_load_model_out
         self.transactions_controller = TransactionsController(self, self.db_connection,
                                                               self.transactions_load_model_in,
                                                               self.transactions_load_model_out)
