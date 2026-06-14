@@ -53,6 +53,11 @@ class TransactionsLoadModelOut(QAbstractTableModel):
         self.endResetModel()
         return self.transaction_data
 
+    def set_basic_filter(self, filtered_data: list[Transaction]) -> None:
+        self.beginResetModel()
+        self.transaction_data = filtered_data
+        self.endResetModel()
+
     @staticmethod
     def _format_datetime(created: str) -> str:
         date = datetime.fromisoformat(created)

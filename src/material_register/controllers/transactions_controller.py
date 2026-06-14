@@ -7,6 +7,7 @@ from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PA
 from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries
+from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.init.data_init import DataInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
@@ -20,6 +21,7 @@ from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
 from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
+from material_register.utils.normalizer import normalize_text
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -128,14 +130,23 @@ class TransactionsController:
         if isinstance(model, TransactionItemsModelOut) and model.rowCount() == 0:
             self.active_commodity_unit = None
 
-    def set_transactions_filter(self) -> None:
+    def set_basic_transactions_filter(self, search_text: str) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
         tab_context = self._models_map.get(current_tab)
         if tab_context is None:
             return
-        model, transfer = tab_context
-        print("model", model)
-        print("transfer", transfer)
+        model, transaction_type = tab_context
+        normalized_text = normalize_text(search_text)
+        if not normalized_text:
+            self._refresh_models_data(transaction_type)
+            return
+        filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type, normalized_text)
+        model.set_basic_filter(filtered_data)
+        if not filtered_data:
+            self.transactions_widget.transactions_actions_widget.search_line_edit.selectAll()
+            MessageBoxes.show_error(self.transactions_widget, "NO_RESULTS", "WARNING")
+            model.reload_transaction_data()
+            return
 
     def _refresh_models_data(self, transfer_type: str) -> None:
         if transfer_type == TRANSFER_IN:

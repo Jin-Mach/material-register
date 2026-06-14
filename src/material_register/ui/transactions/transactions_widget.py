@@ -30,6 +30,7 @@ class TransactionsWidget(QWidget):
         self.setLayout(self.create_ui())
         self._setup_ui()
         self._create_connection()
+        self._apply_timer()
 
     def create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -58,7 +59,7 @@ class TransactionsWidget(QWidget):
     def _create_connection(self) -> None:
         self.transactions_actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_IN))
         self.transactions_actions_widget.out_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_OUT))
-        self.transactions_actions_widget.search_line_edit.textChanged.connect(self.transactions_controller.set_transactions_filter)
+        self.transactions_actions_widget.search_line_edit.textChanged.connect(self._on_text_changed)
 
     def _setup_in_model(self) -> None:
         self.transactions_tab_widget.transaction_in_view.setModel(self.transactions_load_model_in)
@@ -75,12 +76,12 @@ class TransactionsWidget(QWidget):
         self.filter_timer.start()
 
     def _apply_filter(self) -> None:
-        self.transactions_controller.set_transactions_filter()
+        self.transactions_controller.set_basic_transactions_filter(self.transactions_actions_widget.search_line_edit.text())
 
     def _apply_timer(self) -> None:
         self.filter_timer = QTimer()
         self.filter_timer.setSingleShot(True)
-        self.filter_timer.setInterval(300)
+        self.filter_timer.setInterval(500)
         self.filter_timer.timeout.connect(self._apply_filter)
 
     def showEvent(self, event: QShowEvent) -> None:

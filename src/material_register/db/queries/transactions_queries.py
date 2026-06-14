@@ -1,5 +1,8 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
+from material_register.db.config.queries_constants import TRANSACTIONS_BASIC_FILTER_QUERY
+from material_register.domain.transaction_dataclass import Transaction
+
 
 class TransactionsQueries:
 
@@ -20,3 +23,35 @@ class TransactionsQueries:
         else:
             error = query.lastError().text()
         return ok, error, transaction_id
+
+    @staticmethod
+    def get_basic_filter_data(db_connection: QSqlDatabase, transaction_type: str, normalized_text: str):
+        query = QSqlQuery(db_connection)
+        query.prepare(TRANSACTIONS_BASIC_FILTER_QUERY)
+        formated_text = f"%{normalized_text}%"
+        query.addBindValue(transaction_type)
+        query.addBindValue(formated_text)
+        query.addBindValue(formated_text)
+        query.addBindValue(formated_text)
+        query.addBindValue(formated_text)
+        query.addBindValue(formated_text)
+        if not query.exec():
+            return []
+        results = []
+        while query.next():
+            results.append(Transaction(
+                transaction_id=query.value("transaction_id"),
+                transaction_type=query.value("transaction_type"),
+                transaction_created_at=query.value("transaction_created_at"),
+                customer_id=query.value("customer_id"),
+                customer_document_number=query.value("customer_document_number"),
+                customer_address=query.value("customer_address"),
+                customer_name=query.value("customer_name"),
+                total=query.value("total"),
+                suffix=query.value("suffix"),
+                company_normalized=query.value("company_normalized"),
+                first_name_normalized=query.value("first_name_normalized"),
+                last_name_normalized=query.value("last_name_normalized"),
+                address_normalized=query.value("address_normalized"),
+            ))
+        return results

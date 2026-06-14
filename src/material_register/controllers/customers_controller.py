@@ -81,8 +81,8 @@ class CustomersController:
         self.customers_model.setFilter(final_filter)
         if self.customers_model.rowCount() == 0:
             self.update_counts()
-            MessageBoxes.show_error(self.customers_widget, "CUSTOMER_NOT_FOUND", "WARNING")
-            self.customers_widget.action_widget.search_line_edit.clear()
+            MessageBoxes.show_error(self.customers_widget, "NO_RESULTS", "WARNING")
+            self.customers_widget.action_widget.search_line_edit.selectAll()
             self.customers_model.setFilter("")
         self.update_counts()
 

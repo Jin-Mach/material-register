@@ -5,7 +5,7 @@
     "YES": "Změnit",
     "NO": "Zrušit"
   },
-  "CUSTOMER_NOT_FOUND": {
+  "NO_RESULTS": {
     "TITLE": "Chyba",
     "TEXT": "Hledanému výrazu neodpovidají žádné záznamy",
     "CLOSE": "Zavřít"

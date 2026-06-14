@@ -53,6 +53,11 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         self.endResetModel()
         return self.transaction_data
 
+    def set_basic_filter(self, filtered_data: list[Transaction]) -> None:
+        self.beginResetModel()
+        self.transaction_data = filtered_data
+        self.endResetModel()
+
     def set_suffix(self, suffix: str) -> None:
         self.suffix = suffix
 
