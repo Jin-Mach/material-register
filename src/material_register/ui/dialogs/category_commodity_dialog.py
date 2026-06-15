@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QShowEvent, Qt, QFontMetrics
+from PySide6.QtGui import QShowEvent, QFontMetrics
 from PySide6.QtWidgets import (QWidget, QDialog, QVBoxLayout, QFormLayout, QLabel, QComboBox, QDoubleSpinBox,
                                QDialogButtonBox)
 
@@ -117,8 +117,7 @@ class CategoryCommodityDialog(QDialog):
         self.category_combo_box.clear()
         for index, category in enumerate(self.categories):
             if self._has_commodity(category):
-                self.category_combo_box.addItem(category.name)
-                self.category_combo_box.setItemData(index, category.id, Qt.ItemDataRole.UserRole)
+                self.category_combo_box.addItem(category.name, category.id)
         self.category_combo_box.setCurrentIndex(-1)
         QTimer.singleShot(0, lambda: CategoryCommodityDialog._adjust_combo_view_width(self.category_combo_box))
 
@@ -130,8 +129,7 @@ class CategoryCommodityDialog(QDialog):
         index = 0
         for commodity in self.commodities:
             if commodity.category_id == category_id:
-                self.commodity_combo_box.addItem(commodity.name)
-                self.commodity_combo_box.setItemData(index, commodity.id, Qt.ItemDataRole.UserRole)
+                self.commodity_combo_box.addItem(commodity.name, commodity.id)
                 index += 1
         self.commodity_combo_box.setCurrentIndex(-1)
         self._reset_spinboxes_values()
@@ -232,7 +230,7 @@ class CategoryCommodityDialog(QDialog):
         return self._is_valid_value(self.unit_spinbox.value()) and self._is_valid_value(self.price_spinbox.value())
 
     def get_category_commodity_data(self) -> dict[str, str | int | float | None] | None:
-        commodity_id = self.commodity_combo_box.currentData(Qt.ItemDataRole.UserRole)
+        commodity_id = self.commodity_combo_box.currentData()
         if commodity_id is None or not self._valid_values():
             return None
         unit_count, price_per_unit = self._normalize_unit_price_values()

@@ -45,6 +45,7 @@ class NotificationDialog(QDialog):
 
     def show_notification(self) -> None:
         self.adjustSize()
+        self.setFixedSize(self.size())
         position = get_notification_position(self)
         self.move(position)
         self.setWindowOpacity(0.0)
