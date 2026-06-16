@@ -10,7 +10,7 @@ from material_register.config.app_constants import (ADD_MODE, UPDATE_MODE, COMMO
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
-from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
+from material_register.ui.helpers.styles import INVALID_INPUT_STYLE, WARNING_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -50,6 +50,9 @@ class CommodityDialog(QDialog):
         self.unit_label.setObjectName("unitLabel")
         self.unit_input = QComboBox()
         self.unit_input.setObjectName("unitInput")
+        self.warning_spacer_label = QLabel()
+        self.warning_label = QLabel()
+        self.warning_label.setObjectName("warningLabel")
         self.default_price_label = QLabel()
         self.default_price_label.setObjectName("defaultPriceLabel")
         self.price_input = QDoubleSpinBox()
@@ -79,6 +82,7 @@ class CommodityDialog(QDialog):
         form_layout.addRow(self.category_label, self.category_value)
         form_layout.addRow(self.name_label, self.name_input)
         form_layout.addRow(self.unit_label, self.unit_input)
+        form_layout.addRow(self.warning_spacer_label, self.warning_label)
         form_layout.addRow(self.default_price_label, self.price_input)
         form_layout.addRow(self.active_label, self.active_checkbox)
         form_layout.addRow(self.notes_label)
@@ -93,6 +97,7 @@ class CommodityDialog(QDialog):
             self.category_label,
             self.name_label,
             self.unit_label,
+            self.warning_label,
             self.default_price_label,
             self.active_label,
             self.notes_label,
@@ -103,6 +108,7 @@ class CommodityDialog(QDialog):
         self._setup_texts(widgets)
         self._setup_mode()
         self._set_validators()
+        self._setup_style()
         self._update_required_styles()
         self._update_save_button_state()
 
@@ -123,6 +129,9 @@ class CommodityDialog(QDialog):
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _setup_style(self) -> None:
+        self.warning_label.setStyleSheet(WARNING_STYLE)
 
     def _setup_mode(self) -> None:
         if self.mode == ADD_MODE:
@@ -149,6 +158,7 @@ class CommodityDialog(QDialog):
         self.active_checkbox.setChecked(bool(commodity.active))
         self.category_value.setText(str(self.category_name))
         self._update_notes_count()
+        self.unit_input.setEnabled(False)
 
     def _update_notes_count(self) -> None:
         check_notes_length(self.notes_input, self.notes_count_label, self.notes_text, COMMODITY_DIALOG_NOTES_LENGTH)

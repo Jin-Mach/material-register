@@ -80,6 +80,7 @@
     "nameLabelText": "Název:",
     "unitLabelText": "Jednotka:",
     "unitInputItems": ["kg", "ks"],
+    "warningLabelText": "Po vytvoření položky nelze jednotku měnit",
     "defaultPriceLabelText": "Jednotková cena (Kč):",
     "activeLabelText": "Aktivní",
     "notesLabelText": "Poznámky",
