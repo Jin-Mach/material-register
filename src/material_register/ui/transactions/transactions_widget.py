@@ -34,8 +34,8 @@ class TransactionsWidget(QWidget):
 
     def create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        self.transactions_actions_widget = TransactionsActionsWidget(self.stacked_widget)
-        self.transactions_tab_widget = TransactionsTabWidget(self.stacked_widget)
+        self.transactions_actions_widget = TransactionsActionsWidget(self)
+        self.transactions_tab_widget = TransactionsTabWidget(self)
         count_layout = QHBoxLayout()
         self.count_label = QLabel()
         self.count_label.setObjectName("countLabel")
@@ -75,11 +75,15 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transaction_in_view.setup_texts()
         self.transactions_load_model_in.set_suffix(self.model_in_suffix)
         self.transactions_load_model_in.reload_transaction_data()
+        self.transactions_tab_widget.transaction_in_view.customContextMenuRequested.connect(
+            self.transactions_tab_widget.transaction_in_view.open_context_menu)
 
     def _setup_out_model(self) -> None:
         self.transactions_tab_widget.transactions_out_view.setModel(self.transactions_load_model_out)
         self.transactions_tab_widget.transactions_out_view.setup_texts()
         self.transactions_load_model_out.reload_transaction_data()
+        self.transactions_tab_widget.transactions_out_view.customContextMenuRequested.connect(
+            self.transactions_tab_widget.transactions_out_view.open_context_menu)
 
     def _on_text_changed(self) -> None:
         self.filter_timer.start()

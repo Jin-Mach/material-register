@@ -14,6 +14,10 @@
     "modelInSuffix": "Kč",
     "countLabelText": "Zobrazeno:"
   },
+  "TransactionsView": {
+    "updateTransactionActionText": "Upravit transakci",
+    "deleteTransactionActionText": "Smazat transakci"
+  },
   "TransactionsActionsWidget": {
     "inTransactionButtonText": "Přidat výkup",
     "inTransactionButtonTooltipText": "Přidat nový výkup do transakcí",

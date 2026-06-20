@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtSql import QSqlDatabase
+from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QDialog
 
 from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PAYMENT_VALUES
@@ -67,6 +68,14 @@ class TransactionsController:
             self._refresh_models_data(transfer_type=transfer_type)
             TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
                                                          "Transaction added")
+
+    def update_transaction(self, transaction_index: QModelIndex) -> None:
+        print("index:", transaction_index)
+        print("updating transaction")
+
+    def delete_transaction(self, transaction_index: QModelIndex) -> None:
+        print("index:", transaction_index)
+        print("deleting transaction")
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:

@@ -7,13 +7,13 @@ from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.transactions.transactions_widgets.transactions_view import TransactionsView
 
 if TYPE_CHECKING:
-    from material_register.ui.widgets.stacked_widget import StackedWidget
+    from material_register.ui.transactions.transactions_widget import TransactionsWidget
 
 
 class TransactionsTabWidget(QTabWidget):
-    def __init__(self, stacked_widget: "StackedWidget") -> None:
-        super().__init__(stacked_widget)
-        self.stacked_widget = stacked_widget
+    def __init__(self, transactions_widget: "TransactionsWidget") -> None:
+        super().__init__(transactions_widget)
+        self.transactions_widget = transactions_widget
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._setup_ui()
 
@@ -31,7 +31,7 @@ class TransactionsTabWidget(QTabWidget):
         self.out_tab_title = ui_texts.get("outTabTitleText", "OUT")
 
     def _setup_tabs(self) -> None:
-        self.transaction_in_view = TransactionsView(self)
-        self.transactions_out_view = TransactionsView(self)
+        self.transaction_in_view = TransactionsView(self, self.transactions_widget.transactions_controller)
+        self.transactions_out_view = TransactionsView(self, self.transactions_widget.transactions_controller)
         self.addTab(self.transaction_in_view, self.in_tab_title)
         self.addTab(self.transactions_out_view, self.out_tab_title)
