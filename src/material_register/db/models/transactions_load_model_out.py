@@ -33,6 +33,14 @@ class TransactionsLoadModelOut(QAbstractTableModel):
             if column == "total":
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
+        if role == Qt.ItemDataRole.UserRole:
+            parts_list = []
+            for part in (transaction.company_normalized, transaction.first_name_normalized,
+                         transaction.last_name_normalized, transaction.customer_document_number,
+                         transaction.address_normalized):
+                if part:
+                    parts_list.append(part)
+            return " ".join(parts_list)
         return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole) -> Any:
@@ -48,7 +56,7 @@ class TransactionsLoadModelOut(QAbstractTableModel):
     def columnCount(self, parent=QModelIndex()) -> int:
         return len(LOAD_MODEL_IN_COLUMNS)
 
-    def reload_transaction_data(self) -> list[Transaction]:
+    def load_transactions_data(self) -> list[Transaction]:
         self.beginResetModel()
         self.transaction_data = TransactionsLoadQueries.load_transactions_out(self.db_connection)
         self.endResetModel()

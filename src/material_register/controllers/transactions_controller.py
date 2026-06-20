@@ -23,6 +23,7 @@ from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
 from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
+from material_register.utils.normalizer import normalize_text
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -150,11 +151,22 @@ class TransactionsController:
                                                                   from_date, to_date)
         model.set_basic_filter(filtered_data)
         if not filtered_data:
-            self.transactions_widget.transactions_actions_widget.search_line_edit.selectAll()
-            MessageBoxes.show_error(self.transactions_widget, "NO_RESULTS", "WARNING")
-            model.reload_transaction_data()
+            self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
+            model.load_transactions_data()
             return
         self._update_counts(model)
+
+    def set_proxy_transactions_filter(self, search_text: str) -> None:
+        text = normalize_text(search_text)
+        proxy_model = self.transactions_widget.active_proxy
+        if proxy_model is None:
+            return
+        proxy_model.set_filtered_text(text)
+        if proxy_model.rowCount() == 0:
+            self.transactions_widget.transactions_actions_widget.search_line_edit.selectAll()
+            MessageBoxes.show_error(self.transactions_widget, "NO_RESULTS", "WARNING")
+            proxy_model.set_filtered_text("")
+            return
 
     def reset_model_data(self) -> None:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
