@@ -176,6 +176,8 @@ class TransactionsController:
                                                                       from_date, to_date)
             model.set_basic_filter(filtered_data)
             self._update_counts(model)
+        self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
+        self.transactions_widget.transactions_proxy_filter_out.set_filtered_text("")
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
 
     def _refresh_models_data(self) -> None:

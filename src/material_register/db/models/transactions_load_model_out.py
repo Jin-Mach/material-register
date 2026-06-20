@@ -34,13 +34,17 @@ class TransactionsLoadModelOut(QAbstractTableModel):
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
         if role == Qt.ItemDataRole.UserRole:
+            if column == "transaction_created_at":
+                return TransactionsLoadModelOut._format_datetime(transaction.transaction_created_at)
+            if column == "total":
+                return float(transaction.total)
             parts_list = []
             for part in (transaction.company_normalized, transaction.first_name_normalized,
                          transaction.last_name_normalized, transaction.customer_document_number,
                          transaction.address_normalized):
                 if part:
                     parts_list.append(part)
-            return " ".join(parts_list)
+            return " ".join(parts_list).lower()
         return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole) -> Any:
