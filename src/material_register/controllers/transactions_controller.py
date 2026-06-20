@@ -150,11 +150,12 @@ class TransactionsController:
         filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type,
                                                                   from_date, to_date)
         model.set_basic_filter(filtered_data)
+        self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
+        self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
+        self.transactions_widget.transactions_proxy_filter_out.set_filtered_text("")
         if not filtered_data:
-            self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
             model.load_transactions_data()
-            return
-        self._update_counts(model)
+        self._update_counts()
 
     def set_proxy_transactions_filter(self, search_text: str) -> None:
         text = normalize_text(search_text)
@@ -167,6 +168,7 @@ class TransactionsController:
             MessageBoxes.show_error(self.transactions_widget, "NO_RESULTS", "WARNING")
             proxy_model.set_filtered_text("")
             return
+        self._update_counts()
 
     def reset_model_data(self) -> None:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
@@ -175,10 +177,10 @@ class TransactionsController:
             filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type,
                                                                       from_date, to_date)
             model.set_basic_filter(filtered_data)
-            self._update_counts(model)
+        self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
         self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
         self.transactions_widget.transactions_proxy_filter_out.set_filtered_text("")
-        self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
+        self._update_counts()
 
     def _refresh_models_data(self) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
@@ -191,12 +193,17 @@ class TransactionsController:
         for model, transfer_type in self._models_map.values():
             filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type, from_date, to_date)
             model.set_basic_filter(filtered_data)
-        self._update_counts(model)
+        self._update_counts()
 
-    def _update_counts(self, model: "TransactionsLoadModelIn | TransactionsLoadModelOut") -> None:
-        filtered = model.rowCount()
-        total = model.total_count
-        self.transactions_widget.set_count_text(filtered, total)
+    def _update_counts(self) -> None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        if current_tab == 0:
+            proxy = self.transactions_widget.transactions_proxy_filter_in
+            model = self.transactions_model_in
+        else:
+            proxy = self.transactions_widget.transactions_proxy_filter_out
+            model = self.transactions_model_out
+        self.transactions_widget.set_count_text(proxy.rowCount(), model.rowCount())
 
     @staticmethod
     def _check_data(data: dict[str, str | int | float | None] | None) -> bool:
