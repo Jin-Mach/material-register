@@ -9,6 +9,7 @@ from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.db.queries.transactions_queries import TransactionsQueries
+from material_register.db.utils.date_filters import get_filter_range
 from material_register.init.data_init import DataInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
@@ -22,7 +23,6 @@ from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
 from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
-from material_register.utils.normalizer import normalize_text
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -65,7 +65,7 @@ class TransactionsController:
             if not ok:
                 TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.create_transaction")
                 return
-            self._refresh_models_data(transfer_type=transfer_type)
+            self._refresh_models_data()
             TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
                                                          "Transaction added")
 
@@ -139,17 +139,15 @@ class TransactionsController:
         if isinstance(model, TransactionItemsModelOut) and model.rowCount() == 0:
             self.active_commodity_unit = None
 
-    def set_basic_transactions_filter(self, search_text: str) -> None:
+    def set_basic_transactions_filter(self, key: str) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
         tab_context = self._models_map.get(current_tab)
         if tab_context is None:
             return
         model, transaction_type = tab_context
-        normalized_text = normalize_text(search_text)
-        if not normalized_text:
-            self._refresh_models_data(transaction_type)
-            return
-        filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type, normalized_text)
+        from_date, to_date = get_filter_range(key)
+        filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type,
+                                                                  from_date, to_date)
         model.set_basic_filter(filtered_data)
         if not filtered_data:
             self.transactions_widget.transactions_actions_widget.search_line_edit.selectAll()
@@ -159,22 +157,27 @@ class TransactionsController:
         self._update_counts(model)
 
     def reset_model_data(self) -> None:
-        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
-        if current_tab == 0:
-            self.transactions_model_out.reload_transaction_data()
-            self._update_counts(self.transactions_model_in)
-        elif current_tab == 1:
-            self.transactions_model_in.reload_transaction_data()
-            self._update_counts(self.transactions_model_out)
+        key = self.transactions_widget.transactions_actions_widget.get_filter_key()
+        from_date, to_date = get_filter_range(key)
+        for model, transaction_type in self._models_map.values():
+            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type,
+                                                                      from_date, to_date)
+            model.set_basic_filter(filtered_data)
+            self._update_counts(model)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
 
-    def _refresh_models_data(self, transfer_type: str) -> None:
-        if transfer_type == TRANSFER_IN:
-            self.transactions_model_in.reload_transaction_data()
-            self._update_counts(self.transactions_model_in)
-        if transfer_type == TRANSFER_OUT:
-            self.transactions_model_out.reload_transaction_data()
-            self._update_counts(self.transactions_model_out)
+    def _refresh_models_data(self) -> None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        tab_context = self._models_map.get(current_tab)
+        if tab_context is None:
+            return
+        model, transaction_type = tab_context
+        key = self.transactions_widget.transactions_actions_widget.get_filter_key()
+        from_date, to_date = get_filter_range(key)
+        for model, transfer_type in self._models_map.values():
+            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type, from_date, to_date)
+            model.set_basic_filter(filtered_data)
+        self._update_counts(model)
 
     def _update_counts(self, model: "TransactionsLoadModelIn | TransactionsLoadModelOut") -> None:
         filtered = model.rowCount()

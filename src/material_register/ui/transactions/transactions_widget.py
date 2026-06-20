@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QTimer
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
 
@@ -30,7 +29,6 @@ class TransactionsWidget(QWidget):
         self.setLayout(self.create_ui())
         self._setup_ui()
         self._create_connection()
-        self._apply_timer()
 
     def create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -67,7 +65,7 @@ class TransactionsWidget(QWidget):
     def _create_connection(self) -> None:
         self.transactions_actions_widget.in_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_IN))
         self.transactions_actions_widget.out_transaction_button.clicked.connect(lambda: self.transactions_controller.create_transaction(TRANSFER_OUT))
-        self.transactions_actions_widget.search_line_edit.textChanged.connect(self._on_text_changed)
+        self.transactions_actions_widget.base_filter_combobox.currentIndexChanged.connect(self._on_index_changed)
         self.transactions_tab_widget.currentChanged.connect(self.transactions_controller.reset_model_data)
 
     def _setup_in_model(self) -> None:
@@ -85,17 +83,10 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transactions_out_view.customContextMenuRequested.connect(
             self.transactions_tab_widget.transactions_out_view.open_context_menu)
 
-    def _on_text_changed(self) -> None:
-        self.filter_timer.start()
-
-    def _apply_filter(self) -> None:
-        self.transactions_controller.set_basic_transactions_filter(self.transactions_actions_widget.search_line_edit.text())
-
-    def _apply_timer(self) -> None:
-        self.filter_timer = QTimer()
-        self.filter_timer.setSingleShot(True)
-        self.filter_timer.setInterval(500)
-        self.filter_timer.timeout.connect(self._apply_filter)
+    def _on_index_changed(self) -> None:
+        key = self.transactions_actions_widget.get_filter_key()
+        if key:
+            self.transactions_controller.set_basic_transactions_filter(key)
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.count_label.setText(f"{self.count_text} {filtered}/{total}")

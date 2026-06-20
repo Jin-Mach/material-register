@@ -138,10 +138,10 @@ def test_get_basic_filter_data(connection, filter_schema):
         (1, 1, 10, 5),
         (2, 1, 10, 5)
     """)
-    result = TransactionsQueries.get_basic_filter_data(connection, "IN", "jurgen")
+    result = TransactionsQueries.get_basic_filter_data(connection, "IN",
+                                                       "2000-01-01 00:00:00", "2100-01-01 00:00:00")
     assert isinstance(result, list)
-    assert len(result) == 1
+    assert len(result) == 2
     row = result[0]
-    assert row.customer_id == 1
-    assert row.customer_name == "Jürgen Müller"
-    assert row.customer_document_number == "DOC12345"
+    assert row.customer_id in (1, 2)
+    assert row.transaction_type == "IN"

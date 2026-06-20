@@ -23,6 +23,7 @@
     "inTransactionButtonTooltipText": "Přidat nový výkup do transakcí",
     "outTransactionButtonText": "Přidat vývoz",
     "outTransactionButtonTooltipText": "Přidat nový vývoz do transakcí",
+    "baseFilterComboboxItems": ["Dnes", "Tento týden", "Tento měsíc", "Tento rok"],
     "searchLineEditPlaceholderText": "Zadej text pro vyhledávání..."
   },
   "TransactionsTabWidget": {

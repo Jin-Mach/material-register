@@ -112,14 +112,7 @@ TRANSACTIONS_BASIC_FILTER_QUERY = """
                 
                 WHERE 
                     trans.type = ?
-                    AND date(trans.created_at) = date('now')
-                    AND (
-                        cust.company_normalized LIKE ?
-                        OR cust.first_name_normalized LIKE ?
-                        OR cust.last_name_normalized LIKE ? 
-                        OR cust.document_number LIKE ?
-                        OR cust.address_normalized LIKE ?
-                    )
+                    AND trans.created_at BETWEEN ? AND ?
 
                 GROUP BY trans.id
                 ORDER BY trans.id ASC;

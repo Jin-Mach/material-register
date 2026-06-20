@@ -25,16 +25,12 @@ class TransactionsQueries:
         return ok, error, transaction_id
 
     @staticmethod
-    def get_basic_filter_data(db_connection: QSqlDatabase, transaction_type: str, normalized_text: str):
+    def get_basic_filter_data(db_connection: QSqlDatabase, transaction_type: str, from_date: str, end_date: str):
         query = QSqlQuery(db_connection)
         query.prepare(TRANSACTIONS_BASIC_FILTER_QUERY)
-        formated_text = f"%{normalized_text}%"
         query.addBindValue(transaction_type)
-        query.addBindValue(formated_text)
-        query.addBindValue(formated_text)
-        query.addBindValue(formated_text)
-        query.addBindValue(formated_text)
-        query.addBindValue(formated_text)
+        query.addBindValue(from_date)
+        query.addBindValue(end_date)
         if not query.exec():
             return []
         results = []
