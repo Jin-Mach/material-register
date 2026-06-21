@@ -70,13 +70,23 @@ class TransactionsController:
             TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
                                                          "Transaction added")
 
-    def update_transaction(self, transaction_index: QModelIndex) -> None:
-        print("index:", transaction_index)
-        print("updating transaction")
+    def update_transaction(self, proxy_index: QModelIndex) -> None:
+        print("transaction update")
 
-    def delete_transaction(self, transaction_index: QModelIndex) -> None:
-        print("index:", transaction_index)
-        print("deleting transaction")
+    def delete_transaction(self, proxy_index: QModelIndex) -> None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        tab_context = self._models_map.get(current_tab)
+        if tab_context is None:
+            return
+        model, _ = tab_context
+        model_index = self.transactions_widget.active_proxy.mapToSource(proxy_index)
+        if not model or not model_index.isValid():
+            return
+        transaction = model.transaction_data[model_index.row()]
+        question = MessageBoxes.show_question(self.transactions_widget, "DELETE_TRANSACTION", transaction.customer_name)
+        if question:
+            model.removeRow(model_index.row())
+            self._update_counts()
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:

@@ -60,6 +60,12 @@ class TransactionsLoadModelOut(QAbstractTableModel):
     def columnCount(self, parent=QModelIndex()) -> int:
         return len(LOAD_MODEL_IN_COLUMNS)
 
+    def removeRows(self, row: int, count: int = 1, parent=QModelIndex()) -> bool:
+        self.beginRemoveRows(parent, row, row + count - 1)
+        del self.transaction_data[row:row + count]
+        self.endRemoveRows()
+        return True
+
     def load_transactions_data(self) -> list[Transaction]:
         self.beginResetModel()
         self.transaction_data = TransactionsLoadQueries.load_transactions_out(self.db_connection)

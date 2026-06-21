@@ -50,5 +50,11 @@
     "TITLE": "Chyba",
     "TEXT": "Operaci se nepodařilo dokončit",
     "CLOSE": "Zavřít"
+  },
+  "DELETE_TRANSACTION": {
+    "TITLE": "Smazat transakci",
+    "TEXT": "Opravdu smazat transakci?",
+    "YES": "Smazat",
+    "NO": "Zrušit"
   }
 }
