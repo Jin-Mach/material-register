@@ -141,7 +141,9 @@
     "saveTransactionButtonText": "Uložit výkup",
     "saveTransactionButtonTooltipText": "Uloží výkup do databáze",
     "cancelTransactionButtonText": "Zrušit výkup",
-    "cancelTransactionButtonTooltipText": "Zruší výkup a zavře dialog"
+    "cancelTransactionButtonTooltipText": "Zruší výkup a zavře dialog",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod na účet"
   },
   "TransactionItemsDialogOut": {
     "titleText": "Vývoz",

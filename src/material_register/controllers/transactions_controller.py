@@ -11,6 +11,7 @@ from material_register.db.queries.category_queries import CategoryQueries
 from material_register.db.queries.transaction_items_queries import TransactionItemsQueries
 from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.db.utils.date_filters import get_filter_range
+from material_register.domain.transaction_dataclass import Transaction
 from material_register.init.data_init import DataInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
@@ -80,11 +81,16 @@ class TransactionsController:
         if not model_index.isValid():
             return
         transaction = model.transaction_data[model_index.row()]
-        print("transaction type", transaction_type)
-        print("transaction:", transaction)
         transaction_id = transaction.transaction_id
         data = TransactionItemsQueries.get_transaction_items(self.db_connection, transaction_id)
-        print("data:", data)
+        print("data", data)
+        create_data = TransactionsController._transaction_to_dict(transaction)
+        if transaction_type == TRANSFER_IN:
+            self.edit_items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transaction_type)
+        if transaction_type == TRANSFER_OUT:
+            self.edit_items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transaction_type)
+        if self.edit_items_dialog.exec() == QDialog.DialogCode.Accepted:
+            self.active_commodity_unit = None
 
     def delete_transaction(self, proxy_index: QModelIndex) -> None:
         tab_context = self._get_tab_context()
@@ -256,6 +262,16 @@ class TransactionsController:
         if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
             return False
         return bool(model.get_data())
+
+    @staticmethod
+    def _transaction_to_dict(transaction: Transaction) -> dict[str, str | int | float | None]:
+        return {
+            "paymentType": transaction.payment_type,
+            "customerId": transaction.customer_id,
+            "customer": transaction.customer_name,
+            "documentNumber": transaction.customer_document_number,
+            "address": transaction.customer_address
+        }
 
     @staticmethod
     def _is_dialog_data_valid(dialog_data: dict[str, str | int | None]) -> bool:

@@ -51,11 +51,19 @@ class TransactionItemsDialogIn(QDialog):
         self._setup_texts(widgets)
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.cash_payment = ui_texts.get("CASH", "CASH")
+        self.transfer_payment = ui_texts.get("TRANSFER", "TRANSFER")
+        if not ui_texts:
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
+        if UiTexts.set_default_texts(self, widgets):
+            return
 
     def _create_connection(self) -> None:
         self.save_transaction_button.clicked.connect(self.accept)
@@ -71,8 +79,12 @@ class TransactionItemsDialogIn(QDialog):
                                                      self.document_number, self.address)
 
     def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
-        self.payment_text = create_data.get("paymentText", "")
-        self.payment_type = create_data.get("paymentType", None)
+        payment_type = create_data.get("paymentType", "N/A")
+        payment_text = self.cash_payment
+        if payment_type == "TRANSFER":
+            payment_text = self.transfer_payment
+        self.payment_text = payment_text
+        self.payment_type = payment_type
         self.customer_id = create_data.get("customerId", None)
         self.customer = create_data.get("customer", "")
         self.document_number = create_data.get("documentNumber", "")

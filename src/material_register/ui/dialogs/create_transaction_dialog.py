@@ -149,13 +149,10 @@ class CreateTransactionDialog(QDialog):
     def get_create_data(self) -> dict[str, str | int | None] | None:
         if self.selected_customer is None:
             return None
-        payment_text = "N/A"
         payment_type = "NONE"
         if self.transfer_type == TRANSFER_IN:
-            payment_text = self.payment_type_combobox.currentText()
             payment_type = self.payment_type_combobox.currentData()
         return {
-            "paymentText": payment_text,
             "paymentType": payment_type,
             "customerId": self.selected_customer.id,
             "customer": self.customer_name_input.text().strip(),
