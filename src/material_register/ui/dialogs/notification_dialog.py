@@ -33,7 +33,7 @@ class NotificationDialog(QDialog):
         self.animation.setStartValue(0.0)
         self.animation.setEndValue(1.0)
         self.animation.start()
-        QTimer.singleShot(5000, self._fade_out_and_close)
+        QTimer.singleShot(3000, self._fade_out_and_close)
 
     def _fade_out_and_close(self, duration: int = 1000) -> None:
         self.animation = QPropertyAnimation(self, b"windowOpacity")

@@ -74,8 +74,7 @@ class TransactionsController:
         print("transaction update")
 
     def delete_transaction(self, proxy_index: QModelIndex) -> None:
-        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
-        tab_context = self._models_map.get(current_tab)
+        tab_context = self._get_tab_context()
         if tab_context is None:
             return
         model, _ = tab_context
@@ -158,8 +157,7 @@ class TransactionsController:
             self.active_commodity_unit = None
 
     def set_basic_transactions_filter(self, key: str) -> None:
-        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
-        tab_context = self._models_map.get(current_tab)
+        tab_context = self._get_tab_context()
         if tab_context is None:
             return
         model, transaction_type = tab_context
@@ -200,8 +198,7 @@ class TransactionsController:
         self._update_counts()
 
     def _refresh_models_data(self) -> None:
-        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
-        tab_context = self._models_map.get(current_tab)
+        tab_context = self._get_tab_context()
         if tab_context is None:
             return
         model, transaction_type = tab_context
@@ -221,6 +218,13 @@ class TransactionsController:
             proxy = self.transactions_widget.transactions_proxy_filter_out
             model = self.transactions_model_out
         self.transactions_widget.set_count_text(proxy.rowCount(), model.rowCount())
+
+    def _get_tab_context(self) -> tuple["TransactionsLoadModelIn | TransactionsLoadModelOut", str] | None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        tab_context = self._models_map.get(current_tab)
+        if tab_context is None:
+            return None
+        return tab_context
 
     @staticmethod
     def _check_data(data: dict[str, str | int | float | None] | None) -> bool:

@@ -118,7 +118,7 @@ class TransactionsItemsWidget(QWidget):
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
         self.current_model.add_item(new_item_data)
-        self._setup_total_price(self.current_model)
+        self._setup_total_value(self.current_model)
 
     def update_item(self, index: QModelIndex, item_data: dict[str, str | int | float]) -> None:
         if item_data is None:
@@ -126,11 +126,11 @@ class TransactionsItemsWidget(QWidget):
             return
         row = index.row()
         self.current_model.update_item(row, item_data)
-        self._setup_total_price(self.current_model)
+        self._setup_total_value(self.current_model)
 
     def delete_item(self, index: QModelIndex) -> None:
         self.current_model.delete_item(index)
-        self._setup_total_price(self.current_model)
+        self._setup_total_value(self.current_model)
 
-    def _setup_total_price(self, current_model: TransactionItemsModelIn | TransactionItemsModelOut) -> None:
+    def _setup_total_value(self, current_model: TransactionItemsModelIn | TransactionItemsModelOut) -> None:
         self.total_value_label.setText(current_model.return_total())
