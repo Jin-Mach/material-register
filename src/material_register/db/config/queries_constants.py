@@ -120,3 +120,20 @@ TRANSACTIONS_BASIC_FILTER_QUERY = """
                 GROUP BY trans.id
                 ORDER BY trans.id ASC;
             """
+
+SELECTED_TRANSACTION_DATA = """
+            SELECT
+                trans_items.commodity_id AS commodity_id,
+                trans_items.unit_count AS unit_count,
+                trans_items.price_per_unit AS price_per_unit,
+            
+                commodities.name AS commodity_name,
+                commodities.unit AS commodity_unit,
+            
+                categories.name AS category_name
+            
+            FROM transaction_items trans_items
+            JOIN commodities ON commodities.id = trans_items.commodity_id
+            JOIN categories ON categories.id = commodities.category_id
+            WHERE trans_items.transaction_id = ?
+"""

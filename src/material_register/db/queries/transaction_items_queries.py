@@ -1,4 +1,5 @@
-from src.material_register.domain.transaction_item_dataclass import TransactionItem
+from material_register.db.config.queries_constants import SELECTED_TRANSACTION_DATA
+from material_register.domain.transaction_item_detail_dataclass import TransactionItemDetail
 
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
@@ -28,21 +29,22 @@ class TransactionItemsQueries:
         return ok, error
 
     @staticmethod
-    def get_transaction_items(db_connection: QSqlDatabase, transaction_id: int) -> list[TransactionItem]:
+    def get_transaction_items(db_connection: QSqlDatabase, transaction_id: int) -> list[TransactionItemDetail]:
         query = QSqlQuery(db_connection)
-        query.prepare("""
-            SELECT commodity_id, unit_count, price_per_unit from transaction_items 
-            WHERE transaction_id = ?
-        """)
+        query.prepare(SELECTED_TRANSACTION_DATA)
         query.addBindValue(transaction_id)
         if not query.exec():
             return []
         result = []
         while query.next():
             result.append(
-                TransactionItem(
-                    commodityId=query.value(0),
-                    unitCount=query.value(1),
-                    pricePerUnit=query.value(2)
-                ))
+                TransactionItemDetail(
+                    commodity_id=query.value(0),
+                    unit_count=query.value(1),
+                    price_per_unit=query.value(2),
+                    commodity_name=query.value(3),
+                    commodity_suffix=query.value(4),
+                    category_name=query.value(5)
+                )
+            )
         return result

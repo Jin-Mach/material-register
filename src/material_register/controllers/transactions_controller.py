@@ -79,10 +79,8 @@ class TransactionsController:
         model_index = self.transactions_widget.active_proxy.mapToSource(proxy_index)
         if not model_index.isValid():
             return
-        print("model:", model)
-        print("model_index:", model_index)
-        print("transaction_type:", transaction_type)
         transaction = model.transaction_data[model_index.row()]
+        print("transaction type", transaction_type)
         print("transaction:", transaction)
         transaction_id = transaction.transaction_id
         data = TransactionItemsQueries.get_transaction_items(self.db_connection, transaction_id)
