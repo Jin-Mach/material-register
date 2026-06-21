@@ -48,7 +48,8 @@ def filter_schema(connection):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             type TEXT,
             customer_id INTEGER,
-            created_at TEXT
+            created_at TEXT,
+            payment_type TEXT
         )
     """)
     query.exec("""
@@ -67,10 +68,10 @@ def filter_schema(connection):
     """)
 
 def test_insert_into_transactions(connection, schema) -> None:
-    ok, error, transaction_id = TransactionsQueries.insert_into_transactions(connection, "IN",
-                                                                             1, "CASH",
-                                                                             "notes")
-    assert ok == True
+    ok, error, transaction_id = TransactionsQueries.insert_into_transactions(
+        connection, "IN", 1, "CASH", "notes"
+    )
+    assert ok is True
     assert error == ""
     assert isinstance(transaction_id, int)
     query = QSqlQuery(connection)
@@ -83,8 +84,6 @@ def test_insert_into_transactions(connection, schema) -> None:
 
 def test_delete_transaction(connection, schema) -> None:
     query = QSqlQuery(connection)
-
-    # insert 1
     query.exec("""
         INSERT INTO transactions (
             type, customer_id, created_at, payment_type, notes
@@ -92,8 +91,6 @@ def test_delete_transaction(connection, schema) -> None:
             'IN', 1, datetime('now'), 'CASH', 'to_delete'
         )
     """)
-
-    # insert 2
     query.exec("""
         INSERT INTO transactions (
             type, customer_id, created_at, payment_type, notes
@@ -136,9 +133,9 @@ def test_get_basic_filter_data(connection, filter_schema):
     """)
     query.exec("""
         INSERT INTO transactions (
-            id, type, customer_id, created_at
+            id, type, customer_id, created_at, payment_type
         ) VALUES (
-            1, 'IN', 1, datetime('now')
+            1, 'IN', 1, datetime('now'), 'CASH'
         )
     """)
     query.exec("""
@@ -156,9 +153,9 @@ def test_get_basic_filter_data(connection, filter_schema):
     """)
     query.exec("""
         INSERT INTO transactions (
-            id, type, customer_id, created_at
+            id, type, customer_id, created_at, payment_type
         ) VALUES (
-            2, 'IN', 2, datetime('now')
+            2, 'IN', 2, datetime('now'), 'CASH'
         )
     """)
     query.exec("""
@@ -176,8 +173,8 @@ def test_get_basic_filter_data(connection, filter_schema):
         (1, 1, 10, 5),
         (2, 1, 10, 5)
     """)
-    result = TransactionsQueries.get_basic_filter_data(connection, "IN",
-                                                       "2000-01-01 00:00:00", "2100-01-01 00:00:00")
+    result = TransactionsQueries.get_basic_filter_data(
+        connection, "IN", "2000-01-01 00:00:00", "2100-01-01 00:00:00")
     assert isinstance(result, list)
     assert len(result) == 2
     row = result[0]

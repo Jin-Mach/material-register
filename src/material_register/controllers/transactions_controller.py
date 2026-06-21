@@ -8,6 +8,7 @@ from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PA
 from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries
+from material_register.db.queries.transaction_items_queries import TransactionItemsQueries
 from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.db.utils.date_filters import get_filter_range
 from material_register.init.data_init import DataInit
@@ -71,7 +72,21 @@ class TransactionsController:
                                                          "Transaction added")
 
     def update_transaction(self, proxy_index: QModelIndex) -> None:
-        print("transaction update")
+        tab_context = self._get_tab_context()
+        if tab_context is None:
+            return
+        model, transaction_type = tab_context
+        model_index = self.transactions_widget.active_proxy.mapToSource(proxy_index)
+        if not model_index.isValid():
+            return
+        print("model:", model)
+        print("model_index:", model_index)
+        print("transaction_type:", transaction_type)
+        transaction = model.transaction_data[model_index.row()]
+        print("transaction:", transaction)
+        transaction_id = transaction.transaction_id
+        data = TransactionItemsQueries.get_transaction_items(self.db_connection, transaction_id)
+        print("data:", data)
 
     def delete_transaction(self, proxy_index: QModelIndex) -> None:
         tab_context = self._get_tab_context()

@@ -36,7 +36,8 @@ def schema(connection) -> None:
             id INTEGER PRIMARY KEY,
             type TEXT,
             customer_id INTEGER,
-            created_at TEXT
+            created_at TEXT,
+            payment_type TEXT
         )
     """)
     query.exec("""
@@ -63,13 +64,14 @@ def test_load_transaction_in(connection: QSqlDatabase, schema) -> None:
     query.exec("INSERT INTO commodities VALUES (1, 'kg')")
     query.exec("INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
     query.prepare("""
-        INSERT INTO transactions (id, type, customer_id, created_at)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO transactions (id, type, customer_id, created_at, payment_type)
+        VALUES (?, ?, ?, ?, ?)
     """)
     query.addBindValue(1)
     query.addBindValue('IN')
     query.addBindValue(1)
     query.addBindValue(get_timestamp())
+    query.addBindValue('TRANSFER')
     query.exec()
     query.exec("INSERT INTO transaction_items VALUES (1, 1, 1, 10, 20)")
     results = TransactionsLoadQueries.load_transaction_in(connection)
@@ -81,13 +83,14 @@ def test_load_transaction_out(connection: QSqlDatabase, schema) -> None:
     query.exec("INSERT INTO commodities VALUES (1, 'kg')")
     query.exec("INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
     query.prepare("""
-        INSERT INTO transactions (id, type, customer_id, created_at)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO transactions (id, type, customer_id, created_at, payment_type)
+        VALUES (?, ?, ?, ?, ?)
     """)
     query.addBindValue(1)
     query.addBindValue('OUT')
     query.addBindValue(1)
     query.addBindValue(get_timestamp())
+    query.addBindValue(None)
     query.exec()
     query.exec("INSERT INTO transaction_items VALUES (1, 1, 1, 10, 20)")
     results = TransactionsLoadQueries.load_transactions_out(connection)

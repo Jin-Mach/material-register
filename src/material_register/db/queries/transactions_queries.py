@@ -50,6 +50,7 @@ class TransactionsQueries:
                 transaction_id=query.value("transaction_id"),
                 transaction_type=query.value("transaction_type"),
                 transaction_created_at=query.value("transaction_created_at"),
+                payment_type=query.value("transaction_payment_type"),
                 customer_id=query.value("customer_id"),
                 customer_document_number=query.value("customer_document_number"),
                 customer_address=query.value("customer_address"),
