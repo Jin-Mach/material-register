@@ -25,6 +25,17 @@ class TransactionsQueries:
         return ok, error, transaction_id
 
     @staticmethod
+    def delete_transaction(db_connection: QSqlDatabase, transaction_id: int) -> tuple[bool, str]:
+        query = QSqlQuery(db_connection)
+        query.prepare("DELETE FROM transactions WHERE id = ?")
+        query.addBindValue(transaction_id)
+        error = ""
+        ok = query.exec()
+        if not ok:
+            error = query.lastError().text()
+        return ok, error
+
+    @staticmethod
     def get_basic_filter_data(db_connection: QSqlDatabase, transaction_type: str, from_date: str, end_date: str):
         query = QSqlQuery(db_connection)
         query.prepare(TRANSACTIONS_BASIC_FILTER_QUERY)

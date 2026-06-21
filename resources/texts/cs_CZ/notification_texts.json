@@ -11,6 +11,7 @@
     "UPDATE_COMMODITY": "Položka upravena"
   },
   "TRANSACTIONS": {
-    "ADD_TRANSACTION": "Transakce přidána"
+    "ADD_TRANSACTION": "Transakce přidána",
+    "DELETE_TRANSACTION": "Transakce smazána"
   }
 }

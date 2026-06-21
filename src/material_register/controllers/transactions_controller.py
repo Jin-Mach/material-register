@@ -80,13 +80,20 @@ class TransactionsController:
             return
         model, _ = tab_context
         model_index = self.transactions_widget.active_proxy.mapToSource(proxy_index)
-        if not model or not model_index.isValid():
+        if not model_index.isValid():
             return
         transaction = model.transaction_data[model_index.row()]
         question = MessageBoxes.show_question(self.transactions_widget, "DELETE_TRANSACTION", transaction.customer_name)
         if question:
+            transaction_id = transaction.transaction_id
+            ok, error = TransactionsQueries.delete_transaction(self.db_connection, transaction_id)
+            if not ok:
+                TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.delete_transaction")
+                return
             model.removeRow(model_index.row())
             self._update_counts()
+            TransactionsController._notification_handler(self.notification_text, "DELETE_TRANSACTION",
+                                                         "Transaction deleted")
 
     def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:

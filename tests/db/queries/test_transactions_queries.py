@@ -81,6 +81,44 @@ def test_insert_into_transactions(connection, schema) -> None:
     assert query.value(2) == "CASH"
     assert query.value(3) == "notes"
 
+def test_delete_transaction(connection, schema) -> None:
+    query = QSqlQuery(connection)
+
+    # insert 1
+    query.exec("""
+        INSERT INTO transactions (
+            type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            'IN', 1, datetime('now'), 'CASH', 'to_delete'
+        )
+    """)
+
+    # insert 2
+    query.exec("""
+        INSERT INTO transactions (
+            type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            'IN', 2, datetime('now'), 'CASH', 'not_delete'
+        )
+    """)
+    query.exec("SELECT id FROM transactions ORDER BY id ASC")
+    assert query.next()
+    id_to_delete = query.value(0)
+    assert query.next()
+    id_to_check = query.value(0)
+    query.exec("SELECT COUNT(*) FROM transactions")
+    assert query.next()
+    assert query.value(0) == 2
+    ok, error = TransactionsQueries.delete_transaction(connection, id_to_delete)
+    assert ok is True
+    assert error == ""
+    query.exec("SELECT COUNT(*) FROM transactions")
+    assert query.next()
+    assert query.value(0) == 1
+    query.exec("SELECT id FROM transactions")
+    assert query.next()
+    assert query.value(0) == id_to_check
+
 def test_get_basic_filter_data(connection, filter_schema):
     query = QSqlQuery(connection)
     query.exec("""
