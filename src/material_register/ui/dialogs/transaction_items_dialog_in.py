@@ -76,7 +76,7 @@ class TransactionItemsDialogIn(QDialog):
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)
         self.transaction_info_widget.set_create_data(self.payment_text, self.customer,
-                                                     self.document_number, self.address)
+                                                     self.document_number, self.address, self.notes)
 
     def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
         payment_type = create_data.get("paymentType", "N/A")
@@ -89,6 +89,7 @@ class TransactionItemsDialogIn(QDialog):
         self.customer = create_data.get("customer", "")
         self.document_number = create_data.get("documentNumber", "")
         self.address = create_data.get("address", "")
+        self.notes = create_data.get("notes", "")
 
     def _update_create_data(self) -> None:
         new_data = self.transactions_controller.create_transaction_data(self.transfer_type)

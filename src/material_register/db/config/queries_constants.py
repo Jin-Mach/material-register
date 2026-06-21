@@ -4,6 +4,7 @@ TRANSACTIONS_QUERY_IN = """
                     trans.type AS transaction_type,
                     trans.created_at AS transaction_created_at,
                     trans.payment_type AS transaction_payment_type,
+                    trans.notes AS transaction_notes,
                 
                     cust.id AS customer_id,
                     cust.document_number AS customer_document_number,
@@ -40,6 +41,7 @@ TRANSACTIONS_QUERY_OUT = """
                     trans.type AS transaction_type,
                     trans.created_at AS transaction_created_at,
                     trans.payment_type AS transaction_payment_type,
+                    trans.notes AS transaction_notes,
                 
                     cust.id AS customer_id,
                     cust.document_number AS customer_document_number,
@@ -79,6 +81,7 @@ TRANSACTIONS_BASIC_FILTER_QUERY = """
                     trans.type AS transaction_type,
                     trans.created_at AS transaction_created_at,
                     trans.payment_type AS transaction_payment_type,
+                    trans.notes AS transaction_notes,
                 
                     cust.id AS customer_id,
                     cust.document_number AS customer_document_number,

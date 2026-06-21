@@ -37,7 +37,8 @@ def schema(connection) -> None:
             type TEXT,
             customer_id INTEGER,
             created_at TEXT,
-            payment_type TEXT
+            payment_type TEXT,
+            notes TEXT
         )
     """)
     query.exec("""

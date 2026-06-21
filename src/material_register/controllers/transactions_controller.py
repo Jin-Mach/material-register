@@ -98,8 +98,16 @@ class TransactionsController:
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
-            print("dialog_data", dialog_data)
-        self.items_dialog = None
+            ok, error = TransactionsQueries.update_transaction(self.db_connection, transaction_id, dialog_data["type"],
+                                                   dialog_data["customer_id"], dialog_data["payment_type"],
+                                                   dialog_data["notes"])
+            if not ok:
+                TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.update_transaction")
+                return
+            self._refresh_models_data()
+            self.items_dialog = None
+            TransactionsController._notification_handler(self.notification_text, "UPDATE_TRANSACTION",
+                                                         "Transaction updated")
 
     def delete_transaction(self, proxy_index: QModelIndex) -> None:
         tab_context = self._get_tab_context()
@@ -233,7 +241,7 @@ class TransactionsController:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
         from_date, to_date = get_filter_range(key)
         for model, transfer_type in self._models_map.values():
-            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type, from_date, to_date)
+            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection,transaction_type, from_date, to_date)
             model.set_basic_filter(filtered_data)
         self._update_counts()
 
@@ -279,7 +287,8 @@ class TransactionsController:
             "customerId": transaction.customer_id,
             "customer": transaction.customer_name,
             "documentNumber": transaction.customer_document_number,
-            "address": transaction.customer_address
+            "address": transaction.customer_address,
+            "notes": transaction.transaction_notes
         }
 
     @staticmethod

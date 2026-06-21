@@ -10,6 +10,7 @@ class Transaction:
     customer_document_number: str | None = None
     customer_address: str | None = None
     customer_name: str | None = None
+    transaction_notes: str | None = None
     total: float | None = None
     suffix: str | None = None
     company_normalized: str | None = None

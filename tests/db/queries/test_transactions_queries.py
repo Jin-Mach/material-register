@@ -49,7 +49,8 @@ def filter_schema(connection):
             type TEXT,
             customer_id INTEGER,
             created_at TEXT,
-            payment_type TEXT
+            payment_type TEXT,
+            notes TEXT
         )
     """)
     query.exec("""
@@ -116,6 +117,36 @@ def test_delete_transaction(connection, schema) -> None:
     assert query.next()
     assert query.value(0) == id_to_check
 
+def test_update_transaction(connection, schema) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transactions (
+            type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            'IN', 1, datetime('now'), 'CASH', 'old_notes'
+        )
+    """)
+    query.exec("SELECT id FROM transactions")
+    assert query.next()
+    transaction_id = query.value(0)
+
+    ok, error = TransactionsQueries.update_transaction(connection, transaction_id, "OUT", 2,
+                                                       "TRANSFER", "updated_notes")
+    assert ok is True
+    assert error == ""
+    query.prepare("""
+        SELECT type, customer_id, payment_type, notes 
+        FROM transactions
+        WHERE id = ?
+    """)
+    query.addBindValue(transaction_id)
+    query.exec()
+    assert query.next()
+    assert query.value(0) == "OUT"
+    assert query.value(1) == 2
+    assert query.value(2) == "TRANSFER"
+    assert query.value(3) == "updated_notes"
+
 def test_get_basic_filter_data(connection, filter_schema):
     query = QSqlQuery(connection)
     query.exec("""
@@ -133,9 +164,9 @@ def test_get_basic_filter_data(connection, filter_schema):
     """)
     query.exec("""
         INSERT INTO transactions (
-            id, type, customer_id, created_at, payment_type
+            id, type, customer_id, created_at, payment_type, notes
         ) VALUES (
-            1, 'IN', 1, datetime('now'), 'CASH'
+            1, 'IN', 1, datetime('now'), 'CASH', 'some note'
         )
     """)
     query.exec("""
@@ -153,9 +184,9 @@ def test_get_basic_filter_data(connection, filter_schema):
     """)
     query.exec("""
         INSERT INTO transactions (
-            id, type, customer_id, created_at, payment_type
+            id, type, customer_id, created_at, payment_type, notes
         ) VALUES (
-            2, 'IN', 2, datetime('now'), 'CASH'
+            2, 'IN', 2, datetime('now'), 'CASH', 'some note'
         )
     """)
     query.exec("""

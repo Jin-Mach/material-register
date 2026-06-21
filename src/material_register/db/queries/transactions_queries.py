@@ -25,6 +25,24 @@ class TransactionsQueries:
         return ok, error, transaction_id
 
     @staticmethod
+    def update_transaction(db_connection: QSqlDatabase, transaction_id: int, transaction_type: str,
+                           customer_id: int, payment_type: str | None, notes: str) -> tuple[bool, str]:
+        query = QSqlQuery(db_connection)
+        query.prepare("UPDATE transactions SET "
+                      "type = ?, customer_id = ?, payment_type = ?, notes = ? "
+                      "WHERE id = ?")
+        query.addBindValue(transaction_type)
+        query.addBindValue(customer_id)
+        query.addBindValue(payment_type)
+        query.addBindValue(notes)
+        query.addBindValue(transaction_id)
+        ok = query.exec()
+        error = ""
+        if not ok:
+            error = query.lastError().text()
+        return ok, error
+
+    @staticmethod
     def delete_transaction(db_connection: QSqlDatabase, transaction_id: int) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
         query.prepare("DELETE FROM transactions WHERE id = ?")
@@ -55,6 +73,7 @@ class TransactionsQueries:
                 customer_document_number=query.value("customer_document_number"),
                 customer_address=query.value("customer_address"),
                 customer_name=query.value("customer_name"),
+                transaction_notes=query.value("transaction_notes"),
                 total=query.value("total"),
                 suffix=query.value("suffix"),
                 company_normalized=query.value("company_normalized"),

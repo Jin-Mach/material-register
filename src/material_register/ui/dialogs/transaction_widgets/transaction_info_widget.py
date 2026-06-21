@@ -109,11 +109,12 @@ class TransactionInfoWidget(QWidget):
         self.payment_info.setText(payment_text)
 
     def set_create_data(self, payment_text: str, customer: str, document_number: str,
-                        address: str) -> None:
+                        address: str, notes: str) -> None:
         self._apply_transfer_type(payment_text)
         self.customer_name.setText(customer)
         self.document_number.setText(document_number)
         self.address.setText(address)
+        self.notes.setPlainText(notes)
 
     def get_notes(self) -> str:
         return self.notes.toPlainText().strip()

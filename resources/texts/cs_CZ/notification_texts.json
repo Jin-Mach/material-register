@@ -12,6 +12,7 @@
   },
   "TRANSACTIONS": {
     "ADD_TRANSACTION": "Transakce přidána",
+    "UPDATE_TRANSACTION": "Transakce upravena",
     "DELETE_TRANSACTION": "Transakce smazána"
   }
 }
