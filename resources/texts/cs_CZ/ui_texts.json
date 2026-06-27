@@ -8,7 +8,9 @@
     "customersButtonText": "Zákazníci",
     "customersButtonTooltipText": "Zobrazí seznam zákazníků",
     "catalogButtonText": "Katalog",
-    "catalogButtonTooltipText": "Zobrazí katalog položek"
+    "catalogButtonTooltipText": "Zobrazí katalog položek",
+    "inventoryButtonText": "Sklad",
+    "inventoryButtonTooltipText": "Zobrazí stav zásob ve skladu"
   },
   "TransactionsWidget": {
     "modelInSuffix": "Kč",
@@ -41,6 +43,9 @@
   "CustomersView": {
     "updateCustomerActionText": "Upravit záznam",
     "activeCustomerActionText": "Aktivovat/Deaktivovat zákazníka"
+  },
+  "InventoryActionsWidget": {
+    "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
   "ErrorDialog": {
     "closeDialogButtonText": "Zavřít",

@@ -24,14 +24,17 @@ class SidePanel(QWidget):
         self.customers_button.setObjectName("customersButton")
         self.catalog_button = QPushButton()
         self.catalog_button.setObjectName("catalogButton")
+        self.inventory_button = QPushButton()
+        self.inventory_button.setObjectName("inventoryButton")
         main_layout.addWidget(self.transactions_button)
         main_layout.addWidget(self.customers_button)
         main_layout.addWidget(self.catalog_button)
+        main_layout.addWidget(self.inventory_button)
         main_layout.addStretch()
         return main_layout
 
     def _ui_setup(self) -> None:
-        widgets = [self.transactions_button, self.customers_button, self.catalog_button]
+        widgets = [self.transactions_button, self.customers_button, self.catalog_button, self.inventory_button]
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
