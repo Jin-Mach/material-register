@@ -96,6 +96,7 @@ class TransactionsController:
         if item_model is None:
             return
         TransactionsController._load_items_to_model(item_model, items_data)
+        self.items_dialog.transactions_items_widget.setup_total_value(item_model)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
