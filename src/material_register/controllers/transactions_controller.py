@@ -91,6 +91,7 @@ class TransactionsController:
             self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transaction_type)
         if transaction_type == TRANSFER_OUT:
             self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transaction_type)
+            self.active_commodity_unit = items_data[0].commodity_suffix
         item_model = self.items_dialog.transactions_items_widget.current_model
         if item_model is None:
             return
@@ -98,9 +99,11 @@ class TransactionsController:
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
-            ok, error = TransactionsQueries.update_transaction(self.db_connection, transaction_id, dialog_data["type"],
-                                                   dialog_data["customer_id"], dialog_data["payment_type"],
-                                                   dialog_data["notes"])
+            if not TransactionsController._check_transaction_data(dialog_data, item_model):
+                MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
+                return
+            ok, error = TransactionsService.update_transaction_with_items(self.db_connection, transaction_id,
+                                                                          dialog_data, item_model.get_data())
             if not ok:
                 TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.update_transaction")
                 return

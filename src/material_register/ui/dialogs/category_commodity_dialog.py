@@ -198,6 +198,12 @@ class CategoryCommodityDialog(QDialog):
         return unit, price
 
     def _is_valid(self) -> bool:
+        if self.transfer_type == TRANSFER_OUT:
+            return (
+                    self.category_combo_box.currentIndex() != -1
+                    and self.commodity_combo_box.currentIndex() != -1
+                    and self._is_valid_value(self.unit_spinbox.value())
+            )
         return (
                 self.category_combo_box.currentIndex() != -1
                 and self.commodity_combo_box.currentIndex() != -1
@@ -227,7 +233,12 @@ class CategoryCommodityDialog(QDialog):
         return self._normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE
 
     def _valid_values(self) -> bool:
-        return self._is_valid_value(self.unit_spinbox.value()) and self._is_valid_value(self.price_spinbox.value())
+        if self.transfer_type == TRANSFER_OUT:
+            return self._is_valid_value(self.unit_spinbox.value())
+        return (
+                self._is_valid_value(self.unit_spinbox.value())
+                and self._is_valid_value(self.price_spinbox.value())
+        )
 
     def get_category_commodity_data(self) -> dict[str, str | int | float | None] | None:
         commodity_id = self.commodity_combo_box.currentData()

@@ -29,6 +29,19 @@ class TransactionItemsQueries:
         return ok, error
 
     @staticmethod
+    def delete_transaction_items(db_connection: QSqlDatabase, transaction_id: int) -> tuple[bool, str]:
+        query = QSqlQuery(db_connection)
+        query.prepare("""
+                DELETE FROM transaction_items WHERE transaction_id = ?
+        """)
+        query.addBindValue(transaction_id)
+        ok = query.exec()
+        error = ""
+        if not ok:
+            error = query.lastError().text()
+        return ok, error
+
+    @staticmethod
     def get_transaction_items(db_connection: QSqlDatabase, transaction_id: int) -> list[TransactionItemDetail]:
         query = QSqlQuery(db_connection)
         query.prepare(SELECTED_TRANSACTION_DATA)

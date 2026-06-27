@@ -43,6 +43,34 @@ def test_insert_into_transaction_items(connection, schema, transaction_id, commo
     assert query.value(2) == unit_count
     assert query.value(3) == price_per_unit
 
+def test_delete_transaction_items(connection, schema) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transaction_items
+        (transaction_id, commodity_id, unit_count, price_per_unit)
+        VALUES
+            (1, 1, 10, 2.5),
+            (1, 2, 5, 3.0),
+            (2, 3, 1, 1.0)
+    """)
+    ok, error = TransactionItemsQueries.delete_transaction_items(connection, 1)
+    assert ok is True
+    assert error == ""
+    query.exec("""
+        SELECT COUNT(*)
+        FROM transaction_items
+        WHERE transaction_id = 1
+    """)
+    query.next()
+    assert query.value(0) == 0
+    query.exec("""
+        SELECT COUNT(*)
+        FROM transaction_items
+        WHERE transaction_id = 2
+    """)
+    query.next()
+    assert query.value(0) == 1
+
 def test_get_transaction_items(connection, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""

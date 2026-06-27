@@ -150,7 +150,9 @@
     "saveTransactionButtonText": "Uložit vývoz",
     "saveTransactionButtonTooltipText": "Uloží vývoz do databáze",
     "cancelTransactionButtonText": "Zrušit vývoz",
-    "cancelTransactionButtonTooltipText": "Zruší vývoz a zavře dialog"
+    "cancelTransactionButtonTooltipText": "Zruší vývoz a zavře dialog",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod na účet"
   },
   "TransactionInfoWidget": {
     "customerNameLabelText": "Zákazník:",

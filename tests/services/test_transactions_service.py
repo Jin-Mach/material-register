@@ -69,3 +69,55 @@ def test_insert_new_transaction(connection, transaction_schema, items_schema, di
     query.exec("SELECT COUNT(*) FROM transaction_items")
     query.next()
     assert query.value(0) == 1
+
+def test_update_transaction_with_items(connection, transaction_schema, items_schema, dialog_data) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transactions (
+            id, type, customer_id, payment_type, notes
+        )
+        VALUES (1, 'IN', 1, 'CASH', 'old notes')
+    """)
+    query.exec("""
+        INSERT INTO transaction_items (
+            transaction_id, commodity_id, unit_count, price_per_unit
+        )
+        VALUES (1, 1, 10, 5)
+    """)
+    updated_items_data = [
+        TransactionItem(
+            commodityId=2,
+            unitCount=999,
+            pricePerUnit=12.5
+        )
+    ]
+    ok, error = TransactionsService.update_transaction_with_items(connection, 1, dialog_data,
+                                                                  updated_items_data)
+    assert ok is True
+    assert error == ""
+    query.exec("""
+        SELECT type, customer_id, payment_type, notes
+        FROM transactions
+        WHERE id = 1
+    """)
+    assert query.next()
+    assert query.value(0) == "IN"
+    assert query.value(1) == 1
+    assert query.value(2) == "CASH"
+    assert query.value(3) == "some notes"
+    query.exec("""
+        SELECT COUNT(*)
+        FROM transaction_items
+        WHERE transaction_id = 1
+    """)
+    assert query.next()
+    assert query.value(0) == 1
+    query.exec("""
+        SELECT commodity_id, unit_count, price_per_unit
+        FROM transaction_items
+        WHERE transaction_id = 1
+    """)
+    assert query.next()
+    assert query.value(0) == 2
+    assert query.value(1) == 999
+    assert query.value(2) == 12.5
