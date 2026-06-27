@@ -140,3 +140,19 @@ SELECTED_TRANSACTION_DATA = """
             JOIN categories ON categories.id = commodities.category_id
             WHERE trans_items.transaction_id = ?
 """
+
+INVENTORY_QUERY = """
+            SELECT 
+                categories.name AS category_name,
+
+                commodities.name AS commodity_name,
+                commodities.unit AS commodity_unit,
+
+                inventory.stock AS inventory_stock 
+
+            FROM inventory inventory
+            JOIN commodities ON commodities.id = inventory.commodity_id 
+            JOIN categories ON commodities.category_id = categories.id
+
+            ORDER BY categories.name ASC
+"""
