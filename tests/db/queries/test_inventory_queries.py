@@ -3,6 +3,7 @@ import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.config.queries_constants import INVENTORY_QUERY
+from material_register.db.queries.inventory_queries import InventoryQueries
 
 
 @pytest.fixture
@@ -80,4 +81,51 @@ def test_get_inventory(connection, schema) -> None:
     assert rows == [
         ("category1", "commodity1", "kg", 11),
         ("category2", "commodity2", "pcs", 22)
+    ]
+
+def test_update_inventory_item(connection, schema) -> None:
+    insert_query = QSqlQuery(connection)
+    insert_query.exec("""
+            INSERT INTO categories (name, notes)
+            VALUES ('category1', 'notes1')
+        """)
+    insert_query.exec("""
+            INSERT INTO categories (name, notes)
+            VALUES ('category2', 'notes2')
+        """)
+    insert_query.exec("""
+            INSERT INTO commodities (name, category_id, unit, default_price, notes)
+            VALUES ('commodity1', 1, 'kg', 11, 'notes')
+        """)
+    insert_query.exec("""
+            INSERT INTO commodities (name, category_id, unit, default_price, notes)
+            VALUES ('commodity2', 2, 'pcs', 22, 'notes')
+        """)
+    insert_query.exec("""
+            INSERT INTO inventory (commodity_id, stock)
+            VALUES (1, 11)
+        """)
+    insert_query.exec("""
+            INSERT INTO inventory (commodity_id, stock)
+            VALUES (2, 22)
+        """)
+    ok, error = InventoryQueries.update_inventory_item(connection, 1, 11)
+    assert ok == True
+    assert error == ""
+    ok, error = InventoryQueries.update_inventory_item(connection, 2, -11)
+    assert ok == True
+    assert error == ""
+    select_query = QSqlQuery(connection)
+    select_query.exec(INVENTORY_QUERY)
+    rows = []
+    while select_query.next():
+        rows.append((
+            select_query.value(0),
+            select_query.value(1),
+            select_query.value(2),
+            select_query.value(3),
+        ))
+    assert rows == [
+        ("category1", "commodity1", "kg", 22),
+        ("category2", "commodity2", "pcs", 11)
     ]
