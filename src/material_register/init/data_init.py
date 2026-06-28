@@ -1,5 +1,6 @@
 from material_register.db.models.customers_completer_model import CustomersCompleterModel
 from material_register.db.models.customers_model import CustomersModel
+from material_register.db.models.inventory_model import InventoryModel
 from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
 from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
 from material_register.init.db_init import DbInit
@@ -12,6 +13,7 @@ class DataInit:
     customers_completer_model: CustomersCompleterModel | None = None
     transactions_load_model_in: TransactionsLoadModelIn | None = None
     transactions_load_model_out: TransactionsLoadModelOut | None = None
+    inventory_model: InventoryModel | None = None
 
     @classmethod
     def init_data(cls) -> tuple[bool, str]:
@@ -21,6 +23,7 @@ class DataInit:
             cls.customers_completer_model = CustomersCompleterModel(DbCache.active_customers)
             cls.transactions_load_model_in = TransactionsLoadModelIn(DbInit.db_connection)
             cls.transactions_load_model_out = TransactionsLoadModelOut(DbInit.db_connection)
+            cls.inventory_model = InventoryModel(DbInit.db_connection)
             return True, ""
         except Exception as e:
             ErrorHandler.handle_error(e, "db", "critical")

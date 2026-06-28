@@ -25,3 +25,11 @@ CUSTOMERS_HIDDEN_COLUMNS = ["id", "first_name", "last_name", "notes", "created_a
                       "first_name_normalized", "last_name_normalized", "address_normalized"]
 
 TRANSACTION_VIEW_HIDDEN_COLUMNS = ["commodityId"]
+
+INVENTORY_COLUMNS = ["category", "commodity", "inventory_stock"]
+INVENTORY_COLUMNS_MAP = {"category_name": 0,
+                         "commodity_name": 1,
+                         "commodity_unit": 2,
+                         "inventory_stock": 3}
+
+INVENTORY_VIEW_HIDDEN_COLUMNS = ["commodity_unit"]

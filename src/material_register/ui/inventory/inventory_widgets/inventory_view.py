@@ -1,6 +1,11 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QTableView
+from PySide6.QtWidgets import QTableView, QHeaderView
+
+from material_register.db.config.model_constants import INVENTORY_VIEW_HIDDEN_COLUMNS, INVENTORY_COLUMNS_MAP
+from material_register.db.models.inventory_model import InventoryModel
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.headers_texts import HeadersTexts
 
 if TYPE_CHECKING:
     from material_register.ui.inventory.inventory_widget import InventoryWidget
@@ -9,3 +14,31 @@ if TYPE_CHECKING:
 class InventoryView(QTableView):
     def __init__(self, inventory_widget: "InventoryWidget") -> None:
         super().__init__(inventory_widget)
+
+    def setup_ui(self) -> None:
+        model = self.model()
+        error = "TEXTS_LOAD_FAILED"
+        if not isinstance(model, InventoryModel):
+            return
+        if not HeadersTexts.set_inventory_headers_text(self, model):
+            ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = error
+        self._setup_columns()
+        self._setup_behavior()
+
+    def _setup_columns(self) -> None:
+        for column_name in INVENTORY_VIEW_HIDDEN_COLUMNS:
+            column_index = INVENTORY_COLUMNS_MAP.get(column_name)
+            if column_index is not None:
+                self.setColumnHidden(column_index, True)
+
+    def _setup_behavior(self) -> None:
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
+        self.setEditTriggers(QTableView.EditTrigger.NoEditTriggers)
+        self.setSelectionMode(QTableView.SelectionMode.SingleSelection)
+        self.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.setSortingEnabled(True)
+        self.setCornerButtonEnabled(False)
+        self.setAlternatingRowColors(True)

@@ -21,5 +21,11 @@
       "3": "Adresa",
       "4": "Celkem"
     }
+  },
+  "InventoryView": {
+    "0": "Kategorie",
+    "1": "Položka",
+    "2": "Jednotka",
+    "3": "Stav zásob"
   }
 }
