@@ -44,6 +44,9 @@
     "updateCustomerActionText": "Upravit záznam",
     "activeCustomerActionText": "Aktivovat/Deaktivovat zákazníka"
   },
+  "InventoryWidget": {
+    "countLabelText": "Zobrazeno:"
+  },
   "InventoryActionsWidget": {
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },

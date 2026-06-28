@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QTableView
 if TYPE_CHECKING:
     from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
     from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
-    from material_register.db.models.inventory_model import InventoryModel
+    from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
 
 
 # noinspection PyBroadException, PyUnresolvedReferences
@@ -54,7 +54,7 @@ class HeadersTexts:
             return False
 
     @classmethod
-    def set_inventory_headers_text(cls, view: QTableView, model: "InventoryModel") -> bool:
+    def set_inventory_headers_text(cls, view: QTableView, model: "InventoryProxyFilter") -> bool:
         try:
             headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {})
             if not headers_texts:

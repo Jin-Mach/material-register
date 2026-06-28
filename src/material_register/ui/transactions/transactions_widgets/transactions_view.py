@@ -46,6 +46,7 @@ class TransactionsView(QTableView):
         self.setEditTriggers(QTableView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QTableView.SelectionMode.SingleSelection)
         self.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.setSortingEnabled(True)
         self.setCornerButtonEnabled(False)
         self.setAlternatingRowColors(True)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)

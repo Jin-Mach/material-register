@@ -20,9 +20,9 @@ class InventoryModel(QSqlQueryModel):
         column = index.column()
         if role == Qt.ItemDataRole.DisplayRole:
             if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
-                stock = super().data(index, role)
+                stock = super().data(index, Qt.ItemDataRole.DisplayRole)
                 unit_index = self.index(index.row(), INVENTORY_COLUMNS_MAP["commodity_unit"])
-                unit = super().data(unit_index, role)
+                unit = super().data(unit_index, Qt.ItemDataRole.DisplayRole)
                 return f"{stock} {unit}"
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:

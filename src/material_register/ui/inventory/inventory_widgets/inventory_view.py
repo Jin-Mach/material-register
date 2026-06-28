@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QTableView, QHeaderView
 
 from material_register.db.config.model_constants import INVENTORY_VIEW_HIDDEN_COLUMNS, INVENTORY_COLUMNS_MAP
-from material_register.db.models.inventory_model import InventoryModel
+from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.headers_texts import HeadersTexts
 
@@ -18,7 +18,7 @@ class InventoryView(QTableView):
     def setup_ui(self) -> None:
         model = self.model()
         error = "TEXTS_LOAD_FAILED"
-        if not isinstance(model, InventoryModel):
+        if not isinstance(model, InventoryProxyFilter):
             return
         if not HeadersTexts.set_inventory_headers_text(self, model):
             ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}", "ui", "warning")
