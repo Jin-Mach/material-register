@@ -3,6 +3,6 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class TransactionItem:
-    commodityId: int | None = None
-    unitCount: int | float | None = None
-    pricePerUnit: int | float | None = None
+    commodity_id: int | None = None
+    unit_count: int | float | None = None
+    price_per_unit: int | float | None = None

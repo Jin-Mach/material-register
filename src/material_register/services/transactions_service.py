@@ -29,9 +29,9 @@ class TransactionsService:
                 ok, item_error = TransactionItemsQueries.insert_into_transaction_items(
                     db_connection,
                     transaction_id,
-                    item.commodityId,
-                    item.unitCount,
-                    item.pricePerUnit
+                    item.commodity_id,
+                    item.unit_count,
+                    item.price_per_unit
                 )
                 if not ok:
                     db_connection.rollback()
@@ -60,7 +60,7 @@ class TransactionsService:
                 return False, error
             for item in items_data:
                 ok, error = TransactionItemsQueries.insert_into_transaction_items(
-                    db_connection, transaction_id, item.commodityId, item.unitCount, item.pricePerUnit)
+                    db_connection, transaction_id, item.commodity_id, item.unit_count, item.price_per_unit)
                 if not ok:
                     db_connection.rollback()
                     return False, error

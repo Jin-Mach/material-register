@@ -52,9 +52,9 @@ def dialog_data() -> dict[str, str | int]:
 def items_data() -> list[TransactionItem]:
     return [
         TransactionItem(
-            commodityId=2,
-            unitCount=10,
-            pricePerUnit=12.5
+            commodity_id=2,
+            unit_count=10,
+            price_per_unit=12.5
         )
     ]
 
@@ -86,9 +86,9 @@ def test_update_transaction_with_items(connection, transaction_schema, items_sch
     """)
     updated_items_data = [
         TransactionItem(
-            commodityId=2,
-            unitCount=999,
-            pricePerUnit=12.5
+            commodity_id=2,
+            unit_count=999,
+            price_per_unit=12.5
         )
     ]
     ok, error = TransactionsService.update_transaction_with_items(connection, 1, dialog_data,

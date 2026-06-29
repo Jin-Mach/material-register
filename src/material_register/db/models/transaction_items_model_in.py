@@ -84,9 +84,9 @@ class TransactionItemsModelIn(QStandardItemModel):
         for row in range(self.rowCount()):
             item = self.item(row, 0).data(Qt.ItemDataRole.UserRole)
             transaction_items.append(TransactionItem(
-                commodityId=item["commodityId"],
-                unitCount=item["unitCount"],
-                pricePerUnit=item["pricePerUnit"]
+                commodity_id=item["commodityId"],
+                unit_count=item["unitCount"],
+                price_per_unit=item["pricePerUnit"]
             ))
         return transaction_items
 
