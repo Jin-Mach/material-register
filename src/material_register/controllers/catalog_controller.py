@@ -6,6 +6,7 @@ from material_register.core.app_context import AppContext
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.db.queries.commodities_queries import CommoditiesQueries
 from material_register.domain.commodities_dataclass import Commodity
+from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
@@ -24,6 +25,7 @@ class CatalogController:
     def __init__(self, catalog_widget: "CatalogWidget") -> None:
         self.catalog_widget = catalog_widget
         self.db_connection = DbInit.db_connection
+        self.inventory_model = DataInit.inventory_model
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("CATALOG", None)
 
     def add_category(self) -> None:
@@ -70,6 +72,7 @@ class CatalogController:
             parent_item.setExpanded(True)
             CatalogController._refresh_cache()
             self.setup_details_widget()
+            self.inventory_model.load_inventory_data()
             CatalogController._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
     def update_category(self) -> None:
@@ -94,6 +97,7 @@ class CatalogController:
             if item is not None:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
                 item.setExpanded(True)
+            self.inventory_model.load_inventory_data()
             CatalogController._notification_handler(self.notification_texts, "UPDATE_CATEGORY", "Category updated")
 
     def update_commodity(self, commodity: Commodity) -> None:
@@ -121,6 +125,7 @@ class CatalogController:
             if item is not None:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
                 item.setExpanded(True)
+            self.inventory_model.load_inventory_data()
             CatalogController._notification_handler(self.notification_texts, "UPDATE_COMMODITY", "Item updated")
 
     def reload_catalog_tree(self) -> None:

@@ -24,8 +24,8 @@ class InventoryController:
             MessageBoxes.show_error(self.inventory_widget, "NO_RESULTS", "WARNING")
             proxy_model.set_filtered_text("")
             return
-        self._update_counts()
+        self.update_counts()
 
-    def _update_counts(self) -> None:
+    def update_counts(self) -> None:
         self.inventory_widget.set_count_text(self.inventory_widget.active_proxy.rowCount(),
                                              self.inventory_model.rowCount())

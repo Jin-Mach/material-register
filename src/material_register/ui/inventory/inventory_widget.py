@@ -61,6 +61,7 @@ class InventoryWidget(QWidget):
         self.inventory_model.load_inventory_data()
         self.inventory_view.setModel(self.inventory_proxy_filter)
         self.active_proxy = self.inventory_proxy_filter
+        self.inventory_controller.update_counts()
 
     def _on_text_changed(self) -> None:
         self.filter_timer.start()

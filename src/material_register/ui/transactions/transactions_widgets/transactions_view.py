@@ -43,6 +43,7 @@ class TransactionsView(QTableView):
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
         self.setHorizontalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
+        self.verticalHeader().hide()
         self.setEditTriggers(QTableView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QTableView.SelectionMode.SingleSelection)
         self.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
