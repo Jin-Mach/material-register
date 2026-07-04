@@ -10,7 +10,40 @@ def connection() -> QSqlDatabase:
     conn = QSqlDatabase.addDatabase("QSQLITE")
     conn.setDatabaseName(":memory:")
     conn.open()
+    query = QSqlQuery(conn)
+    query.exec("PRAGMA foreign_keys = ON")
     return conn
+
+
+@pytest.fixture
+def category_schema(connection) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        CREATE TABLE categories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL
+        )
+    """)
+    query.exec("""
+        INSERT INTO categories (id, name)
+        VALUES (1, 'test')
+    """)
+
+@pytest.fixture
+def commodity_schema(connection) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        CREATE TABLE commodities (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            category_id INTEGER,
+            unit TEXT
+        )
+    """)
+    query.exec("""
+        INSERT INTO commodities (id, name, category_id, unit)
+        VALUES (2, 'Test commodity', 1, 'kg')
+    """)
 
 @pytest.fixture
 def transaction_schema(connection) -> None:
@@ -35,7 +68,10 @@ def items_schema(connection) -> None:
             transaction_id INTEGER NOT NULL,
             commodity_id INTEGER NOT NULL,
             unit_count REAL NOT NULL,
-            price_per_unit REAL NOT NULL
+            price_per_unit REAL NOT NULL,
+            FOREIGN KEY(transaction_id)
+                REFERENCES transactions(id)
+                ON DELETE CASCADE
         )
     """)
 
@@ -152,3 +188,45 @@ def test_update_transaction_with_items(connection, transaction_schema, items_sch
     assert query.value(0) == 2
     assert query.value(1) == 999
     assert query.value(2) == 12.5
+
+@pytest.mark.parametrize(
+    "transfer_type, initial_stock, expected_stock",
+    [
+        ("IN", 10, 0),
+        ("OUT", -10, 0),
+    ],
+)
+def test_delete_transaction(connection, category_schema, commodity_schema, transaction_schema, items_schema, inventory_schema,
+                            transfer_type, initial_stock, expected_stock) -> None:
+    query = QSqlQuery(connection)
+    query.exec(f"""
+        UPDATE inventory
+        SET stock = {initial_stock}
+        WHERE commodity_id = 2
+    """)
+    assert query.lastError().text() == ""
+    query.exec(f"""
+        INSERT INTO transactions (
+            id, type, customer_id, payment_type, notes
+        )
+        VALUES (1, '{transfer_type}', 1, 'CASH', 'notes')
+    """)
+    assert query.lastError().text() == ""
+    query.exec("""
+        INSERT INTO transaction_items (
+            transaction_id, commodity_id, unit_count, price_per_unit
+        )
+        VALUES (1, 2, 10, 12.5)
+    """)
+    ok, error = TransactionsService.delete_transaction(connection, 1, transfer_type)
+    assert ok is True
+    assert error == ""
+    query.exec("SELECT COUNT(*) FROM transactions")
+    query.next()
+    assert query.value(0) == 0
+    query.exec("SELECT COUNT(*) FROM transaction_items")
+    query.next()
+    assert query.value(0) == 0
+    query.exec("SELECT stock FROM inventory WHERE commodity_id = 2")
+    assert query.next()
+    assert query.value(0) == expected_stock

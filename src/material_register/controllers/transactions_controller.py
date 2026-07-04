@@ -127,11 +127,13 @@ class TransactionsController:
         question = MessageBoxes.show_question(self.transactions_widget, "DELETE_TRANSACTION", transaction.customer_name)
         if question:
             transaction_id = transaction.transaction_id
-            ok, error = TransactionsQueries.delete_transaction(self.db_connection, transaction_id)
+            ok, error = TransactionsService.delete_transaction(self.db_connection, transaction_id,
+                                                               transaction.transaction_type)
             if not ok:
                 TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.delete_transaction")
                 return
             model.removeRow(model_index.row())
+            self.inventory_model.load_inventory_data()
             self._update_counts()
             TransactionsController._notification_handler(self.notification_text, "DELETE_TRANSACTION",
                                                          "Transaction deleted")

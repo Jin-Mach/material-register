@@ -82,6 +82,27 @@ class TransactionsService:
             return False, str(e)
 
     @staticmethod
+    def delete_transaction(db_connection: QSqlDatabase, transaction_id: int, transfer_type: str) -> tuple[bool, str]:
+        try:
+            db_connection.transaction()
+            items = TransactionItemsQueries.get_transaction_items(db_connection, transaction_id)
+            for item in items:
+                amount = TransactionsService._get_amount(transfer_type, item.unit_count, negate=True)
+                ok, error = InventoryQueries.update_inventory_item(db_connection, item.commodity_id, amount)
+                if not ok:
+                    db_connection.rollback()
+                    return False, error
+            ok, error = TransactionsQueries.delete_transaction(db_connection, transaction_id)
+            if not ok:
+                db_connection.rollback()
+                return False, error
+            db_connection.commit()
+            return True, ""
+        except Exception as e:
+            db_connection.rollback()
+            return False, str(e)
+
+    @staticmethod
     def _get_amount(transfer_type: str, amount: int| float, negate: bool = False) -> int | float:
         operator = 1
         if transfer_type == TRANSFER_OUT:
