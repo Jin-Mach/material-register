@@ -43,6 +43,7 @@ class TransactionsController:
         self.transactions_model_in = transactions_model_in
         self.transactions_model_out = transactions_model_out
         self.customers_model = DataInit.customers_model
+        self.inventory_model = DataInit.inventory_model
         self.notification_text = TextsProvider.NOTIFICATION_TEXTS.get("TRANSACTIONS", None)
         self.active_commodity_unit = None
         self.items_dialog = None
@@ -71,6 +72,7 @@ class TransactionsController:
                 TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.create_transaction")
                 return
             self._refresh_models_data()
+            self.inventory_model.load_inventory_data()
             self.items_dialog = None
             TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
                                                          "Transaction added")

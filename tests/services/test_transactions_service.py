@@ -40,6 +40,20 @@ def items_schema(connection) -> None:
     """)
 
 @pytest.fixture
+def inventory_schema(connection) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        CREATE TABLE inventory (
+            commodity_id INTEGER PRIMARY KEY,
+            stock REAL NOT NULL
+        )
+    """)
+    query.exec("""
+        INSERT INTO inventory (commodity_id, stock)
+        VALUES (2, 0)
+    """)
+
+@pytest.fixture
 def dialog_data() -> dict[str, str | int]:
     return {
         "type": "IN",
@@ -58,7 +72,20 @@ def items_data() -> list[TransactionItem]:
         )
     ]
 
-def test_insert_new_transaction(connection, transaction_schema, items_schema, dialog_data, items_data) -> None:
+@pytest.mark.parametrize("transfer_type, insert_stock, expected_stock",
+                         [("IN", 10, 10),
+                          ("OUT", 10, -10)]
+                         )
+def test_insert_new_transaction(connection, transaction_schema, items_schema, inventory_schema, dialog_data, items_data,
+                                transfer_type, insert_stock, expected_stock) -> None:
+    dialog_data["type"] = transfer_type
+    items_data = [
+        TransactionItem(
+            commodity_id=2,
+            unit_count=insert_stock,
+            price_per_unit=12.5
+        )
+    ]
     ok, error = TransactionsService.insert_new_transaction(connection, dialog_data, items_data)
     assert ok == True
     assert error == ""
@@ -69,6 +96,10 @@ def test_insert_new_transaction(connection, transaction_schema, items_schema, di
     query.exec("SELECT COUNT(*) FROM transaction_items")
     query.next()
     assert query.value(0) == 1
+    query.exec("SELECT stock FROM inventory WHERE commodity_id = 2")
+    assert query.next()
+    stock = query.value(0)
+    assert stock == expected_stock
 
 def test_update_transaction_with_items(connection, transaction_schema, items_schema, dialog_data) -> None:
     query = QSqlQuery(connection)

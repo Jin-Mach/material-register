@@ -1,5 +1,7 @@
 from PySide6.QtSql import QSqlDatabase
 
+from material_register.config.app_constants import TRANSFER_OUT, TRANSFER_IN
+from material_register.db.queries.inventory_queries import InventoryQueries
 from material_register.db.queries.transaction_items_queries import TransactionItemsQueries
 from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.domain.transaction_item_dataclass import TransactionItem
@@ -36,6 +38,15 @@ class TransactionsService:
                 if not ok:
                     db_connection.rollback()
                     return False, item_error
+                transfer_type = dialog_data["type"]
+                if transfer_type not in (TRANSFER_IN, TRANSFER_OUT):
+                    db_connection.rollback()
+                    return False, "Invalid transfer type"
+                amount = TransactionsService._get_amount(transfer_type, item.unit_count)
+                ok, inventory_error = InventoryQueries.update_inventory_item(db_connection, item.commodity_id, amount)
+                if not ok:
+                    db_connection.rollback()
+                    return False, inventory_error
             db_connection.commit()
             return True, ""
         except Exception as e:
@@ -69,3 +80,12 @@ class TransactionsService:
         except Exception as e:
             db_connection.rollback()
             return False, str(e)
+
+    @staticmethod
+    def _get_amount(transfer_type: str, amount: int| float, negate: bool = False) -> int | float:
+        operator = 1
+        if transfer_type == TRANSFER_OUT:
+            operator = -1
+        if negate:
+            operator = -operator
+        return operator * amount
