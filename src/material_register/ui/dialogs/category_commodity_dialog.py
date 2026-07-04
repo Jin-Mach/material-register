@@ -185,12 +185,9 @@ class CategoryCommodityDialog(QDialog):
             else:
                 spinbox.setStyleSheet(INVALID_INPUT_STYLE)
 
-    def _normalize_value(self, value: float) -> float:
-        return round(value, self.unit_spinbox.decimals())
-
     def _normalize_unit_price_values(self) -> tuple[int | float, int | float]:
-        unit = self._normalize_value(self.unit_spinbox.value())
-        price = self._normalize_value(self.price_spinbox.value())
+        unit = CategoryCommodityDialog._normalize_value(self.unit_spinbox.value())
+        price = CategoryCommodityDialog._normalize_value(self.price_spinbox.value())
         if self.commodity_suffix in INTEGER_SUFFIXES:
             unit = int(unit)
         if self.transfer_type == TRANSFER_OUT:
@@ -228,6 +225,10 @@ class CategoryCommodityDialog(QDialog):
         if disabled is not None:
             for widget in disabled:
                 widget.setEnabled(False)
+
+    @staticmethod
+    def _normalize_value(value: float) -> float:
+        return float(f"{value:.1f}")
 
     def _is_valid_value(self, value: float) -> bool:
         return self._normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE

@@ -206,10 +206,14 @@ class CommodityDialog(QDialog):
             name=self.name_input.text().strip(),
             category_id=self.category_id,
             unit=self.unit_input.currentText(),
-            default_price=self.price_input.value(),
+            default_price=CommodityDialog._normalize_value(self.price_input.value()),
             notes=self.notes_input.toPlainText().strip(),
             active=int(self.active_checkbox.isChecked())
         )
+
+    @staticmethod
+    def _normalize_value(value: float) -> float:
+        return float(f"{value:.1f}")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
