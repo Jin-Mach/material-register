@@ -1,6 +1,6 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.queries_constants import TRANSACTIONS_BASIC_FILTER_QUERY
+from material_register.db.config.queries_constants import TRANSACTIONS_BASIC_FILTER_QUERY, TRANSACTION_TOTAL_PRICE
 from material_register.domain.transaction_dataclass import Transaction
 
 
@@ -54,7 +54,7 @@ class TransactionsQueries:
         return ok, error
 
     @staticmethod
-    def get_basic_filter_data(db_connection: QSqlDatabase, transaction_type: str, from_date: str, end_date: str):
+    def get_basic_filter_data(db_connection: QSqlDatabase, transaction_type: str, from_date: str, end_date: str) -> list[Transaction]:
         query = QSqlQuery(db_connection)
         query.prepare(TRANSACTIONS_BASIC_FILTER_QUERY)
         query.addBindValue(transaction_type)
@@ -82,3 +82,18 @@ class TransactionsQueries:
                 address_normalized=query.value("address_normalized"),
             ))
         return results
+
+    @staticmethod
+    def get_total_price(db_connection: QSqlDatabase, from_date: str, end_date: str) -> float:
+        query = QSqlQuery(db_connection)
+        query.prepare(TRANSACTION_TOTAL_PRICE)
+        query.addBindValue(from_date)
+        query.addBindValue(end_date)
+        if not query.exec():
+            return 0.0
+        if not query.next():
+            return 0.0
+        total = query.value(0)
+        if not total:
+            return 0.0
+        return float(total)

@@ -6,6 +6,7 @@ from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 
 from material_register.db.config.model_constants import INVENTORY_COLUMNS_MAP
 from material_register.db.config.queries_constants import INVENTORY_QUERY
+from material_register.ui.helpers.formating_utils import format_number_to_locale
 from material_register.ui.helpers.styles import INVENTORY_STOCK_STYLE
 from material_register.ui.setup.ui_icons import UiIcons
 
@@ -24,7 +25,7 @@ class InventoryModel(QSqlQueryModel):
                 stock = super().data(index, Qt.ItemDataRole.DisplayRole)
                 unit_index = self.index(index.row(), INVENTORY_COLUMNS_MAP["commodity_unit"])
                 unit = super().data(unit_index, Qt.ItemDataRole.DisplayRole)
-                return f"{stock} {unit}"
+                return f"{format_number_to_locale(stock)} {unit}"
             if column == INVENTORY_COLUMNS_MAP["commodity_active"]:
                 return ""
         if role == Qt.ItemDataRole.TextAlignmentRole:

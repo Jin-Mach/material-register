@@ -14,7 +14,8 @@
   },
   "TransactionsWidget": {
     "modelInSuffix": "Kč",
-    "countLabelText": "Zobrazeno:"
+    "itemsCountLabelText": "Zobrazeno:",
+    "priceSuffix": "Kč"
   },
   "TransactionsView": {
     "updateTransactionActionText": "Upravit transakci",

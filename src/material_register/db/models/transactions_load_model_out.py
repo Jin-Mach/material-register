@@ -7,6 +7,7 @@ from PySide6.QtSql import QSqlDatabase
 from material_register.db.config.model_constants import LOAD_MODEL_IN_COLUMNS
 from material_register.db.queries.transactions_load_queries import TransactionsLoadQueries
 from material_register.domain.transaction_dataclass import Transaction
+from material_register.ui.helpers.formating_utils import format_number_to_locale
 
 
 class TransactionsLoadModelOut(QAbstractTableModel):
@@ -27,7 +28,7 @@ class TransactionsLoadModelOut(QAbstractTableModel):
             if column == "transaction_created_at":
                 return TransactionsLoadModelOut._format_datetime(transaction.transaction_created_at)
             if column == "total":
-                return f"{transaction.total} {transaction.suffix}"
+                return f"{format_number_to_locale(transaction.total)} {transaction.suffix}"
             return getattr(transaction, column, None)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == "total":

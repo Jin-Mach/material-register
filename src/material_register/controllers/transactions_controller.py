@@ -140,6 +140,7 @@ class TransactionsController:
             model.removeRow(model_index.row())
             self.inventory_model.load_inventory_data()
             self._update_counts()
+            self.update_total_price()
             TransactionsController._notification_handler(self.notification_text, "DELETE_TRANSACTION",
                                                          "Transaction deleted")
 
@@ -220,6 +221,7 @@ class TransactionsController:
         if not filtered_data:
             model.load_transactions_data()
         self._update_counts()
+        self.update_total_price()
 
     def set_proxy_transactions_filter(self, search_text: str) -> None:
         text = normalize_text(search_text)
@@ -245,6 +247,7 @@ class TransactionsController:
         self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
         self.transactions_widget.transactions_proxy_filter_out.set_filtered_text("")
         self._update_counts()
+        self.update_total_price()
 
     def _refresh_models_data(self) -> None:
         tab_context = self._get_tab_context()
@@ -254,9 +257,20 @@ class TransactionsController:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
         from_date, to_date = get_filter_range(key)
         for model, transfer_type in self._models_map.values():
-            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection,transaction_type, from_date, to_date)
+            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type, from_date, to_date)
             model.set_basic_filter(filtered_data)
         self._update_counts()
+        self.update_total_price()
+
+    def update_total_price(self) -> None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        if current_tab == 0:
+            key = self.transactions_widget.transactions_actions_widget.get_filter_key()
+            from_date, to_date = get_filter_range(key)
+            total = TransactionsQueries.get_total_price(self.db_connection, from_date, to_date)
+            self.transactions_widget.set_price_text(total)
+        self.transactions_widget.price_count_label.setVisible(current_tab == 0)
+        self.transactions_widget.price_count_value.setVisible(current_tab == 0)
 
     def _update_counts(self) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()

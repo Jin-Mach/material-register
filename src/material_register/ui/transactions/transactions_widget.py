@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QShowEvent
+from PySide6.QtGui import QShowEvent, QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
 
 from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
@@ -10,6 +10,8 @@ from material_register.db.models.transactions_proxy_filter import TransactionsPr
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.formating_utils import format_number_to_locale
+from material_register.ui.helpers.styles import PRICE_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.transactions.transactions_widgets.transactions_tab_widget import TransactionsTabWidget
 from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import TransactionsActionsWidget
@@ -38,10 +40,15 @@ class TransactionsWidget(QWidget):
         self.transactions_actions_widget = TransactionsActionsWidget(self)
         self.transactions_tab_widget = TransactionsTabWidget(self)
         count_layout = QHBoxLayout()
-        self.count_label = QLabel()
-        self.count_label.setObjectName("countLabel")
-        count_layout.addWidget(self.count_label)
+        self.items_count_label = QLabel()
+        self.items_count_label.setObjectName("itemsCountLabel")
+        self.price_count_label = QLabel()
+        self.price_count_label.setObjectName("priceCountLabel")
+        self.price_count_value = QLabel()
+        count_layout.addWidget(self.items_count_label)
         count_layout.addStretch()
+        count_layout.addWidget(self.price_count_label)
+        count_layout.addWidget(self.price_count_value)
         main_layout.addWidget(self.transactions_actions_widget)
         main_layout.addWidget(self.transactions_tab_widget)
         main_layout.addLayout(count_layout)
@@ -49,8 +56,10 @@ class TransactionsWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_style()
         self._setup_model()
         self.set_count_text(self.transactions_load_model_in.rowCount(), self.transactions_load_model_in.total_count)
+        self.transactions_controller.update_total_price()
 
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
@@ -59,7 +68,14 @@ class TransactionsWidget(QWidget):
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.model_in_suffix = ui_texts.get("modelInSuffix", "")
-        self.count_text = ui_texts.get("countLabelText", "Count:")
+        self.items_count_text = ui_texts.get("itemsCountLabelText", "Count:")
+        self.price_sufix = ui_texts.get("priceSuffix", "")
+
+    def _setup_style(self) -> None:
+        font = QFont()
+        font.setBold(True)
+        self.price_count_value.setStyleSheet(PRICE_STYLE)
+        self.price_count_value.setFont(font)
 
     def _setup_model(self) -> None:
         self._setup_in_model()
@@ -118,7 +134,12 @@ class TransactionsWidget(QWidget):
         self.filter_timer.timeout.connect(self._apply_filter)
 
     def set_count_text(self, filtered: int, total: int) -> None:
-        self.count_label.setText(f"{self.count_text} {filtered}/{total}")
+        self.items_count_label.setText(f"{self.items_count_text} {filtered}/{total}")
+
+    def set_price_text(self, total_price: float) -> None:
+        filter_text = self.transactions_actions_widget.base_filter_combobox.currentText()
+        self.price_count_label.setText(f"{filter_text}:")
+        self.price_count_value.setText(f"{format_number_to_locale(total_price)} {self.price_sufix}")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

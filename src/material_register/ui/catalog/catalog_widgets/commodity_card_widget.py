@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QFormLayout, QLa
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.formating_utils import format_number_to_locale
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -67,7 +68,7 @@ class CommodityCardWidget(QTabWidget):
     def set_commodity_details(self, commodity: Commodity) -> None:
         self.setTabText(0, commodity.name)
         self.unit_value.setText(commodity.unit)
-        self.default_price_value.setText(f"{commodity.default_price:.1f}")
+        self.default_price_value.setText(format_number_to_locale(commodity.default_price))
         self.active_value.setChecked(bool(commodity.active))
         self.notes_value.setPlainText(commodity.notes)
 

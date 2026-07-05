@@ -211,3 +211,32 @@ def test_get_basic_filter_data(connection, filter_schema):
     row = result[0]
     assert row.customer_id in (1, 2)
     assert row.transaction_type == "IN"
+
+def test_get_total_price(connection, filter_schema) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transactions (
+            id, type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            1, 'IN', 1, '2025-01-01 10:00:00', 'CASH', 't1'
+        )
+    """)
+    query.exec("""
+        INSERT INTO transactions (
+            id, type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            2, 'IN', 2, '2025-01-02 10:00:00', 'CASH', 't2'
+        )
+    """)
+    query.exec("""
+        INSERT INTO transaction_items (
+            transaction_id, commodity_id,
+            unit_count, price_per_unit
+        ) VALUES
+        (1, 1, 2, 10),   -- 20
+        (2, 1, 3, 5)     -- 15
+    """)
+    total = TransactionsQueries.get_total_price(
+        connection, "2025-01-01 00:00:00", "2025-12-31 23:59:59")
+    assert isinstance(total, float)
+    assert total == 35.0

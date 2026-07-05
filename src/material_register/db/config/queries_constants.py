@@ -141,6 +141,16 @@ SELECTED_TRANSACTION_DATA = """
             WHERE trans_items.transaction_id = ?
 """
 
+TRANSACTION_TOTAL_PRICE = """
+            SELECT
+                SUM(transaction_items.unit_count * transaction_items.price_per_unit) AS total_price
+            FROM transactions
+            JOIN transaction_items
+                ON transaction_items.transaction_id = transactions.id
+            WHERE transactions.type = 'IN'
+              AND transactions.created_at BETWEEN ? AND ?
+"""
+
 INVENTORY_QUERY = """
             SELECT 
                 categories.name AS category_name,

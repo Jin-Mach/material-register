@@ -5,6 +5,7 @@ from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from material_register.db.config.model_constants import ITEM_MODEL_OUT_COLUMNS, ITEM_MODEL_OUT_COLUMNS_MAP
 from material_register.domain.transaction_item_dataclass import TransactionItem
+from material_register.ui.helpers.formating_utils import format_number_to_locale
 
 
 class TransactionItemsModelOut(QStandardItemModel):
@@ -23,7 +24,7 @@ class TransactionItemsModelOut(QStandardItemModel):
                 commodity_suffix = self.data(index, Qt.ItemDataRole.UserRole + 1)
                 if value is None:
                     return ""
-                return f"{value} {commodity_suffix}"
+                return f"{format_number_to_locale(value)} {commodity_suffix}"
             return super().data(index, role)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
@@ -59,7 +60,7 @@ class TransactionItemsModelOut(QStandardItemModel):
 
     def return_total(self) -> str:
         total_count, unit_suffix = self._calculate_total_unit()
-        return f"{total_count} {unit_suffix}"
+        return f"{format_number_to_locale(total_count)} {unit_suffix}"
 
     def get_transaction_item_data(self, index: QModelIndex) -> dict[str, str | int]:
         return self.item(index.row(), 0).data(Qt.ItemDataRole.UserRole)

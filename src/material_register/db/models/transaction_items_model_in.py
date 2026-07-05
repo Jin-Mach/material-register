@@ -6,6 +6,7 @@ from PySide6.QtGui import QStandardItem, QStandardItemModel
 from material_register.db.config.model_constants import (ITEM_MODEL_IN_COLUMNS, ITEM_MODEL_IN_LIST_COLUMNS,
                                                          ITEM_MODEL_IN_COLUMNS_MAP)
 from material_register.domain.transaction_item_dataclass import TransactionItem
+from material_register.ui.helpers.formating_utils import format_number_to_locale
 
 
 class TransactionItemsModelIn(QStandardItemModel):
@@ -24,13 +25,13 @@ class TransactionItemsModelIn(QStandardItemModel):
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 if value is None:
                     return ""
-                return f"{value} {self.price_suffix}"
+                return f"{format_number_to_locale(value)} {self.price_suffix}"
             if column == ITEM_MODEL_IN_COLUMNS.index("unitCount"):
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 commodity_suffix = self.data(index, Qt.ItemDataRole.UserRole + 1)
                 if value is None:
                     return ""
-                return f"{value} {commodity_suffix}"
+                return f"{format_number_to_locale(value)} {commodity_suffix}"
             return super().data(index, role)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == total_column:
@@ -73,7 +74,7 @@ class TransactionItemsModelIn(QStandardItemModel):
         self.removeRow(index.row())
 
     def return_total(self) -> str:
-        total_count = self._calculate_total_price()
+        total_count = format_number_to_locale(self._calculate_total_price())
         return f"{total_count} {self.price_suffix}"
 
     def get_transaction_item_data(self, index: QModelIndex) -> dict[str, str | int | float]:
@@ -95,7 +96,7 @@ class TransactionItemsModelIn(QStandardItemModel):
         for row in range(self.rowCount()):
             item_data = self.item(row, 0).data(Qt.ItemDataRole.UserRole)
             total_count += item_data["unitCount"] * item_data["pricePerUnit"]
-        return round(total_count, 2)
+        return round(total_count, 1)
 
     def _setup_model(self) -> None:
         self.setColumnCount(len(ITEM_MODEL_IN_COLUMNS))
