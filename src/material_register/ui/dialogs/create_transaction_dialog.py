@@ -5,7 +5,7 @@ from PySide6.QtGui import QShowEvent, Qt, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QDialogButtonBox, \
     QSizePolicy, QHBoxLayout, QCompleter, QWidget
 
-from material_register.config.app_constants import PAYMENT_VALUES, TRANSFER_OUT, TRANSFER_IN
+from material_register.config.ui_constants import PAYMENT_VALUES, TRANSFER_OUT, TRANSFER_IN
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_texts import UiTexts

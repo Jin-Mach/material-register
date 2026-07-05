@@ -1,10 +1,11 @@
+from material_register.db.config.db_constatns import DATABASE_NAME
 from material_register.db.create_connection import create_connection
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.error_handler import ErrorHandler
 
 
 class DbInit:
-    DATABASE_NAME = "material_register.db"
+    DATABASE_NAME = f"{DATABASE_NAME}.db"
     db_connection = None
 
     @classmethod

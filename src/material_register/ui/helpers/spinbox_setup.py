@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QDoubleSpinBox
 
-from material_register.config.app_constants import INTEGER_SUFFIXES
+from material_register.config.ui_constants import INTEGER_SUFFIXES
 
 
 def set_suffix_mode(spinbox: QDoubleSpinBox, suffix: str) -> None:

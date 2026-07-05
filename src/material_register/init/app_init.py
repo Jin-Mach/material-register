@@ -1,6 +1,6 @@
 from PySide6.QtCore import QLocale
 
-from material_register.config.logging_congig import LOG_STRUCTURE
+from material_register.config.logging_config import LOG_STRUCTURE
 from material_register.providers.logger_provider import LoggerProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.providers.language_provider import LanguageProvider

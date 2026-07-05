@@ -5,9 +5,9 @@ from PySide6.QtGui import QShowEvent, QFontMetrics
 from PySide6.QtWidgets import (QWidget, QDialog, QVBoxLayout, QFormLayout, QLabel, QComboBox, QDoubleSpinBox,
                                QDialogButtonBox)
 
-from material_register.config.app_constants import (TRANSFER_OUT, CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
-                                                    CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
-                                                    CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE, INTEGER_SUFFIXES)
+from material_register.config.ui_constants import (TRANSFER_OUT, CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
+                                                   CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
+                                                   CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE, INTEGER_SUFFIXES)
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler

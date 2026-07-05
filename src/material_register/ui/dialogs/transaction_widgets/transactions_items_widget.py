@@ -4,7 +4,7 @@ from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
 
-from material_register.config.app_constants import TRANSFER_OUT, TRANSFER_IN
+from material_register.config.ui_constants import TRANSFER_OUT, TRANSFER_IN
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
 from material_register.services.error_handler import ErrorHandler

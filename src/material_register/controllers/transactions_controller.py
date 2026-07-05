@@ -4,7 +4,7 @@ from PySide6.QtSql import QSqlDatabase
 from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QDialog
 
-from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT, PAYMENT_VALUES
+from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT, PAYMENT_VALUES
 from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
 from material_register.db.queries.category_queries import CategoryQueries

@@ -6,7 +6,7 @@ from PySide6.QtGui import QRegularExpressionValidator, QShowEvent
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QTextEdit, QHBoxLayout, \
     QDialogButtonBox, QCheckBox
 
-from material_register.config.app_constants import ADD_MODE, UPDATE_MODE, CUSTOMERS_DIALOG_NOTES_LENGTH, \
+from material_register.config.ui_constants import ADD_MODE, UPDATE_MODE, CUSTOMERS_DIALOG_NOTES_LENGTH, \
     CUSTOMERS_DIALOG_COMPANY_INDEX, CUSTOMERS_DIALOG_INDIVIDUAL_INDEX
 from material_register.domain.customers_dataclass import Customer
 from material_register.services.error_handler import ErrorHandler

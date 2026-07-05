@@ -4,7 +4,7 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
 
-from material_register.config.app_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
 from material_register.db.models.transactions_proxy_filter import TransactionsProxyFilter
 from material_register.init.data_init import DataInit
