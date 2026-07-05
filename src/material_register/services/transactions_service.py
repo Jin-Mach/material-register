@@ -10,13 +10,13 @@ from material_register.domain.transaction_item_dataclass import TransactionItem
 class TransactionsService:
 
     @staticmethod
-    def insert_new_transaction(db_connection: QSqlDatabase, dialog_data: dict[str, str | int],
-                               items_data: list[TransactionItem]) -> tuple[bool, str]:
+    def create_transaction(db_connection: QSqlDatabase, dialog_data: dict[str, str | int],
+                           items_data: list[TransactionItem]) -> tuple[bool, str]:
         try:
             db_connection.transaction()
             transaction_ok, transaction_error, transaction_id = TransactionsQueries.insert_into_transactions(
                 db_connection,
-                dialog_data["type"],
+                dialog_data["transaction_type"],
                 dialog_data["customer_id"],
                 dialog_data["payment_type"],
                 dialog_data["notes"]
@@ -38,7 +38,7 @@ class TransactionsService:
                 if not ok:
                     db_connection.rollback()
                     return False, item_error
-                transfer_type = dialog_data["type"]
+                transfer_type = dialog_data["transaction_type"]
                 if transfer_type not in (TRANSFER_IN, TRANSFER_OUT):
                     db_connection.rollback()
                     return False, "Invalid transfer type"
@@ -54,32 +54,41 @@ class TransactionsService:
             return False, str(e)
 
     @staticmethod
-    def update_transaction_with_items(db_connection: QSqlDatabase, transaction_id: int,
-                                      dialog_data: dict[str, str | int],
-                                      items_data: list[TransactionItem]) -> tuple[bool, str]:
+    def update_transaction(db_connection: QSqlDatabase, transaction_id: int,
+                           dialog_data: dict[str, str | int],
+                           new_items_data: list[TransactionItem],
+                           old_items_data: list[TransactionItem]) -> tuple[bool, str, bool]:
         try:
             db_connection.transaction()
+            new_stock_dict = TransactionsService._get_stock_dict(new_items_data)
+            old_stock_dict = TransactionsService._get_stock_dict(old_items_data)
+            final_stock_dict = TransactionsService._get_final_stock_dict(old_stock_dict, new_stock_dict,
+                                                                         dialog_data["transaction_type"])
+            if not final_stock_dict:
+                return True, "", False
             ok, error = TransactionsQueries.update_transaction(
-                db_connection, transaction_id, dialog_data["type"], dialog_data["customer_id"],
+                db_connection, transaction_id, dialog_data["transaction_type"], dialog_data["customer_id"],
                 dialog_data["payment_type"], dialog_data["notes"])
             if not ok:
                 db_connection.rollback()
-                return False, error
+                return False, error, False
             ok, error = TransactionItemsQueries.delete_transaction_items(db_connection, transaction_id)
             if not ok:
                 db_connection.rollback()
-                return False, error
-            for item in items_data:
+                return False, error, False
+            for item in new_items_data:
                 ok, error = TransactionItemsQueries.insert_into_transaction_items(
                     db_connection, transaction_id, item.commodity_id, item.unit_count, item.price_per_unit)
                 if not ok:
                     db_connection.rollback()
-                    return False, error
+                    return False, error, False
+            for commodity_id, amount in final_stock_dict.items():
+                InventoryQueries.update_inventory_item(db_connection, commodity_id, amount)
             db_connection.commit()
-            return True, ""
+            return True, "", True
         except Exception as e:
             db_connection.rollback()
-            return False, str(e)
+            return False, str(e), False
 
     @staticmethod
     def delete_transaction(db_connection: QSqlDatabase, transaction_id: int, transfer_type: str) -> tuple[bool, str]:
@@ -110,3 +119,26 @@ class TransactionsService:
         if negate:
             operator = -operator
         return operator * amount
+
+    @staticmethod
+    def _get_stock_dict(items_list: list[TransactionItem]) -> dict[int, float]:
+        stock_dict = {}
+        for item in items_list:
+            if item.commodity_id not in stock_dict.keys():
+                stock_dict[item.commodity_id] = item.unit_count
+            else:
+                stock_dict[item.commodity_id] += item.unit_count
+        return stock_dict
+
+    @staticmethod
+    def _get_final_stock_dict(old_items: dict[int, float], new_items: dict[int, float], transfer_type: str) -> dict[int, float]:
+        final_stock_dict = {}
+        for commodity_id, amount in new_items.items():
+            if commodity_id in old_items:
+                amount = new_items[commodity_id] - old_items[commodity_id]
+            else:
+                amount = new_items[commodity_id]
+            amount = TransactionsService._get_amount(transfer_type, amount)
+            if amount != 0:
+                final_stock_dict[commodity_id] = amount
+        return final_stock_dict

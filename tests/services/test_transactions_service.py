@@ -92,7 +92,7 @@ def inventory_schema(connection) -> None:
 @pytest.fixture
 def dialog_data() -> dict[str, str | int]:
     return {
-        "type": "IN",
+        "transaction_type": "IN",
         "customer_id": 1,
         "payment_type": "CASH",
         "notes": "some notes",
@@ -112,9 +112,9 @@ def items_data() -> list[TransactionItem]:
                          [("IN", 10, 10),
                           ("OUT", 10, -10)]
                          )
-def test_insert_new_transaction(connection, transaction_schema, items_schema, inventory_schema, dialog_data, items_data,
-                                transfer_type, insert_stock, expected_stock) -> None:
-    dialog_data["type"] = transfer_type
+def test_create_transaction(connection, transaction_schema, items_schema, inventory_schema, dialog_data, items_data,
+                            transfer_type, insert_stock, expected_stock) -> None:
+    dialog_data["transaction_type"] = transfer_type
     items_data = [
         TransactionItem(
             commodity_id=2,
@@ -122,7 +122,7 @@ def test_insert_new_transaction(connection, transaction_schema, items_schema, in
             price_per_unit=12.5
         )
     ]
-    ok, error = TransactionsService.insert_new_transaction(connection, dialog_data, items_data)
+    ok, error = TransactionsService.create_transaction(connection, dialog_data, items_data)
     assert ok == True
     assert error == ""
     query = QSqlQuery(connection)
@@ -137,7 +137,7 @@ def test_insert_new_transaction(connection, transaction_schema, items_schema, in
     stock = query.value(0)
     assert stock == expected_stock
 
-def test_update_transaction_with_items(connection, transaction_schema, items_schema, dialog_data) -> None:
+def test_update_transaction(connection, transaction_schema, items_schema, inventory_schema, dialog_data) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transactions (
@@ -149,7 +149,11 @@ def test_update_transaction_with_items(connection, transaction_schema, items_sch
         INSERT INTO transaction_items (
             transaction_id, commodity_id, unit_count, price_per_unit
         )
-        VALUES (1, 1, 10, 5)
+        VALUES (1, 2, 10, 5)
+    """)
+    query.exec("""
+        INSERT INTO inventory (commodity_id, stock)
+        VALUES (2, 0)
     """)
     updated_items_data = [
         TransactionItem(
@@ -158,10 +162,18 @@ def test_update_transaction_with_items(connection, transaction_schema, items_sch
             price_per_unit=12.5
         )
     ]
-    ok, error = TransactionsService.update_transaction_with_items(connection, 1, dialog_data,
-                                                                  updated_items_data)
+    old_items_data = [
+        TransactionItem(
+            commodity_id=2,
+            unit_count=10,
+            price_per_unit=5
+        )
+    ]
+    ok, error, changed = TransactionsService.update_transaction(connection, 1, dialog_data,
+                                                                updated_items_data, old_items_data)
     assert ok is True
     assert error == ""
+    assert changed is True
     query.exec("""
         SELECT type, customer_id, payment_type, notes
         FROM transactions
@@ -188,6 +200,11 @@ def test_update_transaction_with_items(connection, transaction_schema, items_sch
     assert query.value(0) == 2
     assert query.value(1) == 999
     assert query.value(2) == 12.5
+    query.exec("""
+        SELECT stock FROM inventory WHERE commodity_id = 2
+    """)
+    assert query.next()
+    assert query.value(0) == 989
 
 @pytest.mark.parametrize(
     "transfer_type, initial_stock, expected_stock",

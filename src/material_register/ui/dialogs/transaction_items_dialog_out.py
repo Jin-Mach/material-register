@@ -130,7 +130,7 @@ class TransactionItemsDialogOut(QDialog):
         if self.customer_id is None:
             return None
         return {
-            "type": self.transfer_type,
+            "transaction_type": self.transfer_type,
             "customer_id": self.customer_id,
             "payment_type": self.payment_type,
             "notes": self.transaction_info_widget.get_notes()

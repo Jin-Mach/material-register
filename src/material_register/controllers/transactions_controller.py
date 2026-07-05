@@ -67,7 +67,7 @@ class TransactionsController:
             if not TransactionsController._check_transaction_data(dialog_data, model):
                 MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
                 return
-            ok, error = TransactionsService.insert_new_transaction(self.db_connection, dialog_data, model.get_data())
+            ok, error = TransactionsService.create_transaction(self.db_connection, dialog_data, model.get_data())
             if not ok:
                 TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.create_transaction")
                 return
@@ -98,6 +98,7 @@ class TransactionsController:
         if item_model is None:
             return
         TransactionsController._load_items_to_model(item_model, items_data)
+        old_items_data = item_model.get_data()
         self.items_dialog.transactions_items_widget.setup_total_value(item_model)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
@@ -105,13 +106,17 @@ class TransactionsController:
             if not TransactionsController._check_transaction_data(dialog_data, item_model):
                 MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
                 return
-            ok, error = TransactionsService.update_transaction_with_items(self.db_connection, transaction_id,
-                                                                          dialog_data, item_model.get_data())
+            ok, error, changed = TransactionsService.update_transaction(self.db_connection, transaction_id,
+                                                                        dialog_data, item_model.get_data(),
+                                                                        old_items_data)
             if not ok:
                 TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.update_transaction")
                 return
+            if not changed:
+                self.items_dialog = None
+                return
             self._refresh_models_data()
-            self.items_dialog = None
+            self.inventory_model.load_inventory_data()
             TransactionsController._notification_handler(self.notification_text, "UPDATE_TRANSACTION",
                                                          "Transaction updated")
 
