@@ -21,9 +21,11 @@ class InventoryView(QTableView):
         if not isinstance(model, InventoryProxyFilter):
             return
         if not HeadersTexts.set_inventory_headers_text(self, model):
-            ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}",
+                                      "ui", "warning")
             ErrorHandler.ui_texts_error = error
         self._setup_columns()
+        self._setup_headers(model)
         self._setup_behavior()
 
     def _setup_columns(self) -> None:
@@ -32,9 +34,17 @@ class InventoryView(QTableView):
             if column_index is not None:
                 self.setColumnHidden(column_index, True)
 
-    def _setup_behavior(self) -> None:
+    def _setup_headers(self, model: InventoryProxyFilter) -> None:
         header = self.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        active_column = INVENTORY_COLUMNS_MAP["commodity_active"]
+        for col in range(model.columnCount()):
+            if col == active_column:
+                header.setSectionResizeMode(col, QHeaderView.ResizeMode.Fixed)
+            else:
+                header.setSectionResizeMode(col, QHeaderView.ResizeMode.Stretch)
+        self.resizeColumnsToContents()
+
+    def _setup_behavior(self) -> None:
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
         self.verticalHeader().hide()
         self.setEditTriggers(QTableView.EditTrigger.NoEditTriggers)

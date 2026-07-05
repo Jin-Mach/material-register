@@ -12,7 +12,7 @@ def _create_test_db() -> QSqlDatabase:
     db.open()
     query = QSqlQuery(db)
     query.exec("""
-    CREATE TABLE customers (
+    CREATE TABLE ui_icons (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         company TEXT,
         first_name TEXT,

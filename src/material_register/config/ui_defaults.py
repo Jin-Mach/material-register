@@ -6,7 +6,7 @@ DEFAULT_TEXTS = {
     "transactionsButtonText": "Movements",
     "transactionsButtonTooltipText": "Displays material movements",
     "customersButtonText": "Customers",
-    "customersButtonTooltipText": "Displays list of customers",
+    "customersButtonTooltipText": "Displays list of ui_icons",
     "catalogButtonText": "Catalog",
     "catalogButtonTooltipText": "Displays the item catalog"
   },

@@ -73,6 +73,7 @@ class CatalogController:
             CatalogController._refresh_cache()
             self.setup_details_widget()
             self.inventory_model.load_inventory_data()
+            CatalogController._update_inventory_count()
             CatalogController._notification_handler(self.notification_texts, "ADD_COMMODITY", "Commodity added")
 
     def update_category(self) -> None:
@@ -171,3 +172,7 @@ class CatalogController:
             return
         notification = NotificationDialog(AppContext.MAIN_WINDOW, notification_texts.get(key, default))
         notification.show_notification()
+
+    @staticmethod
+    def _update_inventory_count() -> None:
+        AppContext.MAIN_WINDOW.stacked_widget.inventory_widget.inventory_controller.update_counts()

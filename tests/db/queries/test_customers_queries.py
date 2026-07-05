@@ -15,7 +15,7 @@ def connection() -> QSqlDatabase:
 def schema(connection) -> None:
     query = QSqlQuery(connection)
     ok = query.exec("""
-        CREATE TABLE IF NOT EXISTS customers (
+        CREATE TABLE IF NOT EXISTS ui_icons (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             company TEXT,
             first_name TEXT,
@@ -36,7 +36,7 @@ def schema(connection) -> None:
 def test_get_customers(connection, schema):
     query = QSqlQuery(connection)
     query.exec("""
-        INSERT INTO customers
+        INSERT INTO ui_icons
         (company, first_name, last_name, document_number, address, active)
         VALUES ('A', 'Joe', 'Doe', '123', 'Earth', 1)
     """)

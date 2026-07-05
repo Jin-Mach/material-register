@@ -15,8 +15,8 @@ REQUIRED_JSON_FILES = [
 
 REQUIRED_IMAGES = [
     Path("system") / "SplashScreen.jpg",
-    Path("customers") / "activeIcon.png",
-    Path("customers") / "inactiveIcon.png",
+    Path("ui_icons") / "activeIcon.png",
+    Path("ui_icons") / "inactiveIcon.png",
 ]
 
 UI_KEYS = [

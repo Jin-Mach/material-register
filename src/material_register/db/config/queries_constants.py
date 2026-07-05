@@ -23,7 +23,7 @@ TRANSACTIONS_QUERY_IN = """
                     ROUND(SUM(items.unit_count * items.price_per_unit), 1) AS total
                 
                 FROM transactions trans
-                LEFT JOIN customers cust ON cust.id = trans.customer_id
+                LEFT JOIN ui_icons cust ON cust.id = trans.customer_id
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 
                 WHERE 
@@ -62,7 +62,7 @@ TRANSACTIONS_QUERY_OUT = """
                     con.unit AS suffix
                 
                 FROM transactions trans
-                LEFT JOIN customers cust ON cust.id = trans.customer_id
+                LEFT JOIN ui_icons cust ON cust.id = trans.customer_id
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 LEFT JOIN commodities con ON con.id = items.commodity_id  
                               
@@ -112,7 +112,7 @@ TRANSACTIONS_BASIC_FILTER_QUERY = """
                     END AS suffix
                 
                 FROM transactions trans
-                LEFT JOIN customers cust ON cust.id = trans.customer_id
+                LEFT JOIN ui_icons cust ON cust.id = trans.customer_id
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 LEFT JOIN commodities con ON con.id = items.commodity_id
                 
@@ -148,7 +148,9 @@ INVENTORY_QUERY = """
                 commodities.name AS commodity_name,
                 commodities.unit AS commodity_unit,
 
-                inventory.stock AS inventory_stock 
+                inventory.stock AS inventory_stock,
+                
+                commodities.active AS commodity_active 
 
             FROM inventory inventory
             JOIN commodities ON commodities.id = inventory.commodity_id 
