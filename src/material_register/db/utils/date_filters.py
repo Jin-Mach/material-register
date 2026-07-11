@@ -6,7 +6,6 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 def _now() -> datetime:
     return datetime.now()
 
-
 def get_filter_range(key: str) -> tuple[str, str] | None:
     now = _now()
     if key == "today":
