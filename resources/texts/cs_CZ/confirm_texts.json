@@ -40,6 +40,12 @@
     "TEXT": "Všechny položky v transakci musí mít stejnou jednotku.",
     "CLOSE": "Zavřít"
   },
+  "ZERO_PRICE_TRANSACTION": {
+    "TITLE": "Kontrola ceny",
+    "TEXT": "Položka bude vložena bez zadané ceny.\nOpravdu chcete pokračovat?",
+    "YES": "Pokračovat",
+    "NO": "Zrušit"
+  },
   "DELETE_TRANSACTION_ITEM": {
     "TITLE": "Smazat položku",
     "TEXT": "Opravdu smazat položku transakce?",

@@ -11,6 +11,7 @@ from material_register.config.ui_constants import (TRANSFER_OUT, CATEGORY_COMMOD
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.helpers.spinbox_setup import set_suffix_mode
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
@@ -179,11 +180,17 @@ class CategoryCommodityDialog(QDialog):
         self.add_button.setEnabled(valid)
 
     def _set_required_style(self) -> None:
-        for spinbox in (self.unit_spinbox, self.price_spinbox):
-            if self._is_valid_value(spinbox.value()):
-                spinbox.setStyleSheet("")
+        if self._is_unit_valid_value(self.unit_spinbox.value()):
+            self.unit_spinbox.setStyleSheet("")
+        else:
+            self.unit_spinbox.setStyleSheet(INVALID_INPUT_STYLE)
+        if self.transfer_type != TRANSFER_OUT:
+            if self._is_price_valid_value(self.price_spinbox.value()):
+                self.price_spinbox.setStyleSheet("")
             else:
-                spinbox.setStyleSheet(INVALID_INPUT_STYLE)
+                self.price_spinbox.setStyleSheet(INVALID_INPUT_STYLE)
+        else:
+            self.price_spinbox.setStyleSheet("")
 
     def _normalize_unit_price_values(self) -> tuple[int | float, int | float]:
         unit = CategoryCommodityDialog._normalize_value(self.unit_spinbox.value())
@@ -199,13 +206,13 @@ class CategoryCommodityDialog(QDialog):
             return (
                     self.category_combo_box.currentIndex() != -1
                     and self.commodity_combo_box.currentIndex() != -1
-                    and self._is_valid_value(self.unit_spinbox.value())
+                    and self._is_unit_valid_value(self.unit_spinbox.value())
             )
         return (
                 self.category_combo_box.currentIndex() != -1
                 and self.commodity_combo_box.currentIndex() != -1
-                and self._is_valid_value(self.unit_spinbox.value())
-                and self._is_valid_value(self.price_spinbox.value())
+                and self._is_unit_valid_value(self.unit_spinbox.value())
+                and self._is_price_valid_value(self.price_spinbox.value())
         )
 
     @staticmethod
@@ -230,21 +237,29 @@ class CategoryCommodityDialog(QDialog):
     def _normalize_value(value: float) -> float:
         return float(f"{value:.1f}")
 
-    def _is_valid_value(self, value: float) -> bool:
+    def _is_unit_valid_value(self, value: float) -> bool:
         return self._normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE
+
+    def _is_price_valid_value(self, value: float) -> bool:
+        return self._normalize_value(value) >= CATEGORY_COMMODITY_DIALOG_MIN_VALUE
 
     def _valid_values(self) -> bool:
         if self.transfer_type == TRANSFER_OUT:
-            return self._is_valid_value(self.unit_spinbox.value())
+            return self._is_unit_valid_value(self.unit_spinbox.value())
         return (
-                self._is_valid_value(self.unit_spinbox.value())
-                and self._is_valid_value(self.price_spinbox.value())
+                self._is_unit_valid_value(self.unit_spinbox.value())
+                and self._is_price_valid_value(self.price_spinbox.value())
         )
 
     def get_category_commodity_data(self) -> dict[str, str | int | float | None] | None:
         commodity_id = self.commodity_combo_box.currentData()
         if commodity_id is None or not self._valid_values():
             return None
+        if self.transfer_type != TRANSFER_OUT and self.price_spinbox.value() == CATEGORY_COMMODITY_DIALOG_MIN_VALUE:
+            question = MessageBoxes.show_question(self, "ZERO_PRICE_TRANSACTION",
+                                                  f"{self.category_combo_box.currentText()} {self.commodity_combo_box.currentText()}")
+            if not question:
+                return None
         unit_count, price_per_unit = self._normalize_unit_price_values()
         return {
             "category": self.category_combo_box.currentText(),
