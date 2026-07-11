@@ -139,10 +139,10 @@ class CustomerDialog(QDialog):
             self._set_update_mode(self.customer_data)
 
     def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}]{1,20}"))
+        name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}'\- ]{1,20}"))
         company_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}"))
-        document_validator = QRegularExpressionValidator(QRegularExpression(r"[0-9A-Za-z \-/]{1,30}"))
-        address_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,\-/]{1,50}"))
+        document_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .\-/]{1,30}"))
+        address_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,:&'()\-\/]{1,50}"))
         self.first_name_input.setValidator(name_validator)
         self.last_name_input.setValidator(name_validator)
         self.company_input.setValidator(company_validator)

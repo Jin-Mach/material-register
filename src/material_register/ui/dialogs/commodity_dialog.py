@@ -140,8 +140,8 @@ class CommodityDialog(QDialog):
             self._set_update_mode(self.commodity_data)
 
     def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-\/]{1,30}"))
-        self.name_input.setValidator(name_validator)
+        commodity_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,:&%\-\/]{1,30}"))
+        self.name_input.setValidator(commodity_validator)
 
     def _set_add_mode(self) -> None:
         self.name_input.clear()

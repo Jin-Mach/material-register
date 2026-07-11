@@ -87,7 +87,7 @@ class CategoryDialog(QDialog):
             self._set_update_mode(self.category_data)
 
     def _set_validators(self) -> None:
-        category_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-\/]{1,30}"))
+        category_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,:&%\-\/]{1,30}"))
         self.category_name_input.setValidator(category_validator)
 
     def _set_add_mode(self) -> None:
