@@ -7,7 +7,7 @@ class CustomersQueries:
     BASE_QUERY = """
             SELECT id, company, first_name, last_name, document_number, address, notes, created_at, active,
             company_normalized, first_name_normalized, last_name_normalized, address_normalized
-            FROM ui_icons
+            FROM customers
             """
 
     @staticmethod

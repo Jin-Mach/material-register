@@ -13,7 +13,7 @@ class CustomersModel(BaseSqlTableModel):
     def __init__(self, database: QSqlDatabase, parent=None) -> None:
         super().__init__(database, parent)
         self.database = database
-        self.setTable("ui_icons")
+        self.setTable("customers")
         self.setEditStrategy(QSqlTableModel.EditStrategy.OnManualSubmit)
         self.select()
 
@@ -115,7 +115,7 @@ class CustomersModel(BaseSqlTableModel):
 
     def document_exists(self, document_number: str, ignored_id: int | None = None) -> bool:
         query = QSqlQuery(self.database)
-        sql = "SELECT 1 FROM ui_icons WHERE document_number = ?"
+        sql = "SELECT 1 FROM customers WHERE document_number = ?"
         if ignored_id is not None:
             sql += " AND id != ?"
         sql += " LIMIT 1"
@@ -129,7 +129,7 @@ class CustomersModel(BaseSqlTableModel):
 
     def get_total_count(self) -> int:
         query = QSqlQuery(self.database)
-        query.exec("SELECT COUNT(*) FROM ui_icons")
+        query.exec("SELECT COUNT(*) FROM customers")
         if query.next():
             return query.value(0)
         return 0

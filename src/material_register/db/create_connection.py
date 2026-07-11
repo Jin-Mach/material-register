@@ -26,7 +26,7 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
     query = QSqlQuery(connection)
 
     if not query.exec("""
-        CREATE TABLE IF NOT EXISTS ui_icons (
+        CREATE TABLE IF NOT EXISTS customers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             company TEXT,
             first_name TEXT,
@@ -115,7 +115,7 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             ),
 
             FOREIGN KEY(customer_id)
-                REFERENCES ui_icons(id)
+                REFERENCES customers(id)
                 ON DELETE SET NULL
         )
     """):

@@ -30,7 +30,7 @@ def schema(connection) -> None:
 def filter_schema(connection):
     query = QSqlQuery(connection)
     query.exec("""
-        CREATE TABLE ui_icons (
+        CREATE TABLE customers (
             id INTEGER PRIMARY KEY,
             first_name TEXT,
             last_name TEXT,
@@ -150,7 +150,7 @@ def test_update_transaction(connection, schema) -> None:
 def test_get_basic_filter_data(connection, filter_schema):
     query = QSqlQuery(connection)
     query.exec("""
-        INSERT INTO ui_icons (
+        INSERT INTO customers (
             id, first_name, last_name,
             first_name_normalized, last_name_normalized,
             address, address_normalized,
@@ -170,7 +170,7 @@ def test_get_basic_filter_data(connection, filter_schema):
         )
     """)
     query.exec("""
-        INSERT INTO ui_icons (
+        INSERT INTO customers (
             id, first_name, last_name,
             first_name_normalized, last_name_normalized,
             address, address_normalized,

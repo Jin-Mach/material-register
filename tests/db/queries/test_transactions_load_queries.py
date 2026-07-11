@@ -18,7 +18,7 @@ def connection() -> QSqlDatabase:
 def schema(connection) -> None:
     query = QSqlQuery(connection)
     query.exec("""
-        CREATE TABLE ui_icons (
+        CREATE TABLE customers (
             id INTEGER PRIMARY KEY,
             company TEXT,
             first_name TEXT,
@@ -63,7 +63,7 @@ def get_timestamp() -> str:
 def test_load_transaction_in(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("INSERT INTO commodities VALUES (1, 'kg')")
-    query.exec("INSERT INTO ui_icons VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
+    query.exec("INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
     query.prepare("""
         INSERT INTO transactions (id, type, customer_id, created_at, payment_type)
         VALUES (?, ?, ?, ?, ?)
@@ -82,7 +82,7 @@ def test_load_transaction_in(connection: QSqlDatabase, schema) -> None:
 def test_load_transaction_out(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("INSERT INTO commodities VALUES (1, 'kg')")
-    query.exec("INSERT INTO ui_icons VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
+    query.exec("INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
     query.prepare("""
         INSERT INTO transactions (id, type, customer_id, created_at, payment_type)
         VALUES (?, ?, ?, ?, ?)

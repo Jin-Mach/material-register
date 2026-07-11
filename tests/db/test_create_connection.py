@@ -30,7 +30,7 @@ def test_tables_created(tmp_path):
     while query.next():
         tables.append(query.value(0))
     expected = {
-        "ui_icons",
+        "customers",
         "categories",
         "commodities",
         "inventory",
