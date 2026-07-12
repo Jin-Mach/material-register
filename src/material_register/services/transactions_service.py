@@ -83,7 +83,10 @@ class TransactionsService:
                     db_connection.rollback()
                     return False, error, False
             for commodity_id, amount in final_stock_dict.items():
-                InventoryQueries.update_inventory_item(db_connection, commodity_id, amount)
+                ok, inventory_error = InventoryQueries.update_inventory_item(db_connection, commodity_id, amount)
+                if not ok:
+                    db_connection.rollback()
+                    return False, inventory_error, False
             db_connection.commit()
             return True, "", True
         except Exception as e:
@@ -131,14 +134,14 @@ class TransactionsService:
         return stock_dict
 
     @staticmethod
-    def _get_final_stock_dict(old_items: dict[int, float], new_items: dict[int, float], transfer_type: str) -> dict[int, float]:
+    def _get_final_stock_dict(old_items: dict[int, float], new_items: dict[int, float],
+                              transfer_type: str) -> dict[int, float]:
         final_stock_dict = {}
-        for commodity_id, amount in new_items.items():
-            if commodity_id in old_items:
-                amount = new_items[commodity_id] - old_items[commodity_id]
-            else:
-                amount = new_items[commodity_id]
-            amount = TransactionsService._get_amount(transfer_type, amount)
+        all_ids = set(old_items) | set(new_items)
+        for commodity_id in all_ids:
+            old_amount = old_items.get(commodity_id, 0)
+            new_amount = new_items.get(commodity_id, 0)
+            amount = TransactionsService._get_amount(transfer_type, new_amount - old_amount)
             if amount != 0:
                 final_stock_dict[commodity_id] = amount
         return final_stock_dict

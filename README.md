@@ -67,7 +67,7 @@ database handling, and service-layer architecture in Python.
 
   - On macOS/Linux:
     ```bash
-    python3 -m pip install -e .[dev]
+    python3 -m pip install -e ".[dev]"
     ```
 
 ## Usage
