@@ -1,5 +1,4 @@
 from typing import Any
-from datetime import datetime
 
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PySide6.QtSql import QSqlDatabase
@@ -7,7 +6,7 @@ from PySide6.QtSql import QSqlDatabase
 from material_register.db.config.model_constants import LOAD_MODEL_IN_COLUMNS
 from material_register.db.queries.transactions_load_queries import TransactionsLoadQueries
 from material_register.domain.transaction_dataclass import Transaction
-from material_register.ui.helpers.formating_utils import format_number_to_locale
+from material_register.ui.helpers.formating_utils import format_number_to_locale, format_datetime_to_locale
 
 
 class TransactionsLoadModelOut(QAbstractTableModel):
@@ -26,7 +25,7 @@ class TransactionsLoadModelOut(QAbstractTableModel):
         column = LOAD_MODEL_IN_COLUMNS[index.column()]
         if role == Qt.ItemDataRole.DisplayRole:
             if column == "transaction_created_at":
-                return TransactionsLoadModelOut._format_datetime(transaction.transaction_created_at)
+                return format_datetime_to_locale(transaction.transaction_created_at)
             if column == "total":
                 return f"{format_number_to_locale(transaction.total)} {transaction.suffix}"
             return getattr(transaction, column, None)
@@ -36,7 +35,7 @@ class TransactionsLoadModelOut(QAbstractTableModel):
             return Qt.AlignmentFlag.AlignCenter
         if role == Qt.ItemDataRole.UserRole:
             if column == "transaction_created_at":
-                return TransactionsLoadModelOut._format_datetime(transaction.transaction_created_at)
+                return format_datetime_to_locale(transaction.transaction_created_at)
             if column == "total":
                 return float(transaction.total)
             parts_list = []
@@ -78,8 +77,3 @@ class TransactionsLoadModelOut(QAbstractTableModel):
         self.beginResetModel()
         self.transaction_data = filtered_data
         self.endResetModel()
-
-    @staticmethod
-    def _format_datetime(created: str) -> str:
-        date = datetime.fromisoformat(created)
-        return date.strftime("%d.%m.%Y")

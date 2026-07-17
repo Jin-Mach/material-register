@@ -96,4 +96,4 @@ class CustomersView(QTableView):
             ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_texts_error = True
         menu.set_ui_texts(self.menu_texts)
-        menu.exec_(self.mapToGlobal(position))
+        menu.exec(self.mapToGlobal(position))

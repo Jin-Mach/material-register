@@ -13,7 +13,8 @@ class AppInit:
     def init_app() -> tuple[bool, str]:
         try:
             PathsProvider.paths_init(LOG_STRUCTURE)
-            if PathsProvider.root is None or PathsProvider.logs is None:
+            if any([PathsProvider.root is None, PathsProvider.resources is None,
+                    PathsProvider.database is None, PathsProvider.logs is None]):
                 return False, "APP_INIT_FAILED"
             if not LoggerProvider.init_loggers(PathsProvider.logs, LOG_STRUCTURE):
                 return False, "APP_INIT_FAILED"

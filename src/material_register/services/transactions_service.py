@@ -64,7 +64,8 @@ class TransactionsService:
             old_stock_dict = TransactionsService._get_stock_dict(old_items_data)
             final_stock_dict = TransactionsService._get_final_stock_dict(old_stock_dict, new_stock_dict,
                                                                          dialog_data["transaction_type"])
-            if not final_stock_dict:
+            items_changed = old_items_data != new_items_data
+            if not final_stock_dict and not items_changed:
                 return True, "", False
             ok, error = TransactionsQueries.update_transaction(
                 db_connection, transaction_id, dialog_data["transaction_type"], dialog_data["customer_id"],
