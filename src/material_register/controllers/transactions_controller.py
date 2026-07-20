@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtSql import QSqlDatabase
 from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QDialog
 
@@ -14,6 +13,7 @@ from material_register.db.utils.date_filters import get_filter_range
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import TransactionItemDetail
 from material_register.init.data_init import DataInit
+from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
@@ -35,11 +35,11 @@ if TYPE_CHECKING:
 
 
 class TransactionsController:
-    def __init__(self, transactions_widget: "TransactionsWidget", db_connection: QSqlDatabase,
+    def __init__(self, transactions_widget: "TransactionsWidget",
                  transactions_model_in: "TransactionsLoadModelIn",
                  transactions_model_out: "TransactionsLoadModelOut") -> None:
         self.transactions_widget = transactions_widget
-        self.db_connection = db_connection
+        self.db_connection = DbInit.db_connection
         self.transactions_model_in = transactions_model_in
         self.transactions_model_out = transactions_model_out
         self.customers_model = DataInit.customers_model

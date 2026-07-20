@@ -24,11 +24,9 @@ class TransactionsWidget(QWidget):
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
         self.stacked_widget = stacked_widget
-        self.db_connection = DbInit.db_connection
         self.transactions_load_model_in = DataInit.transactions_load_model_in
         self.transactions_load_model_out = DataInit.transactions_load_model_out
-        self.transactions_controller = TransactionsController(self, self.db_connection,
-                                                              self.transactions_load_model_in,
+        self.transactions_controller = TransactionsController(self, self.transactions_load_model_in,
                                                               self.transactions_load_model_out)
         self.setLayout(self.create_ui())
         self._setup_ui()
