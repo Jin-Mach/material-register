@@ -1,12 +1,14 @@
 {
   "MainWindow": {
-    "titleText": "Titulek hlavního okna"
+    "titleText": "Evidence materiálu"
   },
   "SidePanel": {
     "transactionsButtonText": "Transakce",
     "transactionsButtonTooltipText": "Zobrazí seznam transkací",
     "customersButtonText": "Zákazníci",
     "customersButtonTooltipText": "Zobrazí seznam zákazníků",
+    "exportButtonText": "Export",
+    "exportButtonTooltipText": "Zobrazí možnosti exportu",
     "catalogButtonText": "Katalog",
     "catalogButtonTooltipText": "Zobrazí katalog položek",
     "inventoryButtonText": "Sklad",
@@ -50,6 +52,35 @@
   },
   "InventoryActionsWidget": {
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
+  },
+  "ExportWidget": {
+    "pathNameGroupBoxText": "Soubor",
+    "fileTypeLabelText": "Typ souboru:",
+    "fileTypeComboBoxItems": ["Excel"],
+    "pathLabelText": "Cesta:",
+    "pathButtonText": "Vybrat složku",
+    "folderDialogTitle": "Vybrat složku pro export",
+    "nameLabelText": "Název souboru:",
+    "nameLineEditText": "Export",
+    "nameLineEditPlaceholderText": "Zadej název souboru (bez přípony)",
+    "dateOptionsGroupBoxText": "Období",
+    "todayRadioButtonText": "Dnes",
+    "weekRadioButtonText": "Tento týden",
+    "monthRadioButtonText": "Tento měsíc",
+    "yearRadioButtonText": "Tento rok",
+    "customRadioButtonText": "Vlastní",
+    "fromDateLabelText": "od:",
+    "toDateLabelText": "do:",
+    "transactionsTypeGroupBoxText": "Typ transakce",
+    "allTypesRadioButtonText": "Vše",
+    "inTypesRadioButtonText": "Pouze výkup",
+    "outTypesRadioButtonText": "Pouze vývoz",
+    "exportOptionsGroupBoxText": "Po exportu",
+    "noActionRadioButtonText": "Nedělat nic",
+    "openFolderRadioButtonText": "Otevřít ve složce",
+    "openFileRadioButtonText": "Otevřít soubor",
+    "exportButtonText": "Exportovat",
+    "exportButtonTooltipText": "Exportuje data dle nastavených parametrů"
   },
   "ErrorDialog": {
     "closeDialogButtonText": "Zavřít",

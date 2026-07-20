@@ -1,0 +1,353 @@
+from pathlib import Path
+
+from typing import TYPE_CHECKING
+
+from PySide6.QtCore import Qt, QDate, QStandardPaths, QRegularExpression
+from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics, QResizeEvent
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QHBoxLayout, QLabel, \
+    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog
+
+from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT, DO_NOTHING, OPEN_FOLDER, OPEN_FILE
+from material_register.db.utils.date_filters import get_filter_range
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.ui_texts import UiTexts
+
+if TYPE_CHECKING:
+    from material_register.ui.widgets.stacked_widget import StackedWidget
+
+
+class ExportWidget(QWidget):
+    WIDTH = 400
+    SPACING = 20
+
+    def __init__(self, stacked_widget: "StackedWidget") -> None:
+        super().__init__(stacked_widget)
+        self.current_path = ""
+        self.setLayout(self._create_ui())
+        self._setup_ui()
+        self._create_connection()
+
+    def _create_ui(self) -> QVBoxLayout:
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        path_name_group = self._create_path_name_group()
+        date_options_group = self._create_date_options_group()
+        transactions_type_group = self._create_transactions_type_group()
+        export_options_group = self._create_export_options_group()
+        export_action_group = self._create_export_action_group()
+        main_layout.addWidget(path_name_group)
+        main_layout.addWidget(date_options_group)
+        main_layout.addWidget(transactions_type_group)
+        main_layout.addWidget(export_options_group)
+        main_layout.addWidget(export_action_group)
+        return main_layout
+
+    def _create_path_name_group(self) -> QGroupBox:
+        self.path_name_group_box = QGroupBox()
+        self.path_name_group_box.setObjectName("pathNameGroupBox")
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        file_type_layout = QHBoxLayout()
+        self.file_type_label = QLabel()
+        self.file_type_label.setObjectName("fileTypeLabel")
+        self.file_type_combobox = QComboBox()
+        self.file_type_combobox.setObjectName("fileTypeComboBox")
+        form_layout = QFormLayout()
+        self.path_label = QLabel()
+        self.path_label.setObjectName("pathLabel")
+        self.path_line_edit = QLineEdit()
+        self.path_line_edit.setObjectName("pathLineEdit")
+        self.path_line_edit.setMinimumWidth(self.WIDTH)
+        self.path_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.path_button = QPushButton()
+        self.path_button.setObjectName("pathButton")
+        path_layout = QHBoxLayout()
+        path_layout.addWidget(self.path_line_edit)
+        path_layout.addWidget(self.path_button)
+        self.name_label = QLabel()
+        self.name_label.setObjectName("nameLabel")
+        self.name_line_edit = QLineEdit()
+        self.name_line_edit.setObjectName("nameLineEdit")
+        self.name_line_edit.setMinimumWidth(self.WIDTH)
+        self.name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.suffix_label = QLabel()
+        self.suffix_label.setObjectName("suffixLabel")
+        name_layout = QHBoxLayout()
+        name_layout.addWidget(self.name_line_edit)
+        name_layout.addWidget(self.suffix_label)
+        file_type_layout.addStretch()
+        file_type_layout.addWidget(self.file_type_label)
+        file_type_layout.addWidget(self.file_type_combobox)
+        file_type_layout.addStretch()
+        form_layout.addRow(self.path_label, path_layout)
+        form_layout.addRow(self.name_label, name_layout)
+        main_layout.addLayout(file_type_layout)
+        main_layout.addLayout(form_layout)
+        self.path_name_group_box.setLayout(main_layout)
+        return self.path_name_group_box
+
+    def _create_date_options_group(self) -> QGroupBox:
+        self.date_options_group_box = QGroupBox()
+        self.date_options_group_box.setObjectName("dateOptionsGroupBox")
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        self.time_button_group = QButtonGroup()
+        standard_time_layout = QHBoxLayout()
+        self.today_radio_button = QRadioButton()
+        self.today_radio_button.setObjectName("todayRadioButton")
+        self.week_radio_button = QRadioButton()
+        self.week_radio_button.setObjectName("weekRadioButton")
+        self.month_radio_button = QRadioButton()
+        self.month_radio_button.setObjectName("monthRadioButton")
+        self.year_radio_button = QRadioButton()
+        self.year_radio_button.setObjectName("yearRadioButton")
+        custom_time_layout = QHBoxLayout()
+        custom_time_layout.setSpacing(self.SPACING)
+        self.custom_radio_button = QRadioButton()
+        self.custom_radio_button.setObjectName("customRadioButton")
+        from_to_layout = QHBoxLayout()
+        from_to_layout.setSpacing(self.SPACING // 2)
+        self.from_date_label = QLabel()
+        self.from_date_label.setObjectName("fromDateLabel")
+        self.from_date_edit = QDateEdit()
+        self.from_date_edit.setCalendarPopup(True)
+        separator_label = QLabel("-")
+        self.from_date_edit.setObjectName("fromDateEdit")
+        self.to_date_label = QLabel()
+        self.to_date_label.setObjectName("toDateLabel")
+        self.to_date_edit = QDateEdit()
+        self.to_date_edit.setCalendarPopup(True)
+        self.to_date_edit.setObjectName("toDateEdit")
+        self.time_button_group.addButton(self.today_radio_button)
+        self.time_button_group.addButton(self.week_radio_button)
+        self.time_button_group.addButton(self.month_radio_button)
+        self.time_button_group.addButton(self.year_radio_button)
+        self.time_button_group.addButton(self.custom_radio_button)
+        standard_time_layout.addWidget(self.today_radio_button)
+        standard_time_layout.addWidget(self.week_radio_button)
+        standard_time_layout.addWidget(self.month_radio_button)
+        standard_time_layout.addWidget(self.year_radio_button)
+        standard_time_layout.addStretch()
+        from_to_layout.addWidget(self.from_date_label)
+        from_to_layout.addWidget(self.from_date_edit)
+        from_to_layout.addWidget(separator_label)
+        from_to_layout.addWidget(self.to_date_label)
+        from_to_layout.addWidget(self.to_date_edit)
+        custom_time_layout.addWidget(self.custom_radio_button)
+        custom_time_layout.addLayout(from_to_layout)
+        custom_time_layout.addStretch()
+        main_layout.addLayout(standard_time_layout)
+        main_layout.addLayout(custom_time_layout)
+        self.date_options_group_box.setLayout(main_layout)
+        return self.date_options_group_box
+
+    def _create_transactions_type_group(self) -> QGroupBox:
+        self.transactions_type_group_box = QGroupBox()
+        self.transactions_type_group_box.setObjectName("transactionsTypeGroupBox")
+        main_layout = QHBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        self.all_types_radio_button = QRadioButton()
+        self.all_types_radio_button.setObjectName("allTypesRadioButton")
+        self.in_types_radio_button = QRadioButton()
+        self.in_types_radio_button.setObjectName("inTypesRadioButton")
+        self.out_types_radio_button = QRadioButton()
+        self.out_types_radio_button.setObjectName("outTypesRadioButton")
+        main_layout.addWidget(self.all_types_radio_button)
+        main_layout.addWidget(self.in_types_radio_button)
+        main_layout.addWidget(self.out_types_radio_button)
+        main_layout.addStretch()
+        self.transactions_type_group_box.setLayout(main_layout)
+        return self.transactions_type_group_box
+
+    def _create_export_options_group(self) -> QGroupBox:
+        self.export_options_group_box = QGroupBox()
+        self.export_options_group_box.setObjectName("exportOptionsGroupBox")
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        self.no_action_radio_button = QRadioButton()
+        self.no_action_radio_button.setObjectName("noActionRadioButton")
+        self.open_folder_radio_button = QRadioButton()
+        self.open_folder_radio_button.setObjectName("openFolderRadioButton")
+        self.open_file_radio_button = QRadioButton()
+        self.open_file_radio_button.setObjectName("openFileRadioButton")
+        main_layout.addWidget(self.no_action_radio_button)
+        main_layout.addWidget(self.open_folder_radio_button)
+        main_layout.addWidget(self.open_file_radio_button)
+        main_layout.addStretch()
+        self.export_options_group_box.setLayout(main_layout)
+        return self.export_options_group_box
+
+    def _create_export_action_group(self) -> QGroupBox:
+        self.export_action_group_box = QGroupBox()
+        self.export_action_group_box.setObjectName("exportActionGroupBox")
+        main_layout = QHBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        self.export_button = QPushButton()
+        self.export_button.setObjectName("exportButton")
+        main_layout.addStretch()
+        main_layout.addWidget(self.export_button)
+        main_layout.addStretch()
+        self.export_action_group_box.setLayout(main_layout)
+        return self.export_action_group_box
+
+    def _setup_ui(self) -> None:
+        widgets = self.findChildren(QWidget)
+        default_radiobuttons = [self.today_radio_button, self.all_types_radio_button, self.no_action_radio_button]
+        for radio_button in default_radiobuttons:
+            radio_button.setChecked(True)
+        self._setup_texts(widgets)
+        self._set_file_suffix()
+        self._set_validators()
+        self._set_folder_path()
+        self._apply_date_state()
+        self._setup_date_edits()
+        self._apply_export_action_state()
+
+    def _setup_texts(self, widgets: list[QWidget]) -> None:
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        if not ui_texts:
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Export Folder")
+        type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
+        if not type_items:
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.file_type_combobox.addItems(type_items)
+        if UiTexts.set_ui_texts(self, widgets):
+            self.name_line_edit.setText("")
+            self.default_name = ui_texts.get(f"{self.name_line_edit.objectName()}Text", "Export")
+            today = QDate.currentDate()
+            self.name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
+            return
+        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
+    def _create_connection(self) -> None:
+        date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,
+                             self.year_radio_button, self.custom_radio_button]
+        self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
+        self.name_line_edit.textChanged.connect(self._apply_export_action_state)
+        self.path_button.clicked.connect(self._select_export_folder)
+        for radio_button in date_radiobuttons:
+            radio_button.toggled.connect(self._apply_date_state)
+        self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
+        self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+
+    def _set_validators(self) -> None:
+        name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-z0-9_\- ]+"))
+        self.name_line_edit.setValidator(name_validator)
+
+    def _set_folder_path(self) -> None:
+        self.current_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+        self._set_elided_path(self.current_path)
+        self.path_line_edit.setToolTip(self.current_path)
+        self.path_line_edit.setToolTipDuration(3000)
+        self.path_line_edit.setReadOnly(True)
+
+    def _set_file_suffix(self) -> None:
+        self.suffix_label.setText(ExportWidget._get_file_suffix(self.file_type_combobox.currentText()))
+
+    def _apply_date_state(self) -> None:
+        if self.custom_radio_button.isChecked():
+            self.from_date_edit.setEnabled(True)
+            self.to_date_edit.setEnabled(True)
+        else:
+            self.from_date_edit.setEnabled(False)
+            self.to_date_edit.setEnabled(False)
+
+    def _apply_export_action_state(self) -> None:
+        self.export_button.setEnabled(self.name_line_edit.text().strip() != "")
+
+    def _setup_date_edits(self) -> None:
+        today = QDate.currentDate()
+        start_of_year = QDate(today.year(), 1, 1)
+        self.from_date_edit.setMinimumDate(start_of_year)
+        self.from_date_edit.setMaximumDate(today)
+        self.from_date_edit.setDate(start_of_year)
+        self.to_date_edit.setMinimumDate(start_of_year)
+        self.to_date_edit.setMaximumDate(today)
+        self.to_date_edit.setDate(today)
+
+    def _update_to_date_minimum(self, date: QDate) -> None:
+        self.to_date_edit.setMinimumDate(date)
+
+    def _update_from_date_maximum(self, date: QDate) -> None:
+        self.from_date_edit.setMaximumDate(date)
+
+    def _set_elided_path(self, path: str) -> None:
+        metrics = QFontMetrics(self.path_line_edit.font())
+        elided_path = metrics.elidedText(path, Qt.TextElideMode.ElideMiddle, self.path_line_edit.width())
+        self.path_line_edit.setText(elided_path)
+
+    def _select_export_folder(self) -> None:
+        folder = QFileDialog.getExistingDirectory(self, self.folder_dialog_title, self.current_path)
+        if folder:
+            self.current_path = folder
+            self._set_elided_path(self.current_path)
+            self.path_line_edit.setToolTip(folder)
+
+    def _get_full_path(self) -> Path:
+        return (Path(self.current_path) / self.name_line_edit.text().strip()).with_suffix(self.suffix_label.text())
+
+    def _get_date_interval(self) -> tuple[str, str]:
+        date_map = {
+            self.today_radio_button: "today",
+            self.week_radio_button: "week",
+            self.month_radio_button: "month",
+            self.year_radio_button: "year",
+        }
+        for key in date_map:
+            if key.isChecked():
+                date_range = get_filter_range(date_map[key])
+                if date_range is not None:
+                    return date_range
+        date_range = (self.from_date_edit.date().toString("yyyy-MM-dd 00:00:00"),
+                      self.to_date_edit.date().toString("yyyy-MM-dd 23:59:59"))
+        return date_range
+
+    def _get_transaction_types(self) -> tuple[str | None, str | None]:
+        type_map = {
+            self.in_types_radio_button: (TRANSFER_IN, None),
+            self.out_types_radio_button: (None, TRANSFER_OUT)
+        }
+        for key in type_map:
+            if key.isChecked():
+                return type_map[key]
+        return TRANSFER_IN, TRANSFER_OUT
+
+    def _get_export_action(self) -> str:
+        options_map = {
+            self.open_folder_radio_button: OPEN_FOLDER,
+            self.open_file_radio_button:OPEN_FILE
+        }
+        for key in options_map:
+            if key.isChecked():
+                return options_map[key]
+        return DO_NOTHING
+
+    @staticmethod
+    def _get_file_suffix(file_type: str) -> str:
+        file_map = {
+            "Excel": ".xlsx",
+        }
+        return file_map[file_type]
+
+    def return_data(self):
+        from_date, to_date = self._get_date_interval()
+        return {
+            "export_path": self._get_full_path(),
+            "from_date": from_date,
+            "to_date": to_date,
+            "transaction_types": self._get_transaction_types(),
+            "export_action": self._get_export_action(),
+        }
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        super().resizeEvent(event)
+        if self.current_path:
+            self._set_elided_path(self.current_path)

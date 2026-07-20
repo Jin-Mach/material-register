@@ -40,8 +40,9 @@ class MainWindow(QMainWindow):
         buttons_map = {
             self.side_panel.transactions_button: 0,
             self.side_panel.inventory_button: 1,
-            self.side_panel.customers_button: 2,
-            self.side_panel.catalog_button: 3
+            self.side_panel.export_button: 2,
+            self.side_panel.customers_button: 3,
+            self.side_panel.catalog_button: 4
         }
         for button, index in buttons_map.items():
             button.clicked.connect(lambda _, i=index: self.stacked_widget.setCurrentIndex(i))
