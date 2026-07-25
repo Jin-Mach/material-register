@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import Qt, QDate, QStandardPaths, QRegularExpression
 from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics, QResizeEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QHBoxLayout, QLabel, \
-    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog, QDoubleSpinBox
+    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog, QDoubleSpinBox, QScrollArea
 
 from material_register.config.ui_constants import DO_NOTHING, OPEN_FOLDER, OPEN_FILE, EXPORT_PRICE_MIN_VALUE, \
     EXPORT_PRICE_MAX_VALUE
@@ -33,16 +33,22 @@ class ExportWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        group_widget = QWidget()
+        group_layout = QVBoxLayout(group_widget)
+        group_layout.setSpacing(self.SPACING)
         path_name_group = self._create_path_name_group()
         date_options_group = self._create_date_options_group()
         financial_data_group = self._create_financial_data_group()
         export_options_group = self._create_export_options_group()
+        group_layout.addWidget(path_name_group)
+        group_layout.addWidget(date_options_group)
+        group_layout.addWidget(financial_data_group)
+        group_layout.addWidget(export_options_group)
         export_action_group = self._create_export_action_group()
-        main_layout.addWidget(path_name_group)
-        main_layout.addWidget(date_options_group)
-        main_layout.addWidget(financial_data_group)
-        main_layout.addWidget(export_options_group)
+        scroll_area.setWidget(group_widget)
+        main_layout.addWidget(scroll_area)
         main_layout.addWidget(export_action_group)
         return main_layout
 
