@@ -4,6 +4,11 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QThread, QObject
 from PySide6.QtSql import QSqlDatabase
 
+from material_register.core.app_context import AppContext
+from material_register.providers.texts_provider import TextsProvider
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.workers.export_worker import ExportWorker
 
 if TYPE_CHECKING:
@@ -16,6 +21,7 @@ class ExportController(QObject):
         self.export_widget = export_widget
         self.thread = None
         self.worker = None
+        self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("EXPORT", None)
 
     def start_export(self) -> None:
         export_settings = self.export_widget.get_export_data()
@@ -34,11 +40,11 @@ class ExportController(QObject):
 
     def _export_error(self, error: str) -> None:
         self._clean_thread()
-        print("error", error)
+        ExportController._handle_db_error(error, f"{self.__class__.__name__}._export_error")
 
     def _export_ok(self) -> None:
         self._clean_thread()
-        print("OK")
+        ExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
 
     def _clean_thread(self) -> None:
         if self.worker and self.worker.db_connection:
@@ -71,3 +77,18 @@ class ExportController(QObject):
             if export_settings[key] in (None, ""):
                 return False
         return True
+
+    @staticmethod
+    def _handle_db_error(error: str, method: str) -> None:
+        if not error:
+            error = f"Unknown export error: {method}"
+        ErrorHandler.handle_error(error, "export", "critical")
+        dialog = ErrorDialog()
+        dialog.show_dialog("EXPORT_ERROR", False)
+
+    @staticmethod
+    def _notification_handler(notification_texts: dict[str, str], key: str, default: str) -> None:
+        if notification_texts is None:
+            return
+        notification = NotificationDialog(AppContext.MAIN_WINDOW, notification_texts.get(key, default))
+        notification.show_notification()

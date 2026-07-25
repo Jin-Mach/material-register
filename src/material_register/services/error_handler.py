@@ -15,6 +15,7 @@ class ErrorHandler:
             "app": logger_provider.app,
             "ui": logger_provider.ui,
             "db": logger_provider.db,
+            "export": logger_provider.export,
             "error": logger_provider.error
         }
 

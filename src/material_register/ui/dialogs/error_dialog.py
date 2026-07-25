@@ -42,11 +42,9 @@ class ErrorDialog(QDialog):
 
     def _ui_setup(self) -> None:
         widgets = [self.close_dialog_button, self.close_app_button]
-        if not UiTexts.set_ui_texts(self, widgets):
+        if UiTexts.set_ui_texts(self, widgets):
             return
-        if not UiTexts.set_default_texts(self, widgets):
-            return
-        return
+        UiTexts.set_default_texts(self, widgets)
 
     def _create_connection(self) -> None:
         self.close_dialog_button.clicked.connect(self.close)

@@ -6,7 +6,7 @@ DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
 _locale = QLocale()
 
 def format_number_to_locale(number: float) -> str:
-    return _locale.toString(number, "f", 1)
+    return _locale.toString(float(number), "f", 1)
 
 def format_datetime_to_locale(iso_datetime: str) -> str:
     date_time = QDateTime.fromString(iso_datetime, DATE_FORMAT)
