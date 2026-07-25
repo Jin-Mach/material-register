@@ -12,7 +12,6 @@ from material_register.ui.widgets.splash_screen import SplashScreen
 
 
 class InitController(QObject):
-
     def __init__(self, resources_path: Path) -> None:
         super().__init__()
         self.splash_screen = SplashScreen(resources_path)
