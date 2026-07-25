@@ -16,7 +16,7 @@ class ExportController:
 
     def start_export(self) -> None:
         export_settings = self.export_widget.get_export_data()
-        in_data = ExportQueries.load_export_data_in(self.db_connection, export_settings["from_date"], export_settings["to_date"])
-        out_data = ExportQueries.load_export_data_out(self.db_connection, export_settings["from_date"], export_settings["to_date"])
+        in_ok, in_error, in_data = ExportQueries.load_export_data_in(self.db_connection, export_settings["from_date"], export_settings["to_date"])
+        out_ok, out_error, out_data = ExportQueries.load_export_data_out(self.db_connection, export_settings["from_date"], export_settings["to_date"])
         print("in_data: ", in_data)
         print("out_data: ", out_data)

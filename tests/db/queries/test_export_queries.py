@@ -12,7 +12,6 @@ def connection() -> QSqlDatabase:
     conn.open()
     return conn
 
-
 @pytest.fixture
 def schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -67,7 +66,9 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
         INSERT INTO transaction_items VALUES
         (2, 2, 1, 50, 3.5)
     """)
-    results = ExportQueries.load_export_data_in(connection, '2026-07-25 08:00:00', '2026-07-25 09:00:00')
+    ok, error, results = ExportQueries.load_export_data_in(connection, '2026-07-25 08:00:00', '2026-07-25 09:00:00')
+    assert ok == True
+    assert error == ""
     assert len(results) == 1
     assert results[0].category_name == "Fe"
     assert results[0].commodity_name == "Fe 12345"
@@ -96,7 +97,9 @@ def test_load_export_data_out(connection: QSqlDatabase, schema) -> None:
         INSERT INTO transaction_items VALUES
         (2, 2, 1, 50, 4.0)
     """)
-    results = ExportQueries.load_export_data_out(connection, '2026-07-25 08:00:00', '2026-07-25 09:00:00')
+    ok, error, results = ExportQueries.load_export_data_out(connection, '2026-07-25 08:00:00', '2026-07-25 09:00:00')
+    assert ok == True
+    assert error == ""
     assert len(results) == 1
     assert results[0].category_name == "Fe"
     assert results[0].commodity_name == "Fe 12345"

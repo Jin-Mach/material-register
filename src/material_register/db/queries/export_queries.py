@@ -7,13 +7,14 @@ from material_register.domain.export_dataclass import ExportItemIn, ExportItemOu
 class ExportQueries:
 
     @staticmethod
-    def load_export_data_in(db_connection: QSqlDatabase, form_date: str, to_date: str) -> list[ExportItemIn]:
+    def load_export_data_in(db_connection: QSqlDatabase, from_date: str, to_date: str) -> tuple[bool, str, list[ExportItemIn]]:
         query = QSqlQuery(db_connection)
         query.prepare(EXPORT_QUERY_IN)
-        query.addBindValue(form_date)
+        query.addBindValue(from_date)
         query.addBindValue(to_date)
-        if not query.exec():
-            return []
+        ok = query.exec()
+        if not ok:
+            return False, query.lastError().text(), []
         results = []
         while query.next():
             results.append(ExportItemIn(
@@ -24,16 +25,17 @@ class ExportQueries:
                 total_quantity=query.value(4),
                 total_price=query.value(5)
             ))
-        return results
+        return True, "", results
 
     @staticmethod
-    def load_export_data_out(db_connection: QSqlDatabase, from_date: str, to_date: str) -> list[ExportItemOut]:
+    def load_export_data_out(db_connection: QSqlDatabase, from_date: str, to_date: str) -> tuple[bool, str, list[ExportItemOut]]:
         query = QSqlQuery(db_connection)
         query.prepare(EXPORT_QUERY_OUT)
         query.addBindValue(from_date)
         query.addBindValue(to_date)
-        if not query.exec():
-            return []
+        ok = query.exec()
+        if not ok:
+            return False, query.lastError().text(), []
         results = []
         while query.next():
             results.append(ExportItemOut(
@@ -42,4 +44,4 @@ class ExportQueries:
                 commodity_unit=query.value(2),
                 total_quantity=query.value(3)
             ))
-        return results
+        return True, "", results
