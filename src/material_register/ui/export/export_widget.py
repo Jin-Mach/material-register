@@ -376,7 +376,7 @@ class ExportWidget(QWidget):
     def _normalize_value(value: float) -> float:
         return float(f"{value:.1f}")
 
-    def get_export_data(self):
+    def get_export_data(self) -> dict[str, Path | str | float]:
         from_date, to_date = self._get_date_interval()
         return {
             "export_path": self._get_full_path(),

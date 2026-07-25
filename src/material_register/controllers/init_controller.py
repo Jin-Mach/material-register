@@ -7,7 +7,7 @@ from PySide6.QtCore import QThread, QObject, QTimer
 from material_register.core.app_context import AppContext
 from material_register.ui.main_window import MainWindow
 from material_register.ui.dialogs.error_dialog import ErrorDialog
-from material_register.workers.init.init_worker import InitWorker
+from material_register.workers.init_worker import InitWorker
 from material_register.ui.widgets.splash_screen import SplashScreen
 
 
@@ -28,16 +28,16 @@ class InitController(QObject):
         self.worker = InitWorker()
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
-        self.worker.error_signal.connect(self.init_error)
-        self.worker.finished_signal.connect(self.init_ok)
+        self.worker.error.connect(self._init_error)
+        self.worker.finished.connect(self._init_ok)
         self.thread.start()
 
-    def init_error(self, error: str) -> None:
-        self.clean_thread(True)
+    def _init_error(self, error: str) -> None:
+        self._clean_thread(True)
         QTimer.singleShot(1000, lambda: self._finish_error(error))
 
-    def init_ok(self) -> None:
-        self.clean_thread(False)
+    def _init_ok(self) -> None:
+        self._clean_thread(False)
         QTimer.singleShot(1000, self._finish_ok)
 
     def _finish_ok(self):
@@ -52,7 +52,7 @@ class InitController(QObject):
         dialog.show_dialog(error, False)
         sys.exit(1)
 
-    def clean_thread(self, reset_main_window: bool) -> None:
+    def _clean_thread(self, reset_main_window: bool) -> None:
         self.thread.quit()
         self.thread.wait()
         self.worker.deleteLater()

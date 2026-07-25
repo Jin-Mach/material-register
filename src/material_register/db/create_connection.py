@@ -5,11 +5,11 @@ from PySide6.QtSql import QSqlDatabase, QSqlQuery
 from material_register.services.error_handler import ErrorHandler
 
 
-def create_connection(database_path: Path | None, db_name: str) -> QSqlDatabase | None:
+def create_connection(database_path: Path | None, db_name: str, connection_name: str) -> QSqlDatabase | None:
     if database_path is None:
         ErrorHandler.handle_error("Database path is None", "db", "critical")
         return None
-    connection = QSqlDatabase.addDatabase("QSQLITE", f"{db_name}_connection")
+    connection = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     connection.setDatabaseName(str(database_path / db_name))
     if not connection.open():
         ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")

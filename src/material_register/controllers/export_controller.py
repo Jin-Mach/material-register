@@ -1,22 +1,73 @@
+from pathlib import Path
 from typing import TYPE_CHECKING
 
-from material_register.db.queries.export_queries import ExportQueries
-from material_register.init.db_init import DbInit
+from PySide6.QtCore import QThread, QObject
+from PySide6.QtSql import QSqlDatabase
+
+from material_register.workers.export_worker import ExportWorker
 
 if TYPE_CHECKING:
     from material_register.ui.export.export_widget import ExportWidget
 
 
-class ExportController:
-    def __init__(self, export_widget: "ExportWidget") -> None:
+class ExportController(QObject):
+    def __init__(self, export_widget: "ExportWidget", /) -> None:
+        super().__init__()
         self.export_widget = export_widget
-        self.db_connection = DbInit.db_connection
         self.thread = None
         self.worker = None
 
     def start_export(self) -> None:
         export_settings = self.export_widget.get_export_data()
-        in_ok, in_error, in_data = ExportQueries.load_export_data_in(self.db_connection, export_settings["from_date"], export_settings["to_date"])
-        out_ok, out_error, out_data = ExportQueries.load_export_data_out(self.db_connection, export_settings["from_date"], export_settings["to_date"])
-        print("in_data: ", in_data)
-        print("out_data: ", out_data)
+        if not ExportController._is_export_settings_valid(export_settings):
+            return
+        self._start_worker(export_settings["export_path"], export_settings["from_date"], export_settings["to_date"])
+
+    def _start_worker(self, export_path: Path, from_date: str, to_date: str) -> None:
+        self.thread = QThread()
+        self.worker = ExportWorker(export_path, from_date, to_date)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.error.connect(self._export_error)
+        self.worker.finished.connect(self._export_ok)
+        self.thread.start()
+
+    def _export_error(self, error: str) -> None:
+        self._clean_thread()
+        print("error", error)
+
+    def _export_ok(self) -> None:
+        self._clean_thread()
+        print("OK")
+
+    def _clean_thread(self) -> None:
+        if self.worker and self.worker.db_connection:
+            connection_name = self.worker.db_connection.connectionName()
+            self.worker.db_connection.close()
+            self.worker.db_connection = None
+            QSqlDatabase.removeDatabase(connection_name)
+        self.thread.quit()
+        self.thread.wait()
+        self.worker.deleteLater()
+        self.thread.deleteLater()
+        self.thread = None
+        self.worker = None
+
+    @staticmethod
+    def _is_export_settings_valid(export_settings: dict[str, Path | str | float]) -> bool:
+        required_keys = [
+            "export_path",
+            "from_date",
+            "to_date",
+            "export_action",
+            "opening_balance",
+            "income",
+            "expense",
+        ]
+        for key in required_keys:
+            if key not in export_settings:
+                return False
+        for key in ["export_path", "from_date", "to_date", "export_action"]:
+            if export_settings[key] in (None, ""):
+                return False
+        return True

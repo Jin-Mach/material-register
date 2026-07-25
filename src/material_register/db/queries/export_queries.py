@@ -9,7 +9,8 @@ class ExportQueries:
     @staticmethod
     def load_export_data_in(db_connection: QSqlDatabase, from_date: str, to_date: str) -> tuple[bool, str, list[ExportItemIn]]:
         query = QSqlQuery(db_connection)
-        query.prepare(EXPORT_QUERY_IN)
+        if not query.prepare(EXPORT_QUERY_IN):
+            return False, query.lastError().text(), []
         query.addBindValue(from_date)
         query.addBindValue(to_date)
         ok = query.exec()
@@ -30,7 +31,8 @@ class ExportQueries:
     @staticmethod
     def load_export_data_out(db_connection: QSqlDatabase, from_date: str, to_date: str) -> tuple[bool, str, list[ExportItemOut]]:
         query = QSqlQuery(db_connection)
-        query.prepare(EXPORT_QUERY_OUT)
+        if not query.prepare(EXPORT_QUERY_OUT):
+            return False, query.lastError().text(), []
         query.addBindValue(from_date)
         query.addBindValue(to_date)
         ok = query.exec()

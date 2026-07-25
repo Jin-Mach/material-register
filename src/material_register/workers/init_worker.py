@@ -7,8 +7,8 @@ from material_register.init.setup_init import SetupInit
 
 
 class InitWorker(QObject):
-    finished_signal = Signal()
-    error_signal = Signal(str)
+    finished = Signal()
+    error = Signal(str)
 
     def __init__(self) -> None:
         super().__init__()
@@ -17,18 +17,18 @@ class InitWorker(QObject):
     def run(self) -> None:
         app_ok, app_error = AppInit.init_app()
         if not app_ok:
-            self.error_signal.emit(app_error)
+            self.error.emit(app_error)
             return
         setup_ok, setup_error = SetupInit.init_setup()
         if not setup_ok:
-            self.error_signal.emit(setup_error)
+            self.error.emit(setup_error)
             return
         db_ok, db_error = DbInit.init_db()
         if not db_ok:
-            self.error_signal.emit(db_error)
+            self.error.emit(db_error)
             return
         models_ok, models_error = DataInit.init_data()
         if not models_ok:
-            self.error_signal.emit(models_error)
+            self.error.emit(models_error)
             return
-        self.finished_signal.emit()
+        self.finished.emit()

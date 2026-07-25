@@ -1,3 +1,5 @@
+from PySide6.QtSql import QSqlDatabase
+
 from material_register.db.config.db_constatns import DATABASE_NAME
 from material_register.db.create_connection import create_connection
 from material_register.db.utils.schema_validator import is_schema_valid
@@ -12,7 +14,7 @@ class DbInit:
     @classmethod
     def init_db(cls) -> tuple[bool, str]:
         try:
-            cls.db_connection = create_connection(PathsProvider.database, cls.DATABASE_NAME)
+            cls.db_connection = create_connection(PathsProvider.database, cls.DATABASE_NAME, "main_connection")
             if cls.db_connection is None:
                 return False, "DATABASE_FAILED"
             schema_ok, schema_error = is_schema_valid(cls.db_connection)
@@ -23,3 +25,10 @@ class DbInit:
         except Exception as e:
             ErrorHandler.handle_error(e, "db", "critical")
             return False, "DATABASE_FAILED"
+
+    @classmethod
+    def thread_connection(cls, connection_name: str) -> tuple[bool, str, QSqlDatabase | None, ]:
+        thread_connection = create_connection(PathsProvider.database, cls.DATABASE_NAME, connection_name)
+        if thread_connection is None:
+            return False, "THREAD_CONNECTION_FAILED", None
+        return True, "", thread_connection
