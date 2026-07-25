@@ -7,7 +7,7 @@ from material_register.domain.transaction_dataclass import Transaction
 class TransactionsLoadQueries:
 
     @staticmethod
-    def load_transaction_in(db_connection: QSqlDatabase) -> list:
+    def load_transaction_in(db_connection: QSqlDatabase) -> list[Transaction]:
         query = QSqlQuery(db_connection)
         if not query.exec(TRANSACTIONS_QUERY_IN):
             return []

@@ -23,6 +23,7 @@ TRANSACTIONS_QUERY_IN = """
                     ROUND(SUM(items.unit_count * items.price_per_unit), 1) AS total
                 
                 FROM transactions trans
+                
                 LEFT JOIN customers cust ON cust.id = trans.customer_id
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 
@@ -62,6 +63,7 @@ TRANSACTIONS_QUERY_OUT = """
                     con.unit AS suffix
                 
                 FROM transactions trans
+                
                 LEFT JOIN customers cust ON cust.id = trans.customer_id
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 LEFT JOIN commodities con ON con.id = items.commodity_id  
@@ -112,6 +114,7 @@ TRANSACTIONS_BASIC_FILTER_QUERY = """
                     END AS suffix
                 
                 FROM transactions trans
+                
                 LEFT JOIN customers cust ON cust.id = trans.customer_id
                 LEFT JOIN transaction_items items ON items.transaction_id = trans.id
                 LEFT JOIN commodities con ON con.id = items.commodity_id
@@ -136,17 +139,22 @@ SELECTED_TRANSACTION_DATA = """
                 categories.name AS category_name
             
             FROM transaction_items trans_items
+            
             JOIN commodities ON commodities.id = trans_items.commodity_id
             JOIN categories ON categories.id = commodities.category_id
+            
             WHERE trans_items.transaction_id = ?
 """
 
 TRANSACTION_TOTAL_PRICE = """
             SELECT
                 SUM(transaction_items.unit_count * transaction_items.price_per_unit) AS total_price
+            
             FROM transactions
+            
             JOIN transaction_items
                 ON transaction_items.transaction_id = transactions.id
+            
             WHERE transactions.type = 'IN'
               AND transactions.created_at BETWEEN ? AND ?
 """
@@ -163,8 +171,83 @@ INVENTORY_QUERY = """
                 commodities.active AS commodity_active 
 
             FROM inventory inventory
+            
             JOIN commodities ON commodities.id = inventory.commodity_id 
             JOIN categories ON commodities.category_id = categories.id
 
             ORDER BY categories.name ASC
+"""
+
+EXPORT_QUERY_IN = """
+            SELECT
+                category.name AS category,
+                
+                commodity.name AS commodity,
+                commodity.unit AS commodity_unit,
+                
+                items.price_per_unit,
+                
+                ROUND(SUM(items.unit_count), 1) AS total_quantity,
+                ROUND(SUM(items.unit_count * items.price_per_unit), 1) AS total_price
+            
+            FROM transactions trans
+            
+            JOIN transaction_items items
+                ON items.transaction_id = trans.id
+            
+            JOIN commodities commodity
+                ON commodity.id = items.commodity_id
+            
+            LEFT JOIN categories category
+                ON category.id = commodity.category_id
+            
+            WHERE
+                trans.type = 'IN'
+                AND trans.created_at >= ?
+                AND trans.created_at <= ?
+            
+            GROUP BY
+                category.name,
+                commodity.name,
+                items.price_per_unit
+            
+            ORDER BY
+                category.name,
+                commodity.name,
+                items.price_per_unit
+"""
+
+EXPORT_QUERY_OUT = """
+            SELECT
+            
+                category.name AS category,
+                
+                commodity.name AS commodity,
+                commodity.unit AS commodity_unit,
+                
+                ROUND(SUM(items.unit_count), 1) AS total_quantity
+                
+            FROM transactions trans
+            
+            JOIN transaction_items items
+                ON items.transaction_id = trans.id
+            
+            JOIN commodities commodity
+                ON commodity.id = items.commodity_id
+                
+            LEFT JOIN categories category
+                ON category.id = commodity.category_id
+            
+            WHERE trans.type = 'OUT'
+                AND trans.created_at >= ?
+                AND trans.created_at <= ?
+            
+            GROUP BY
+                category.name,
+                commodity.name,
+                commodity.unit
+            
+            ORDER BY
+                category.name,
+                commodity.name
 """
