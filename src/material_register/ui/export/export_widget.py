@@ -5,11 +5,13 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import Qt, QDate, QStandardPaths, QRegularExpression
 from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics, QResizeEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QHBoxLayout, QLabel, \
-    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog
+    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog, QDoubleSpinBox
 
-from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT, DO_NOTHING, OPEN_FOLDER, OPEN_FILE
+from material_register.config.ui_constants import DO_NOTHING, OPEN_FOLDER, OPEN_FILE, EXPORT_PRICE_MIN_VALUE, \
+    EXPORT_PRICE_MAX_VALUE
 from material_register.db.utils.date_filters import get_filter_range
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -32,12 +34,12 @@ class ExportWidget(QWidget):
         main_layout.setSpacing(self.SPACING)
         path_name_group = self._create_path_name_group()
         date_options_group = self._create_date_options_group()
-        transactions_type_group = self._create_transactions_type_group()
+        financial_data_group = self._create_financial_data_group()
         export_options_group = self._create_export_options_group()
         export_action_group = self._create_export_action_group()
         main_layout.addWidget(path_name_group)
         main_layout.addWidget(date_options_group)
-        main_layout.addWidget(transactions_type_group)
+        main_layout.addWidget(financial_data_group)
         main_layout.addWidget(export_options_group)
         main_layout.addWidget(export_action_group)
         return main_layout
@@ -141,23 +143,31 @@ class ExportWidget(QWidget):
         self.date_options_group_box.setLayout(main_layout)
         return self.date_options_group_box
 
-    def _create_transactions_type_group(self) -> QGroupBox:
-        self.transactions_type_group_box = QGroupBox()
-        self.transactions_type_group_box.setObjectName("transactionsTypeGroupBox")
+    def _create_financial_data_group(self) -> QGroupBox:
+        self.financial_data_group_box = QGroupBox()
+        self.financial_data_group_box.setObjectName("financialDataGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        self.all_types_radio_button = QRadioButton()
-        self.all_types_radio_button.setObjectName("allTypesRadioButton")
-        self.in_types_radio_button = QRadioButton()
-        self.in_types_radio_button.setObjectName("inTypesRadioButton")
-        self.out_types_radio_button = QRadioButton()
-        self.out_types_radio_button.setObjectName("outTypesRadioButton")
-        main_layout.addWidget(self.all_types_radio_button)
-        main_layout.addWidget(self.in_types_radio_button)
-        main_layout.addWidget(self.out_types_radio_button)
+        form_layout = QFormLayout()
+        form_layout.setSpacing(self.SPACING)
+        self.opening_balance_label = QLabel()
+        self.opening_balance_label.setObjectName("openingBalanceLabel")
+        self.opening_balance_spinbox  =QDoubleSpinBox()
+        self.opening_balance_spinbox.setObjectName("openingBalanceSpinbox")
+        self.income_label = QLabel()
+        self.income_label.setObjectName("incomeLabel")
+        self.income_spinbox = QDoubleSpinBox()
+        self.income_spinbox.setObjectName("incomeSpinbox")
+        self.expense_label = QLabel()
+        self.expense_label.setObjectName("expenseLabel")
+        self.expense_spinbox = QDoubleSpinBox()
+        self.expense_spinbox.setObjectName("expenseSpinbox")
+        form_layout.addRow(self.opening_balance_label, self.opening_balance_spinbox)
+        form_layout.addRow(self.income_label, self.income_spinbox)
+        form_layout.addRow(self.expense_label, self.expense_spinbox)
+        main_layout.addLayout(form_layout)
         main_layout.addStretch()
-        self.transactions_type_group_box.setLayout(main_layout)
-        return self.transactions_type_group_box
+        self.financial_data_group_box.setLayout(main_layout)
+        return self.financial_data_group_box
 
     def _create_export_options_group(self) -> QGroupBox:
         self.export_options_group_box = QGroupBox()
@@ -192,15 +202,17 @@ class ExportWidget(QWidget):
 
     def _setup_ui(self) -> None:
         widgets = self.findChildren(QWidget)
-        default_radiobuttons = [self.today_radio_button, self.all_types_radio_button, self.no_action_radio_button]
+        default_radiobuttons = [self.today_radio_button, self.no_action_radio_button]
         for radio_button in default_radiobuttons:
             radio_button.setChecked(True)
         self._setup_texts(widgets)
+        self._setup_spinboxes()
         self._set_file_suffix()
         self._set_validators()
         self._set_folder_path()
         self._apply_date_state()
         self._setup_date_edits()
+        self._set_required_style()
         self._apply_export_action_state()
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
@@ -210,6 +222,7 @@ class ExportWidget(QWidget):
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Export Folder")
+        self.price_suffix = ui_texts.get("priceSuffix", "")
         type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
         if not type_items:
             ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
@@ -231,12 +244,24 @@ class ExportWidget(QWidget):
         date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,
                              self.year_radio_button, self.custom_radio_button]
         self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
-        self.name_line_edit.textChanged.connect(self._apply_export_action_state)
+        self.name_line_edit.textChanged.connect(self._on_text_or_value_changed)
         self.path_button.clicked.connect(self._select_export_folder)
         for radio_button in date_radiobuttons:
             radio_button.toggled.connect(self._apply_date_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+        self.opening_balance_spinbox.valueChanged.connect(self._on_text_or_value_changed)
+
+    def _setup_spinboxes(self) -> None:
+        spinboxes = [self.opening_balance_spinbox, self.income_spinbox, self.expense_spinbox]
+        for spinbox in spinboxes:
+            spinbox.setMinimum(EXPORT_PRICE_MIN_VALUE)
+            spinbox.setMaximum(EXPORT_PRICE_MAX_VALUE)
+            spinbox.setDecimals(1)
+            spinbox.setSingleStep(0.1)
+            spinbox.setGroupSeparatorShown(True)
+            if self.price_suffix:
+                spinbox.setSuffix(f" {self.price_suffix}")
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-z0-9_\- ]+"))
@@ -252,6 +277,10 @@ class ExportWidget(QWidget):
     def _set_file_suffix(self) -> None:
         self.suffix_label.setText(ExportWidget._get_file_suffix(self.file_type_combobox.currentText()))
 
+    def _on_text_or_value_changed(self) -> None:
+        self._apply_export_action_state()
+        self._set_required_style()
+
     def _apply_date_state(self) -> None:
         if self.custom_radio_button.isChecked():
             self.from_date_edit.setEnabled(True)
@@ -261,7 +290,10 @@ class ExportWidget(QWidget):
             self.to_date_edit.setEnabled(False)
 
     def _apply_export_action_state(self) -> None:
-        self.export_button.setEnabled(self.name_line_edit.text().strip() != "")
+        if self.name_line_edit.text().strip() != "" and self.opening_balance_spinbox.value() > 0.0:
+            self.export_button.setEnabled(True)
+        else:
+            self.export_button.setEnabled(False)
 
     def _setup_date_edits(self) -> None:
         today = QDate.currentDate()
@@ -278,6 +310,16 @@ class ExportWidget(QWidget):
 
     def _update_from_date_maximum(self, date: QDate) -> None:
         self.from_date_edit.setMaximumDate(date)
+
+    def _set_required_style(self) -> None:
+        if self.name_line_edit.text().strip() == "":
+            self.name_line_edit.setStyleSheet(INVALID_INPUT_STYLE)
+        else:
+            self.name_line_edit.setStyleSheet("")
+        if self.opening_balance_spinbox.value() == 0.0:
+            self.opening_balance_spinbox.setStyleSheet(INVALID_INPUT_STYLE)
+        else:
+            self.opening_balance_spinbox.setStyleSheet("")
 
     def _set_elided_path(self, path: str) -> None:
         metrics = QFontMetrics(self.path_line_edit.font())
@@ -310,16 +352,6 @@ class ExportWidget(QWidget):
                       self.to_date_edit.date().toString("yyyy-MM-dd 23:59:59"))
         return date_range
 
-    def _get_transaction_types(self) -> tuple[str | None, str | None]:
-        type_map = {
-            self.in_types_radio_button: (TRANSFER_IN, None),
-            self.out_types_radio_button: (None, TRANSFER_OUT)
-        }
-        for key in type_map:
-            if key.isChecked():
-                return type_map[key]
-        return TRANSFER_IN, TRANSFER_OUT
-
     def _get_export_action(self) -> str:
         options_map = {
             self.open_folder_radio_button: OPEN_FOLDER,
@@ -337,13 +369,19 @@ class ExportWidget(QWidget):
         }
         return file_map[file_type]
 
-    def return_data(self):
+    @staticmethod
+    def _normalize_value(value: float) -> float:
+        return float(f"{value:.1f}")
+
+    def get_export_data(self):
         from_date, to_date = self._get_date_interval()
         return {
             "export_path": self._get_full_path(),
             "from_date": from_date,
             "to_date": to_date,
-            "transaction_types": self._get_transaction_types(),
+            "opening_balance": ExportWidget._normalize_value(self.opening_balance_spinbox.value()),
+            "income": ExportWidget._normalize_value(self.income_spinbox.value()),
+            "expense": ExportWidget._normalize_value(self.expense_spinbox.value()),
             "export_action": self._get_export_action(),
         }
 

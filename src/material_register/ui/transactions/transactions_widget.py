@@ -8,7 +8,6 @@ from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
 from material_register.db.models.transactions_proxy_filter import TransactionsProxyFilter
 from material_register.init.data_init import DataInit
-from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.formating_utils import format_number_to_locale
 from material_register.ui.helpers.styles import PRICE_STYLE
