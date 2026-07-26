@@ -74,23 +74,23 @@ class ExportWidget(QWidget):
         path_layout = QHBoxLayout()
         path_layout.addWidget(self.path_line_edit)
         path_layout.addWidget(self.path_button)
-        self.name_label = QLabel()
-        self.name_label.setObjectName("nameLabel")
-        self.name_line_edit = QLineEdit()
-        self.name_line_edit.setObjectName("nameLineEdit")
-        self.name_line_edit.setMinimumWidth(self.WIDTH)
-        self.name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.file_name_label = QLabel()
+        self.file_name_label.setObjectName("fileNameLabel")
+        self.file_name_line_edit = QLineEdit()
+        self.file_name_line_edit.setObjectName("fileNameLineEdit")
+        self.file_name_line_edit.setMinimumWidth(self.WIDTH)
+        self.file_name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.suffix_label = QLabel()
         self.suffix_label.setObjectName("suffixLabel")
         name_layout = QHBoxLayout()
-        name_layout.addWidget(self.name_line_edit)
+        name_layout.addWidget(self.file_name_line_edit)
         name_layout.addWidget(self.suffix_label)
         file_type_layout.addStretch()
         file_type_layout.addWidget(self.file_type_label)
         file_type_layout.addWidget(self.file_type_combobox)
         file_type_layout.addStretch()
         form_layout.addRow(self.path_label, path_layout)
-        form_layout.addRow(self.name_label, name_layout)
+        form_layout.addRow(self.file_name_label, name_layout)
         main_layout.addLayout(file_type_layout)
         main_layout.addLayout(form_layout)
         self.path_name_group_box.setLayout(main_layout)
@@ -238,10 +238,10 @@ class ExportWidget(QWidget):
             return
         self.file_type_combobox.addItems(type_items)
         if UiTexts.set_ui_texts(self, widgets):
-            self.name_line_edit.setText("")
-            self.default_name = ui_texts.get(f"{self.name_line_edit.objectName()}Text", "Export")
+            self.file_name_line_edit.setText("")
+            self.default_name = ui_texts.get(f"{self.file_name_line_edit.objectName()}Text", "Export")
             today = QDate.currentDate()
-            self.name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
+            self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
@@ -252,7 +252,7 @@ class ExportWidget(QWidget):
         date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,
                              self.year_radio_button, self.custom_radio_button]
         self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
-        self.name_line_edit.textChanged.connect(self._on_text_or_value_changed)
+        self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
         self.path_button.clicked.connect(self._select_export_folder)
         for radio_button in date_radiobuttons:
             radio_button.toggled.connect(self._apply_date_state)
@@ -273,8 +273,8 @@ class ExportWidget(QWidget):
                 spinbox.setSuffix(f" {self.price_suffix}")
 
     def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-z0-9_\- ]+"))
-        self.name_line_edit.setValidator(name_validator)
+        name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}"))
+        self.file_name_line_edit.setValidator(name_validator)
 
     def _set_folder_path(self) -> None:
         self.current_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
@@ -299,7 +299,7 @@ class ExportWidget(QWidget):
             self.to_date_edit.setEnabled(False)
 
     def _apply_export_action_state(self) -> None:
-        if self.name_line_edit.text().strip() != "" and self.opening_balance_spinbox.value() > 0.0:
+        if self.file_name_line_edit.text().strip() != "" and self.opening_balance_spinbox.value() > 0.0:
             self.export_button.setEnabled(True)
         else:
             self.export_button.setEnabled(False)
@@ -321,10 +321,10 @@ class ExportWidget(QWidget):
         self.from_date_edit.setMaximumDate(date)
 
     def _set_required_style(self) -> None:
-        if self.name_line_edit.text().strip() == "":
-            self.name_line_edit.setStyleSheet(INVALID_INPUT_STYLE)
+        if self.file_name_line_edit.text().strip() == "":
+            self.file_name_line_edit.setStyleSheet(INVALID_INPUT_STYLE)
         else:
-            self.name_line_edit.setStyleSheet("")
+            self.file_name_line_edit.setStyleSheet("")
         if self.opening_balance_spinbox.value() == 0.0:
             self.opening_balance_spinbox.setStyleSheet(INVALID_INPUT_STYLE)
         else:
@@ -343,7 +343,7 @@ class ExportWidget(QWidget):
             self.path_line_edit.setToolTip(folder)
 
     def _get_full_path(self) -> Path:
-        return (Path(self.current_path) / self.name_line_edit.text().strip()).with_suffix(self.suffix_label.text())
+        return (Path(self.current_path) / self.file_name_line_edit.text().strip()).with_suffix(self.suffix_label.text())
 
     def _get_date_interval(self) -> tuple[str, str]:
         date_map = {

@@ -12,7 +12,9 @@
     "catalogButtonText": "Katalog",
     "catalogButtonTooltipText": "Zobrazí katalog položek",
     "inventoryButtonText": "Sklad",
-    "inventoryButtonTooltipText": "Zobrazí stav zásob ve skladu"
+    "inventoryButtonTooltipText": "Zobrazí stav zásob ve skladu",
+    "settingsButtonText": "Nastavení",
+    "settingsButtonTooltipText": "Zobrazí nastavení aplikace"
   },
   "TransactionsWidget": {
     "modelInSuffix": "Kč",
@@ -60,8 +62,8 @@
     "pathLabelText": "Cesta:",
     "pathButtonText": "Vybrat složku",
     "folderDialogTitle": "Vybrat složku pro export",
-    "nameLabelText": "Název souboru:",
-    "nameLineEditText": "Export",
+    "fileNameLabelText": "Název souboru:",
+    "fileNameLineEditText": "Export",
     "nameLineEditPlaceholderText": "Zadej název souboru (bez přípony)",
     "dateOptionsGroupBoxText": "Období",
     "todayRadioButtonText": "Dnes",
@@ -225,5 +227,31 @@
     "addButtonTooltipText": "Přidá položku do transakce",
     "cancelButtonText": "Zrušit",
     "cancelButtonTooltipText": "Zavře dialog"
+  },
+  "SettingsWidget": {
+    "exportTabTitle": "Export"
+  },
+  "ExportSettings": {
+    "branchGroupBoxText": "Pobočka",
+    "branchNameLabelText": "Pobočka:",
+    "branchNameLineEditPlaceholderText": "Zadej název pobočky",
+    "pathNameGroupBoxText": "Soubor",
+    "pathLabelText": "Cesta:",
+    "pathButtonText": "Vybrat složku",
+    "folderDialogTitle": "Vybrat složku pro export",
+    "fileNameLabelText": "Název souboru:",
+    "fileNameLineEditText": "",
+    "fileNameLineEditPlaceholderText": "Zadej název souboru (bez přípony)",
+    "exportOptionsGroupBoxText": "Po exportu",
+    "noActionRadioButtonText": "Nedělat nic",
+    "openFolderRadioButtonText": "Otevřít ve složce",
+    "openFileRadioButtonText": "Otevřít soubor",
+    "otherSettingsGroupBoxText": "Ostatní",
+    "useLastOptionsCheckboxText": "Používat poslední použité hodnoty",
+    "saveLastOpeningBalanceCheckboxText": "Ukládat zůstatek",
+    "restoreButtonText": "Obnovit výchozí",
+    "restoreButtonTooltipText": "Nastaví výchozí hodnoty pro export",
+    "saveButtonText": "Uložit",
+    "saveButtonTooltipText": "Uloží aktuání nastavení exportu"
   }
 }
