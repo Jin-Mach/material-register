@@ -1,10 +1,13 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import Qt, QStandardPaths, QRegularExpression
+from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QGroupBox, QScrollArea, QHBoxLayout, QLabel, QFormLayout,
                                QLineEdit,
                                QPushButton, QSizePolicy, QRadioButton, QCheckBox)
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -17,6 +20,7 @@ class ExportSettings(QWidget):
 
     def __init__(self, settings_widget: "SettingsWidget") -> None:
         super().__init__(settings_widget)
+        self.current_path = ""
         self.setLayout(self._create_ui())
         self._setup_ui()
 
@@ -138,6 +142,9 @@ class ExportSettings(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._set_folder_path()
+        self._apply_settings()
+        self._set_validators()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
@@ -147,3 +154,32 @@ class ExportSettings(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
+
+    def _apply_settings(self) -> None:
+        if not UiSettings.set_ui_settings("export", self.findChildren(QWidget)):
+            ErrorHandler.handle_error(f"Settings load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
+            return
+        if not self.file_name_line_edit.text().strip():
+            today = QDate.currentDate()
+            self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
+
+    def _set_validators(self) -> None:
+        name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}"))
+        self.branch_name_line_edit.setValidator(name_validator)
+        self.file_name_line_edit.setValidator(name_validator)
+
+    def _set_folder_path(self) -> None:
+        if not self.path_line_edit.text().strip():
+            self.current_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+        else:
+            self.current_path = self.path_line_edit.text().strip()
+        self._set_elided_path(self.current_path)
+        self.path_line_edit.setToolTip(self.current_path)
+        self.path_line_edit.setToolTipDuration(3000)
+        self.path_line_edit.setReadOnly(True)
+
+    def _set_elided_path(self, path: str) -> None:
+        metrics = QFontMetrics(self.path_line_edit.font())
+        elided_path = metrics.elidedText(path, Qt.TextElideMode.ElideMiddle, self.path_line_edit.width())
+        self.path_line_edit.setText(elided_path)

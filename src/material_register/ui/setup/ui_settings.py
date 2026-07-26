@@ -10,8 +10,9 @@ class UiSettings:
     def setup_init(cls, settings: dict[str, Any]) -> None:
         cls.SETTINGS = settings
 
-    def set_ui_settings(self, main_key: str, widgets: list[QWidget]) -> bool:
-        settings = self.SETTINGS.get(main_key, {})
+    @classmethod
+    def set_ui_settings(cls, main_key: str, widgets: list[QWidget], sub_key: str = "user") -> bool:
+        settings = cls.SETTINGS.get(main_key, {}).get(sub_key, {})
         if not settings:
             return False
         for widget in widgets:

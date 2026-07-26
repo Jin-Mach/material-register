@@ -13,6 +13,7 @@ from material_register.controllers.export_controller import ExportController
 from material_register.db.utils.date_filters import get_filter_range
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
+from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -210,14 +211,12 @@ class ExportWidget(QWidget):
 
     def _setup_ui(self) -> None:
         widgets = self.findChildren(QWidget)
-        default_radiobuttons = [self.today_radio_button, self.no_action_radio_button]
-        for radio_button in default_radiobuttons:
-            radio_button.setChecked(True)
         self._setup_texts(widgets)
         self._setup_spinboxes()
+        self._set_folder_path()
+        self.apply_settings()
         self._set_file_suffix()
         self._set_validators()
-        self._set_folder_path()
         self._apply_date_state()
         self._setup_date_edits()
         self._set_required_style()
@@ -238,15 +237,22 @@ class ExportWidget(QWidget):
             return
         self.file_type_combobox.addItems(type_items)
         if UiTexts.set_ui_texts(self, widgets):
-            self.file_name_line_edit.setText("")
             self.default_name = ui_texts.get(f"{self.file_name_line_edit.objectName()}Text", "Export")
-            today = QDate.currentDate()
-            self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
+
+    def apply_settings(self) -> None:
+        if not UiSettings.set_ui_settings("export", self.findChildren(QWidget)):
+            ErrorHandler.handle_error(f"Settings load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
+            return
+        if not self.file_name_line_edit.text().strip():
+            today = QDate.currentDate()
+            self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
+        self.today_radio_button.setChecked(True)
 
     def _create_connection(self) -> None:
         date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,
@@ -277,7 +283,10 @@ class ExportWidget(QWidget):
         self.file_name_line_edit.setValidator(name_validator)
 
     def _set_folder_path(self) -> None:
-        self.current_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+        if not self.path_line_edit.text().strip():
+            self.current_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+        else:
+            self.current_path = self.path_line_edit.text().strip()
         self._set_elided_path(self.current_path)
         self.path_line_edit.setToolTip(self.current_path)
         self.path_line_edit.setToolTipDuration(3000)
