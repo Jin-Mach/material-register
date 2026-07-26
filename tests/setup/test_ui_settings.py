@@ -11,7 +11,9 @@ def test_set_ui_settings_line_edit(qtbot):
     qtbot.addWidget(line_edit)
     UiSettings.setup_init({
         "export": {
-            "branchNameLineEdit": "Some branch"
+            "user": {
+                "branchNameLineEdit": "Some branch"
+            }
         }
     })
     result = UiSettings().set_ui_settings("export", [line_edit])
@@ -27,7 +29,9 @@ def test_set_ui_settings_spinbox(qtbot):
     qtbot.addWidget(spinbox)
     UiSettings.setup_init({
         "export": {
-            "openingBalanceSpinbox": 1000
+            "user": {
+                "openingBalanceSpinbox": 1000
+            }
         }
     })
     result = UiSettings().set_ui_settings("export", [spinbox])
@@ -42,7 +46,9 @@ def test_set_ui_settings_checkbox(qtbot):
     qtbot.addWidget(checkbox)
     UiSettings.setup_init({
         "export": {
-            "saveLastBalanceCheckbox": True
+            "user": {
+                "saveLastBalanceCheckbox": True
+            }
         }
     })
     result = UiSettings().set_ui_settings("export", [checkbox])
@@ -57,7 +63,9 @@ def test_set_ui_settings_radiobutton(qtbot):
     qtbot.addWidget(radio)
     UiSettings.setup_init({
         "export": {
-            "openFolderRadioButton": True
+            "user": {
+                "openFolderRadioButton": True
+            }
         }
     })
     result = UiSettings().set_ui_settings("export", [radio])
@@ -75,8 +83,10 @@ def test_set_ui_settings_multiple_widgets(qtbot):
     qtbot.addWidget(save_checkbox)
     UiSettings.setup_init({
         "export": {
-            "branchNameLineEdit": "Warehouse",
-            "saveLastBalanceCheckbox": False
+            "user": {
+                "branchNameLineEdit": "Warehouse",
+                "saveLastBalanceCheckbox": False
+            }
         }
     })
     result = UiSettings().set_ui_settings(
@@ -106,7 +116,9 @@ def test_set_ui_settings_missing_key(qtbot):
     qtbot.addWidget(line_edit)
     UiSettings.setup_init({
         "export": {
-            "otherSetting": "X"
+            "user": {
+                "otherSetting": "X"
+            }
         }
     })
     result = UiSettings().set_ui_settings("export", [line_edit])
