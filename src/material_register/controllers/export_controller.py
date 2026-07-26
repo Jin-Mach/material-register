@@ -40,7 +40,7 @@ class ExportController(QObject):
 
     def _export_error(self, error: str) -> None:
         self._clean_thread()
-        ExportController._handle_db_error(error, f"{self.__class__.__name__}._export_error")
+        ExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
 
     def _export_ok(self) -> None:
         self._clean_thread()
@@ -79,7 +79,7 @@ class ExportController(QObject):
         return True
 
     @staticmethod
-    def _handle_db_error(error: str, method: str) -> None:
+    def _handle_export_error(error: str, method: str) -> None:
         if not error:
             error = f"Unknown export error: {method}"
         ErrorHandler.handle_error(error, "export", "critical")

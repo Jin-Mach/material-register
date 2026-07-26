@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 class SettingsWidget(QWidget):
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
+        self.stacked_widget = stacked_widget
         self.setLayout(self._create_ui())
         self._setup_ui()
 

@@ -6,7 +6,7 @@ noActionRadioButton = true
 openFolderRadioButton = false
 openFileRadioButton = false
 useLastOptionsCheckbox = true
-saveLastBalanceCheckbox = false
+saveLastOpeningBalanceCheckbox = false
 openingBalanceSpinbox = 0.0
 
 [export.user]
@@ -17,5 +17,5 @@ noActionRadioButton = true
 openFolderRadioButton = false
 openFileRadioButton = false
 useLastOptionsCheckbox = true
-saveLastBalanceCheckbox = false
+saveLastOpeningBalanceCheckbox = false
 openingBalanceSpinbox = 0.0

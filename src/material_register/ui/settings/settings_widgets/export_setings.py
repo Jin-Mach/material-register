@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QGroupBox, QScrollArea, QHB
                                QLineEdit,
                                QPushButton, QSizePolicy, QRadioButton, QCheckBox, QFileDialog)
 
+from material_register.controllers.settings_controller import SettingsController
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
@@ -20,6 +21,8 @@ class ExportSettings(QWidget):
 
     def __init__(self, settings_widget: "SettingsWidget") -> None:
         super().__init__(settings_widget)
+        self.settings_widget = settings_widget
+        self.settings_controller = SettingsController(self)
         self.current_path = ""
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -170,6 +173,7 @@ class ExportSettings(QWidget):
 
     def _create_connection(self) -> None:
         self.path_button.clicked.connect(self._select_export_path)
+        self.save_button.clicked.connect(self.settings_controller.update_settings)
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}"))
