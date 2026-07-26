@@ -240,7 +240,6 @@
     "pathButtonText": "Select folder",
     "folderDialogTitle": "Select export folder",
     "fileNameLabelText": "File name:",
-    "fileNameLineEditText": "",
     "fileNameLineEditPlaceholderText": "Enter file name (without extension)",
     "exportOptionsGroupBoxText": "After export",
     "noActionRadioButtonText": "Do nothing",

@@ -15,9 +15,9 @@ FILES_MAP = {
 }
 
 ICONS_MAP = {
-    "system/SplashScreen.jpg":"https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/system/SplashScreen.jpg",
-    "ui_icons/activeIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/activeIcon.png",
-    "ui_icons/inactiveIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/inactiveIcon.png",
+    "images/system/SplashScreen.jpg": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/system/SplashScreen.jpg",
+    "images/ui_icons/activeIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/activeIcon.png",
+    "images/ui_icons/inactiveIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/inactiveIcon.png",
 }
 
 FILES_SUFFIXES = [".toml", ".json", ".qss"]

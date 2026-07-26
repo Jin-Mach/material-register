@@ -240,7 +240,6 @@
     "pathButtonText": "Vybrat složku",
     "folderDialogTitle": "Vybrat složku pro export",
     "fileNameLabelText": "Název souboru:",
-    "fileNameLineEditText": "",
     "fileNameLineEditPlaceholderText": "Zadej název souboru (bez přípony)",
     "exportOptionsGroupBoxText": "Po exportu",
     "noActionRadioButtonText": "Nedělat nic",
