@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt, QStandardPaths, QRegularExpression
 from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QGroupBox, QScrollArea, QHBoxLayout, QLabel, QFormLayout,
                                QLineEdit,
-                               QPushButton, QSizePolicy, QRadioButton, QCheckBox)
+                               QPushButton, QSizePolicy, QRadioButton, QCheckBox, QFileDialog)
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_settings import UiSettings
@@ -23,6 +23,7 @@ class ExportSettings(QWidget):
         self.current_path = ""
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._create_connection()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -142,12 +143,18 @@ class ExportSettings(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
-        self._set_folder_path()
         self._apply_settings()
+        self._set_folder_path()
         self._set_validators()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        if not ui_texts:
+            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Export Folder")
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
@@ -160,9 +167,9 @@ class ExportSettings(QWidget):
             ErrorHandler.handle_error(f"Settings load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return
-        if not self.file_name_line_edit.text().strip():
-            today = QDate.currentDate()
-            self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
+
+    def _create_connection(self) -> None:
+        self.path_button.clicked.connect(self._select_export_path)
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}"))
@@ -183,3 +190,22 @@ class ExportSettings(QWidget):
         metrics = QFontMetrics(self.path_line_edit.font())
         elided_path = metrics.elidedText(path, Qt.TextElideMode.ElideMiddle, self.path_line_edit.width())
         self.path_line_edit.setText(elided_path)
+
+    def _select_export_path(self) -> None:
+        folder = QFileDialog.getExistingDirectory(self, self.folder_dialog_title, self.current_path)
+        if folder:
+            self.current_path = folder
+            self._set_elided_path(self.current_path)
+            self.path_line_edit.setToolTip(self.current_path)
+
+    def get_export_settings_data(self):
+        return {
+            self.branch_name_line_edit.objectName(): self.branch_name_line_edit.text().strip(),
+            self.path_line_edit.objectName(): self.path_line_edit.text().strip(),
+            self.file_name_line_edit.objectName(): self.file_name_line_edit.text().strip(),
+            self.no_action_radio_button.objectName(): self.no_action_radio_button.isChecked(),
+            self.open_folder_radio_button.objectName(): self.open_folder_radio_button.isChecked(),
+            self.open_file_radio_button.objectName(): self.open_file_radio_button.isChecked(),
+            self.use_last_options_checkbox.objectName(): self.use_last_options_checkbox.isChecked(),
+            self.save_last_opening_balance_checkbox.objectName(): self.save_last_opening_balance_checkbox.isChecked(),
+        }
