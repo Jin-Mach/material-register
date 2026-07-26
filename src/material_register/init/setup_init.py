@@ -9,6 +9,7 @@ from material_register.providers.paths_provider import PathsProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.ui.setup.headers_texts import HeadersTexts
 from material_register.ui.setup.ui_icons import UiIcons
+from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 
 
@@ -33,6 +34,7 @@ class SetupInit:
             SettingsProvider.provider_init(PathsProvider.resources)
             if not SettingsProvider.SETTINGS:
                 return False, "CONFIG_LOAD_FAILED"
+            UiSettings.setup_init(SettingsProvider.SETTINGS)
             TextsProvider.provider_init(LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources)
             if not all([TextsProvider.UI_TEXTS, TextsProvider.ERROR_TEXTS, TextsProvider.HEADERS_TEXTS, TextsProvider.CONFIRM_TEXTS]):
                 return False, "TEXTS_LOAD_FAILED"
