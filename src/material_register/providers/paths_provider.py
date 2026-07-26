@@ -16,7 +16,7 @@ class PathsProvider:
 
     @classmethod
     def paths_init(cls, log_structure: dict[str, tuple[str, str]]) -> None:
-        if all([cls.root, cls.resources, cls.config, cls.database, cls.logs]):
+        if all([cls.root, cls.resources, cls.database, cls.logs]):
             return
         cls.root = cls.get_base_path()
         if cls.root is None:

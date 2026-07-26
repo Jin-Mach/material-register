@@ -31,9 +31,11 @@ class DownloadProvider:
             response.raise_for_status()
             path.parent.mkdir(parents=True, exist_ok=True)
             if path.suffix in FILES_SUFFIXES:
-                path.write_text(response.text)
+                path.write_text(response.text, encoding="utf-8")
             elif path.suffix in ICONS_SUFFIXES:
                 path.write_bytes(response.content)
+            else:
+                return False
             return True
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")

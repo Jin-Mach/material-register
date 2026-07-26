@@ -12,5 +12,5 @@ ICONS_MAP = {
     "ui_icons/inactiveIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/customers/inactiveIcon.png",
 }
 
-FILES_SUFFIXES = [".json", ".qss"]
+FILES_SUFFIXES = [".toml", ".json", ".qss"]
 ICONS_SUFFIXES = [".png", ".jpg", ".jpeg"]
