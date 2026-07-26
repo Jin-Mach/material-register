@@ -9,6 +9,24 @@ def _create_settings_file(tmp_path: Path, data: str) -> None:
     file = config_dir / "settings.toml"
     file.write_text(data, encoding="utf-8")
 
+def test_save_settings(tmp_path: Path) -> None:
+    data = """
+            [export.default]
+            branchNameLineEdit = "Some branch"
+            pathLineEdit = "/tmp/export"
+            saveLastBalanceCheckbox = true
+            openingBalanceSpinbox = 1000.0
+            """
+    _create_settings_file(tmp_path, data)
+    SettingsProvider.provider_init(tmp_path)
+    SettingsProvider.SETTINGS["export"]["default"]["branchNameLineEdit"] = "Updated branch"
+    SettingsProvider.SETTINGS["export"]["default"]["openingBalanceSpinbox"] = 2000.0
+    result = SettingsProvider.save_settings()
+    assert result is True
+    SettingsProvider.provider_init(tmp_path)
+    assert SettingsProvider.SETTINGS["export"]["default"]["branchNameLineEdit"] == "Updated branch"
+    assert SettingsProvider.SETTINGS["export"]["default"]["openingBalanceSpinbox"] == 2000.0
+
 def test_load_settings_valid(tmp_path: Path) -> None:
     data = """
             [export.default]

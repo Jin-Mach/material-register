@@ -1,4 +1,5 @@
 import tomllib
+import tomli_w
 
 from pathlib import Path
 
@@ -12,16 +13,26 @@ class SettingsProvider:
     @classmethod
     def provider_init(cls, resources_path: Path) -> None:
         cls.SETTINGS_PATH = resources_path / "config" / "settings.toml"
-        cls.SETTINGS = cls._load_settings(cls.SETTINGS_PATH)
+        cls.SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        cls.SETTINGS = SettingsProvider._load_settings(cls.SETTINGS_PATH)
 
     @classmethod
-    def _load_settings(cls, settings_path: Path) -> dict:
+    def save_settings(cls) -> bool:
+        try:
+            with open(cls.SETTINGS_PATH, "wb") as settings_file:
+                tomli_w.dump(cls.SETTINGS, settings_file)
+            return True
+        except Exception as e:
+            ErrorHandler.handle_error(e, "app", "error")
+            return False
+
+    @staticmethod
+    def _load_settings(settings_path: Path) -> dict:
         try:
             if not settings_path.exists():
                 return {}
             with open(settings_path, "rb") as settings_file:
-                cls.SETTINGS = tomllib.load(settings_file)
-            return cls.SETTINGS
+                return tomllib.load(settings_file)
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")
             return {}

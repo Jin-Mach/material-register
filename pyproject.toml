@@ -3,7 +3,7 @@ name = "material-register"
 version = "1.0.0"
 description = "Material tracking desktop application built with PySide and SQLite"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "MIT" }
 
 authors = [
@@ -12,7 +12,8 @@ authors = [
 
 dependencies = [
     "PySide6",
-    "requests"
+    "requests",
+    "tomli_w"
 ]
 
 [project.optional-dependencies]
