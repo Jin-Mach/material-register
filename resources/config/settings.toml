@@ -1,0 +1,21 @@
+[export.default]
+branchNameLineEdit = ""
+pathLineEdit = ""
+fileNameLineEdit = ""
+noActionRadioButton = true
+openFolderRadioButton = false
+openFileRadioButton = false
+useLastOptionsCheckbox = true
+saveLastBalanceCheckbox = false
+openingBalanceSpinbox = 0.0
+
+[export.user]
+branchNameLineEdit = ""
+pathLineEdit = ""
+fileNameLineEdit = ""
+noActionRadioButton = true
+openFolderRadioButton = false
+openFileRadioButton = false
+useLastOptionsCheckbox = true
+saveLastBalanceCheckbox = false
+openingBalanceSpinbox = 0.0

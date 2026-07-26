@@ -1,5 +1,6 @@
 from material_register.providers.download_provider import DownloadProvider
 from material_register.providers.file_provider import FileProvider
+from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.setup.error_texts import ErrorTexts
@@ -29,6 +30,9 @@ class SetupInit:
                         return False, "PERMISSION_ERROR"
                     if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
                         return False, "DOWNLOAD_FAILED"
+            SettingsProvider.provider_init(PathsProvider.resources)
+            if not SettingsProvider.SETTINGS:
+                return False, "CONFIG_LOAD_FAILED"
             TextsProvider.provider_init(LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources)
             if not all([TextsProvider.UI_TEXTS, TextsProvider.ERROR_TEXTS, TextsProvider.HEADERS_TEXTS, TextsProvider.CONFIRM_TEXTS]):
                 return False, "TEXTS_LOAD_FAILED"

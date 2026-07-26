@@ -1,9 +1,10 @@
 import json
+import tomllib
 
 from pathlib import Path
 
 from material_register.config.file_config import REQUIRED_JSON_FILES, REQUIRED_IMAGES, UI_KEYS, ERROR_KEYS, \
-    HEADERS_KEYS, CONFIRM_STRUCTURE, NOTIFICATION_KEYS
+    HEADERS_KEYS, CONFIRM_STRUCTURE, NOTIFICATION_KEYS, REQUIRED_CONFIG_FILES
 from material_register.services.error_handler import ErrorHandler
 
 
@@ -16,6 +17,8 @@ class FileProvider:
         invalid_files.update(texts_folder)
         images_folder = cls._check_images(resources_path / "images")
         invalid_files.update(images_folder)
+        config_files = cls._check_config_files(resources_path)
+        invalid_files.update(config_files)
         return invalid_files
 
     @classmethod
@@ -40,6 +43,18 @@ class FileProvider:
         return invalid_files
 
     @classmethod
+    def _check_config_files(cls, base_path: Path) -> set[Path]:
+        invalid_files = set()
+        for path in REQUIRED_CONFIG_FILES:
+            file_path = base_path / path
+            if not file_path.exists():
+                invalid_files.add(file_path)
+                continue
+            if not cls._is_toml_valid(file_path):
+                invalid_files.add(file_path)
+        return invalid_files
+
+    @classmethod
     def _is_file_valid(cls, file: Path) -> bool:
         try:
             name = file.stem
@@ -55,6 +70,16 @@ class FileProvider:
             if name == "notification_texts":
                 return cls._check_notification_json(data)
             return False
+        except Exception as e:
+            ErrorHandler.handle_error(e, "app", "error")
+            return False
+
+    @staticmethod
+    def _is_toml_valid(file: Path) -> bool:
+        try:
+            with open(file, "rb") as settings_file:
+                tomllib.load(settings_file)
+            return True
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")
             return False

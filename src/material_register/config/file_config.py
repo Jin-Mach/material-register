@@ -1,5 +1,9 @@
 from pathlib import Path
 
+REQUIRED_CONFIG_FILES = [
+    Path("config") / "settings.toml",
+]
+
 REQUIRED_JSON_FILES = [
     Path("cs_CZ") / "ui_texts.json",
     Path("en_GB") / "ui_texts.json",

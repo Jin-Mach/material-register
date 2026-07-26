@@ -12,6 +12,16 @@ FAKE_UI_KEYS = [("MainWindow", "titleText")]
 FAKE_HEADERS_KEYS = [("CustomersView", "company")]
 FAKE_NOTIFICATION_KEYS = [("CUSTOMERS", "ADD_CUSTOMER")]
 
+def write_settings(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """
+        [export.default]
+        branchNameLineEdit = ""
+        """,
+        encoding="utf-8"
+    )
+
 def write_json(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
@@ -70,10 +80,11 @@ def test_check_missing_files(tmp_path: Path) -> None:
     base = tmp_path / "resources"
     write_json(base / "texts" / "en_GB" / "ui_texts.json", create_valid_ui())
     write_image(base / "images" / "system" / "splash.png")
+    write_settings(base / "config" / "settings.toml")
     result = FileProvider.check_missing_files(base)
     assert len(result) == 0
 
 def test_check_missing_files_reports_missing(tmp_path: Path) -> None:
     base = tmp_path / "resources"
     result = FileProvider.check_missing_files(base)
-    assert len(result) == 2
+    assert len(result) == 3
