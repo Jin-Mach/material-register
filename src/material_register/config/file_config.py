@@ -206,7 +206,6 @@ UI_KEYS = [
     ("ExportSettings", "pathButtonText"),
     ("ExportSettings", "folderDialogTitle"),
     ("ExportSettings", "fileNameLabelText"),
-    ("ExportSettings", "fileNameLineEditText"),
     ("ExportSettings", "fileNameLineEditPlaceholderText"),
     ("ExportSettings", "exportOptionsGroupBoxText"),
     ("ExportSettings", "noActionRadioButtonText"),
