@@ -1,12 +1,15 @@
 {
-  "APP_INIT_FAILED": "Failed to start the application.",
+  "APP_INIT_FAILED": "The application could not be started.",
   "RESOURCES_MISSING": "Required application files are missing.",
   "DOWNLOAD_FAILED": "Failed to download required files.",
   "TEXTS_LOAD_FAILED": "Failed to load application texts.",
+  "CONFIG_LOAD_FAILED": "Failed to load application settings.",
+  "SETTINGS_FAILED": "An error occurred while configuring the application.",
   "DATABASE_FAILED": "Failed to connect to or load the database.",
-  "DATABASE_ERROR": "A database error occurred.",
-  "CRITICAL_FAILURE": "A critical error has occurred.",
-  "UNKNOWN_ERROR": "An unexpected error has occurred.",
+  "DATABASE_ERROR": "An error occurred while working with the database.",
+  "EXPORT_ERROR": "Failed to complete the export.",
+  "CRITICAL_FAILURE": "A critical error occurred.",
+  "UNKNOWN_ERROR": "An unexpected error occurred.",
   "CONNECTION_ERROR": "Unable to establish an internet connection.",
   "PERMISSION_ERROR": "The application does not have permission to write to disk."
 }

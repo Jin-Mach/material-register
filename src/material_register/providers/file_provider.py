@@ -87,7 +87,7 @@ class FileProvider:
             return False
 
     @classmethod
-    def _check_ui_json(cls, data: dict[str, dict[str, str]]) -> bool:
+    def _check_ui_json(cls, data: dict[str, dict[str, str | list[str]]]) -> bool:
         for section, key in UI_KEYS:
             if section not in data:
                 return False

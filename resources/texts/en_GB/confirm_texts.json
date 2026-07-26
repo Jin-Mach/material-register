@@ -1,13 +1,72 @@
 {
   "ACTIVE": {
-    "TITLE": "Status change",
-    "TEXT": "Do you really want to change the status of the selected user?",
+    "TITLE": "Change status",
+    "TEXT": "Are you sure you want to change the status of the selected user?",
     "YES": "Change",
     "NO": "Cancel"
   },
-  "CUSTOMER_NOT_FOUND": {
-    "TITLE": "No Results",
-    "TEXT": "No records found for the entered search term",
+  "NO_RESULTS": {
+    "TITLE": "Error",
+    "TEXT": "No records match the search term",
     "CLOSE": "Close"
+  },
+  "NO_CUSTOMERS": {
+    "TITLE": "Error",
+    "TEXT": "No active customers\n(Create or activate at least one customer)",
+    "CLOSE": "Close"
+  },
+  "NO_CATEGORY": {
+    "TITLE": "Error",
+    "TEXT": "No category\n(Create at least one category)",
+    "CLOSE": "Close"
+  },
+  "TREE_ITEM_CREATION_FAILED": {
+    "TITLE": "Error",
+    "TEXT": "Failed to create catalog item.",
+    "CLOSE": "Close"
+  },
+  "INVALID_DATA": {
+    "TITLE": "Error",
+    "TEXT": "An unexpected error occurred while processing data.",
+    "CLOSE": "Close"
+  },
+  "ITEMS_DATA_FAILED": {
+    "TITLE": "Error",
+    "TEXT": "Failed to load transaction item data",
+    "CLOSE": "Close"
+  },
+  "INVALID_COMMODITY_UNIT": {
+    "TITLE": "Error",
+    "TEXT": "All items in the transaction must have the same unit.",
+    "CLOSE": "Close"
+  },
+  "ZERO_PRICE_TRANSACTION": {
+    "TITLE": "Price check",
+    "TEXT": "The item will be inserted without a specified price.\nDo you want to continue?",
+    "YES": "Continue",
+    "NO": "Cancel"
+  },
+  "DELETE_TRANSACTION_ITEM": {
+    "TITLE": "Delete item",
+    "TEXT": "Are you sure you want to delete the transaction item?",
+    "YES": "Delete",
+    "NO": "Cancel"
+  },
+  "DATABASE_ERROR": {
+    "TITLE": "Error",
+    "TEXT": "The operation could not be completed",
+    "CLOSE": "Close"
+  },
+  "DELETE_TRANSACTION": {
+    "TITLE": "Delete transaction",
+    "TEXT": "Are you sure you want to delete the transaction?",
+    "YES": "Delete",
+    "NO": "Cancel"
+  },
+  "RESTORE_SETTINGS": {
+    "TITLE": "Restore default settings",
+    "TEXT": "Are you sure you want to restore all settings to their default values?",
+    "YES": "Restore",
+    "NO": "Cancel"
   }
 }

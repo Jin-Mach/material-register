@@ -4,5 +4,29 @@
     "document_number": "Document number",
     "address": "Address",
     "active": "Status"
+  },
+  "TransactionView": {
+    "category": "Category",
+    "commodity": "Item",
+    "commodityId": "Item ID",
+    "unitCount": "Total quantity",
+    "pricePerUnit": "Unit price (CZK)",
+    "totalPrice": "Total amount"
+  },
+  "TransactionsView": {
+    "headers_texts": {
+      "0": "Date",
+      "1": "Customer",
+      "2": "Document",
+      "3": "Address",
+      "4": "Total"
+    }
+  },
+  "InventoryView": {
+    "0": "Category",
+    "1": "Item",
+    "2": "Unit",
+    "3": "Stock quantity",
+    "4": "Status"
   }
 }

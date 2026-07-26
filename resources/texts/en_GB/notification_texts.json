@@ -2,12 +2,20 @@
   "CUSTOMERS": {
     "ADD_CUSTOMER": "Customer added",
     "UPDATE_CUSTOMER": "Record updated",
-    "CHANGE_ACTIVE": "Status changed"
+    "CHANGE_ACTIVE": "Status updated"
   },
   "CATALOG": {
     "ADD_CATEGORY": "Category added",
     "UPDATE_CATEGORY": "Category updated",
     "ADD_COMMODITY": "Item added",
     "UPDATE_COMMODITY": "Item updated"
+  },
+  "TRANSACTIONS": {
+    "ADD_TRANSACTION": "Transaction added",
+    "UPDATE_TRANSACTION": "Transaction updated",
+    "DELETE_TRANSACTION": "Transaction deleted"
+  },
+  "EXPORT": {
+    "EXPORT_COMPLETED": "Export completed"
   }
 }
