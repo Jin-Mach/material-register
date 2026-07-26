@@ -213,8 +213,8 @@ class ExportWidget(QWidget):
         widgets = self.findChildren(QWidget)
         self._setup_texts(widgets)
         self._setup_spinboxes()
-        self._set_folder_path()
         self.apply_settings()
+        self._set_folder_path()
         self._set_file_suffix()
         self._set_validators()
         self._apply_date_state()
@@ -249,6 +249,7 @@ class ExportWidget(QWidget):
             ErrorHandler.handle_error(f"Settings load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return
+        self._set_folder_path()
         if not self.file_name_line_edit.text().strip():
             today = QDate.currentDate()
             self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")

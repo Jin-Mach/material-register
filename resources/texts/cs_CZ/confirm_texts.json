@@ -62,5 +62,11 @@
     "TEXT": "Opravdu smazat transakci?",
     "YES": "Smazat",
     "NO": "Zrušit"
+  },
+  "RESTORE_SETTINGS": {
+    "TITLE": "Obnovit výchozí nastavení",
+    "TEXT": "Opravdu chcete obnovit všechna nastavení na výchozí hodnoty?",
+    "YES": "Obnovit",
+    "NO": "Zrušit"
   }
 }

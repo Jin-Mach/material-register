@@ -348,7 +348,7 @@ class TransactionsController:
     def _handle_db_error(error: str, method: str) -> None:
         if not error:
             error = f"Unknown database error: {method}"
-        ErrorHandler.handle_error(error, "db", "critical")
+        ErrorHandler.handle_error(f"{error}: {method}", "db", "critical")
         dialog = ErrorDialog()
         dialog.show_dialog("DATABASE_ERROR", False)
 

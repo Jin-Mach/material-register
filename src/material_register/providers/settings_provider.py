@@ -23,7 +23,23 @@ class SettingsProvider:
                 tomli_w.dump(cls.SETTINGS, settings_file)
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, "settings", "error")
+            return False
+
+    @classmethod
+    def restore_settings(cls, section: str) -> bool:
+        try:
+            settings = cls.SETTINGS.get(section, {})
+            default = settings.get("default", {})
+            user = settings.get("user", {})
+            if not default or not user:
+                return False
+            for key, value in default.items():
+                if key in user:
+                    user[key] = value
+            return True
+        except Exception as e:
+            ErrorHandler.handle_error(e, "settings", "error")
             return False
 
     @staticmethod
@@ -34,5 +50,5 @@ class SettingsProvider:
             with open(settings_path, "rb") as settings_file:
                 return tomllib.load(settings_file)
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, "settings", "error")
             return {}

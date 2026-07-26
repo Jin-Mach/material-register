@@ -82,7 +82,7 @@ class ExportController(QObject):
     def _handle_export_error(error: str, method: str) -> None:
         if not error:
             error = f"Unknown export error: {method}"
-        ErrorHandler.handle_error(error, "export", "critical")
+        ErrorHandler.handle_error(f"{error}: {method}", "export", "critical")
         dialog = ErrorDialog()
         dialog.show_dialog("EXPORT_ERROR", False)
 

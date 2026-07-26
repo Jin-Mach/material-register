@@ -21,6 +21,7 @@ class LoggerProvider:
             cls.ui = cls._create_logger("material-transactions.ui", "ui")
             cls.db = cls._create_logger("material-transactions.db", "db")
             cls.export = cls._create_logger("material-transactions.export", "export")
+            cls.settings = cls._create_logger("material-transactions.settings", "settings")
             cls.error = cls._create_logger("material-transactions.error","error")
             return True
         except Exception as e:

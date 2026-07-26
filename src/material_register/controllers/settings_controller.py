@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 
 if TYPE_CHECKING:
     from material_register.ui.settings.settings_widgets.export_setings import ExportSettings
@@ -29,6 +30,20 @@ class SettingsController:
             return
         self._reload_settings()
 
+    def restore_settings(self) -> None:
+        question = MessageBoxes.show_question(self.export_settings, "RESTORE_SETTINGS")
+        if question:
+            if not SettingsProvider.restore_settings("export"):
+                SettingsController._handle_settings_error("Restore settings failed",
+                                                          f"{self.__class__.__name__}.restore_settings")
+                return
+            if not SettingsProvider.save_settings():
+                SettingsController._handle_settings_error("Restore settings failed",
+                                                          f"{self.__class__.__name__}.restore_settings")
+                return
+            self.export_settings.apply_settings()
+            self._reload_settings()
+
     def _reload_settings(self) -> None:
         stacked_widget = self.export_settings.settings_widget.stacked_widget
         export_widget = stacked_widget.export_widget
@@ -39,6 +54,6 @@ class SettingsController:
     def _handle_settings_error(error: str, method: str) -> None:
         if not error:
             error = f"Settings failed: {method}"
-        ErrorHandler.handle_error(error, "app", "warning")
+        ErrorHandler.handle_error(f"{error}: {method}", "settings", "warning")
         dialog = ErrorDialog()
         dialog.show_dialog("SETTINGS_FAILED", False)

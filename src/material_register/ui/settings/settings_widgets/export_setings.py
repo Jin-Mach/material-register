@@ -146,7 +146,7 @@ class ExportSettings(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
-        self._apply_settings()
+        self.apply_settings()
         self._set_folder_path()
         self._set_validators()
 
@@ -165,7 +165,7 @@ class ExportSettings(QWidget):
         if UiTexts.set_default_texts(self, widgets):
             return
 
-    def _apply_settings(self) -> None:
+    def apply_settings(self) -> None:
         if not UiSettings.set_ui_settings("export", self.findChildren(QWidget)):
             ErrorHandler.handle_error(f"Settings load failed: {self.__class__.__name__}", "ui", "warning")
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
@@ -173,6 +173,7 @@ class ExportSettings(QWidget):
 
     def _create_connection(self) -> None:
         self.path_button.clicked.connect(self._select_export_path)
+        self.restore_button.clicked.connect(self.settings_controller.restore_settings)
         self.save_button.clicked.connect(self.settings_controller.update_settings)
 
     def _set_validators(self) -> None:
@@ -205,7 +206,7 @@ class ExportSettings(QWidget):
     def get_export_settings_data(self):
         return {
             self.branch_name_line_edit.objectName(): self.branch_name_line_edit.text().strip(),
-            self.path_line_edit.objectName(): self.path_line_edit.text().strip(),
+            self.path_line_edit.objectName(): self.current_path,
             self.file_name_line_edit.objectName(): self.file_name_line_edit.text().strip(),
             self.no_action_radio_button.objectName(): self.no_action_radio_button.isChecked(),
             self.open_folder_radio_button.objectName(): self.open_folder_radio_button.isChecked(),
