@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
 
+from material_register.core.app_context import AppContext
 from material_register.providers.settings_provider import SettingsProvider
+from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
@@ -13,6 +15,7 @@ class SettingsController:
     def __init__(self, export_settings: "ExportSettings") -> None:
         self.export_settings = export_settings
         self.settings = SettingsProvider.SETTINGS.get("export", {})
+        self.status_texts = TextsProvider.STATUS_TEXTS
 
     def update_settings(self) -> None:
         user_settings = self.settings.get("user", {})
@@ -29,6 +32,7 @@ class SettingsController:
                                                       f"{self.__class__.__name__}.update_settings")
             return
         self._reload_settings()
+        AppContext.MAIN_WINDOW.status_bar.show_message(self.status_texts.get("SETTINGS_SAVED"))
 
     def restore_settings(self) -> None:
         question = MessageBoxes.show_question(self.export_settings, "RESTORE_SETTINGS")
@@ -43,6 +47,7 @@ class SettingsController:
                 return
             self.export_settings.apply_settings()
             self._reload_settings()
+            AppContext.MAIN_WINDOW.status_bar.show_message(self.status_texts.get("SETTINGS_RESTORED"))
 
     def _reload_settings(self) -> None:
         stacked_widget = self.export_settings.settings_widget.stacked_widget

@@ -7,6 +7,7 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.widgets.side_panel import SidePanel
 from material_register.ui.widgets.stacked_widget import StackedWidget
+from material_register.ui.widgets.status_bar import StatusBar
 
 
 class MainWindow(QMainWindow):
@@ -14,6 +15,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setMinimumSize(900, 600)
         self.setCentralWidget(self._create_ui())
+        self.status_bar = StatusBar(self)
+        self.setStatusBar(self.status_bar)
         self._ui_setup()
         self._create_connection()
         self.settings_manager = SettingsManager(self)

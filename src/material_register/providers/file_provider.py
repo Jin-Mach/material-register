@@ -4,7 +4,7 @@ import tomllib
 from pathlib import Path
 
 from material_register.config.file_config import REQUIRED_JSON_FILES, REQUIRED_IMAGES, UI_KEYS, ERROR_KEYS, \
-    HEADERS_KEYS, CONFIRM_STRUCTURE, NOTIFICATION_KEYS, REQUIRED_CONFIG_FILES
+    HEADERS_KEYS, CONFIRM_STRUCTURE, NOTIFICATION_KEYS, REQUIRED_CONFIG_FILES, STATUS_KEYS
 from material_register.services.error_handler import ErrorHandler
 
 
@@ -69,6 +69,8 @@ class FileProvider:
                 return cls._check_confirm_json(data)
             if name == "notification_texts":
                 return cls._check_notification_json(data)
+            if name == "status_texts":
+                return cls._check_status_json(data)
             return False
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")
@@ -137,5 +139,14 @@ class FileProvider:
             if key not in data[section]:
                 return False
             if not data[section][key]:
+                return False
+        return True
+
+    @classmethod
+    def _check_status_json(cls, data: dict[str, dict[str, str]]) -> bool:
+        for key in STATUS_KEYS:
+            if key not in data:
+                return False
+            if not data[key]:
                 return False
         return True

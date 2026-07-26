@@ -14,7 +14,9 @@ REQUIRED_JSON_FILES = [
     Path("cs_CZ") / "confirm_texts.json",
     Path("en_GB") / "confirm_texts.json",
     Path("cs_CZ") / "notification_texts.json",
-    Path("en_GB") / "notification_texts.json"
+    Path("en_GB") / "notification_texts.json",
+    Path("cs_CZ") / "status_texts.json",
+    Path("en_GB") / "status_texts.json",
 ]
 
 REQUIRED_IMAGES = [
@@ -140,4 +142,10 @@ NOTIFICATION_KEYS = [
     ("CATALOG", "UPDATE_CATEGORY"),
     ("CATALOG", "ADD_COMMODITY"),
     ("CATALOG", "UPDATE_COMMODITY"),
+]
+
+STATUS_KEYS = [
+    "SETTINGS_SAVED",
+    "SETTINGS_RESTORED",
+    "READY"
 ]
