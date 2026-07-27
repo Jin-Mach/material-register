@@ -203,6 +203,7 @@ EXPORT_QUERY_IN = """
             
             WHERE
                 trans.type = 'IN'
+                AND trans.payment_type = 'CASH'
                 AND trans.created_at >= ?
                 AND trans.created_at <= ?
             

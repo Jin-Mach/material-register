@@ -33,7 +33,9 @@ def schema(connection) -> None:
         CREATE TABLE transactions (
             id INTEGER PRIMARY KEY,
             type TEXT,
-            created_at TEXT
+            created_at TEXT,
+            payment_type TEXT,
+            notes TEXT
         )
     """)
     query.exec("""
@@ -52,11 +54,11 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
     query.exec("INSERT INTO commodities VALUES (1, 'Fe 12345', 1, 'kg')")
     query.exec("""
         INSERT INTO transactions VALUES 
-        (1, 'IN', '2026-07-25 08:00:00')
+        (1, 'IN', '2026-07-25 08:00:00', 'CASH', NULL)
     """)
     query.exec("""
         INSERT INTO transactions VALUES 
-        (2, 'IN', '2026-07-25 09:00:00')
+        (2, 'IN', '2026-07-25 09:00:00', 'CASH', NULL)
     """)
     query.exec("""
         INSERT INTO transaction_items VALUES
@@ -83,11 +85,11 @@ def test_load_export_data_out(connection: QSqlDatabase, schema) -> None:
     query.exec("INSERT INTO commodities VALUES (1, 'Fe 12345', 1, 'kg')")
     query.exec("""
         INSERT INTO transactions VALUES 
-        (1, 'OUT', '2026-07-25 08:00:00')
+        (1, 'OUT', '2026-07-25 08:00:00', NULL, NULL)
     """)
     query.exec("""
         INSERT INTO transactions VALUES 
-        (2, 'OUT', '2026-07-25 09:00:00')
+        (2, 'OUT', '2026-07-25 09:00:00', NULL, NULL)
     """)
     query.exec("""
         INSERT INTO transaction_items VALUES
