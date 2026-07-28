@@ -1,5 +1,6 @@
 {
   "SETTINGS_SAVED": "Settings saved",
   "SETTINGS_RESTORED": "Settings restored",
+  "SETTINGS_FAILED": "Failed to save settings",
   "READY": "Ready"
 }

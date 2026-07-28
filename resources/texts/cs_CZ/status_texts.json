@@ -1,5 +1,6 @@
 {
   "SETTINGS_SAVED": "Nastavení uloženo",
   "SETTINGS_RESTORED": "Nastavení obnoveno",
+  "SETTINGS_FAILED": "Nepodařilo se uložit nastavení",
   "READY": "Připraveno"
 }

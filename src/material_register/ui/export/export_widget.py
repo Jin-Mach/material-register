@@ -26,6 +26,7 @@ class ExportWidget(QWidget):
 
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
+        self.stacked_widget = stacked_widget
         self.export_controller = ExportController(self)
         self.current_path = ""
         self.setLayout(self._create_ui())
