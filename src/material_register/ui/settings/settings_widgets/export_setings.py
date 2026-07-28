@@ -38,7 +38,7 @@ class ExportSettings(QWidget):
         branch_group = self._create_branch_group()
         path_name_group = self._create_path_name_group()
         export_options_group = self._create_export_options_group()
-        other_settings_group = self._create_other_settings()
+        other_settings_group = self._create_other_settings_group()
         group_layout.addWidget(branch_group)
         group_layout.addWidget(path_name_group)
         group_layout.addWidget(export_options_group)
@@ -115,7 +115,7 @@ class ExportSettings(QWidget):
         self.export_options_group_box.setLayout(main_layout)
         return self.export_options_group_box
 
-    def _create_other_settings(self) -> QGroupBox:
+    def _create_other_settings_group(self) -> QGroupBox:
         self.other_settings_group_box = QGroupBox()
         self.other_settings_group_box.setObjectName("otherSettingsGroupBox")
         main_layout = QVBoxLayout()

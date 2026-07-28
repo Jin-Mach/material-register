@@ -56,6 +56,9 @@
     "searchLineEditPlaceholderText": "Enter search text..."
   },
   "ExportWidget": {
+    "branchGroupBoxText": "Branch",
+    "branchNameLabelText": "Branch:",
+    "branchNameLineEditPlaceholderText": "Enter branch name",
     "pathNameGroupBoxText": "File",
     "fileTypeLabelText": "File type:",
     "fileTypeComboBoxItems": ["Excel"],
@@ -82,6 +85,9 @@
     "noActionRadioButtonText": "Do nothing",
     "openFolderRadioButtonText": "Open folder",
     "openFileRadioButtonText": "Open file",
+    "otherSettingsGroupBoxText": "Other",
+    "useLastOptionsCheckboxText": "Remember last settings",
+    "saveLastOpeningBalanceCheckboxText": "Remember last balance",
     "exportButtonText": "Export",
     "exportButtonTooltipText": "Exports data according to the selected parameters"
   },
@@ -246,8 +252,8 @@
     "openFolderRadioButtonText": "Open folder",
     "openFileRadioButtonText": "Open file",
     "otherSettingsGroupBoxText": "Other",
-    "useLastOptionsCheckboxText": "Use last used values",
-    "saveLastOpeningBalanceCheckboxText": "Save balance",
+    "useLastOptionsCheckboxText": "Remember last settings",
+    "saveLastOpeningBalanceCheckboxText": "Remember last balance",
     "restoreButtonText": "Restore default",
     "restoreButtonTooltipText": "Restores default export values",
     "saveButtonText": "Save",

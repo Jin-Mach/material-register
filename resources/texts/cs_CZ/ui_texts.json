@@ -56,6 +56,9 @@
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
   "ExportWidget": {
+    "branchGroupBoxText": "Pobočka",
+    "branchNameLabelText": "Pobočka:",
+    "branchNameLineEditPlaceholderText": "Zadej název pobočky",
     "pathNameGroupBoxText": "Soubor",
     "fileTypeLabelText": "Typ souboru:",
     "fileTypeComboBoxItems": ["Excel"],
@@ -82,6 +85,9 @@
     "noActionRadioButtonText": "Nedělat nic",
     "openFolderRadioButtonText": "Otevřít ve složce",
     "openFileRadioButtonText": "Otevřít soubor",
+    "otherSettingsGroupBoxText": "Ostatní",
+    "useLastOptionsCheckboxText": "Pamatovat si poslední nastavení",
+    "saveLastOpeningBalanceCheckboxText": "Pamatovat si poslední zůstatek",
     "exportButtonText": "Exportovat",
     "exportButtonTooltipText": "Exportuje data dle nastavených parametrů"
   },
@@ -246,8 +252,8 @@
     "openFolderRadioButtonText": "Otevřít ve složce",
     "openFileRadioButtonText": "Otevřít soubor",
     "otherSettingsGroupBoxText": "Ostatní",
-    "useLastOptionsCheckboxText": "Používat poslední použité hodnoty",
-    "saveLastOpeningBalanceCheckboxText": "Ukládat zůstatek",
+    "useLastOptionsCheckboxText": "Pamatovat si poslední nastavení",
+    "saveLastOpeningBalanceCheckboxText": "Pamatovat si poslední zůstatek",
     "restoreButtonText": "Obnovit výchozí",
     "restoreButtonTooltipText": "Nastaví výchozí hodnoty pro export",
     "saveButtonText": "Uložit",

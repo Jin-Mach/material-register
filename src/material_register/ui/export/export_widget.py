@@ -5,10 +5,10 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import Qt, QDate, QStandardPaths, QRegularExpression
 from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics, QResizeEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QHBoxLayout, QLabel, \
-    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog, QDoubleSpinBox, QScrollArea
+    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog, QDoubleSpinBox, QScrollArea, \
+    QCheckBox
 
-from material_register.config.ui_constants import DO_NOTHING, OPEN_FOLDER, OPEN_FILE, EXPORT_PRICE_MIN_VALUE, \
-    EXPORT_PRICE_MAX_VALUE
+from material_register.config.ui_constants import EXPORT_PRICE_MIN_VALUE, EXPORT_PRICE_MAX_VALUE
 from material_register.controllers.export_controller import ExportController
 from material_register.db.utils.date_filters import get_filter_range
 from material_register.services.error_handler import ErrorHandler
@@ -39,19 +39,40 @@ class ExportWidget(QWidget):
         group_widget = QWidget()
         group_layout = QVBoxLayout(group_widget)
         group_layout.setSpacing(self.SPACING)
+        branch_group = self._create_branch_group()
         path_name_group = self._create_path_name_group()
         date_options_group = self._create_date_options_group()
         financial_data_group = self._create_financial_data_group()
         export_options_group = self._create_export_options_group()
+        other_settings_group = self._create_other_settings_group()
+        group_layout.addWidget(branch_group)
         group_layout.addWidget(path_name_group)
         group_layout.addWidget(date_options_group)
         group_layout.addWidget(financial_data_group)
         group_layout.addWidget(export_options_group)
+        group_layout.addWidget(other_settings_group)
         export_action_group = self._create_export_action_group()
         scroll_area.setWidget(group_widget)
         main_layout.addWidget(scroll_area)
         main_layout.addWidget(export_action_group)
         return main_layout
+
+    def _create_branch_group(self) -> QGroupBox:
+        self.branch_group_box = QGroupBox()
+        self.branch_group_box.setObjectName("branchGroupBox")
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        form_layout = QFormLayout()
+        self.branch_name_label = QLabel()
+        self.branch_name_label.setObjectName("branchNameLabel")
+        self.branch_name_line_edit = QLineEdit()
+        self.branch_name_line_edit.setObjectName("branchNameLineEdit")
+        self.branch_name_line_edit.setMinimumWidth(self.WIDTH)
+        self.branch_name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        form_layout.addRow(self.branch_name_label, self.branch_name_line_edit)
+        main_layout.addLayout(form_layout)
+        self.branch_group_box.setLayout(main_layout)
+        return self.branch_group_box
 
     def _create_path_name_group(self) -> QGroupBox:
         self.path_name_group_box = QGroupBox()
@@ -196,6 +217,20 @@ class ExportWidget(QWidget):
         self.export_options_group_box.setLayout(main_layout)
         return self.export_options_group_box
 
+    def _create_other_settings_group(self) -> QGroupBox:
+        self.other_settings_group_box = QGroupBox()
+        self.other_settings_group_box.setObjectName("otherSettingsGroupBox")
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        self.use_last_options_checkbox = QCheckBox()
+        self.use_last_options_checkbox.setObjectName("useLastOptionsCheckbox")
+        self.save_last_opening_balance_checkbox = QCheckBox()
+        self.save_last_opening_balance_checkbox.setObjectName("saveLastOpeningBalanceCheckbox")
+        main_layout.addWidget(self.use_last_options_checkbox)
+        main_layout.addWidget(self.save_last_opening_balance_checkbox)
+        self.other_settings_group_box.setLayout(main_layout)
+        return self.other_settings_group_box
+
     def _create_export_action_group(self) -> QGroupBox:
         self.export_action_group_box = QGroupBox()
         self.export_action_group_box.setObjectName("exportActionGroupBox")
@@ -258,6 +293,7 @@ class ExportWidget(QWidget):
     def _create_connection(self) -> None:
         date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,
                              self.year_radio_button, self.custom_radio_button]
+        self.branch_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
         self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
         self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
         self.path_button.clicked.connect(self._select_export_folder)
@@ -281,6 +317,7 @@ class ExportWidget(QWidget):
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}"))
+        self.branch_name_line_edit.setValidator(name_validator)
         self.file_name_line_edit.setValidator(name_validator)
 
     def _set_folder_path(self) -> None:
@@ -309,7 +346,9 @@ class ExportWidget(QWidget):
             self.to_date_edit.setEnabled(False)
 
     def _apply_export_action_state(self) -> None:
-        if self.file_name_line_edit.text().strip() != "" and self.opening_balance_spinbox.value() > 0.0:
+        if (self.branch_name_line_edit.text().strip() != ""
+                and self.file_name_line_edit.text().strip() != ""
+                and self.opening_balance_spinbox.value() > 0.0):
             self.export_button.setEnabled(True)
         else:
             self.export_button.setEnabled(False)
@@ -331,6 +370,10 @@ class ExportWidget(QWidget):
         self.from_date_edit.setMaximumDate(date)
 
     def _set_required_style(self) -> None:
+        if self.branch_name_line_edit.text().strip() == "":
+            self.branch_name_line_edit.setStyleSheet(INVALID_INPUT_STYLE)
+        else:
+            self.branch_name_line_edit.setStyleSheet("")
         if self.file_name_line_edit.text().strip() == "":
             self.file_name_line_edit.setStyleSheet(INVALID_INPUT_STYLE)
         else:
@@ -371,16 +414,6 @@ class ExportWidget(QWidget):
                       self.to_date_edit.date().toString("yyyy-MM-dd 23:59:59"))
         return date_range
 
-    def _get_export_action(self) -> str:
-        options_map = {
-            self.open_folder_radio_button: OPEN_FOLDER,
-            self.open_file_radio_button:OPEN_FILE
-        }
-        for key in options_map:
-            if key.isChecked():
-                return options_map[key]
-        return DO_NOTHING
-
     @staticmethod
     def _get_file_suffix(file_type: str) -> str:
         file_map = {
@@ -392,16 +425,22 @@ class ExportWidget(QWidget):
     def _normalize_value(value: float) -> float:
         return float(f"{value:.1f}")
 
-    def get_export_data(self) -> dict[str, Path | str | float]:
+    def get_export_data(self) -> dict[str, Path | str | float | bool]:
         from_date, to_date = self._get_date_interval()
         return {
-            "export_path": self._get_full_path(),
+            "branchNameLineEdit": self.branch_name_line_edit.text().strip(),
+            "pathLineEdit": self._get_full_path(),
+            "fileNameLineEdit": self.file_name_line_edit.text().strip(),
             "from_date": from_date,
             "to_date": to_date,
             "opening_balance": ExportWidget._normalize_value(self.opening_balance_spinbox.value()),
             "income": ExportWidget._normalize_value(self.income_spinbox.value()),
             "expense": ExportWidget._normalize_value(self.expense_spinbox.value()),
-            "export_action": self._get_export_action(),
+            "noActionRadioButton": self.no_action_radio_button.isChecked(),
+            "openFolderRadioButton": self.open_folder_radio_button.isChecked(),
+            "openFileRadioButton": self.open_file_radio_button.isChecked(),
+            "useLastOptionsCheckbox": self.use_last_options_checkbox.isChecked(),
+            "saveLastOpeningBalanceCheckbox": self.save_last_opening_balance_checkbox.isChecked()
         }
 
     def resizeEvent(self, event: QResizeEvent) -> None:
