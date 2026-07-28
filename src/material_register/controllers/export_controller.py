@@ -24,7 +24,6 @@ class ExportController(QObject):
         self.thread = None
         self.worker = None
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("EXPORT", None)
-        self.status_texts = TextsProvider.STATUS_TEXTS
 
     def start_export(self) -> None:
         self.export_settings = self.export_widget.get_export_data()
@@ -69,16 +68,16 @@ class ExportController(QObject):
     def _last_settings_saved(self) -> None:
         user_settings = SettingsProvider.SETTINGS.get("user", {})
         if not user_settings:
-            AppContext.MAIN_WINDOW.status_bar.show_message(self.status_texts.get("SETTINGS_FAILED"))
+            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
         for key, value in self.export_settings.items():
             if key in user_settings:
                 user_settings[key] = value
         if not SettingsProvider.save_settings():
-            AppContext.MAIN_WINDOW.status_bar.show_message(self.status_texts.get("SETTINGS_FAILED"))
+            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
         self._reload_settings()
-        AppContext.MAIN_WINDOW.status_bar.show_message(self.status_texts.get("SETTINGS_SAVED"))
+        AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
 
     def _reload_settings(self) -> None:
         stacked_widget = self.export_widget.stacked_widget
