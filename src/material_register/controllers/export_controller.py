@@ -46,9 +46,9 @@ class ExportController(QObject):
         ExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
 
     def _export_ok(self) -> None:
-        self._clean_thread()
         if self.export_settings.get("useLastOptionsCheckbox", False):
             self._last_settings_saved()
+        self._clean_thread()
         ExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
 
     def _clean_thread(self) -> None:
@@ -66,11 +66,13 @@ class ExportController(QObject):
         self.worker = None
 
     def _last_settings_saved(self) -> None:
-        user_settings = SettingsProvider.SETTINGS.get("user", {})
+        user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
         if not user_settings:
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
         for key, value in self.export_settings.items():
+            if isinstance(self.export_settings[key], Path):
+                value = str(value)
             if key in user_settings:
                 user_settings[key] = value
         if not SettingsProvider.save_settings():
@@ -94,7 +96,7 @@ class ExportController(QObject):
             "fileNameLineEdit",
             "from_date",
             "to_date",
-            "opening_balance",
+            "openingBalanceSpinbox",
             "income",
             "expense",
             "noActionRadioButton",
@@ -109,7 +111,7 @@ class ExportController(QObject):
         for key in ["branchNameLineEdit", "pathLineEdit", "fileNameLineEdit", "from_date", "to_date"]:
             if self.export_settings[key] in (None, ""):
                 return False
-        for key in ["opening_balance", "income", "expense"]:
+        for key in ["openingBalanceSpinbox", "income", "expense"]:
             if not isinstance(self.export_settings[key], (int, float)):
                 return False
         for key in ["noActionRadioButton", "openFolderRadioButton", "openFileRadioButton", "useLastOptionsCheckbox",

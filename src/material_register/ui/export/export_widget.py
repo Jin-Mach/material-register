@@ -28,7 +28,9 @@ class ExportWidget(QWidget):
         super().__init__(stacked_widget)
         self.stacked_widget = stacked_widget
         self.export_controller = ExportController(self)
-        self.current_path = ""
+        self.current_path = Path(
+            QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+        )
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -323,11 +325,13 @@ class ExportWidget(QWidget):
 
     def _set_folder_path(self) -> None:
         if not self.path_line_edit.text().strip():
-            self.current_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+            self.current_path = Path(
+                QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+            )
         else:
-            self.current_path = self.path_line_edit.text().strip()
-        self._set_elided_path(self.current_path)
-        self.path_line_edit.setToolTip(self.current_path)
+            self.current_path = Path(self.path_line_edit.text().strip())
+        self._set_elided_path(str(self.current_path))
+        self.path_line_edit.setToolTip(str(self.current_path))
         self.path_line_edit.setToolTipDuration(3000)
         self.path_line_edit.setReadOnly(True)
 
@@ -390,14 +394,14 @@ class ExportWidget(QWidget):
         self.path_line_edit.setText(elided_path)
 
     def _select_export_folder(self) -> None:
-        folder = QFileDialog.getExistingDirectory(self, self.folder_dialog_title, self.current_path)
+        folder = QFileDialog.getExistingDirectory(self, self.folder_dialog_title, str(self.current_path))
         if folder:
-            self.current_path = folder
-            self._set_elided_path(self.current_path)
-            self.path_line_edit.setToolTip(folder)
+            self.current_path = Path(folder)
+            self._set_elided_path(str(self.current_path))
+            self.path_line_edit.setToolTip(str(folder))
 
     def _get_full_path(self) -> Path:
-        return (Path(self.current_path) / self.file_name_line_edit.text().strip()).with_suffix(self.suffix_label.text())
+        return (self.current_path / self.file_name_line_edit.text().strip()).with_suffix(self.suffix_label.text())
 
     def _get_date_interval(self) -> tuple[str, str]:
         date_map = {
@@ -430,11 +434,12 @@ class ExportWidget(QWidget):
         from_date, to_date = self._get_date_interval()
         return {
             "branchNameLineEdit": self.branch_name_line_edit.text().strip(),
-            "pathLineEdit": self._get_full_path(),
+            "pathLineEdit": str(self.current_path),
+            "export_path": self._get_full_path(),
             "fileNameLineEdit": self.file_name_line_edit.text().strip(),
             "from_date": from_date,
             "to_date": to_date,
-            "opening_balance": ExportWidget._normalize_value(self.opening_balance_spinbox.value()),
+            "openingBalanceSpinbox": ExportWidget._normalize_value(self.opening_balance_spinbox.value()),
             "income": ExportWidget._normalize_value(self.income_spinbox.value()),
             "expense": ExportWidget._normalize_value(self.expense_spinbox.value()),
             "noActionRadioButton": self.no_action_radio_button.isChecked(),
@@ -446,5 +451,4 @@ class ExportWidget(QWidget):
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         super().resizeEvent(event)
-        if self.current_path:
-            self._set_elided_path(self.current_path)
+        self._set_elided_path(str(self.current_path))

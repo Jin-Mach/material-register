@@ -17,10 +17,11 @@ class UiSettings:
             return False
         for widget in widgets:
             key = widget.objectName()
-            if isinstance(widget, QLineEdit):
-                widget.setText(settings.get(key, ""))
-            elif isinstance(widget, (QSpinBox, QDoubleSpinBox)):
-                widget.setValue(settings.get(key, 0.0))
-            elif isinstance(widget, (QCheckBox, QRadioButton)):
-                widget.setChecked(settings.get(key, False))
+            if key in settings:
+                if isinstance(widget, QLineEdit):
+                    widget.setText(settings.get(key, ""))
+                elif isinstance(widget, (QSpinBox, QDoubleSpinBox)):
+                    widget.setValue(settings.get(key, 0.0))
+                elif isinstance(widget, (QCheckBox, QRadioButton)):
+                    widget.setChecked(settings.get(key, False))
         return True
