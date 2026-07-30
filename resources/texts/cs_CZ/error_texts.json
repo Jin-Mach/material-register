@@ -8,6 +8,7 @@
   "DATABASE_FAILED": "Nepodařilo se připojit k databázi nebo ji načíst.",
   "DATABASE_ERROR": "Došlo k chybě při práci s databází.",
   "EXPORT_ERROR": "Nepodařilo se dokončit export",
+  "PATH_ERROR": "Chyba při nastavení cesty souboru",
   "CRITICAL_FAILURE": "Došlo ke kritické chybě.",
   "UNKNOWN_ERROR": "Došlo k neočekávané chybě.",
   "CONNECTION_ERROR": "Nelze navázat připojení k internetu.",

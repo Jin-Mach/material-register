@@ -68,5 +68,11 @@
     "TEXT": "Are you sure you want to restore all settings to their default values?",
     "YES": "Restore",
     "NO": "Cancel"
+  },
+  "PATH_EXISTS": {
+    "TITLE": "File already exists",
+    "TEXT": "A file with the same name already exists in the destination folder.\nDo you want to continue and replace it?",
+    "YES": "Continue",
+    "NO": "Cancel"
   }
 }

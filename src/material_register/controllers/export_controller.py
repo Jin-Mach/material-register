@@ -9,6 +9,7 @@ from material_register.providers.settings_provider import SettingsProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.workers.export_worker import ExportWorker
 
@@ -28,7 +29,18 @@ class ExportController(QObject):
     def start_export(self) -> None:
         self.export_settings = self.export_widget.get_export_data()
         if not self._is_export_settings_valid():
+            MessageBoxes.show_error(self.export_widget, "INVALID_DATA")
             return
+        export_path = self.export_settings.get("export_path", None)
+        if export_path is None:
+            ExportController._handle_export_error("Export path is None",
+                                                  f"{self.__class__.__name__}.start_export",
+                                                  "PATH_ERROR")
+            return
+        if export_path.exists():
+            question = MessageBoxes.show_question(self.export_widget, "PATH_EXISTS")
+            if not question:
+                return
         self._start_worker(self.export_settings["pathLineEdit"], self.export_settings["from_date"],
                            self.export_settings["to_date"])
 
@@ -121,12 +133,12 @@ class ExportController(QObject):
         return True
 
     @staticmethod
-    def _handle_export_error(error: str, method: str) -> None:
+    def _handle_export_error(error: str, method: str, error_key: str = "EXPORT_ERROR") -> None:
         if not error:
             error = f"Unknown export error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", "export", "critical")
         dialog = ErrorDialog()
-        dialog.show_dialog("EXPORT_ERROR", False)
+        dialog.show_dialog(error_key, False)
 
     @staticmethod
     def _notification_handler(notification_texts: dict[str, str], key: str, default: str) -> None:

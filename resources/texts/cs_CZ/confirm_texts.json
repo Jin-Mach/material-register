@@ -68,5 +68,11 @@
     "TEXT": "Opravdu chcete obnovit všechna nastavení na výchozí hodnoty?",
     "YES": "Obnovit",
     "NO": "Zrušit"
+  },
+  "PATH_EXISTS": {
+    "TITLE": "Soubor již existuje",
+    "TEXT": "V cílové složce je soubor se stejným názvem.\nChcete pokračovat a nahradit jej?",
+    "YES": "Pokračovat",
+    "NO": "Zrušit"
   }
 }

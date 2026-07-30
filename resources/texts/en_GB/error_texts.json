@@ -8,6 +8,7 @@
   "DATABASE_FAILED": "Failed to connect to or load the database.",
   "DATABASE_ERROR": "An error occurred while working with the database.",
   "EXPORT_ERROR": "Failed to complete the export.",
+  "PATH_ERROR": "Error while setting the file path.",
   "CRITICAL_FAILURE": "A critical error occurred.",
   "UNKNOWN_ERROR": "An unexpected error occurred.",
   "CONNECTION_ERROR": "Unable to establish an internet connection.",

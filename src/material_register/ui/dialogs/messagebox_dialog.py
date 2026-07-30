@@ -68,7 +68,7 @@ class MessageBoxDialog(QDialog):
             "CRITICAL": app_style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxCritical)
         }
         if icon_key is None:
-            return
+            icon_key = "WARNING"
         icon = icon_map.get(icon_key, None)
         if icon is None:
             return
