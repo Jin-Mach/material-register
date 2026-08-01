@@ -41,12 +41,11 @@ class ExportController(QObject):
             question = MessageBoxes.show_question(self.export_widget, "PATH_EXISTS")
             if not question:
                 return
-        self._start_worker(self.export_settings["pathLineEdit"], self.export_settings["from_date"],
-                           self.export_settings["to_date"])
+        self._start_worker(self.export_settings)
 
-    def _start_worker(self, export_path: Path, from_date: str, to_date: str) -> None:
+    def _start_worker(self, export_settings: dict[str, Path | str | float | bool]) -> None:
         self.thread = QThread()
-        self.worker = ExportWorker(export_path, from_date, to_date)
+        self.worker = ExportWorker(export_settings)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._export_error)

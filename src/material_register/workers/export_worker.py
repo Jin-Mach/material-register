@@ -10,24 +10,24 @@ class ExportWorker(QObject):
     finished = Signal()
     error = Signal(str)
 
-    def __init__(self, export_path: Path, from_date: str, to_date: str) -> None:
+    def __init__(self, export_settings: dict[str, Path | str | float | bool]) -> None:
         super().__init__()
-        self.export_path = export_path
-        self.from_date = from_date
-        self.to_date = to_date
+        self.export_settings = export_settings
         self.db_connection = None
 
     @Slot()
     def run(self) -> None:
+        from_date = self.export_settings["from_date"]
+        to_date = self.export_settings["to_date"]
         ok, error, self.db_connection = DbInit.thread_connection("export_connection")
         if not ok:
             self.error.emit(error)
             return
-        ok, error, in_data = ExportQueries.load_export_data_in(self.db_connection, self.from_date, self.to_date)
+        ok, error, in_data = ExportQueries.load_export_data_in(self.db_connection, from_date, to_date)
         if not ok:
             self.error.emit(error)
             return
-        ok, error, out_data = ExportQueries.load_export_data_out(self.db_connection, self.from_date, self.to_date)
+        ok, error, out_data = ExportQueries.load_export_data_out(self.db_connection, from_date, to_date)
         if not ok:
             self.error.emit(error)
             return

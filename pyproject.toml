@@ -13,7 +13,8 @@ authors = [
 dependencies = [
     "PySide6",
     "requests",
-    "tomli_w"
+    "tomli_w",
+    "openpyxl"
 ]
 
 [project.optional-dependencies]
