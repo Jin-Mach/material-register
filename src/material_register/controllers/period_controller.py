@@ -11,13 +11,13 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
-from material_register.workers.export_worker import ExportWorker
+from material_register.workers.period_export_worker import PeriodExportWorker
 
 if TYPE_CHECKING:
     from material_register.ui.export.export_widget import ExportWidget
 
 
-class ExportController(QObject):
+class PeriodExportController(QObject):
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__()
         self.export_widget = export_widget
@@ -33,7 +33,7 @@ class ExportController(QObject):
             return
         export_path = self.export_settings.get("export_path", None)
         if export_path is None:
-            ExportController._handle_export_error("Export path is None",
+            PeriodExportController._handle_export_error("Export path is None",
                                                   f"{self.__class__.__name__}.start_export",
                                                   "PATH_ERROR")
             return
@@ -45,7 +45,7 @@ class ExportController(QObject):
 
     def _start_worker(self, export_settings: dict[str, Path | str | float | bool]) -> None:
         self.thread = QThread()
-        self.worker = ExportWorker(export_settings)
+        self.worker = PeriodExportWorker(export_settings)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._export_error)
@@ -54,13 +54,13 @@ class ExportController(QObject):
 
     def _export_error(self, error: str) -> None:
         self._clean_thread()
-        ExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
+        PeriodExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
 
     def _export_ok(self) -> None:
         if self.export_settings.get("useLastOptionsCheckbox", False):
             self._last_settings_saved()
         self._clean_thread()
-        ExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
+        PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
 
     def _clean_thread(self) -> None:
         if self.worker and self.worker.db_connection:

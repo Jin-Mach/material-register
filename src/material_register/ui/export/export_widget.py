@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPus
     QCheckBox
 
 from material_register.config.ui_constants import EXPORT_PRICE_MIN_VALUE, EXPORT_PRICE_MAX_VALUE
-from material_register.controllers.export_controller import ExportController
+from material_register.controllers.period_controller import PeriodExportController
 from material_register.db.utils.date_filters import get_filter_range
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
@@ -27,7 +27,7 @@ class ExportWidget(QWidget):
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
         self.stacked_widget = stacked_widget
-        self.export_controller = ExportController(self)
+        self.period_export_controller = PeriodExportController(self)
         self.current_path = Path(
             QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
         )
@@ -305,7 +305,7 @@ class ExportWidget(QWidget):
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
         self.opening_balance_spinbox.valueChanged.connect(self._on_text_or_value_changed)
-        self.export_button.clicked.connect(self.export_controller.start_export)
+        self.export_button.clicked.connect(self.period_export_controller.start_export)
 
     def _setup_spinboxes(self) -> None:
         spinboxes = [self.opening_balance_spinbox, self.income_spinbox, self.expense_spinbox]

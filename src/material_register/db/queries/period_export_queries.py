@@ -4,7 +4,7 @@ from material_register.db.config.queries_constants import EXPORT_QUERY_IN, EXPOR
 from material_register.domain.export_dataclass import ExportItemIn, ExportItemOut
 
 
-class ExportQueries:
+class PeriodExportQueries:
 
     @staticmethod
     def load_export_data_in(db_connection: QSqlDatabase, from_date: str, to_date: str) -> tuple[bool, str, list[ExportItemIn]]:
