@@ -10,49 +10,60 @@ class PeriodSheet:
     START_ROW = 1
     LAST_COLUMN = 8
 
-    TITLE_FONT_SIZE = 15
-    HEADER_FONT_SIZE = 12
+    TITLE_FONT_SIZE = 12
     DEFAULT_FONT_SIZE = 10
 
-    TITLE_ROW_HEIGHT = 25
-    HEADER_ROW_HEIGHT = 20
+    TITLE_ROW_HEIGHT = 20
     DEFAULT_ROW_HEIGHT = 15
 
     ERROR_TEXT = "[N/A]"
 
     @staticmethod
     def create_sheet(sheet: Worksheet, export_settings: dict[str, Path | str | float | bool],
+                     export_texts: dict[str, str],
                      data_in: list[ExportItemIn], out_data: list[ExportItemOut]) -> Worksheet:
         #print("in data:", data_in)
         #print("out data:", out_data)
         row = PeriodSheet.START_ROW
-        row = PeriodSheet._create_header(sheet, row, PeriodSheet.LAST_COLUMN, export_settings)
+        row = PeriodSheet._create_header(sheet, row, PeriodSheet.LAST_COLUMN, export_settings, export_texts)
         sheet.freeze_panes = f"A{row}"
         sheet.protection.enable()
         return sheet
 
     @staticmethod
     def _create_header(sheet: Worksheet, row: int, last_column: int,
-                       export_settings: dict[str, Path | str | float | bool]) -> int:
-        cell = sheet.cell(row=row, column=1, value="material register")
+                       export_settings: dict[str, Path | str | float | bool],
+                       export_texts: dict[str, str]) -> int:
+        cell = sheet.cell(row=row, column=1, value=export_texts.get("titleText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, font_size=PeriodSheet.TITLE_FONT_SIZE, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.TITLE_ROW_HEIGHT
         PeriodSheet._cell_lock(cell)
         row += 1
+        range_text = export_texts.get("rangeText", PeriodSheet.ERROR_TEXT)
+        cell = sheet.cell(row, column=1, value=range_text)
+        PeriodSheet._cell_alignment(cell, horizontal="left")
+        PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
+        PeriodSheet._cell_lock(cell)
         period_value = PeriodSheet._get_period_range(export_settings.get("from_date", None),
                                                      export_settings.get("to_date", None))
-        cell = sheet.cell(row, column=1, value=period_value)
-        sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column // 2)
+        cell = sheet.cell(row, column=2, value=period_value)
+        sheet.merge_cells(start_row=row, start_column=2, end_row=row, end_column=last_column // 2)
         PeriodSheet._cell_alignment(cell)
-        PeriodSheet._cell_font(cell, PeriodSheet.HEADER_FONT_SIZE, bold=True)
+        PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
         PeriodSheet._cell_lock(cell)
-        cell = sheet.cell(row, column=(last_column // 2) + 1, value=export_settings.get("branchNameLineEdit", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row, end_column=last_column)
+        branch_text = export_texts.get("branchText", PeriodSheet.ERROR_TEXT)
+        cell = sheet.cell(row, column=(last_column // 2) + 1, value=branch_text)
+        PeriodSheet._cell_alignment(cell, horizontal="left")
+        PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
+        PeriodSheet._cell_lock(cell)
+        branch_value = export_settings.get("branchNameLineEdit", PeriodSheet.ERROR_TEXT)
+        cell = sheet.cell(row, column=(last_column // 2) + 2, value=branch_value)
+        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 2, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell)
-        PeriodSheet._cell_font(cell, PeriodSheet.HEADER_FONT_SIZE, bold=True)
-        sheet.row_dimensions[row].height = PeriodSheet.HEADER_ROW_HEIGHT
+        PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
+        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         PeriodSheet._cell_lock(cell)
         return row + 2
 

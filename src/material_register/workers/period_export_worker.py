@@ -12,9 +12,10 @@ class PeriodExportWorker(QObject):
     finished = Signal()
     error = Signal(str)
 
-    def __init__(self, export_settings: dict[str, Path | str | float | bool]) -> None:
+    def __init__(self, export_settings: dict[str, Path | str | float | bool], export_texts: dict[str, dict[str, str]]) -> None:
         super().__init__()
         self.export_settings = export_settings
+        self.export_texts = export_texts
         self.db_connection = None
 
     @Slot()
@@ -35,7 +36,7 @@ class PeriodExportWorker(QObject):
             if not ok:
                 self.error.emit(error)
                 return
-            workbook = PeriodWorkbook.create_workbook(self.export_settings, in_data, out_data)
+            workbook = PeriodWorkbook.create_workbook(self.export_settings, self.export_texts, in_data, out_data)
             if not is_disk_writable(export_path.parent):
                 self.error.emit(f"Export path {export_path} is not writable")
                 return

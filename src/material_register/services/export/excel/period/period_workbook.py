@@ -6,12 +6,14 @@ from material_register.services.export.excel.period.period_sheet import PeriodSh
 
 
 class PeriodWorkbook:
+    ERROR_TEXT = "[N/A]"
 
     @staticmethod
-    def create_workbook(export_settings: dict[str, Path | str | float | bool],
+    def create_workbook(export_settings: dict[str, Path | str | float | bool], export_texts: dict[str, dict[str, str]],
                         in_data: list[ExportItemIn], out_data: list[ExportItemOut]) -> Workbook:
         workbook = Workbook()
         workbook.remove(workbook.active)
-        sheet = workbook.create_sheet("test")
-        PeriodSheet.create_sheet(sheet, export_settings, in_data, out_data)
+        period_texts = export_texts.get("PeriodSheet", {})
+        sheet = workbook.create_sheet(period_texts.get("sheetName", PeriodWorkbook.ERROR_TEXT))
+        PeriodSheet.create_sheet(sheet, export_settings, period_texts, in_data, out_data)
         return workbook

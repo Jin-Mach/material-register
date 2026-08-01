@@ -17,6 +17,8 @@ REQUIRED_JSON_FILES = [
     Path("en_GB") / "notification_texts.json",
     Path("cs_CZ") / "status_texts.json",
     Path("en_GB") / "status_texts.json",
+    Path("cs_CZ") / "export_texts.json",
+    Path("en_GB") / "export_texts.json",
 ]
 
 REQUIRED_IMAGES = [
@@ -291,4 +293,11 @@ STATUS_KEYS = [
     "SETTINGS_SAVED",
     "SETTINGS_RESTORED",
     "READY"
+]
+
+EXPORT_KEYS = [
+    ("PeriodSheet", "sheetName"),
+    ("PeriodSheet", "titleText"),
+    ("PeriodSheet", "rangeText"),
+    ("PeriodSheet", "branchText"),
 ]

@@ -11,6 +11,8 @@ FILES_MAP = {
     "texts/en_GB/headers_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/headers_texts.json",
     "texts/cs_CZ/status_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/cs_CZ/status_texts.json",
     "texts/en_GB/status_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/status_texts.json",
+    "texts/cs_CZ/export_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/cs_CZ/export_texts.json",
+    "texts/en_GB/export_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/export_texts.json",
     "config/settings.toml": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/config/settings.toml"
 }
 

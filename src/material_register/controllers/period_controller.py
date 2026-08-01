@@ -25,11 +25,17 @@ class PeriodExportController(QObject):
         self.thread = None
         self.worker = None
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("EXPORT", None)
+        self.export_texts = TextsProvider.EXPORT_TEXTS
 
     def start_export(self) -> None:
         self.export_settings = self.export_widget.get_export_data()
         if not self._is_export_settings_valid():
             MessageBoxes.show_error(self.export_widget, "INVALID_DATA")
+            return
+        if not self.export_texts:
+            PeriodExportController._handle_export_error("Export texts not loaded",
+                                                        f"{self.__class__.__name__}.start_export",
+                                                        "TEXTS_LOAD_FAILED")
             return
         export_path = self.export_settings.get("export_path", None)
         if export_path is None:
@@ -41,11 +47,11 @@ class PeriodExportController(QObject):
             question = MessageBoxes.show_question(self.export_widget, "PATH_EXISTS")
             if not question:
                 return
-        self._start_worker(self.export_settings)
+        self._start_worker(self.export_settings, self.export_texts)
 
-    def _start_worker(self, export_settings: dict[str, Path | str | float | bool]) -> None:
+    def _start_worker(self, export_settings: dict[str, Path | str | float | bool], export_texts: dict[str, dict[str, str]]) -> None:
         self.thread = QThread()
-        self.worker = PeriodExportWorker(export_settings)
+        self.worker = PeriodExportWorker(export_settings, export_texts)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._export_error)
