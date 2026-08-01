@@ -35,7 +35,7 @@ class PeriodExportWorker(QObject):
             if not ok:
                 self.error.emit(error)
                 return
-            workbook = PeriodWorkbook.create_workbook(in_data, out_data)
+            workbook = PeriodWorkbook.create_workbook(self.export_settings, in_data, out_data)
             if not is_disk_writable(export_path.parent):
                 self.error.emit(f"Export path {export_path} is not writable")
                 return
