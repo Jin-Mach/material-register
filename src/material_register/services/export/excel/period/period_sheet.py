@@ -7,6 +7,7 @@ from material_register.domain.export_dataclass import ExportItemIn, ExportItemOu
 from material_register.ui.helpers.formating_utils import format_date_range_to_locale
 
 
+# noinspection PyDunderSlots
 class PeriodSheet:
     START_ROW = 1
     LAST_COLUMN = 8
@@ -67,7 +68,7 @@ class PeriodSheet:
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT // 2
+        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -75,7 +76,7 @@ class PeriodSheet:
                                   export_settings: dict[str, Path | str | float | bool],
                                   export_texts: dict[str, str]) -> tuple[int, float]:
         currency_suffix = export_texts.get("currencySuffix", PeriodSheet.ERROR_TEXT)
-        cell_format = f'#,##0.00 "{currency_suffix}";[Red]#,##0.00 "{currency_suffix}"'
+        cell_format = f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         cell = sheet.cell(row=row, column=1, value=export_texts.get("notesText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column // 2)
         PeriodSheet._cell_alignment(cell)
@@ -108,7 +109,6 @@ class PeriodSheet:
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
-        income_row = row
         income = export_settings.get("income", 0.0)
         cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("incomeText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row,
@@ -123,7 +123,6 @@ class PeriodSheet:
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
-        buyback_row = row
         buyback = 99.9 * -1
         cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("buybackText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row,
@@ -162,10 +161,8 @@ class PeriodSheet:
         cell = sheet.cell(row=row, column=(last_column // 2) + 3)
         column_letter = get_column_letter((last_column // 2) + 3)
         balance_value = (
-            f"={column_letter}{opening_balance_row}"
-            f"+{column_letter}{income_row}"
-            f"+{column_letter}{buyback_row}"
-            f"+{column_letter}{expense_row}"
+            f"=SUM({column_letter}{opening_balance_row}"
+            f"+{column_letter}{expense_row})"
         )
         cell.value = balance_value
         cell.number_format = cell_format
@@ -175,7 +172,7 @@ class PeriodSheet:
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT // 2
+        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         return row + PeriodSheet.NOTES_ROWS + 1, PeriodSheet._get_balance_value(opening_balance, income, buyback, expense)
 
     @staticmethod
