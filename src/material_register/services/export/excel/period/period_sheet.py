@@ -161,8 +161,7 @@ class PeriodSheet:
         cell = sheet.cell(row=row, column=(last_column // 2) + 3)
         column_letter = get_column_letter((last_column // 2) + 3)
         balance_value = (
-            f"=SUM({column_letter}{opening_balance_row}"
-            f"+{column_letter}{expense_row})"
+            f"=SUM({column_letter}{opening_balance_row}:{column_letter}{expense_row})"
         )
         cell.value = balance_value
         cell.number_format = cell_format
