@@ -300,4 +300,12 @@ EXPORT_KEYS = [
     ("PeriodSheet", "titleText"),
     ("PeriodSheet", "rangeText"),
     ("PeriodSheet", "branchText"),
+    ("PeriodSheet", "notesText"),
+    ("PeriodSheet", "financialText"),
+    ("PeriodSheet", "openingBalanceText"),
+    ("PeriodSheet", "buybackText"),
+    ("PeriodSheet", "incomeText"),
+    ("PeriodSheet", "expenseText"),
+    ("PeriodSheet", "balanceText"),
+    ("PeriodSheet", "currencySuffix")
 ]

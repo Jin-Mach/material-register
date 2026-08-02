@@ -3,6 +3,14 @@
     "sheetName": "Evidence",
     "titleText": "Material Register",
     "rangeText": "Period:",
-    "branchText": "Branch"
+    "branchText": "Branch:",
+    "notesText": "Notes",
+    "financialText": "Finance",
+    "openingBalanceText": "Opening balance:",
+    "buybackText": "Buyback:",
+    "incomeText": "Income:",
+    "expenseText": "Expenses:",
+    "balanceText": "Balance:",
+    "currencySuffix": "£"
   }
 }

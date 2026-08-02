@@ -3,6 +3,14 @@
     "sheetName": "Evidence",
     "titleText": "Evidence materiálu",
     "rangeText": "Období:",
-    "branchText": "Pobočka:"
+    "branchText": "Pobočka:",
+    "notesText": "Poznámky",
+    "financialText": "Finance",
+    "openingBalanceText": "Počáteční zůstatek:",
+    "incomeText": "Příjem:",
+    "buybackText": "Výkup:",
+    "expenseText": "Náklady:",
+    "balanceText": "Zůstatek:",
+    "currencySuffix": "Kč"
   }
 }
