@@ -4,6 +4,7 @@ from openpyxl.styles import Alignment, Font
 from openpyxl.utils import get_column_letter
 
 from material_register.domain.export_dataclass import ExportItemIn, ExportItemOut
+from material_register.services.export.period_report import PeriodReport
 from material_register.ui.helpers.formating_utils import format_date_range_to_locale
 
 
@@ -26,7 +27,8 @@ class PeriodSheet:
     def create_sheet(sheet: Worksheet, export_settings: dict[str, Path | str | float | bool],
                      export_texts: dict[str, str],
                      data_in: list[ExportItemIn], out_data: list[ExportItemOut]) -> Worksheet:
-        #print("in data:", data_in)
+        period_in_data = PeriodReport.get_period_data_in(data_in)
+        print("period_in_data: ", period_in_data)
         #print("out data:", out_data)
         row = PeriodSheet.START_ROW
         row = PeriodSheet._create_header(sheet, row, PeriodSheet.LAST_COLUMN, export_settings, export_texts)

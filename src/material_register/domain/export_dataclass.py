@@ -15,3 +15,11 @@ class ExportItemOut:
     commodity_name: str | None = None
     commodity_unit: str | None = None
     total_quantity: float | None = None
+
+@dataclass
+class PeriodItemIn:
+    commodity_name: str | None = None
+    commodity_unit: str | None = None
+    price_per_unit: float | None = None
+    total_quantity: float | None = None
+    total_price: float = 0.0
