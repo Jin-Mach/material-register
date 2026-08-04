@@ -11,6 +11,11 @@
     "buybackText": "Výkup:",
     "expenseText": "Náklady:",
     "balanceText": "Zůstatek:",
-    "currencySuffix": "Kč"
+    "currencySuffix": "Kč",
+    "commodityText": "Položka",
+    "pricePerUnitText": "Cena",
+    "quantityText": "Množství",
+    "totalPriceText": "Celková cena",
+    "summaryPriceText": "Celkem"
   }
 }

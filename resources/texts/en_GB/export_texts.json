@@ -7,10 +7,15 @@
     "notesText": "Notes",
     "financialText": "Finance",
     "openingBalanceText": "Opening balance:",
-    "buybackText": "Buyback:",
     "incomeText": "Income:",
+    "buybackText": "Buyback:",
     "expenseText": "Expenses:",
     "balanceText": "Balance:",
-    "currencySuffix": "£"
+    "currencySuffix": "£",
+    "commodityText": "Item",
+    "pricePerUnitText": "Price",
+    "quantityText": "Quantity",
+    "totalPriceText": "Total price",
+    "summaryPriceText": "Total"
   }
 }
