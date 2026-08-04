@@ -1,4 +1,4 @@
-from material_register.domain.export_dataclass import ExportItemIn, PeriodItemIn
+from material_register.domain.export_dataclass import ExportItemIn, PeriodItemIn, ExportItemOut, PeriodItemOut
 
 
 class PeriodReport:
@@ -34,4 +34,18 @@ class PeriodReport:
                         total_price=in_item.total_price
                     )
                     items.append(period_item_in)
+        return report_data
+
+    @staticmethod
+    def get_period_data_out(out_data: list[ExportItemOut]) -> dict[str, list[PeriodItemOut]]:
+        report_data = {}
+        for out_item in out_data:
+            period_item_out = PeriodItemOut(
+                commodity_name=out_item.commodity_name,
+                commodity_unit=out_item.commodity_unit,
+                total_quantity=out_item.total_quantity
+            )
+            if out_item.category_name not in report_data:
+                report_data[out_item.category_name] = []
+            report_data[out_item.category_name].append(period_item_out)
         return report_data

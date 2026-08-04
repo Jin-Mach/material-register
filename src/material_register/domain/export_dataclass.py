@@ -23,3 +23,9 @@ class PeriodItemIn:
     price_per_unit: float | None = None
     total_quantity: float | None = None
     total_price: float = 0.0
+
+@dataclass(frozen=True)
+class PeriodItemOut:
+    commodity_name: str | None = None
+    commodity_unit: str | None = None
+    total_quantity: float = 0.0

@@ -29,7 +29,8 @@ class PeriodSheet:
                      data_in: list[ExportItemIn], out_data: list[ExportItemOut]) -> Worksheet:
         period_in_data = PeriodReport.get_period_data_in(data_in)
         print("period_in_data: ", period_in_data)
-        #print("out data:", out_data)
+        period_out_data = PeriodReport.get_period_data_out(out_data)
+        print("period_out_data: ", period_out_data)
         row = PeriodSheet.START_ROW
         row = PeriodSheet._create_header(sheet, row, PeriodSheet.LAST_COLUMN, export_settings, export_texts)
         row, balance = PeriodSheet._create_financial_section(sheet, row, PeriodSheet.LAST_COLUMN, export_settings,
