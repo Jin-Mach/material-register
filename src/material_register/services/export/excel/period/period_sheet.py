@@ -25,7 +25,6 @@ class PeriodSheet:
                      data_in: list[ExportItemIn], out_data: list[ExportItemOut]) -> Worksheet:
         period_in_data = PeriodReport.get_period_data_in(data_in)
         period_out_data = PeriodReport.get_period_data_out(out_data)
-        print("period_out_data: ", period_out_data)
         row = PeriodSheet.START_ROW
         row = PeriodSheet._create_header(sheet, row, PeriodSheet.LAST_COLUMN, export_settings, export_texts)
         row, balance = PeriodSheet._create_financial_section(sheet, row, PeriodSheet.LAST_COLUMN, export_settings,
@@ -36,6 +35,7 @@ class PeriodSheet:
                                                              export_texts, period_in_data)
         out_section_row = PeriodSheet._create_data_out_section(sheet, data_section_row, PeriodSheet.LAST_COLUMN,
                                                                export_texts, period_out_data)
+        row = PeriodSheet._create_data_spacer(sheet, in_section_row, out_section_row, PeriodSheet.LAST_COLUMN)
         print("final balance: ", balance)
         PeriodSheet._auto_size_columns(sheet)
         return sheet
@@ -215,7 +215,7 @@ class PeriodSheet:
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
             row = PeriodSheet._create_category_in_section(sheet, row, last_column, export_texts, in_data, money_cell_format)
-        return row + 1
+        return row
 
     @staticmethod
     def _create_data_out_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
@@ -246,7 +246,7 @@ class PeriodSheet:
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
             row = PeriodSheet._create_category_out_section(sheet, row, last_column, out_data)
-        return row + 1
+        return row
 
     @staticmethod
     def _create_category_in_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
@@ -290,15 +290,13 @@ class PeriodSheet:
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        row += 1
-        sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column // 2)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
     def _create_category_out_section(sheet: Worksheet, row: int, last_column: int, out_data: list[PeriodItemOut]) -> int:
         first_column = (last_column // 2) + 1
-        for item in out_data:
+        stop_index = len(out_data)
+        for index, item in enumerate(out_data):
             quantity_cell_format = f'#,##0.0 "{item.commodity_unit}";[Red]#,##0.0 "{item.commodity_unit}"'
             cell = sheet.cell(row=row, column=first_column, value=item.commodity_name)
             sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=first_column + 1)
@@ -311,10 +309,23 @@ class PeriodSheet:
             PeriodSheet._cell_alignment(cell, horizontal="right")
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            row += 1
-        sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=last_column)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
+            if index + 1 != stop_index:
+                row += 1
         return row + 1
+
+    @staticmethod
+    def _create_data_spacer(sheet: Worksheet, in_row: int, out_row: int, last_column: int) -> int:
+        different = abs(in_row - out_row)
+        if in_row < out_row:
+            last_row = out_row
+            sheet.merge_cells(start_row=in_row, start_column=1, end_row=in_row + different, end_column=last_column // 2)
+        else:
+            last_row = in_row
+            sheet.merge_cells(start_row=out_row, start_column=(last_column // 2) + 1,
+                              end_row=out_row + different, end_column=last_column)
+        sheet.merge_cells(start_row=last_row, start_column=1, end_row=last_row, end_column=last_column)
+        sheet.row_dimensions[last_row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
+        return last_row + 1
 
     @staticmethod
     def _cell_alignment(cell, horizontal: str = "center", vertical: str = "center") -> None:
