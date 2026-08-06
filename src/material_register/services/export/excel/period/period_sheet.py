@@ -44,6 +44,9 @@ class PeriodSheet:
     def _create_header(sheet: Worksheet, row: int, last_column: int,
                        export_settings: dict[str, Path | str | float | bool],
                        export_texts: dict[str, str]) -> int:
+        middle_column = last_column // 2
+        branch_label_column = middle_column + 1
+        branch_value_column = middle_column + 2
         cell = sheet.cell(row=row, column=1, value=export_texts.get("titleText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell)
@@ -51,22 +54,22 @@ class PeriodSheet:
         sheet.row_dimensions[row].height = PeriodSheet.TITLE_ROW_HEIGHT
         row += 1
         range_text = export_texts.get("rangeText", PeriodSheet.ERROR_TEXT)
-        cell = sheet.cell(row, column=1, value=range_text)
+        cell = sheet.cell(row=row, column=1, value=range_text)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
         period_value = PeriodSheet._get_period_range(export_settings.get("from_date", None),
                                                      export_settings.get("to_date", None))
-        cell = sheet.cell(row, column=2, value=period_value)
-        sheet.merge_cells(start_row=row, start_column=2, end_row=row, end_column=last_column // 2)
+        cell = sheet.cell(row=row, column=2, value=period_value)
+        sheet.merge_cells(start_row=row, start_column=2, end_row=row, end_column=middle_column)
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
         branch_text = export_texts.get("branchText", PeriodSheet.ERROR_TEXT)
-        cell = sheet.cell(row, column=(last_column // 2) + 1, value=branch_text)
+        cell = sheet.cell(row=row, column=branch_label_column, value=branch_text)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
         branch_value = export_settings.get("branchNameLineEdit", PeriodSheet.ERROR_TEXT)
-        cell = sheet.cell(row, column=(last_column // 2) + 2, value=branch_value)
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 2, end_row=row, end_column=last_column)
+        cell = sheet.cell(row=row, column=branch_value_column, value=branch_value)
+        sheet.merge_cells(start_row=row, start_column=branch_value_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
@@ -79,97 +82,99 @@ class PeriodSheet:
     def _create_financial_section(sheet: Worksheet, row: int, last_column: int,
                                   export_settings: dict[str, Path | str | float | bool],
                                   export_texts: dict[str, str]) -> tuple[int, float]:
+        middle_column = last_column // 2
+        financial_label_column = middle_column + 1
+        financial_value_column = middle_column + 3
         currency_suffix = export_texts.get("currencySuffix", PeriodSheet.ERROR_TEXT)
         cell_format = f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         cell = sheet.cell(row=row, column=1, value=export_texts.get("notesText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column // 2)
+        sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=middle_column)
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("financialText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row, end_column=last_column)
+        cell = sheet.cell(row=row, column=financial_label_column,
+                          value=export_texts.get("financialText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=financial_label_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
         cell = sheet.cell(row=row, column=1)
-        sheet.merge_cells(start_row=row, start_column=1, end_row=row + PeriodSheet.NOTES_ROWS, end_column=last_column // 2)
+        sheet.merge_cells(start_row=row, start_column=1, end_row=row + PeriodSheet.NOTES_ROWS, end_column=middle_column)
         PeriodSheet._cell_alignment(cell, horizontal="left", vertical="top")
         PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         for current_row in range(row, row + PeriodSheet.NOTES_ROWS):
             sheet.row_dimensions[current_row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         opening_balance_row = row
         opening_balance = export_settings.get("openingBalanceSpinbox", 0.0)
-        cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("openingBalanceText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row, end_column=(last_column // 2) + 2)
+        cell = sheet.cell(row=row, column=financial_label_column,
+                          value=export_texts.get("openingBalanceText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=financial_label_column, end_row=row,
+                          end_column=financial_label_column + 1)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        cell = sheet.cell(row=row, column=(last_column // 2) + 3, value=opening_balance)
+        cell = sheet.cell(row=row, column=financial_value_column, value=opening_balance)
         cell.number_format = cell_format
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 3, end_row=row, end_column=last_column)
+        sheet.merge_cells(start_row=row, start_column=financial_value_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
         income = export_settings.get("income", 0.0)
-        cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("incomeText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row,
-                          end_column=(last_column // 2) + 2)
+        cell = sheet.cell(row=row, column=financial_label_column,
+                          value=export_texts.get("incomeText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=financial_label_column, end_row=row,
+                          end_column=financial_label_column + 1)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        cell = sheet.cell(row=row, column=(last_column // 2) + 3, value=income)
+        cell = sheet.cell(row=row, column=financial_value_column, value=income)
         cell.number_format = cell_format
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 3, end_row=row, end_column=last_column)
+        sheet.merge_cells(start_row=row, start_column=financial_value_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
         buyback = 99.9 * -1
-        cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("buybackText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row,
-                          end_column=(last_column // 2) + 2)
+        cell = sheet.cell(row=row, column=financial_label_column,
+                          value=export_texts.get("buybackText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=financial_label_column, end_row=row,
+                          end_column=financial_label_column + 1)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        cell = sheet.cell(row=row, column=(last_column // 2) + 3, value=buyback)
+        cell = sheet.cell(row=row, column=financial_value_column, value=buyback)
         cell.number_format = cell_format
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 3, end_row=row, end_column=last_column)
+        sheet.merge_cells(start_row=row, start_column=financial_value_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
         expense_row = row
         expense = export_settings.get("expense", 0.0) * -1
-        cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("expenseText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row,
-                          end_column=(last_column // 2) + 2)
+        cell = sheet.cell(row=row, column=financial_label_column,
+                          value=export_texts.get("expenseText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=financial_label_column, end_row=row,
+                          end_column=financial_label_column + 1)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        cell = sheet.cell(row=row, column=(last_column // 2) + 3, value=expense)
+        cell = sheet.cell(row=row, column=financial_value_column, value=expense)
         cell.number_format = cell_format
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 3, end_row=row, end_column=last_column)
+        sheet.merge_cells(start_row=row, start_column=financial_value_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
-        cell = sheet.cell(row=row, column=(last_column // 2) + 1, value=export_texts.get("balanceText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 1, end_row=row,
-                          end_column=(last_column // 2) + 2)
+        cell = sheet.cell(row=row, column=financial_label_column,
+                          value=export_texts.get("balanceText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=financial_label_column, end_row=row,
+                          end_column=financial_label_column + 1)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        cell = sheet.cell(row=row, column=(last_column // 2) + 3)
-        column_letter = get_column_letter((last_column // 2) + 3)
-        balance_value = (
-            f"=SUM({column_letter}{opening_balance_row}:{column_letter}{expense_row})"
-        )
+        column_letter = get_column_letter(financial_value_column)
+        balance_value = f"=SUM({column_letter}{opening_balance_row}:{column_letter}{expense_row})"
+        cell = sheet.cell(row=row, column=financial_value_column)
         cell.value = balance_value
         cell.number_format = cell_format
-        sheet.merge_cells(start_row=row, start_column=(last_column // 2) + 3, end_row=row, end_column=last_column)
+        sheet.merge_cells(start_row=row, start_column=financial_value_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
@@ -181,111 +186,119 @@ class PeriodSheet:
     @staticmethod
     def _create_data_in_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
                                 in_data: dict[str, list[PeriodItemIn]]) -> int:
+        first_column = 1
+        middle_column = last_column // 2
         currency_suffix = export_texts.get("currencySuffix", PeriodSheet.ERROR_TEXT)
         money_cell_format = f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
-        cell = sheet.cell(row=row, column=1, value=export_texts.get("buybackText", PeriodSheet.ERROR_TEXT))
-        sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column // 2)
+        cell = sheet.cell(row=row, column=first_column, value=export_texts.get("buybackText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=middle_column)
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
-        for category, in_data in in_data.items():
-            first_column = 1
-            cell = sheet.cell(row=row, column=1, value=category)
-            sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=last_column // 2)
+        for category, category_data in in_data.items():
+            cell = sheet.cell(row=row, column=first_column, value=category)
+            sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=middle_column)
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
-            cell = sheet.cell(row=row, column=first_column, value=export_texts.get("commodityText", PeriodSheet.ERROR_TEXT))
+            cell = sheet.cell(row=row, column=first_column,
+                              value=export_texts.get("commodityText", PeriodSheet.ERROR_TEXT))
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 1, value=export_texts.get("pricePerUnitText", PeriodSheet.ERROR_TEXT))
+            cell = sheet.cell(row=row, column=first_column + 1,
+                              value=export_texts.get("pricePerUnitText", PeriodSheet.ERROR_TEXT))
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 2, value=export_texts.get("quantityText", PeriodSheet.ERROR_TEXT))
+            cell = sheet.cell(row=row, column=first_column + 2,
+                              value=export_texts.get("quantityText", PeriodSheet.ERROR_TEXT))
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 3, value=export_texts.get("totalPriceText", PeriodSheet.ERROR_TEXT))
+            cell = sheet.cell(row=row, column=first_column + 3,
+                              value=export_texts.get("totalPriceText", PeriodSheet.ERROR_TEXT))
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
-            row = PeriodSheet._create_category_in_section(sheet, row, last_column, export_texts, in_data, money_cell_format)
+            row = PeriodSheet._create_category_in_section(sheet, row, last_column, export_texts, category_data,
+                                                          money_cell_format)
         return row
 
     @staticmethod
     def _create_data_out_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
                                  data_out: dict[str, list[PeriodItemOut]]) -> int:
-        first_column = (last_column // 2) + 1
+        middle_column = last_column // 2
+        first_column = middle_column + 1
         cell = sheet.cell(row=row, column=first_column, value=export_texts.get("exportText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
-        for category, out_data in data_out.items():
+        for category, category_data in data_out.items():
             cell = sheet.cell(row=row, column=first_column, value=category)
             sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=last_column)
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
-            cell = sheet.cell(row=row, column=first_column, value=export_texts.get("commodityText", PeriodSheet.ERROR_TEXT))
+            cell = sheet.cell(row=row, column=first_column,
+                              value=export_texts.get("commodityText", PeriodSheet.ERROR_TEXT))
             sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=first_column + 1)
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 2, value=export_texts.get("quantityText", PeriodSheet.ERROR_TEXT))
+            cell = sheet.cell(row=row, column=first_column + 2,
+                              value=export_texts.get("quantityText", PeriodSheet.ERROR_TEXT))
             sheet.merge_cells(start_row=row, start_column=first_column + 2, end_row=row, end_column=last_column)
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
-            row = PeriodSheet._create_category_out_section(sheet, row, last_column, out_data)
+            row = PeriodSheet._create_category_out_section(sheet, row, last_column, category_data)
         return row
 
     @staticmethod
     def _create_category_in_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
                                     in_data: list[PeriodItemIn], money_cell_format: str) -> int:
-        opening_row = row
         first_column = 1
+        middle_column = last_column // 2
+        commodity_column = first_column
+        price_column = first_column + 1
+        quantity_column = first_column + 2
+        total_column = first_column + 3
+        summary_label_column = middle_column - 1
+        summary_value_column = middle_column
+        opening_row = row
+        price_letter = get_column_letter(price_column)
+        quantity_letter = get_column_letter(quantity_column)
         for item in in_data:
             quantity_cell_format = f'#,##0.0 "{item.commodity_unit}";[Red]#,##0.0 "{item.commodity_unit}"'
-            cell = sheet.cell(row=row, column=first_column, value=item.commodity_name)
+            cell = sheet.cell(row=row, column=commodity_column, value=item.commodity_name)
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 1, value=item.price_per_unit)
+            cell = sheet.cell(row=row, column=price_column, value=item.price_per_unit)
             cell.number_format = money_cell_format
             PeriodSheet._cell_alignment(cell, horizontal="right")
             PeriodSheet._cell_font(cell)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 2, value=item.total_quantity)
+            cell = sheet.cell(row=row, column=quantity_column, value=item.total_quantity)
             cell.number_format = quantity_cell_format
             PeriodSheet._cell_alignment(cell, horizontal="right")
             PeriodSheet._cell_font(cell)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 3, value=item.total_price)
+            cell = sheet.cell(row=row, column=total_column, value=f"={price_letter}{row}*{quantity_letter}{row}")
             cell.number_format = money_cell_format
             PeriodSheet._cell_alignment(cell, horizontal="right")
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
-        sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=(last_column // 2) - 2)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        cell = sheet.cell(row=row, column=(last_column // 2) - 1, value=export_texts.get("summaryPriceText", PeriodSheet.ERROR_TEXT))
+        sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=middle_column - 2)
+        cell = sheet.cell(row=row, column=summary_label_column,
+                          value=export_texts.get("summaryPriceText", PeriodSheet.ERROR_TEXT))
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        total_column = get_column_letter(first_column + 3)
-        total_value = (
-            f"=SUM({total_column}{opening_row}:{total_column}{row -1})"
-        )
-        cell = sheet.cell(row=row, column=last_column // 2, value=total_value)
+        total_column_letter = get_column_letter(total_column)
+        total_value = f"=SUM({total_column_letter}{opening_row}:{total_column_letter}{row - 1})"
+        cell = sheet.cell(row=row, column=summary_value_column, value=total_value)
         cell.number_format = money_cell_format
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
@@ -294,18 +307,20 @@ class PeriodSheet:
 
     @staticmethod
     def _create_category_out_section(sheet: Worksheet, row: int, last_column: int, out_data: list[PeriodItemOut]) -> int:
-        first_column = (last_column // 2) + 1
+        middle_column = last_column // 2
+        first_column = middle_column + 1
+        commodity_column = first_column
+        quantity_column = first_column + 2
         stop_index = len(out_data)
         for index, item in enumerate(out_data):
             quantity_cell_format = f'#,##0.0 "{item.commodity_unit}";[Red]#,##0.0 "{item.commodity_unit}"'
-            cell = sheet.cell(row=row, column=first_column, value=item.commodity_name)
-            sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=first_column + 1)
+            cell = sheet.cell(row=row, column=commodity_column, value=item.commodity_name)
+            sheet.merge_cells(start_row=row, start_column=commodity_column, end_row=row, end_column=commodity_column + 1)
             PeriodSheet._cell_alignment(cell)
             PeriodSheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-            cell = sheet.cell(row=row, column=first_column + 2, value=item.total_quantity)
+            cell = sheet.cell(row=row, column=quantity_column, value=item.total_quantity)
             cell.number_format = quantity_cell_format
-            sheet.merge_cells(start_row=row, start_column=first_column + 2, end_row=row, end_column=last_column)
+            sheet.merge_cells(start_row=row, start_column=quantity_column, end_row=row, end_column=last_column)
             PeriodSheet._cell_alignment(cell, horizontal="right")
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
@@ -315,14 +330,15 @@ class PeriodSheet:
 
     @staticmethod
     def _create_data_spacer(sheet: Worksheet, in_row: int, out_row: int, last_column: int) -> int:
+        middle_column = last_column // 2
         different = abs(in_row - out_row)
         if in_row < out_row:
             last_row = out_row
-            sheet.merge_cells(start_row=in_row, start_column=1, end_row=in_row + different, end_column=last_column // 2)
+            sheet.merge_cells(start_row=in_row, start_column=1, end_row=in_row + different, end_column=middle_column)
         else:
             last_row = in_row
-            sheet.merge_cells(start_row=out_row, start_column=(last_column // 2) + 1,
-                              end_row=out_row + different, end_column=last_column)
+            sheet.merge_cells(start_row=out_row, start_column=middle_column + 1, end_row=out_row + different,
+                              end_column=last_column)
         sheet.merge_cells(start_row=last_row, start_column=1, end_row=last_row, end_column=last_column)
         sheet.row_dimensions[last_row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         return last_row + 1
