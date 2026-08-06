@@ -1,6 +1,7 @@
 from pathlib import Path
+
 from openpyxl.worksheet.worksheet import Worksheet
-from openpyxl.styles import Alignment, Font
+from openpyxl.styles import Alignment, Font, Side, Border
 from openpyxl.utils import get_column_letter
 
 from material_register.domain.export_dataclass import ExportItemIn, ExportItemOut, PeriodItemIn, PeriodItemOut
@@ -44,6 +45,7 @@ class PeriodSheet:
     def _create_header(sheet: Worksheet, row: int, last_column: int,
                        export_settings: dict[str, Path | str | float | bool],
                        export_texts: dict[str, str]) -> int:
+        start_row = row
         middle_column = last_column // 2
         branch_label_column = middle_column + 1
         branch_value_column = middle_column + 2
@@ -73,6 +75,7 @@ class PeriodSheet:
         PeriodSheet._cell_alignment(cell)
         PeriodSheet._cell_font(cell, PeriodSheet.DEFAULT_FONT_SIZE, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
+        PeriodSheet._set_borders(sheet, start_row=start_row, start_column=1, end_row=row, end_column=last_column)
         row += 1
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
@@ -82,6 +85,7 @@ class PeriodSheet:
     def _create_financial_section(sheet: Worksheet, row: int, last_column: int,
                                   export_settings: dict[str, Path | str | float | bool],
                                   export_texts: dict[str, str]) -> tuple[int, float]:
+        start_row = row
         middle_column = last_column // 2
         financial_label_column = middle_column + 1
         financial_value_column = middle_column + 3
@@ -178,6 +182,9 @@ class PeriodSheet:
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
+        PeriodSheet._set_borders(sheet, start_row=start_row, start_column=1, end_row=row, end_column=last_column)
+        PeriodSheet._set_borders(sheet, start_row=row, start_column=financial_value_column,
+                                 end_row=row, end_column=last_column, style="medium")
         row += 1
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
@@ -186,6 +193,7 @@ class PeriodSheet:
     @staticmethod
     def _create_data_in_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
                                 in_data: dict[str, list[PeriodItemIn]]) -> int:
+        start_row = row
         first_column = 1
         middle_column = last_column // 2
         currency_suffix = export_texts.get("currencySuffix", PeriodSheet.ERROR_TEXT)
@@ -223,11 +231,13 @@ class PeriodSheet:
             row += 1
             row = PeriodSheet._create_category_in_section(sheet, row, last_column, export_texts, category_data,
                                                           money_cell_format)
+        PeriodSheet._set_borders(sheet, start_row=start_row, start_column=1, end_row=row - 1, end_column=last_column // 2)
         return row
 
     @staticmethod
     def _create_data_out_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
                                  data_out: dict[str, list[PeriodItemOut]]) -> int:
+        start_row = row
         middle_column = last_column // 2
         first_column = middle_column + 1
         cell = sheet.cell(row=row, column=first_column, value=export_texts.get("exportText", PeriodSheet.ERROR_TEXT))
@@ -256,6 +266,7 @@ class PeriodSheet:
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
             row = PeriodSheet._create_category_out_section(sheet, row, last_column, category_data)
+        PeriodSheet._set_borders(sheet, start_row=start_row, start_column=first_column, end_row=row - 1, end_column=last_column)
         return row
 
     @staticmethod
@@ -352,6 +363,27 @@ class PeriodSheet:
         if font_size is None:
             font_size = PeriodSheet.DEFAULT_FONT_SIZE
         cell.font = Font(size=font_size, bold=bold)
+
+    @staticmethod
+    def _set_borders(sheet: Worksheet, start_row: int, start_column: int, end_row: int, end_column: int,
+                     style: str = "thin") -> None:
+        side = Side(border_style=style)
+        for row in sheet.iter_rows(min_row=start_row, max_row=end_row,
+                                   min_col=start_column, max_col=end_column):
+            for cell in row:
+                top = None
+                bottom = None
+                left = None
+                right = None
+                if cell.row == start_row:
+                    top = side
+                if cell.row == end_row:
+                    bottom = side
+                if cell.column == start_column:
+                    left = side
+                if cell.column == end_column:
+                    right = side
+                cell.border = Border(top=top, bottom=bottom, left=left, right=right)
 
     @staticmethod
     def _auto_size_columns(sheet: Worksheet) -> None:
