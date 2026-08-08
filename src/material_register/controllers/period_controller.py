@@ -62,10 +62,13 @@ class PeriodExportController(QObject):
         self._clean_thread()
         PeriodExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
 
-    def _export_ok(self, last_balance: float) -> None:
+    def _export_ok(self, last_value: float) -> None:
         if self.export_settings.get("useLastOptionsCheckbox", False):
             self._last_settings_saved()
-        print("last balance:", last_balance)
+        new_balance = 0.0
+        if self.export_settings.get("saveLastOpeningBalanceCheckbox", False):
+            new_balance = last_value
+        self._new_balance_saved(new_balance)
         self._clean_thread()
         PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
 
@@ -84,15 +87,37 @@ class PeriodExportController(QObject):
         self.worker = None
 
     def _last_settings_saved(self) -> None:
+        user_settings_keys = [
+            "branchNameLineEdit",
+            "pathLineEdit",
+            "fileNameLineEdit",
+            "noActionRadioButton",
+            "openFolderRadioButton",
+            "openFileRadioButton",
+            "useLastOptionsCheckbox",
+            "saveLastOpeningBalanceCheckbox"
+        ]
         user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
         if not user_settings:
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
         for key, value in self.export_settings.items():
-            if isinstance(self.export_settings[key], Path):
+            if isinstance(value, Path):
                 value = str(value)
-            if key in user_settings:
+            if key in user_settings_keys:
                 user_settings[key] = value
+        if not SettingsProvider.save_settings():
+            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
+            return
+        self._reload_settings()
+        AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
+
+    def _new_balance_saved(self, new_balance: float) -> None:
+        user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
+        if not user_settings:
+            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
+            return
+        user_settings["openingBalanceSpinbox"] = new_balance
         if not SettingsProvider.save_settings():
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
