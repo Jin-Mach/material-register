@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from openpyxl.cell import Cell
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.styles import Alignment, Font, Side, Border
 from openpyxl.utils import get_column_letter
@@ -23,25 +24,25 @@ class PeriodSheet:
     @staticmethod
     def create_sheet(sheet: Worksheet, export_settings: dict[str, Path | str | float | bool],
                      export_texts: dict[str, str],
-                     data_in: list[ExportItemIn], out_data: list[ExportItemOut]) -> Worksheet:
+                     data_in: list[ExportItemIn], out_data: list[ExportItemOut]) -> tuple[Worksheet, float]:
         period_in_data = PeriodReport.get_period_data_in(data_in)
         period_out_data = PeriodReport.get_period_data_out(out_data)
         row = PeriodSheet.START_ROW
         row = PeriodSheet._create_header(sheet, row, PeriodSheet.LAST_COLUMN, export_settings, export_texts)
-        row, balance = PeriodSheet._create_financial_section(sheet, row, PeriodSheet.LAST_COLUMN, export_settings,
+        row, buyback_cell, total_value = PeriodSheet._create_financial_section(sheet, row, PeriodSheet.LAST_COLUMN, export_settings,
                                                     export_texts)
         freeze_row = row
         data_section_row = row
-        in_section_row = PeriodSheet._create_data_in_section(sheet, data_section_row, PeriodSheet.LAST_COLUMN,
+        in_section_row, buyback_value = PeriodSheet._create_data_in_section(sheet, data_section_row, PeriodSheet.LAST_COLUMN,
                                                              export_texts, period_in_data)
+        total_value = PeriodSheet._update_buyback_value(buyback_cell, buyback_value, total_value)
         out_section_row = PeriodSheet._create_data_out_section(sheet, data_section_row, PeriodSheet.LAST_COLUMN,
                                                                export_texts, period_out_data)
         row = PeriodSheet._create_data_spacer(sheet, in_section_row, out_section_row, PeriodSheet.LAST_COLUMN)
-        print("final balance: ", balance)
         PeriodSheet._auto_size_columns(sheet)
         page_text = export_texts.get("pageText", PeriodSheet.ERROR_TEXT)
         PeriodSheet._setup_sheet(sheet, row, PeriodSheet.LAST_COLUMN, freeze_row, page_text)
-        return sheet
+        return sheet, total_value
 
     @staticmethod
     def _setup_sheet(sheet: Worksheet, last_row: int, last_column: int, freeze_row: int, page_text: str) -> None:
@@ -103,7 +104,7 @@ class PeriodSheet:
     @staticmethod
     def _create_financial_section(sheet: Worksheet, row: int, last_column: int,
                                   export_settings: dict[str, Path | str | float | bool],
-                                  export_texts: dict[str, str]) -> tuple[int, float]:
+                                  export_texts: dict[str, str]) -> tuple[int, Cell, float]:
         start_row = row
         middle_column = last_column // 2
         financial_label_column = middle_column + 1
@@ -157,14 +158,14 @@ class PeriodSheet:
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
         row += 1
-        buyback = 99.9 * -1
+        buyback_row = row
         cell = sheet.cell(row=row, column=financial_label_column,
                           value=export_texts.get("buybackText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=financial_label_column, end_row=row,
                           end_column=financial_label_column + 1)
         PeriodSheet._cell_alignment(cell, horizontal="left")
         PeriodSheet._cell_font(cell, bold=True)
-        cell = sheet.cell(row=row, column=financial_value_column, value=buyback)
+        cell = sheet.cell(row=row, column=financial_value_column, value=0.0)
         cell.number_format = cell_format
         sheet.merge_cells(start_row=row, start_column=financial_value_column, end_row=row, end_column=last_column)
         PeriodSheet._cell_alignment(cell, horizontal="right")
@@ -207,16 +208,18 @@ class PeriodSheet:
         row += 1
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=last_column)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        return row + 1, PeriodSheet._get_balance_value(opening_balance, income, buyback, expense)
+        total = round(opening_balance + income + expense, 1)
+        return row + 1, sheet.cell(row=buyback_row, column=financial_value_column), total
 
     @staticmethod
     def _create_data_in_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
-                                in_data: dict[str, list[PeriodItemIn]]) -> int:
+                                in_data: dict[str, list[PeriodItemIn]]) -> tuple[int, float]:
         start_row = row
         first_column = 1
         middle_column = last_column // 2
         currency_suffix = export_texts.get("currencySuffix", PeriodSheet.ERROR_TEXT)
         money_cell_format = f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
+        buyback = 0
         cell = sheet.cell(row=row, column=first_column, value=export_texts.get("buybackText", PeriodSheet.ERROR_TEXT))
         sheet.merge_cells(start_row=row, start_column=first_column, end_row=row, end_column=middle_column)
         PeriodSheet._cell_alignment(cell)
@@ -248,10 +251,11 @@ class PeriodSheet:
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
-            row = PeriodSheet._create_category_in_section(sheet, row, last_column, export_texts, category_data,
-                                                          money_cell_format)
+            row, category_buyback = PeriodSheet._create_category_in_section(
+                sheet, row, last_column, export_texts, category_data, money_cell_format)
+            buyback += category_buyback
         PeriodSheet._set_borders(sheet, start_row=start_row, start_column=1, end_row=row - 1, end_column=last_column // 2)
-        return row
+        return row, buyback
 
     @staticmethod
     def _create_data_out_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
@@ -290,7 +294,7 @@ class PeriodSheet:
 
     @staticmethod
     def _create_category_in_section(sheet: Worksheet, row: int, last_column: int, export_texts: dict[str, str],
-                                    in_data: list[PeriodItemIn], money_cell_format: str) -> int:
+                                    in_data: list[PeriodItemIn], money_cell_format: str) -> tuple[int, float]:
         first_column = 1
         middle_column = last_column // 2
         commodity_column = first_column
@@ -298,10 +302,7 @@ class PeriodSheet:
         quantity_column = first_column + 2
         total_column = first_column + 3
         summary_label_column = middle_column - 1
-        summary_value_column = middle_column
-        opening_row = row
-        price_letter = get_column_letter(price_column)
-        quantity_letter = get_column_letter(quantity_column)
+        buyback = 0.0
         for item in in_data:
             quantity_cell_format = f'#,##0.0 "{item.commodity_unit}";[Red]#,##0.0 "{item.commodity_unit}"'
             cell = sheet.cell(row=row, column=commodity_column, value=item.commodity_name)
@@ -315,25 +316,25 @@ class PeriodSheet:
             cell.number_format = quantity_cell_format
             PeriodSheet._cell_alignment(cell, horizontal="right")
             PeriodSheet._cell_font(cell)
-            cell = sheet.cell(row=row, column=total_column, value=f"={price_letter}{row}*{quantity_letter}{row}")
+            cell = sheet.cell(row=row, column=total_column, value=item.total_price)
             cell.number_format = money_cell_format
             PeriodSheet._cell_alignment(cell, horizontal="right")
             PeriodSheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
             row += 1
+            buyback += item.total_price
+        summary_value_column = middle_column
         sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=middle_column - 2)
         cell = sheet.cell(row=row, column=summary_label_column,
                           value=export_texts.get("summaryPriceText", PeriodSheet.ERROR_TEXT))
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
-        total_column_letter = get_column_letter(total_column)
-        total_value = f"=SUM({total_column_letter}{opening_row}:{total_column_letter}{row - 1})"
-        cell = sheet.cell(row=row, column=summary_value_column, value=total_value)
+        cell = sheet.cell(row=row, column=summary_value_column, value=buyback)
         cell.number_format = money_cell_format
         PeriodSheet._cell_alignment(cell, horizontal="right")
         PeriodSheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = PeriodSheet.DEFAULT_ROW_HEIGHT
-        return row + 1
+        return row + 1, buyback
 
     @staticmethod
     def _create_category_out_section(sheet: Worksheet, row: int, last_column: int, out_data: list[PeriodItemOut]) -> int:
@@ -417,11 +418,12 @@ class PeriodSheet:
             sheet.column_dimensions[column_letter].width = max_length + 3
 
     @staticmethod
+    def _update_buyback_value(buyback_cell: Cell, buyback_value: float, total_value: float) -> float:
+        buyback_cell.value = buyback_value * -1
+        return total_value + buyback_cell.value
+
+    @staticmethod
     def _get_period_range(from_date: str | None, to_date: str | None) -> str:
         if from_date is None or to_date is None:
             return PeriodSheet.ERROR_TEXT
         return format_date_range_to_locale(from_date, to_date)
-
-    @staticmethod
-    def _get_balance_value(opening_balance: float, income: float, buyback: float, expense: float) -> float:
-        return round(opening_balance + income + buyback + expense, 1)

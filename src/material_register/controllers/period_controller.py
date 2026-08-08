@@ -62,9 +62,10 @@ class PeriodExportController(QObject):
         self._clean_thread()
         PeriodExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
 
-    def _export_ok(self) -> None:
+    def _export_ok(self, last_balance: float) -> None:
         if self.export_settings.get("useLastOptionsCheckbox", False):
             self._last_settings_saved()
+        print("last balance:", last_balance)
         self._clean_thread()
         PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
 

@@ -9,7 +9,7 @@ from material_register.utils.system import is_disk_writable
 
 
 class PeriodExportWorker(QObject):
-    finished = Signal()
+    finished = Signal(float)
     error = Signal(str)
 
     def __init__(self, export_settings: dict[str, Path | str | float | bool], export_texts: dict[str, dict[str, str]]) -> None:
@@ -36,11 +36,11 @@ class PeriodExportWorker(QObject):
             if not ok:
                 self.error.emit(error)
                 return
-            workbook = PeriodWorkbook.create_workbook(self.export_settings, self.export_texts, in_data, out_data)
+            workbook, last_balance = PeriodWorkbook.create_workbook(self.export_settings, self.export_texts, in_data, out_data)
             if not is_disk_writable(export_path.parent):
                 self.error.emit(f"Export path {export_path} is not writable")
                 return
             workbook.save(export_path)
-            self.finished.emit()
+            self.finished.emit(last_balance)
         except Exception as e:
             self.error.emit(f"Export failed: {str(e)}")
