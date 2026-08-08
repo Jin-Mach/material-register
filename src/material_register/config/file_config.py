@@ -313,5 +313,6 @@ EXPORT_KEYS = [
     ("PeriodSheet", "quantityText"),
     ("PeriodSheet", "totalPriceText"),
     ("PeriodSheet", "summaryPriceText"),
-    ("PeriodSheet", "exportText")
+    ("PeriodSheet", "exportText"),
+    ("PeriodSheet", "pageText"),
 ]

@@ -30,7 +30,7 @@ class PeriodSheet:
         row = PeriodSheet._create_header(sheet, row, PeriodSheet.LAST_COLUMN, export_settings, export_texts)
         row, balance = PeriodSheet._create_financial_section(sheet, row, PeriodSheet.LAST_COLUMN, export_settings,
                                                     export_texts)
-        sheet.freeze_panes = f"A{row}"
+        freeze_row = row
         data_section_row = row
         in_section_row = PeriodSheet._create_data_in_section(sheet, data_section_row, PeriodSheet.LAST_COLUMN,
                                                              export_texts, period_in_data)
@@ -39,7 +39,26 @@ class PeriodSheet:
         row = PeriodSheet._create_data_spacer(sheet, in_section_row, out_section_row, PeriodSheet.LAST_COLUMN)
         print("final balance: ", balance)
         PeriodSheet._auto_size_columns(sheet)
+        page_text = export_texts.get("pageText", PeriodSheet.ERROR_TEXT)
+        PeriodSheet._setup_sheet(sheet, row, PeriodSheet.LAST_COLUMN, freeze_row, page_text)
         return sheet
+
+    @staticmethod
+    def _setup_sheet(sheet: Worksheet, last_row: int, last_column: int, freeze_row: int, page_text: str) -> None:
+        sheet.sheet_view.zoomScale = 90
+        sheet.freeze_panes = f"A{freeze_row}"
+        sheet.print_area = f"A1:{get_column_letter(last_column)}{last_row}"
+        sheet.print_title_rows = f"1:{freeze_row - 1}"
+        sheet.page_setup.orientation = "landscape"
+        sheet.page_setup.paperSize = sheet.PAPERSIZE_A4
+        sheet.page_setup.fitToWidth = 1
+        sheet.page_setup.fitToHeight = 0
+        sheet.page_margins.left = 0.25
+        sheet.page_margins.right = 0.25
+        sheet.page_margins.top = 0.5
+        sheet.page_margins.bottom = 0.5
+        sheet.print_options.horizontalCentered = True
+        sheet.oddFooter.center.text = f"{page_text} &P / &N"
 
     @staticmethod
     def _create_header(sheet: Worksheet, row: int, last_column: int,
