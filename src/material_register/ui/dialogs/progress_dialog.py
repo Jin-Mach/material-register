@@ -1,13 +1,13 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QKeyEvent
+from PySide6.QtGui import QKeyEvent, QShowEvent
 from PySide6.QtWidgets import QDialog, QWidget, QVBoxLayout, QLabel, QProgressBar
 
 
 class ProgressDialog(QDialog):
     def __init__(self, export_texts: dict[str, dict[str, str]], parent: QWidget) -> None:
         super().__init__(parent)
-        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.CustomizeWindowHint)
-        self.setModal(True)
+        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowModality(Qt.WindowModality.ApplicationModal)
         self.progress_texts = export_texts.get(self.__class__.__name__, {})
         self.setLayout(self._create_ui())
 
@@ -32,3 +32,8 @@ class ProgressDialog(QDialog):
             event.ignore()
             return
         super().keyPressEvent(event)
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        self.adjustSize()
+        self.setFixedSize(self.width(), self.height())
