@@ -74,5 +74,15 @@
     "TEXT": "A file with the same name already exists in the destination folder.\nDo you want to continue and replace it?",
     "YES": "Continue",
     "NO": "Cancel"
+  },
+  "OPEN_FILE_FAILED": {
+    "TITLE": "Error",
+    "TEXT": "Failed to open the file.\nCheck the settings or open it manually.",
+    "CLOSE": "Close"
+  },
+  "OPEN_EXPLORER_FAILED": {
+    "TITLE": "Error",
+    "TEXT": "Failed to show the file in the file manager.\nCheck the settings or show it manually.",
+    "CLOSE": "Close"
   }
 }

@@ -74,5 +74,15 @@
     "TEXT": "V cílové složce je soubor se stejným názvem.\nChcete pokračovat a nahradit jej?",
     "YES": "Pokračovat",
     "NO": "Zrušit"
+  },
+  "OPEN_FILE_FAILED": {
+      "TITLE": "Chyba",
+      "TEXT": "Nepodařilo se otevřít soubor.\nZkontrolujte nastavení nebo jej otevřete ručně.",
+      "CLOSE": "Zavřít"
+  },
+  "OPEN_EXPLORER_FAILED": {
+      "TITLE": "Chyba",
+      "TEXT": "Nepodařilo se zobrazit soubor ve správci souborů.\nZkontrolujte nastavení nebo jej zobrazte ručně.",
+      "CLOSE": "Zavřít"
   }
 }

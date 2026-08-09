@@ -12,6 +12,7 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
+from material_register.utils.file_launchers import open_file_in_explorer, open_file_in_default
 from material_register.utils.normalizer import normalize_value
 from material_register.workers.period_export_worker import PeriodExportWorker
 
@@ -23,6 +24,7 @@ class PeriodExportController(QObject):
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__()
         self.export_widget = export_widget
+        self.export_path = None
         self.progress_dialog = None
         self.export_settings = {}
         self.thread = None
@@ -40,13 +42,13 @@ class PeriodExportController(QObject):
                                                         f"{self.__class__.__name__}.start_export",
                                                         "TEXTS_LOAD_FAILED")
             return
-        export_path = self.export_settings.get("export_path", None)
-        if export_path is None:
+        self.export_path = self.export_settings.get("export_path", None)
+        if self.export_path is None:
             PeriodExportController._handle_export_error("Export path is None",
                                                   f"{self.__class__.__name__}.start_export",
                                                   "PATH_ERROR")
             return
-        if export_path.exists():
+        if self.export_path.exists():
             question = MessageBoxes.show_question(self.export_widget, "PATH_EXISTS")
             if not question:
                 return
@@ -69,6 +71,7 @@ class PeriodExportController(QObject):
     def _no_export_data(self, key: str) -> None:
         self._clean_thread()
         self.progress_dialog.close()
+        self._reset_variables()
         QTimer.singleShot(100, lambda: MessageBoxes.show_error(self.export_widget, key))
 
     def _update_texts(self) -> None:
@@ -98,7 +101,11 @@ class PeriodExportController(QObject):
         self.thread.wait()
         self.worker.deleteLater()
         self.thread.deleteLater()
+
+    def _reset_variables(self) -> None:
         self.export_settings = {}
+        self.progress_dialog = None
+        self.export_path = None
         self.thread = None
         self.worker = None
 
@@ -106,8 +113,16 @@ class PeriodExportController(QObject):
         self.progress_dialog.close()
         if error is not None:
             PeriodExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
+            self._reset_variables()
             return
         PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
+        if self.export_settings.get("openFolderRadioButton", False):
+            if not open_file_in_explorer(self.export_path):
+                MessageBoxes.show_error(self.export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION")
+        if self.export_settings.get("openFileRadioButton", False):
+            if not open_file_in_default(self.export_path):
+                MessageBoxes.show_error(self.export_widget, "OPEN_FILE_FAILED", "INFORMATION")
+        self._reset_variables()
 
     def _last_settings_saved(self) -> None:
         user_settings_keys = [
