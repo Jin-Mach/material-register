@@ -1,4 +1,8 @@
 {
+  "ProgressDialog": {
+    "loadingDataText": "Načítám data...",
+    "exportInProgressText": "Probíhá export..."
+  },
   "PeriodSheet": {
     "sheetName": "Evidence",
     "titleText": "Evidence materiálu",

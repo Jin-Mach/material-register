@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QThread, QObject
+from PySide6.QtCore import QThread, QObject, QTimer
 from PySide6.QtSql import QSqlDatabase
 
 from material_register.core.app_context import AppContext
@@ -11,6 +11,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
+from material_register.ui.dialogs.progress_dialog import ProgressDialog
 from material_register.workers.period_export_worker import PeriodExportWorker
 
 if TYPE_CHECKING:
@@ -21,6 +22,7 @@ class PeriodExportController(QObject):
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__()
         self.export_widget = export_widget
+        self.progress_dialog = None
         self.export_settings = {}
         self.thread = None
         self.worker = None
@@ -47,6 +49,9 @@ class PeriodExportController(QObject):
             question = MessageBoxes.show_question(self.export_widget, "PATH_EXISTS")
             if not question:
                 return
+        self.progress_dialog = ProgressDialog(self.export_texts, AppContext.MAIN_WINDOW)
+        self.progress_dialog.set_label_text("loadingDataText")
+        self.progress_dialog.show()
         self._start_worker(self.export_settings, self.export_texts)
 
     def _start_worker(self, export_settings: dict[str, Path | str | float | bool], export_texts: dict[str, dict[str, str]]) -> None:
@@ -55,12 +60,16 @@ class PeriodExportController(QObject):
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._export_error)
+        self.worker.export_started.connect(self._update_texts)
         self.worker.finished.connect(self._export_ok)
         self.thread.start()
 
     def _export_error(self, error: str) -> None:
         self._clean_thread()
-        PeriodExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
+        QTimer.singleShot(1000, lambda: self._finish_export(error=error))
+
+    def _update_texts(self) -> None:
+        self.progress_dialog.set_label_text("exportInProgressText")
 
     def _export_ok(self, last_value: float) -> None:
         if self.export_settings.get("useLastOptionsCheckbox", False):
@@ -70,7 +79,7 @@ class PeriodExportController(QObject):
             new_balance = last_value
         self._new_balance_saved(new_balance)
         self._clean_thread()
-        PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
+        QTimer.singleShot(1000, self._finish_export)
 
     def _clean_thread(self) -> None:
         if self.worker and self.worker.db_connection:
@@ -85,6 +94,13 @@ class PeriodExportController(QObject):
         self.export_settings = {}
         self.thread = None
         self.worker = None
+
+    def _finish_export(self, error: str | None = None) -> None:
+        self.progress_dialog.close()
+        if error is not None:
+            PeriodExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
+            return
+        PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
 
     def _last_settings_saved(self) -> None:
         user_settings_keys = [

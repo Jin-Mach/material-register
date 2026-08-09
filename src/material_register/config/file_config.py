@@ -296,6 +296,8 @@ STATUS_KEYS = [
 ]
 
 EXPORT_KEYS = [
+    ("ProgressDialog", "loadingDataText"),
+    ("ProgressDialog", "exportInProgressText"),
     ("PeriodSheet", "sheetName"),
     ("PeriodSheet", "titleText"),
     ("PeriodSheet", "rangeText"),
