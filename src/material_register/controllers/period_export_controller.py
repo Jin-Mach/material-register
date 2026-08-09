@@ -117,12 +117,16 @@ class PeriodExportController(QObject):
         if not user_settings:
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
-        user_settings["openingBalanceSpinbox"] = new_balance
+        user_settings["openingBalanceSpinbox"] = PeriodExportController._normalize_value(new_balance)
         if not SettingsProvider.save_settings():
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
         self._reload_settings()
         AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
+
+    @staticmethod
+    def _normalize_value(value: float) -> float:
+        return float(f"{value:.1f}")
 
     def _reload_settings(self) -> None:
         stacked_widget = self.export_widget.stacked_widget

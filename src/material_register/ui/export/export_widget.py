@@ -8,8 +8,9 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPus
     QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog, QDoubleSpinBox, QScrollArea, \
     QCheckBox
 
-from material_register.config.ui_constants import EXPORT_PRICE_MIN_VALUE, EXPORT_PRICE_MAX_VALUE
-from material_register.controllers.period_controller import PeriodExportController
+from material_register.config.ui_constants import EXPORT_PRICE_MIN_VALUE, EXPORT_PRICE_MAX_VALUE, \
+    BALANCE_PRICE_MIN_VALUE
+from material_register.controllers.period_export_controller import PeriodExportController
 from material_register.db.utils.date_filters import get_filter_range
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
@@ -292,6 +293,8 @@ class ExportWidget(QWidget):
             today = QDate.currentDate()
             self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
         self.today_radio_button.setChecked(True)
+        if not self.save_last_opening_balance_checkbox.isChecked():
+            self.opening_balance_spinbox.setValue(0.0)
 
     def _create_connection(self) -> None:
         date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,
@@ -304,13 +307,15 @@ class ExportWidget(QWidget):
             radio_button.toggled.connect(self._apply_date_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
-        self.opening_balance_spinbox.valueChanged.connect(self._on_text_or_value_changed)
         self.export_button.clicked.connect(self.period_export_controller.start_export)
 
     def _setup_spinboxes(self) -> None:
         spinboxes = [self.opening_balance_spinbox, self.income_spinbox, self.expense_spinbox]
         for spinbox in spinboxes:
-            spinbox.setMinimum(EXPORT_PRICE_MIN_VALUE)
+            minimum = EXPORT_PRICE_MIN_VALUE
+            if spinbox == self.opening_balance_spinbox:
+                minimum = BALANCE_PRICE_MIN_VALUE
+            spinbox.setMinimum(minimum)
             spinbox.setMaximum(EXPORT_PRICE_MAX_VALUE)
             spinbox.setDecimals(1)
             spinbox.setSingleStep(0.1)
@@ -351,9 +356,7 @@ class ExportWidget(QWidget):
             self.to_date_edit.setEnabled(False)
 
     def _apply_export_action_state(self) -> None:
-        if (self.branch_name_line_edit.text().strip() != ""
-                and self.file_name_line_edit.text().strip() != ""
-                and self.opening_balance_spinbox.value() > 0.0):
+        if self.branch_name_line_edit.text().strip() != "" and self.file_name_line_edit.text().strip() != "":
             self.export_button.setEnabled(True)
         else:
             self.export_button.setEnabled(False)
@@ -383,10 +386,6 @@ class ExportWidget(QWidget):
             self.file_name_line_edit.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             self.file_name_line_edit.setStyleSheet("")
-        if self.opening_balance_spinbox.value() == 0.0:
-            self.opening_balance_spinbox.setStyleSheet(INVALID_INPUT_STYLE)
-        else:
-            self.opening_balance_spinbox.setStyleSheet("")
 
     def _set_elided_path(self, path: str) -> None:
         metrics = QFontMetrics(self.path_line_edit.font())
