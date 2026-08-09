@@ -25,7 +25,7 @@ def open_file_in_explorer(file_path: Path | str) -> bool:
     try:
         path = os.path.abspath(file_path)
         if sys.platform == "win32":
-            subprocess.run(["explorer", "/select,", path], check=True)
+            subprocess.Popen(["explorer", "/select,", path])
         elif sys.platform == "darwin":
             subprocess.run(["open", "-R", path], check=True)
         else:
