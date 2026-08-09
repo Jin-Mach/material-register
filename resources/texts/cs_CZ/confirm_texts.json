@@ -25,6 +25,11 @@
     "TEXT": "Nepodařilo se vytvořit položku v katalogu.",
     "CLOSE": "Zavřít"
   },
+  "NO_DATA": {
+    "TITLE": "Chyba",
+    "TEXT": "Nastavení neodpovídají žádná data.\nUpravte nastavení a opakujte akci",
+    "CLOSE": "Zavřít"
+  },
   "INVALID_DATA": {
     "TITLE": "Chyba",
     "TEXT": "Došlo k neočekávané chybě při zpracování dat.",

@@ -60,16 +60,22 @@ class PeriodExportController(QObject):
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._export_error)
+        self.worker.no_export_data.connect(self._no_export_data)
         self.worker.export_started.connect(self._update_texts)
         self.worker.finished.connect(self._export_ok)
         self.thread.start()
 
-    def _export_error(self, error: str) -> None:
+    def _no_export_data(self, key: str) -> None:
         self._clean_thread()
-        QTimer.singleShot(1000, lambda: self._finish_export(error=error))
+        self.progress_dialog.close()
+        QTimer.singleShot(100, lambda: MessageBoxes.show_error(self.export_widget, key))
 
     def _update_texts(self) -> None:
         self.progress_dialog.set_label_text("exportInProgressText")
+
+    def _export_error(self, error: str) -> None:
+        self._clean_thread()
+        QTimer.singleShot(1000, lambda: self._finish_export(error=error))
 
     def _export_ok(self, last_value: float) -> None:
         if self.export_settings.get("useLastOptionsCheckbox", False):

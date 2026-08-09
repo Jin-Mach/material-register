@@ -10,6 +10,7 @@ from material_register.utils.system import is_disk_writable
 
 class PeriodExportWorker(QObject):
     finished = Signal(float)
+    no_export_data = Signal(str)
     export_started = Signal()
     error = Signal(str)
 
@@ -36,6 +37,9 @@ class PeriodExportWorker(QObject):
             ok, error, out_data = PeriodExportQueries.load_export_data_out(self.db_connection, from_date, to_date)
             if not ok:
                 self.error.emit(error)
+                return
+            if not in_data and not out_data:
+                self.no_export_data.emit("NO_DATA")
                 return
             self.export_started.emit()
             workbook, last_balance = PeriodWorkbook.create_workbook(self.export_settings, self.export_texts, in_data, out_data)
