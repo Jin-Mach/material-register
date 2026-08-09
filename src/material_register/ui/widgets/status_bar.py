@@ -17,6 +17,7 @@ class StatusBar(QStatusBar):
 
     def _create_ui(self) -> None:
         self.permanent_label = QLabel()
+        self.permanent_label.setContentsMargins(10, 0, 10, 0)
         self.addWidget(self.permanent_label)
 
     def _setup_texts(self) -> None:
