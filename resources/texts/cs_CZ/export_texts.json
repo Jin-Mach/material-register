@@ -1,8 +1,4 @@
 {
-  "ProgressDialog": {
-    "loadingDataText": "Načítám data...",
-    "exportInProgressText": "Probíhá export..."
-  },
   "PeriodSheet": {
     "sheetName": "Evidence",
     "titleText": "Evidence materiálu",
@@ -21,7 +17,6 @@
     "quantityText": "Množství",
     "totalPriceText": "Celková cena",
     "summaryPriceText": "Celkem",
-    "exportText": "Vývoz",
-    "pageText": "Strana:"
+    "exportText": "Vývoz"
   }
 }

@@ -12,6 +12,7 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
+from material_register.utils.normalizer import normalize_value
 from material_register.workers.period_export_worker import PeriodExportWorker
 
 if TYPE_CHECKING:
@@ -139,16 +140,12 @@ class PeriodExportController(QObject):
         if not user_settings:
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
-        user_settings["openingBalanceSpinbox"] = PeriodExportController._normalize_value(new_balance)
+        user_settings["openingBalanceSpinbox"] = normalize_value(new_balance)
         if not SettingsProvider.save_settings():
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
         self._reload_settings()
         AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
-
-    @staticmethod
-    def _normalize_value(value: float) -> float:
-        return float(f"{value:.1f}")
 
     def _reload_settings(self) -> None:
         stacked_widget = self.export_widget.stacked_widget

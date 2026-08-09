@@ -11,11 +11,12 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPus
 from material_register.config.ui_constants import EXPORT_PRICE_MIN_VALUE, EXPORT_PRICE_MAX_VALUE, \
     BALANCE_PRICE_MIN_VALUE
 from material_register.controllers.period_export_controller import PeriodExportController
-from material_register.db.utils.date_filters import get_filter_range
+from material_register.utils.date_filters import get_filter_range
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:
     from material_register.ui.widgets.stacked_widget import StackedWidget
@@ -425,10 +426,6 @@ class ExportWidget(QWidget):
         }
         return file_map[file_type]
 
-    @staticmethod
-    def _normalize_value(value: float) -> float:
-        return float(f"{value:.1f}")
-
     def get_export_data(self) -> dict[str, Path | str | float | bool]:
         from_date, to_date = self._get_date_interval()
         return {
@@ -438,9 +435,9 @@ class ExportWidget(QWidget):
             "fileNameLineEdit": self.file_name_line_edit.text().strip(),
             "from_date": from_date,
             "to_date": to_date,
-            "openingBalanceSpinbox": ExportWidget._normalize_value(self.opening_balance_spinbox.value()),
-            "income": ExportWidget._normalize_value(self.income_spinbox.value()),
-            "expense": ExportWidget._normalize_value(self.expense_spinbox.value()),
+            "openingBalanceSpinbox": normalize_value(self.opening_balance_spinbox.value()),
+            "income": normalize_value(self.income_spinbox.value()),
+            "expense": normalize_value(self.expense_spinbox.value()),
             "noActionRadioButton": self.no_action_radio_button.isChecked(),
             "openFolderRadioButton": self.open_folder_radio_button.isChecked(),
             "openFileRadioButton": self.open_file_radio_button.isChecked(),

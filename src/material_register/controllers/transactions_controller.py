@@ -9,7 +9,7 @@ from material_register.db.models.transaction_items_model_in import TransactionIt
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.db.queries.transaction_items_queries import TransactionItemsQueries
 from material_register.db.queries.transactions_queries import TransactionsQueries
-from material_register.db.utils.date_filters import get_filter_range
+from material_register.utils.date_filters import get_filter_range
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import TransactionItemDetail
 from material_register.init.data_init import DataInit

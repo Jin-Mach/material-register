@@ -13,6 +13,7 @@ from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE, WARNING_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -206,14 +207,10 @@ class CommodityDialog(QDialog):
             name=self.name_input.text().strip(),
             category_id=self.category_id,
             unit=self.unit_input.currentText(),
-            default_price=CommodityDialog._normalize_value(self.price_input.value()),
+            default_price=normalize_value(self.price_input.value()),
             notes=self.notes_input.toPlainText().strip(),
             active=int(self.active_checkbox.isChecked())
         )
-
-    @staticmethod
-    def _normalize_value(value: float) -> float:
-        return float(f"{value:.1f}")
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

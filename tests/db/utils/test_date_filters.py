@@ -2,7 +2,7 @@ import pytest
 
 from datetime import datetime
 
-from material_register.db.utils.date_filters import get_filter_range
+from material_register.utils.date_filters import get_filter_range
 
 
 @pytest.mark.parametrize(
@@ -17,7 +17,7 @@ from material_register.db.utils.date_filters import get_filter_range
 def test_filter_range_start_dates(monkeypatch, key: str, expected_start: str) -> None:
     fixed_now = datetime(2026, 7, 11, 15, 30, 45)
     monkeypatch.setattr(
-        "material_register.db.utils.date_filters._now",
+        "material_register.utils.date_filters._now",
         lambda: fixed_now,
     )
     start, end = get_filter_range(key)
@@ -27,7 +27,7 @@ def test_filter_range_start_dates(monkeypatch, key: str, expected_start: str) ->
 def test_week_filter_is_monday_to_current_day(monkeypatch) -> None:
     fixed_now = datetime(2026, 7, 15, 10, 0, 0)
     monkeypatch.setattr(
-        "material_register.db.utils.date_filters._now",
+        "material_register.utils.date_filters._now",
         lambda: fixed_now,
     )
     start, end = get_filter_range("week")
@@ -45,7 +45,7 @@ def test_week_filter_is_monday_to_current_day(monkeypatch) -> None:
 )
 def test_month_filter_starts_first_day(monkeypatch, fixed_date: datetime, expected_start: str) -> None:
     monkeypatch.setattr(
-        "material_register.db.utils.date_filters._now",
+        "material_register.utils.date_filters._now",
         lambda: fixed_date,
     )
     start, end = get_filter_range("month")
@@ -62,7 +62,7 @@ def test_month_filter_starts_first_day(monkeypatch, fixed_date: datetime, expect
 )
 def test_year_filter_starts_first_january(monkeypatch, fixed_date: datetime) -> None:
     monkeypatch.setattr(
-        "material_register.db.utils.date_filters._now",
+        "material_register.utils.date_filters._now",
         lambda: fixed_date,
     )
     start, end = get_filter_range("year")
@@ -72,7 +72,7 @@ def test_year_filter_starts_first_january(monkeypatch, fixed_date: datetime) -> 
 def test_invalid_filter_returns_none(monkeypatch) -> None:
     fixed_now = datetime(2026, 7, 11, 15, 30, 45)
     monkeypatch.setattr(
-        "material_register.db.utils.date_filters._now",
+        "material_register.utils.date_filters._now",
         lambda: fixed_now,
     )
     result = get_filter_range("invalid")

@@ -25,11 +25,6 @@
     "TEXT": "Failed to create catalog item.",
     "CLOSE": "Close"
   },
-  "NO_DATA": {
-    "TITLE": "Error",
-    "TEXT": "No data matches the current settings.\nAdjust the settings and try again.",
-    "CLOSE": "Close"
-  },
   "INVALID_DATA": {
     "TITLE": "Error",
     "TEXT": "An unexpected error occurred while processing data.",

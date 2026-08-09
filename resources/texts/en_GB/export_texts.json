@@ -1,8 +1,4 @@
 {
-  "ProgressDialog": {
-    "loadingDataText": "Loading data...",
-    "exportInProgressText": "Export in progress..."
-  },
   "PeriodSheet": {
     "sheetName": "Evidence",
     "titleText": "Material Register",
@@ -21,7 +17,6 @@
     "quantityText": "Quantity",
     "totalPriceText": "Total price",
     "summaryPriceText": "Total",
-    "exportText": "Dispatch",
-    "pageText": "Page:"
+    "exportText": "Dispatch"
   }
 }

@@ -19,3 +19,6 @@ def normalize_whitespace(text: str | None) -> str | None:
     if text is None:
         return None
     return " ".join(str(text).split())
+
+def normalize_value(value: float) -> float:
+    return float(f"{value:.1f}")

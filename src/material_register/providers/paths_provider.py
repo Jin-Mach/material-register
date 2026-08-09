@@ -4,7 +4,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QStandardPaths
 
-from material_register.config.paths_constants import PROJECT_NAME
+from material_register.config.project_constants import PROJECT_NAME
 from material_register.services.error_handler import ErrorHandler
 
 

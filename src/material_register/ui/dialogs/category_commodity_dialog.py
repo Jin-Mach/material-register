@@ -16,6 +16,7 @@ from material_register.ui.helpers.spinbox_setup import set_suffix_mode
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
@@ -180,12 +181,12 @@ class CategoryCommodityDialog(QDialog):
         self.add_button.setEnabled(valid)
 
     def _set_required_style(self) -> None:
-        if self._is_unit_valid_value(self.unit_spinbox.value()):
+        if CategoryCommodityDialog._is_unit_valid_value(self.unit_spinbox.value()):
             self.unit_spinbox.setStyleSheet("")
         else:
             self.unit_spinbox.setStyleSheet(INVALID_INPUT_STYLE)
         if self.transfer_type != TRANSFER_OUT:
-            if self._is_price_valid_value(self.price_spinbox.value()):
+            if CategoryCommodityDialog._is_price_valid_value(self.price_spinbox.value()):
                 self.price_spinbox.setStyleSheet("")
             else:
                 self.price_spinbox.setStyleSheet(INVALID_INPUT_STYLE)
@@ -193,8 +194,8 @@ class CategoryCommodityDialog(QDialog):
             self.price_spinbox.setStyleSheet("")
 
     def _normalize_unit_price_values(self) -> tuple[int | float, int | float]:
-        unit = CategoryCommodityDialog._normalize_value(self.unit_spinbox.value())
-        price = CategoryCommodityDialog._normalize_value(self.price_spinbox.value())
+        unit = normalize_value(self.unit_spinbox.value())
+        price = normalize_value(self.price_spinbox.value())
         if self.commodity_suffix in INTEGER_SUFFIXES:
             unit = int(unit)
         if self.transfer_type == TRANSFER_OUT:
@@ -206,13 +207,13 @@ class CategoryCommodityDialog(QDialog):
             return (
                     self.category_combo_box.currentIndex() != -1
                     and self.commodity_combo_box.currentIndex() != -1
-                    and self._is_unit_valid_value(self.unit_spinbox.value())
+                    and CategoryCommodityDialog._is_unit_valid_value(self.unit_spinbox.value())
             )
         return (
                 self.category_combo_box.currentIndex() != -1
                 and self.commodity_combo_box.currentIndex() != -1
-                and self._is_unit_valid_value(self.unit_spinbox.value())
-                and self._is_price_valid_value(self.price_spinbox.value())
+                and CategoryCommodityDialog._is_unit_valid_value(self.unit_spinbox.value())
+                and CategoryCommodityDialog._is_price_valid_value(self.price_spinbox.value())
         )
 
     @staticmethod
@@ -232,23 +233,20 @@ class CategoryCommodityDialog(QDialog):
         if disabled is not None:
             for widget in disabled:
                 widget.setEnabled(False)
+    @staticmethod
+    def _is_unit_valid_value(value: float) -> bool:
+        return normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE
 
     @staticmethod
-    def _normalize_value(value: float) -> float:
-        return float(f"{value:.1f}")
-
-    def _is_unit_valid_value(self, value: float) -> bool:
-        return self._normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE
-
-    def _is_price_valid_value(self, value: float) -> bool:
-        return self._normalize_value(value) >= CATEGORY_COMMODITY_DIALOG_MIN_VALUE
+    def _is_price_valid_value(value: float) -> bool:
+        return normalize_value(value) >= CATEGORY_COMMODITY_DIALOG_MIN_VALUE
 
     def _valid_values(self) -> bool:
         if self.transfer_type == TRANSFER_OUT:
-            return self._is_unit_valid_value(self.unit_spinbox.value())
+            return CategoryCommodityDialog._is_unit_valid_value(self.unit_spinbox.value())
         return (
-                self._is_unit_valid_value(self.unit_spinbox.value())
-                and self._is_price_valid_value(self.price_spinbox.value())
+                CategoryCommodityDialog._is_unit_valid_value(self.unit_spinbox.value())
+                and CategoryCommodityDialog._is_price_valid_value(self.price_spinbox.value())
         )
 
     def get_category_commodity_data(self) -> dict[str, str | int | float | None] | None:

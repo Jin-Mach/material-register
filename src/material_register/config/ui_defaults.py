@@ -1,257 +1,261 @@
 DEFAULT_TEXTS = {
-  "MainWindow": {
-    "titleText": "Material Register"
-  },
-  "SidePanel": {
-    "transactionsButtonText": "Transactions",
-    "transactionsButtonTooltipText": "Displays the list of transactions",
-    "customersButtonText": "Customers",
-    "customersButtonTooltipText": "Displays the list of customers",
-    "exportButtonText": "Export",
-    "exportButtonTooltipText": "Displays export options",
-    "catalogButtonText": "Catalog",
-    "catalogButtonTooltipText": "Displays item catalog",
-    "inventoryButtonText": "Inventory",
-    "inventoryButtonTooltipText": "Displays stock status",
-    "settingsButtonText": "Settings",
-    "settingsButtonTooltipText": "Displays application settings"
-  },
-  "TransactionsWidget": {
-    "modelInSuffix": "CZK",
-    "itemsCountLabelText": "Displayed:",
-    "priceSuffix": "CZK"
-  },
-  "TransactionsView": {
-    "updateTransactionActionText": "Edit transaction",
-    "deleteTransactionActionText": "Delete transaction"
-  },
-  "TransactionsActionsWidget": {
-    "inTransactionButtonText": "Add purchase",
-    "inTransactionButtonTooltipText": "Add a new purchase transaction",
-    "outTransactionButtonText": "Add sale",
-    "outTransactionButtonTooltipText": "Add a new sale transaction",
-    "baseFilterComboboxItems": ["Today", "This week", "This month", "This year"],
-    "searchLineEditPlaceholderText": "Enter search text..."
-  },
-  "TransactionsTabWidget": {
-    "inTabTitleText": "Purchase",
-    "outTabTitleText": "Sale"
-  },
-  "CustomersActionsWidget": {
-    "addCustomerButtonText": "Add customer",
-    "addCustomerButtonTooltipText": "Add a new customer",
-    "searchLineEditPlaceholderText": "Enter search text..."
-  },
-  "CustomersWidget": {
-    "countLabelText": "Displayed:"
-  },
-  "CustomersView": {
-    "updateCustomerActionText": "Edit record",
-    "activeCustomerActionText": "Activate/Deactivate customer"
-  },
-  "InventoryWidget": {
-    "countLabelText": "Displayed:"
-  },
-  "InventoryActionsWidget": {
-    "searchLineEditPlaceholderText": "Enter search text..."
-  },
-  "ExportWidget": {
-    "pathNameGroupBoxText": "File",
-    "fileTypeLabelText": "File type:",
-    "fileTypeComboBoxItems": ["Excel"],
-    "pathLabelText": "Path:",
-    "pathButtonText": "Select folder",
-    "folderDialogTitle": "Select export folder",
-    "fileNameLabelText": "File name:",
-    "fileNameLineEditText": "Export",
-    "nameLineEditPlaceholderText": "Enter file name (without extension)",
-    "dateOptionsGroupBoxText": "Period",
-    "todayRadioButtonText": "Today",
-    "weekRadioButtonText": "This week",
-    "monthRadioButtonText": "This month",
-    "yearRadioButtonText": "This year",
-    "customRadioButtonText": "Custom",
-    "fromDateLabelText": "from:",
-    "toDateLabelText": "to:",
-    "financialDataGroupBoxText": "Finance",
-    "priceSuffix": "CZK",
-    "openingBalanceLabelText": "Opening balance:",
-    "incomeLabelText": "Additional income:",
-    "expenseLabelText": "External expenses:",
-    "exportOptionsGroupBoxText": "After export",
-    "noActionRadioButtonText": "Do nothing",
-    "openFolderRadioButtonText": "Open folder",
-    "openFileRadioButtonText": "Open file",
-    "exportButtonText": "Export",
-    "exportButtonTooltipText": "Exports data according to the selected parameters"
-  },
-  "ErrorDialog": {
-    "closeDialogButtonText": "Close",
-    "closeDialogButtonTooltipText": "Close error dialog",
-    "closeAppButtonText": "Exit",
-    "closeAppButtonTooltipText": "Exit application"
-  },
-  "CustomerDialog": {
-    "titleText": "Customer",
-    "createdLabelText": "Created:",
-    "subjectTypePlaceholderText": "Select customer type...",
-    "subjectTypeItems": [
-      "Individual",
-      "Company"
-    ],
-    "companyLabelText": "Company:",
-    "firstNameLabelText": "First name:",
-    "lastNameLabelText": "Last name:",
-    "documentTypeLabelText": "Document:",
-    "addressLabelText": "Address:",
-    "activeLabelText": "Active:",
-    "notesLabelText": "Notes:",
-    "notesCountLabelText": "Characters:",
-    "saveButtonText": "Save",
-    "saveButtonTooltipText": "Saves customer",
-    "closeButtonText": "Close",
-    "closeButtonTooltipText": "Closes dialog"
-  },
-  "CategoryDialog": {
-    "titleText": "Category",
-    "categoryNameLabelText": "Category name",
-    "notesLabelText": "Notes:",
-    "notesCountLabelText": "Characters:",
-    "saveButtonText": "Save",
-    "saveButtonTooltipText": "Saves category",
-    "closeButtonText": "Close",
-    "closeButtonTooltipText": "Closes dialog"
-  },
-  "CommodityDialog": {
-    "titleText": "Item",
-    "categoryLabelText": "Category:",
-    "nameLabelText": "Name:",
-    "unitLabelText": "Unit:",
-    "unitInputItems": ["kg", "pcs"],
-    "warningLabelText": "The unit cannot be changed after creating the item",
-    "defaultPriceLabelText": "Unit price (CZK):",
-    "activeLabelText": "Active",
-    "notesLabelText": "Notes",
-    "notesCountLabelText": "Character count:",
-    "saveButtonText": "Save",
-    "saveButtonTooltipText": "Saves item",
-    "closeButtonText": "Close",
-    "closeButtonTooltipText": "Closes dialog"
-  },
-  "CatalogWidget": {
-    "addCategoryButtonText": "Add category",
-    "addCategoryButtonTooltipText": "Creates a new category",
-    "catalogTitleLabelText": "Item catalog"
-  },
-  "CatalogDefaultWidget": {
-    "titleLabelText": "Item details",
-    "subtitleLabelText": "Select a category to display items"
-  },
-  "CategoryDetailWidget": {
-    "categoryGroupBoxText": "Category",
-    "notesLabelText": "Notes",
-    "updateCategoryButtonText": "Edit category",
-    "updateCategoryButtonTooltipText": "Edits selected category",
-    "addCommodityButtonText": "Add item",
-    "addCommodityButtonTooltipText": "Creates a new item in the selected category"
-  },
-  "CommoditiesGridWidget": {
-    "commoditiesGroupBoxText": "Category items",
-    "noCommoditiesLabelText": "There are no items in this category"
-  },
-  "CommodityCardWidget": {
-    "unitLabelText": "Unit:",
-    "defaultPriceLabelText": "Unit price (CZK):",
-    "activeLabelText": "Active:",
-    "notesLabelText": "Notes",
-    "updateCommodityButtonText": "Edit item",
-    "updateCommodityButtonTooltipText": "Edits selected item"
-  },
-  "CreateTransactionDialog": {
-    "titleText": "New transaction",
-    "paymentTypeLabelText": "Payment:",
-    "paymentTypeComboboxItems": ["Cash", "Bank transfer"],
-    "customerNameLabelText": "Customer:",
-    "customerDocumentNumberLabelText": "Document:",
-    "customerAddressLabelText": "Address:",
-    "continueTransactionButtonText": "Create transaction",
-    "continueTransactionButtonTooltipText": "Creates a new transaction for selected customer",
-    "cancelTransactionButtonText": "Cancel",
-    "cancelTransactionButtonTooltipText": "Closes dialog"
-  },
-  "TransactionItemsDialogIn": {
-    "titleText": "Purchase",
-    "saveTransactionButtonText": "Save purchase",
-    "saveTransactionButtonTooltipText": "Saves purchase to database",
-    "cancelTransactionButtonText": "Cancel purchase",
-    "cancelTransactionButtonTooltipText": "Cancels purchase and closes dialog",
-    "CASH": "Cash",
-    "TRANSFER": "Bank transfer"
-  },
-  "TransactionItemsDialogOut": {
-    "titleText": "Sale",
-    "saveTransactionButtonText": "Save sale",
-    "saveTransactionButtonTooltipText": "Saves sale to database",
-    "cancelTransactionButtonText": "Cancel sale",
-    "cancelTransactionButtonTooltipText": "Cancels sale and closes dialog",
-    "CASH": "Cash",
-    "TRANSFER": "Bank transfer"
-  },
-  "TransactionInfoWidget": {
-    "customerNameLabelText": "Customer:",
-    "documentNumberLabelText": "Document:",
-    "addressLabelText": "Address:",
-    "updateTransactionInfoButtonText": "Edit",
-    "updateTransactionInfoButtonTooltipText": "Opens dialog to re-enter customer",
-    "notesCountLabelText": "Character count:"
-  },
-  "TransactionsItemsWidget": {
-    "addItemButtonText": "Add item",
-    "addItemButtonTooltipText": "Opens dialog to add a new item",
-    "updateItemButtonText": "Edit item",
-    "updateItemButtonTooltipText": "Opens item edit dialog",
-    "deleteButtonText": "Delete item",
-    "deleteButtonTooltipText": "Deletes selected item from list",
-    "totalPriceLabelText": "Total:",
-    "priceSuffix": "CZK"
-  },
-  "CategoryCommodityDialog": {
-    "titleText": "New item",
-    "categoryLabelText": "Category:",
-    "categoryComboBoxPlaceholderText": "Select category...",
-    "commodityLabelText": "Item:",
-    "commodityComboBoxPlaceholderText": "Select item...",
-    "unitLabelText": "Total quantity:",
-    "priceLabelText": "Unit price (CZK):",
-    "addButtonText": "Add item",
-    "addButtonTooltipText": "Adds item to transaction",
-    "cancelButtonText": "Cancel",
-    "cancelButtonTooltipText": "Closes dialog"
-  },
-  "SettingsWidget": {
-    "exportTabTitle": "Export"
-  },
-  "ExportSettings": {
-    "branchGroupBoxText": "Branch",
-    "branchNameLabelText": "Branch:",
-    "branchNameLineEditPlaceholderText": "Enter branch name",
-    "pathNameGroupBoxText": "File",
-    "pathLabelText": "Path:",
-    "pathButtonText": "Select folder",
-    "folderDialogTitle": "Select export folder",
-    "fileNameLabelText": "File name:",
-    "fileNameLineEditText": "",
-    "fileNameLineEditPlaceholderText": "Enter file name (without extension)",
-    "exportOptionsGroupBoxText": "After export",
-    "noActionRadioButtonText": "Do nothing",
-    "openFolderRadioButtonText": "Open folder",
-    "openFileRadioButtonText": "Open file",
-    "otherSettingsGroupBoxText": "Other",
-    "useLastOptionsCheckboxText": "Use last used values",
-    "saveLastOpeningBalanceCheckboxText": "Save balance",
-    "restoreButtonText": "Restore default",
-    "restoreButtonTooltipText": "Restores default export values",
-    "saveButtonText": "Save",
-    "saveButtonTooltipText": "Saves current export settings"
-  }
+    "MainWindow": {
+        "titleText": "Material Register"
+    },
+    "SidePanel": {
+        "transactionsButtonText": "Transactions",
+        "transactionsButtonTooltipText": "Displays the list of transactions",
+        "customersButtonText": "Customers",
+        "customersButtonTooltipText": "Displays the list of customers",
+        "exportButtonText": "Export",
+        "exportButtonTooltipText": "Displays export options",
+        "catalogButtonText": "Catalog",
+        "catalogButtonTooltipText": "Displays item catalog",
+        "inventoryButtonText": "Inventory",
+        "inventoryButtonTooltipText": "Displays stock status",
+        "settingsButtonText": "Settings",
+        "settingsButtonTooltipText": "Displays application settings"
+    },
+    "TransactionsWidget": {
+        "modelInSuffix": "CZK",
+        "itemsCountLabelText": "Displayed:",
+        "priceSuffix": "CZK"
+    },
+    "TransactionsView": {
+        "updateTransactionActionText": "Edit transaction",
+        "deleteTransactionActionText": "Delete transaction"
+    },
+    "TransactionsActionsWidget": {
+        "inTransactionButtonText": "Add purchase",
+        "inTransactionButtonTooltipText": "Add a new purchase transaction",
+        "outTransactionButtonText": "Add sale",
+        "outTransactionButtonTooltipText": "Add a new sale transaction",
+        "baseFilterComboboxItems": ["Today", "This week", "This month", "This year"],
+        "searchLineEditPlaceholderText": "Enter search text..."
+    },
+    "TransactionsTabWidget": {
+        "inTabTitleText": "Purchase",
+        "outTabTitleText": "Sale"
+    },
+    "CustomersActionsWidget": {
+        "addCustomerButtonText": "Add customer",
+        "addCustomerButtonTooltipText": "Add a new customer",
+        "searchLineEditPlaceholderText": "Enter search text..."
+    },
+    "CustomersWidget": {
+        "countLabelText": "Displayed:"
+    },
+    "CustomersView": {
+        "updateCustomerActionText": "Edit record",
+        "activeCustomerActionText": "Activate/Deactivate customer"
+    },
+    "InventoryWidget": {
+        "countLabelText": "Displayed:"
+    },
+    "InventoryActionsWidget": {
+        "searchLineEditPlaceholderText": "Enter search text..."
+    },
+    "ExportWidget": {
+        "branchGroupBoxText": "Branch",
+        "branchNameLabelText": "Branch:",
+        "pathNameGroupBoxText": "File",
+        "fileTypeLabelText": "File type:",
+        "fileTypeComboBoxItems": ["Excel"],
+        "pathLabelText": "Path:",
+        "pathButtonText": "Select folder",
+        "folderDialogTitle": "Select export folder",
+        "fileNameLabelText": "File name:",
+        "fileNameLineEditText": "Export",
+        "nameLineEditPlaceholderText": "Enter file name (without extension)",
+        "dateOptionsGroupBoxText": "Period",
+        "todayRadioButtonText": "Today",
+        "weekRadioButtonText": "This week",
+        "monthRadioButtonText": "This month",
+        "yearRadioButtonText": "This year",
+        "customRadioButtonText": "Custom",
+        "fromDateLabelText": "from:",
+        "toDateLabelText": "to:",
+        "financialDataGroupBoxText": "Finance",
+        "priceSuffix": "CZK",
+        "openingBalanceLabelText": "Opening balance:",
+        "incomeLabelText": "Additional income:",
+        "expenseLabelText": "External expenses:",
+        "exportOptionsGroupBoxText": "After export",
+        "noActionRadioButtonText": "Do nothing",
+        "openFolderRadioButtonText": "Open folder",
+        "openFileRadioButtonText": "Open file",
+        "otherSettingsGroupBoxText": "Other",
+        "useLastOptionsCheckboxText": "Remember last settings",
+        "saveLastOpeningBalanceCheckboxText": "Remember last balance",
+        "exportButtonText": "Export",
+        "exportButtonTooltipText": "Exports data according to the selected parameters"
+    },
+    "ErrorDialog": {
+        "closeDialogButtonText": "Close",
+        "closeDialogButtonTooltipText": "Close error dialog",
+        "closeAppButtonText": "Exit",
+        "closeAppButtonTooltipText": "Exit application"
+    },
+    "CustomerDialog": {
+        "titleText": "Customer",
+        "createdLabelText": "Created:",
+        "subjectTypePlaceholderText": "Select customer type...",
+        "subjectTypeItems": [
+            "Individual",
+            "Company"
+        ],
+        "companyLabelText": "Company:",
+        "firstNameLabelText": "First name:",
+        "lastNameLabelText": "Last name:",
+        "documentTypeLabelText": "Document:",
+        "addressLabelText": "Address:",
+        "activeLabelText": "Active:",
+        "notesLabelText": "Notes:",
+        "notesCountLabelText": "Characters:",
+        "saveButtonText": "Save",
+        "saveButtonTooltipText": "Saves customer",
+        "closeButtonText": "Close",
+        "closeButtonTooltipText": "Closes dialog"
+    },
+    "CategoryDialog": {
+        "titleText": "Category",
+        "categoryNameLabelText": "Category name",
+        "notesLabelText": "Notes:",
+        "notesCountLabelText": "Characters:",
+        "saveButtonText": "Save",
+        "saveButtonTooltipText": "Saves category",
+        "closeButtonText": "Close",
+        "closeButtonTooltipText": "Closes dialog"
+    },
+    "CommodityDialog": {
+        "titleText": "Item",
+        "categoryLabelText": "Category:",
+        "nameLabelText": "Name:",
+        "unitLabelText": "Unit:",
+        "unitInputItems": ["kg", "pcs"],
+        "warningLabelText": "The unit cannot be changed after creating the item",
+        "defaultPriceLabelText": "Unit price (CZK):",
+        "activeLabelText": "Active",
+        "notesLabelText": "Notes",
+        "notesCountLabelText": "Character count:",
+        "saveButtonText": "Save",
+        "saveButtonTooltipText": "Saves item",
+        "closeButtonText": "Close",
+        "closeButtonTooltipText": "Closes dialog"
+    },
+    "CatalogWidget": {
+        "addCategoryButtonText": "Add category",
+        "addCategoryButtonTooltipText": "Creates a new category",
+        "catalogTitleLabelText": "Item catalog"
+    },
+    "CatalogDefaultWidget": {
+        "titleLabelText": "Item details",
+        "subtitleLabelText": "Select a category to display items"
+    },
+    "CategoryDetailWidget": {
+        "categoryGroupBoxText": "Category",
+        "notesLabelText": "Notes",
+        "updateCategoryButtonText": "Edit category",
+        "updateCategoryButtonTooltipText": "Edits selected category",
+        "addCommodityButtonText": "Add item",
+        "addCommodityButtonTooltipText": "Creates a new item in the selected category"
+    },
+    "CommoditiesGridWidget": {
+        "commoditiesGroupBoxText": "Category items",
+        "noCommoditiesLabelText": "There are no items in this category"
+    },
+    "CommodityCardWidget": {
+        "unitLabelText": "Unit:",
+        "defaultPriceLabelText": "Unit price (CZK):",
+        "activeLabelText": "Active:",
+        "notesLabelText": "Notes",
+        "updateCommodityButtonText": "Edit item",
+        "updateCommodityButtonTooltipText": "Edits selected item"
+    },
+    "CreateTransactionDialog": {
+        "titleText": "New transaction",
+        "paymentTypeLabelText": "Payment:",
+        "paymentTypeComboboxItems": ["Cash", "Bank transfer"],
+        "customerNameLabelText": "Customer:",
+        "customerDocumentNumberLabelText": "Document:",
+        "customerAddressLabelText": "Address:",
+        "continueTransactionButtonText": "Create transaction",
+        "continueTransactionButtonTooltipText": "Creates a new transaction for selected customer",
+        "cancelTransactionButtonText": "Cancel",
+        "cancelTransactionButtonTooltipText": "Closes dialog"
+    },
+    "TransactionItemsDialogIn": {
+        "titleText": "Purchase",
+        "saveTransactionButtonText": "Save purchase",
+        "saveTransactionButtonTooltipText": "Saves purchase to database",
+        "cancelTransactionButtonText": "Cancel purchase",
+        "cancelTransactionButtonTooltipText": "Cancels purchase and closes dialog",
+        "CASH": "Cash",
+        "TRANSFER": "Bank transfer"
+    },
+    "TransactionItemsDialogOut": {
+        "titleText": "Sale",
+        "saveTransactionButtonText": "Save sale",
+        "saveTransactionButtonTooltipText": "Saves sale to database",
+        "cancelTransactionButtonText": "Cancel sale",
+        "cancelTransactionButtonTooltipText": "Cancels sale and closes dialog",
+        "CASH": "Cash",
+        "TRANSFER": "Bank transfer"
+    },
+    "TransactionInfoWidget": {
+        "customerNameLabelText": "Customer:",
+        "documentNumberLabelText": "Document:",
+        "addressLabelText": "Address:",
+        "updateTransactionInfoButtonText": "Edit",
+        "updateTransactionInfoButtonTooltipText": "Opens dialog to re-enter customer",
+        "notesCountLabelText": "Character count:"
+    },
+    "TransactionsItemsWidget": {
+        "addItemButtonText": "Add item",
+        "addItemButtonTooltipText": "Opens dialog to add a new item",
+        "updateItemButtonText": "Edit item",
+        "updateItemButtonTooltipText": "Opens item edit dialog",
+        "deleteButtonText": "Delete item",
+        "deleteButtonTooltipText": "Deletes selected item from list",
+        "totalPriceLabelText": "Total:",
+        "priceSuffix": "CZK"
+    },
+    "CategoryCommodityDialog": {
+        "titleText": "New item",
+        "categoryLabelText": "Category:",
+        "categoryComboBoxPlaceholderText": "Select category...",
+        "commodityLabelText": "Item:",
+        "commodityComboBoxPlaceholderText": "Select item...",
+        "unitLabelText": "Total quantity:",
+        "priceLabelText": "Unit price (CZK):",
+        "addButtonText": "Add item",
+        "addButtonTooltipText": "Adds item to transaction",
+        "cancelButtonText": "Cancel",
+        "cancelButtonTooltipText": "Closes dialog"
+    },
+    "SettingsWidget": {
+        "exportTabTitle": "Export"
+    },
+    "ExportSettings": {
+        "branchGroupBoxText": "Branch",
+        "branchNameLabelText": "Branch:",
+        "branchNameLineEditPlaceholderText": "Enter branch name",
+        "pathNameGroupBoxText": "File",
+        "pathLabelText": "Path:",
+        "pathButtonText": "Select folder",
+        "folderDialogTitle": "Select export folder",
+        "fileNameLabelText": "File name:",
+        "fileNameLineEditPlaceholderText": "Enter file name (without extension)",
+        "exportOptionsGroupBoxText": "After export",
+        "noActionRadioButtonText": "Do nothing",
+        "openFolderRadioButtonText": "Open folder",
+        "openFileRadioButtonText": "Open file",
+        "otherSettingsGroupBoxText": "Other",
+        "useLastOptionsCheckboxText": "Remember last settings",
+        "saveLastOpeningBalanceCheckboxText": "Remember last balance",
+        "restoreButtonText": "Restore default",
+        "restoreButtonTooltipText": "Restores default export values",
+        "saveButtonText": "Save",
+        "saveButtonTooltipText": "Saves current export settings"
+    }
 }
