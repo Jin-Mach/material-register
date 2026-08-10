@@ -294,8 +294,6 @@ class ExportWidget(QWidget):
             today = QDate.currentDate()
             self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
         self.today_radio_button.setChecked(True)
-        if not self.save_last_opening_balance_checkbox.isChecked():
-            self.opening_balance_spinbox.setValue(0.0)
 
     def _create_connection(self) -> None:
         date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,

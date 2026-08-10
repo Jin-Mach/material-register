@@ -57,7 +57,8 @@ class PeriodExportController(QObject):
         self.progress_dialog.show()
         self._start_worker(self.export_settings, self.export_texts)
 
-    def _start_worker(self, export_settings: dict[str, Path | str | float | bool], export_texts: dict[str, dict[str, str]]) -> None:
+    def _start_worker(self, export_settings: dict[str, Path | str | float | bool],
+                      export_texts: dict[str, dict[str, str]]) -> None:
         self.thread = QThread()
         self.worker = PeriodExportWorker(export_settings, export_texts)
         self.worker.moveToThread(self.thread)
@@ -84,10 +85,8 @@ class PeriodExportController(QObject):
     def _export_ok(self, last_value: float) -> None:
         if self.export_settings.get("useLastOptionsCheckbox", False):
             self._last_settings_saved()
-        new_balance = 0.0
         if self.export_settings.get("saveLastOpeningBalanceCheckbox", False):
-            new_balance = last_value
-        self._new_balance_saved(new_balance)
+            PeriodExportController._new_balance_saved(last_value)
         self._clean_thread()
         QTimer.singleShot(1000, self._finish_export)
 
@@ -132,8 +131,6 @@ class PeriodExportController(QObject):
             "noActionRadioButton",
             "openFolderRadioButton",
             "openFileRadioButton",
-            "useLastOptionsCheckbox",
-            "saveLastOpeningBalanceCheckbox"
         ]
         user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
         if not user_settings:
@@ -147,28 +144,7 @@ class PeriodExportController(QObject):
         if not SettingsProvider.save_settings():
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
-        self._reload_settings()
         AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
-
-    def _new_balance_saved(self, new_balance: float) -> None:
-        user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
-        if not user_settings:
-            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
-            return
-        user_settings["openingBalanceSpinbox"] = normalize_value(new_balance)
-        if not SettingsProvider.save_settings():
-            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
-            return
-        self._reload_settings()
-        AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
-
-    def _reload_settings(self) -> None:
-        stacked_widget = self.export_widget.stacked_widget
-        export_settings = stacked_widget.settings_widget.export_settings
-        if hasattr(self.export_widget, "apply_settings"):
-            self.export_widget.apply_settings()
-        if hasattr(export_settings, "apply_settings"):
-            export_settings.apply_settings()
 
     def _is_export_settings_valid(self) -> bool:
         required_keys = [
@@ -200,6 +176,18 @@ class PeriodExportController(QObject):
             if not isinstance(self.export_settings[key], bool):
                 return False
         return True
+
+    @staticmethod
+    def _new_balance_saved(new_balance: float) -> None:
+        user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
+        if not user_settings:
+            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
+            return
+        user_settings["openingBalanceSpinbox"] = normalize_value(new_balance)
+        if not SettingsProvider.save_settings():
+            AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
+            return
+        AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
 
     @staticmethod
     def _handle_export_error(error: str, method: str, error_key: str = "EXPORT_ERROR") -> None:
