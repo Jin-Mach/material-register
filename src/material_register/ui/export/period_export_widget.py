@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from material_register.ui.widgets.stacked_widget import StackedWidget
 
 
-class ExportWidget(QWidget):
+class PeriodExportWidget(QWidget):
     WIDTH = 400
     SPACING = 20
 
@@ -340,7 +340,7 @@ class ExportWidget(QWidget):
         self.path_line_edit.setReadOnly(True)
 
     def _set_file_suffix(self) -> None:
-        self.suffix_label.setText(ExportWidget._get_file_suffix(self.file_type_combobox.currentText()))
+        self.suffix_label.setText(PeriodExportWidget._get_file_suffix(self.file_type_combobox.currentText()))
 
     def _on_text_or_value_changed(self) -> None:
         self._apply_export_action_state()

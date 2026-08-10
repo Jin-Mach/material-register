@@ -55,7 +55,7 @@ DEFAULT_TEXTS = {
     "InventoryActionsWidget": {
         "searchLineEditPlaceholderText": "Enter search text..."
     },
-    "ExportWidget": {
+    "PeriodExportWidget": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
         "pathNameGroupBoxText": "File",
@@ -234,9 +234,9 @@ DEFAULT_TEXTS = {
         "cancelButtonTooltipText": "Closes dialog"
     },
     "SettingsWidget": {
-        "exportTabTitle": "Export"
+        "periodExportTabTitle": "Records"
     },
-    "ExportSettings": {
+    "PeriodExportSettings": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
         "branchNameLineEditPlaceholderText": "Enter branch name",

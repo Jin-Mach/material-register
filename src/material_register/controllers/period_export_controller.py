@@ -17,13 +17,13 @@ from material_register.utils.normalizer import normalize_value
 from material_register.workers.period_export_worker import PeriodExportWorker
 
 if TYPE_CHECKING:
-    from material_register.ui.export.export_widget import ExportWidget
+    from material_register.ui.export.period_export_widget import PeriodExportWidget
 
 
 class PeriodExportController(QObject):
-    def __init__(self, export_widget: "ExportWidget") -> None:
+    def __init__(self, period_export_widget: "PeriodExportWidget") -> None:
         super().__init__()
-        self.export_widget = export_widget
+        self.period_export_widget = period_export_widget
         self.export_path = None
         self.progress_dialog = None
         self.export_settings = {}
@@ -33,9 +33,9 @@ class PeriodExportController(QObject):
         self.export_texts = TextsProvider.EXPORT_TEXTS
 
     def start_export(self) -> None:
-        self.export_settings = self.export_widget.get_export_data()
+        self.export_settings = self.period_export_widget.get_export_data()
         if not self._is_export_settings_valid():
-            MessageBoxes.show_error(self.export_widget, "INVALID_DATA")
+            MessageBoxes.show_error(self.period_export_widget, "INVALID_DATA")
             return
         if not self.export_texts:
             PeriodExportController._handle_export_error("Export texts not loaded",
@@ -49,7 +49,7 @@ class PeriodExportController(QObject):
                                                   "PATH_ERROR")
             return
         if self.export_path.exists():
-            question = MessageBoxes.show_question(self.export_widget, "PATH_EXISTS")
+            question = MessageBoxes.show_question(self.period_export_widget, "PATH_EXISTS")
             if not question:
                 return
         self.progress_dialog = ProgressDialog(self.export_texts, AppContext.MAIN_WINDOW)
@@ -73,7 +73,7 @@ class PeriodExportController(QObject):
         self._clean_thread()
         self.progress_dialog.close()
         self._reset_variables()
-        QTimer.singleShot(100, lambda: MessageBoxes.show_error(self.export_widget, key))
+        QTimer.singleShot(100, lambda: MessageBoxes.show_error(self.period_export_widget, key))
 
     def _update_texts(self) -> None:
         self.progress_dialog.set_label_text("exportInProgressText")
@@ -117,10 +117,10 @@ class PeriodExportController(QObject):
         PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
         if self.export_settings.get("openFolderRadioButton", False):
             if not open_file_in_explorer(self.export_path):
-                MessageBoxes.show_error(self.export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION")
+                MessageBoxes.show_error(self.period_export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION")
         if self.export_settings.get("openFileRadioButton", False):
             if not open_file_in_default(self.export_path):
-                MessageBoxes.show_error(self.export_widget, "OPEN_FILE_FAILED", "INFORMATION")
+                MessageBoxes.show_error(self.period_export_widget, "OPEN_FILE_FAILED", "INFORMATION")
         self._reset_variables()
 
     def _last_settings_saved(self) -> None:

@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from material_register.ui.settings.settings_widget import SettingsWidget
 
 
-class ExportSettings(QWidget):
+class PeriodExportSettings(QWidget):
     WIDTH = 400
     SPACING = 20
 

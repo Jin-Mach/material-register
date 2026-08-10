@@ -55,7 +55,7 @@
   "InventoryActionsWidget": {
     "searchLineEditPlaceholderText": "Enter search text..."
   },
-  "ExportWidget": {
+  "PeriodExportWidget": {
     "branchGroupBoxText": "Branch",
     "branchNameLabelText": "Branch:",
     "branchNameLineEditPlaceholderText": "Enter branch name",
@@ -235,9 +235,9 @@
     "cancelButtonTooltipText": "Closes dialog"
   },
   "SettingsWidget": {
-    "exportTabTitle": "Export"
+    "periodExportTabTitle": "Records"
   },
-  "ExportSettings": {
+  "PeriodExportSettings": {
     "branchGroupBoxText": "Branch",
     "branchNameLabelText": "Branch:",
     "branchNameLineEditPlaceholderText": "Enter branch name",

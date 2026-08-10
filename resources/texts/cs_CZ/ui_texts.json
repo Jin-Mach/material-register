@@ -55,7 +55,7 @@
   "InventoryActionsWidget": {
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
-  "ExportWidget": {
+  "PeriodExportWidget": {
     "branchGroupBoxText": "Pobočka",
     "branchNameLabelText": "Pobočka:",
     "branchNameLineEditPlaceholderText": "Zadej název pobočky",
@@ -235,9 +235,9 @@
     "cancelButtonTooltipText": "Zavře dialog"
   },
   "SettingsWidget": {
-    "exportTabTitle": "Export"
+    "periodExportTabTitle": "Evidence"
   },
-  "ExportSettings": {
+  "PeriodExportSettings": {
     "branchGroupBoxText": "Pobočka",
     "branchNameLabelText": "Pobočka:",
     "branchNameLineEditPlaceholderText": "Zadej název pobočky",
