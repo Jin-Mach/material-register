@@ -51,4 +51,4 @@ class PeriodExportWorker(QObject):
             workbook.save(export_path)
             self.finished.emit(last_balance)
         except Exception as e:
-            self.error.emit(f"Export failed: {str(e)}")
+            self.error.emit(f"Export failed: {e}")

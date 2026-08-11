@@ -130,7 +130,7 @@ class TransactionsService:
     def _get_stock_dict(items_list: list[TransactionItem]) -> dict[int, float]:
         stock_dict = {}
         for item in items_list:
-            if item.commodity_id not in stock_dict.keys():
+            if item.commodity_id not in stock_dict:
                 stock_dict[item.commodity_id] = item.unit_count
             else:
                 stock_dict[item.commodity_id] += item.unit_count
