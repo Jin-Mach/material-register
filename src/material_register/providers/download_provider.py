@@ -21,9 +21,8 @@ class DownloadProvider:
             for invalid_file in invalid_files:
                 relative = invalid_file.relative_to(resource_path)
                 url = FILES_MAP.get(str(relative)) or ICONS_MAP.get(str(relative))
-                if url:
-                    if not cls._save_file(url, invalid_file):
-                        return False
+                if url and not cls._save_file(url, invalid_file):
+                    return False
             return True
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")

@@ -30,13 +30,12 @@ class CustomersModel(BaseSqlTableModel):
             return super().data(index, role)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
-        if role == Qt.ItemDataRole.DecorationRole:
-            if column == self.fieldIndex("active"):
-                record = self.record(index.row())
-                if record.value("active") == 1:
-                    return UiIcons.ACTIVE_ICON
-                else:
-                    return UiIcons.INACTIVE_ICON
+        if role == Qt.ItemDataRole.DecorationRole and column == self.fieldIndex("active"):
+            record = self.record(index.row())
+            if record.value("active") == 1:
+                return UiIcons.ACTIVE_ICON
+            else:
+                return UiIcons.INACTIVE_ICON
         if role == Qt.ItemDataRole.UserRole:
             record = self.record(index.row())
             return record.value("id")

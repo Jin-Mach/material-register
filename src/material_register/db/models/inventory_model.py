@@ -32,20 +32,17 @@ class InventoryModel(QSqlQueryModel):
             if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
-        if role == Qt.ItemDataRole.ForegroundRole:
-            if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
-                stock = super().data(index, Qt.ItemDataRole.DisplayRole)
-                if isinstance(stock, float):
-                    if stock < 0:
-                        return QColor(INVENTORY_STOCK_STYLE)
-        if role == Qt.ItemDataRole.DecorationRole:
-            if column == INVENTORY_COLUMNS_MAP["commodity_active"]:
-                active = super().data(index, Qt.ItemDataRole.DisplayRole)
-                if isinstance(active, int):
-                    if active == 1:
-                        return UiIcons.ACTIVE_ICON
-                    else:
-                        return UiIcons.INACTIVE_ICON
+        if role == Qt.ItemDataRole.ForegroundRole and column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
+            stock = super().data(index, Qt.ItemDataRole.DisplayRole)
+            if isinstance(stock, float) and stock < 0:
+                return QColor(INVENTORY_STOCK_STYLE)
+        if role == Qt.ItemDataRole.DecorationRole and column == INVENTORY_COLUMNS_MAP["commodity_active"]:
+            active = super().data(index, Qt.ItemDataRole.DisplayRole)
+            if isinstance(active, int):
+                if active == 1:
+                    return UiIcons.ACTIVE_ICON
+                else:
+                    return UiIcons.INACTIVE_ICON
         return super().data(index, role)
 
     def load_inventory_data(self) -> tuple[bool, str]:

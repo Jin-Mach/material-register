@@ -118,12 +118,11 @@ class PeriodExportController(QObject):
             self._reset_variables()
             return
         PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
-        if self.export_settings.get("openFolderRadioButton", False):
-            if not open_file_in_explorer(self.export_path):
-                MessageBoxes.show_error(self.period_export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION")
-        if self.export_settings.get("openFileRadioButton", False):
-            if not open_file_in_default(self.export_path):
-                MessageBoxes.show_error(self.period_export_widget, "OPEN_FILE_FAILED", "INFORMATION")
+        if self.export_settings.get("openFolderRadioButton", False) and not open_file_in_explorer(self.export_path):
+            MessageBoxes.show_error(self.period_export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION")
+        if self.export_settings.get("openFileRadioButton", False) and not open_file_in_default(self.export_path):
+            MessageBoxes.show_error(self.period_export_widget, "OPEN_FILE_FAILED", "INFORMATION")
+
         self._reset_variables()
 
     def _last_settings_saved(self) -> None:
