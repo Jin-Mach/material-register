@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts

@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent, QShowEvent
-from PySide6.QtWidgets import QDialog, QWidget, QVBoxLayout, QLabel, QProgressBar
+from PySide6.QtWidgets import QDialog, QLabel, QProgressBar, QVBoxLayout, QWidget
 
 
 class ProgressDialog(QDialog):

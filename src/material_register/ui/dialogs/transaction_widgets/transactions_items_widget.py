@@ -2,20 +2,37 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
 
-from material_register.config.ui_constants import TRANSFER_OUT, TRANSFER_IN
-from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
-from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
+from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.db.models.transaction_items_model_in import (
+    TransactionItemsModelIn,
+)
+from material_register.db.models.transaction_items_model_out import (
+    TransactionItemsModelOut,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.message_boxes import MessageBoxes
-from material_register.ui.dialogs.transaction_widgets.transaction_view import TransactionView
+from material_register.ui.dialogs.transaction_widgets.transaction_view import (
+    TransactionView,
+)
 from material_register.ui.helpers.styles import PRICE_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
-    from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
+    from material_register.ui.dialogs.transaction_items_dialog_in import (
+        TransactionItemsDialogIn,
+    )
+    from material_register.ui.dialogs.transaction_items_dialog_out import (
+        TransactionItemsDialogOut,
+    )
 
 
 class TransactionsItemsWidget(QWidget):

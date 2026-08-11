@@ -1,19 +1,25 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QShowEvent, QFont
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
+from PySide6.QtGui import QFont, QShowEvent
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
-from material_register.db.models.transactions_proxy_filter import TransactionsProxyFilter
+from material_register.db.models.transactions_proxy_filter import (
+    TransactionsProxyFilter,
+)
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.formating_utils import format_number_to_locale
 from material_register.ui.helpers.styles import PRICE_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.ui.transactions.transactions_widgets.transactions_tab_widget import TransactionsTabWidget
-from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import TransactionsActionsWidget
+from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import (
+    TransactionsActionsWidget,
+)
+from material_register.ui.transactions.transactions_widgets.transactions_tab_widget import (
+    TransactionsTabWidget,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.widgets.stacked_widget import StackedWidget

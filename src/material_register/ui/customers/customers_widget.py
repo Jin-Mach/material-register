@@ -2,13 +2,17 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.customers_controller import CustomersController
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.customers.customers_widgets.customers_actions_widget import CustomersActionsWidget
-from material_register.ui.customers.customers_widgets.customers_view import CustomersView
+from material_register.ui.customers.customers_widgets.customers_actions_widget import (
+    CustomersActionsWidget,
+)
+from material_register.ui.customers.customers_widgets.customers_view import (
+    CustomersView,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:

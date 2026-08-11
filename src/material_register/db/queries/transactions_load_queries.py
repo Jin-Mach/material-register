@@ -1,6 +1,9 @@
-from PySide6.QtSql import QSqlQuery, QSqlDatabase
+from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.queries_constants import TRANSACTIONS_QUERY_OUT, TRANSACTIONS_QUERY_IN
+from material_register.db.config.queries_constants import (
+    TRANSACTIONS_QUERY_IN,
+    TRANSACTIONS_QUERY_OUT,
+)
 from material_register.domain.transaction_dataclass import Transaction
 
 

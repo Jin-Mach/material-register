@@ -1,4 +1,4 @@
-from PySide6.QtCore import QSortFilterProxyModel, Qt, QModelIndex
+from PySide6.QtCore import QModelIndex, QSortFilterProxyModel, Qt
 
 
 class TransactionsProxyFilter(QSortFilterProxyModel):

@@ -1,10 +1,11 @@
-import pytest
-
 from datetime import datetime
 
+import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.queries.transactions_load_queries import TransactionsLoadQueries
+from material_register.db.queries.transactions_load_queries import (
+    TransactionsLoadQueries,
+)
 
 
 @pytest.fixture

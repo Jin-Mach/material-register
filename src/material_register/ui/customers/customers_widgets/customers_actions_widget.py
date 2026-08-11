@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLineEdit
+from PySide6.QtWidgets import QHBoxLayout, QLineEdit, QPushButton, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts

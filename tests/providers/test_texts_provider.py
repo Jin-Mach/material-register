@@ -1,8 +1,8 @@
 import json
-
 from pathlib import Path
 
 from material_register.providers.texts_provider import TextsProvider
+
 
 def _create_texts_file(tmp_path: Path, language: str, data: dict) -> None:
     lang_dir = tmp_path / "texts" / language

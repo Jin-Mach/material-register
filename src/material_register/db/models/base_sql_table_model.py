@@ -1,4 +1,4 @@
-from PySide6.QtSql import QSqlTableModel, QSqlDatabase
+from PySide6.QtSql import QSqlDatabase, QSqlTableModel
 
 
 class BaseSqlTableModel(QSqlTableModel):

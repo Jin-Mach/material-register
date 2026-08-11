@@ -1,4 +1,4 @@
-from PySide6.QtSql import QSqlQuery, QSqlDatabase
+from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.domain.category_dataclass import Category
 

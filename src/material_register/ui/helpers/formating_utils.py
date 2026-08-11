@@ -1,5 +1,4 @@
-from PySide6.QtCore import QLocale, Qt, QDateTime
-
+from PySide6.QtCore import QDateTime, QLocale, Qt
 
 DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
 

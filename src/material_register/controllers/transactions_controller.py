@@ -3,35 +3,59 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QDialog
 
-from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT, PAYMENT_VALUES
+from material_register.config.ui_constants import (
+    PAYMENT_VALUES,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.core.app_context import AppContext
-from material_register.db.models.transaction_items_model_in import TransactionItemsModelIn
+from material_register.db.models.transaction_items_model_in import (
+    TransactionItemsModelIn,
+)
+from material_register.db.models.transaction_items_model_out import (
+    TransactionItemsModelOut,
+)
 from material_register.db.queries.category_queries import CategoryQueries
-from material_register.db.queries.transaction_items_queries import TransactionItemsQueries
+from material_register.db.queries.transaction_items_queries import (
+    TransactionItemsQueries,
+)
 from material_register.db.queries.transactions_queries import TransactionsQueries
-from material_register.utils.date_filters import get_filter_range
 from material_register.domain.transaction_dataclass import Transaction
-from material_register.domain.transaction_item_detail_dataclass import TransactionItemDetail
+from material_register.domain.transaction_item_detail_dataclass import (
+    TransactionItemDetail,
+)
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.transactions_service import TransactionsService
-from material_register.ui.dialogs.category_commodity_dialog import CategoryCommodityDialog
-from material_register.ui.dialogs.create_transaction_dialog import CreateTransactionDialog
+from material_register.ui.dialogs.category_commodity_dialog import (
+    CategoryCommodityDialog,
+)
+from material_register.ui.dialogs.create_transaction_dialog import (
+    CreateTransactionDialog,
+)
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
-from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
-from material_register.ui.dialogs.transaction_items_dialog_out import TransactionItemsDialogOut
-from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
+from material_register.ui.dialogs.transaction_items_dialog_in import (
+    TransactionItemsDialogIn,
+)
+from material_register.ui.dialogs.transaction_items_dialog_out import (
+    TransactionItemsDialogOut,
+)
+from material_register.utils.date_filters import get_filter_range
 from material_register.utils.normalizer import normalize_text
 
 if TYPE_CHECKING:
+    from material_register.db.models.transactions_load_model_in import (
+        TransactionsLoadModelIn,
+    )
+    from material_register.db.models.transactions_load_model_out import (
+        TransactionsLoadModelOut,
+    )
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
-    from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
-    from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
 
 
 class TransactionsController:

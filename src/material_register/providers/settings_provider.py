@@ -1,7 +1,7 @@
 import tomllib
-import tomli_w
-
 from pathlib import Path
+
+import tomli_w
 
 from material_register.services.error_handler import ErrorHandler
 

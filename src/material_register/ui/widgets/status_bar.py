@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QStatusBar, QLabel
+from PySide6.QtWidgets import QLabel, QStatusBar
 
 from material_register.providers.texts_provider import TextsProvider
 

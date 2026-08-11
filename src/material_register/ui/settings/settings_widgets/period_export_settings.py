@@ -1,10 +1,22 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt, QStandardPaths, QRegularExpression
-from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QGroupBox, QScrollArea, QHBoxLayout, QLabel, QFormLayout,
-                               QLineEdit,
-                               QPushButton, QSizePolicy, QRadioButton, QCheckBox, QFileDialog)
+from PySide6.QtCore import QRegularExpression, QStandardPaths, Qt
+from PySide6.QtGui import QFontMetrics, QRegularExpressionValidator
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QFileDialog,
+    QFormLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QRadioButton,
+    QScrollArea,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
 
 from material_register.controllers.settings_controller import SettingsController
 from material_register.services.error_handler import ErrorHandler

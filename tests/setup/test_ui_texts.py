@@ -1,6 +1,6 @@
 import pytest
+from PySide6.QtWidgets import QPushButton, QWidget
 
-from PySide6.QtWidgets import QWidget, QPushButton
 from material_register.ui.setup.ui_texts import UiTexts
 
 

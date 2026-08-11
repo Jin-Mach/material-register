@@ -1,10 +1,9 @@
 import json
-import pytest
-
 from pathlib import Path
 
-from material_register.providers.file_provider import FileProvider
+import pytest
 
+from material_register.providers.file_provider import FileProvider
 
 FAKE_JSON_FILES = [Path("en_GB") / "ui_texts.json"]
 FAKE_IMAGES = [Path("system") / "splash.png"]

@@ -1,8 +1,13 @@
-import requests
-
 from pathlib import Path
 
-from material_register.config.download_config import FILES_MAP, ICONS_MAP, FILES_SUFFIXES, ICONS_SUFFIXES
+import requests
+
+from material_register.config.download_config import (
+    FILES_MAP,
+    FILES_SUFFIXES,
+    ICONS_MAP,
+    ICONS_SUFFIXES,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.utils.network import is_internet_available
 from material_register.utils.system import is_disk_writable

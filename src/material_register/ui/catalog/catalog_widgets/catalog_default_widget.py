@@ -1,13 +1,15 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.catalog.catalog_widgets.catalog_details_widget import CatalogDetailsWidget
+    from material_register.ui.catalog.catalog_widgets.catalog_details_widget import (
+        CatalogDetailsWidget,
+    )
 
 
 class CatalogDefaultWidget(QWidget):

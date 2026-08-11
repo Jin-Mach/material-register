@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class TransactionItemDetail:
     commodity_id: int | None = None

@@ -1,5 +1,4 @@
 import pytest
-
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.create_connection import create_db_tables

@@ -2,7 +2,6 @@ from pathlib import Path
 
 from material_register.providers.logger_provider import LoggerProvider
 
-
 log_structure = {
     "app": ("app_logs", "app.log"),
     "ui": ("ui_logs", "ui.log"),

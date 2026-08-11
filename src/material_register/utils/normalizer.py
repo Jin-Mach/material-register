@@ -1,5 +1,6 @@
 import unicodedata
 
+
 def normalize_text(text: str | None) -> str | None:
     if text is None:
         return None

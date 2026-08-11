@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QTextEdit, QLabel
+from PySide6.QtWidgets import QLabel, QTextEdit
 
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 

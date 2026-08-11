@@ -1,10 +1,19 @@
 import json
 import tomllib
-
 from pathlib import Path
 
-from material_register.config.file_config import REQUIRED_JSON_FILES, REQUIRED_IMAGES, UI_KEYS, ERROR_KEYS, \
-    HEADERS_KEYS, CONFIRM_STRUCTURE, NOTIFICATION_KEYS, REQUIRED_CONFIG_FILES, STATUS_KEYS, EXPORT_KEYS
+from material_register.config.file_config import (
+    CONFIRM_STRUCTURE,
+    ERROR_KEYS,
+    EXPORT_KEYS,
+    HEADERS_KEYS,
+    NOTIFICATION_KEYS,
+    REQUIRED_CONFIG_FILES,
+    REQUIRED_IMAGES,
+    REQUIRED_JSON_FILES,
+    STATUS_KEYS,
+    UI_KEYS,
+)
 from material_register.services.error_handler import ErrorHandler
 
 

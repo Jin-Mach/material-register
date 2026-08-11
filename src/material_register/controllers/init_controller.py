@@ -1,14 +1,13 @@
 import sys
-
 from pathlib import Path
 
-from PySide6.QtCore import QThread, QObject, QTimer
+from PySide6.QtCore import QObject, QThread, QTimer
 
 from material_register.core.app_context import AppContext
-from material_register.ui.main_window import MainWindow
 from material_register.ui.dialogs.error_dialog import ErrorDialog
-from material_register.workers.init_worker import InitWorker
+from material_register.ui.main_window import MainWindow
 from material_register.ui.widgets.splash_screen import SplashScreen
+from material_register.workers.init_worker import InitWorker
 
 
 class InitController(QObject):

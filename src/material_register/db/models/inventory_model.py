@@ -2,7 +2,7 @@ from typing import Any
 
 from PySide6.QtCore import QModelIndex, Qt
 from PySide6.QtGui import QColor
-from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
+from PySide6.QtSql import QSqlDatabase, QSqlQueryModel
 
 from material_register.db.config.model_constants import INVENTORY_COLUMNS_MAP
 from material_register.db.config.queries_constants import INVENTORY_QUERY

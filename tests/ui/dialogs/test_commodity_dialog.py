@@ -1,5 +1,4 @@
 import pytest
-
 from PySide6.QtWidgets import QWidget
 
 from material_register.ui.dialogs.commodity_dialog import CommodityDialog

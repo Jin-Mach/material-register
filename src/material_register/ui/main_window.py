@@ -1,5 +1,5 @@
-from PySide6.QtGui import QShowEvent, QCloseEvent
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
+from PySide6.QtGui import QCloseEvent, QShowEvent
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.settings_manager import SettingsManager

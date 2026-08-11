@@ -1,16 +1,27 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtGui import QResizeEvent, Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QGridLayout, QLabel, QGroupBox
+from PySide6.QtWidgets import (
+    QGridLayout,
+    QGroupBox,
+    QLabel,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.catalog.catalog_widgets.commodity_card_widget import CommodityCardWidget
+from material_register.ui.catalog.catalog_widgets.commodity_card_widget import (
+    CommodityCardWidget,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import CategoryWithCommoditiesWidget
     from material_register.controllers.catalog_controller import CatalogController
+    from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import (
+        CategoryWithCommoditiesWidget,
+    )
 
 
 class CommoditiesGridWidget(QWidget):

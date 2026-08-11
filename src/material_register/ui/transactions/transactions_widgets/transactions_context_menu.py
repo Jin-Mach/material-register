@@ -4,10 +4,13 @@ from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenu
 
-
 if TYPE_CHECKING:
-    from material_register.ui.transactions.transactions_widgets.transactions_view import TransactionsView
-    from material_register.controllers.transactions_controller import TransactionsController
+    from material_register.controllers.transactions_controller import (
+        TransactionsController,
+    )
+    from material_register.ui.transactions.transactions_widgets.transactions_view import (
+        TransactionsView,
+    )
 
 
 class TransactionsContextMenu(QMenu):

@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QThread, QObject, QTimer
+from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
 
 from material_register.core.app_context import AppContext
@@ -12,7 +12,10 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
-from material_register.utils.file_launchers import open_file_in_explorer, open_file_in_default
+from material_register.utils.file_launchers import (
+    open_file_in_default,
+    open_file_in_explorer,
+)
 from material_register.utils.normalizer import normalize_value
 from material_register.workers.period_export_worker import PeriodExportWorker
 

@@ -1,8 +1,8 @@
 from PySide6.QtCore import QObject, Signal, Slot
 
 from material_register.init.app_init import AppInit
-from material_register.init.db_init import DbInit
 from material_register.init.data_init import DataInit
+from material_register.init.db_init import DbInit
 from material_register.init.setup_init import SetupInit
 
 

@@ -1,7 +1,9 @@
-from material_register.db.config.queries_constants import SELECTED_TRANSACTION_DATA
-from material_register.domain.transaction_item_detail_dataclass import TransactionItemDetail
-
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
+
+from material_register.db.config.queries_constants import SELECTED_TRANSACTION_DATA
+from material_register.domain.transaction_item_detail_dataclass import (
+    TransactionItemDetail,
+)
 
 
 class TransactionItemsQueries:

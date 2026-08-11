@@ -1,12 +1,29 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QRegularExpression
-from PySide6.QtGui import QShowEvent, QRegularExpressionValidator, QFont
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLineEdit, QLabel, QTextEdit, QHBoxLayout, QDialogButtonBox,
-                               QCheckBox, QFormLayout, QDoubleSpinBox, QComboBox, QWidget)
+from PySide6.QtGui import QFont, QRegularExpressionValidator, QShowEvent
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QDoubleSpinBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
-from material_register.config.ui_constants import (ADD_MODE, UPDATE_MODE, COMMODITY_DIALOG_MIN_VALUE,
-                                                   COMMODITY_DIALOG_MAX_PRICE_VALUE, COMMODITY_DIALOG_NOTES_LENGTH)
+from material_register.config.ui_constants import (
+    ADD_MODE,
+    COMMODITY_DIALOG_MAX_PRICE_VALUE,
+    COMMODITY_DIALOG_MIN_VALUE,
+    COMMODITY_DIALOG_NOTES_LENGTH,
+    UPDATE_MODE,
+)
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length

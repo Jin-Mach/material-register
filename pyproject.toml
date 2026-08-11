@@ -37,3 +37,4 @@ qt_api = "pyside6"
 
 [tool.ruff]
 target-version = "py313"
+src = ["src", "tests"]

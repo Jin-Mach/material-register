@@ -1,5 +1,11 @@
 from PySide6.QtGui import QFont, QShowEvent, Qt
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QDialogButtonBox, QApplication
+from PySide6.QtWidgets import (
+    QApplication,
+    QDialog,
+    QDialogButtonBox,
+    QLabel,
+    QVBoxLayout,
+)
 
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.error_texts import ErrorTexts

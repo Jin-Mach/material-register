@@ -1,10 +1,12 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QTabWidget, QSizePolicy
+from PySide6.QtWidgets import QSizePolicy, QTabWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.ui.transactions.transactions_widgets.transactions_view import TransactionsView
+from material_register.ui.transactions.transactions_widgets.transactions_view import (
+    TransactionsView,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.transactions.transactions_widget import TransactionsWidget

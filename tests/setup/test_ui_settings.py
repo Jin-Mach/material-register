@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QLineEdit, QSpinBox, QCheckBox, QRadioButton
+from PySide6.QtWidgets import QCheckBox, QLineEdit, QRadioButton, QSpinBox, QWidget
 
 from material_register.ui.setup.ui_settings import UiSettings
 

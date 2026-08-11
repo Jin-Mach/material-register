@@ -1,6 +1,13 @@
 from typing import Any
 
-from PySide6.QtWidgets import QWidget, QLineEdit, QSpinBox, QDoubleSpinBox, QCheckBox, QRadioButton
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QDoubleSpinBox,
+    QLineEdit,
+    QRadioButton,
+    QSpinBox,
+    QWidget,
+)
 
 
 class UiSettings:

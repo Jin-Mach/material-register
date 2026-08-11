@@ -1,6 +1,6 @@
-import requests
-
 from types import SimpleNamespace
+
+import requests
 
 from material_register.providers.download_provider import DownloadProvider
 

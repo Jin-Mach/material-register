@@ -1,13 +1,25 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QShowEvent, QFontMetrics
-from PySide6.QtWidgets import (QWidget, QDialog, QVBoxLayout, QFormLayout, QLabel, QComboBox, QDoubleSpinBox,
-                               QDialogButtonBox)
+from PySide6.QtGui import QFontMetrics, QShowEvent
+from PySide6.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QDoubleSpinBox,
+    QFormLayout,
+    QLabel,
+    QVBoxLayout,
+    QWidget,
+)
 
-from material_register.config.ui_constants import (TRANSFER_OUT, CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
-                                                   CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
-                                                   CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE, INTEGER_SUFFIXES)
+from material_register.config.ui_constants import (
+    CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE,
+    CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
+    CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
+    INTEGER_SUFFIXES,
+    TRANSFER_OUT,
+)
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
@@ -19,7 +31,9 @@ from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:
-    from material_register.ui.dialogs.transaction_items_dialog_in import TransactionItemsDialogIn
+    from material_register.ui.dialogs.transaction_items_dialog_in import (
+        TransactionItemsDialogIn,
+    )
 
 
 # noinspection PyTypeChecker,SpellCheckingInspection

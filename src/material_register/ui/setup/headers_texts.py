@@ -6,9 +6,13 @@ from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
 if TYPE_CHECKING:
-    from material_register.db.models.transactions_load_model_in import TransactionsLoadModelIn
-    from material_register.db.models.transactions_load_model_out import TransactionsLoadModelOut
     from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
+    from material_register.db.models.transactions_load_model_in import (
+        TransactionsLoadModelIn,
+    )
+    from material_register.db.models.transactions_load_model_out import (
+        TransactionsLoadModelOut,
+    )
 
 
 # noinspection PyBroadException, PyUnresolvedReferences

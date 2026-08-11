@@ -2,7 +2,7 @@ from pathlib import Path
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QWidget, QApplication, QProgressBar, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QApplication, QLabel, QProgressBar, QVBoxLayout, QWidget
 
 
 class SplashScreen(QWidget):

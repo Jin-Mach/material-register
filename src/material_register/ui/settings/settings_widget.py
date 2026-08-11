@@ -1,9 +1,11 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QTabWidget
+from PySide6.QtWidgets import QTabWidget, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.settings.settings_widgets.period_export_settings import PeriodExportSettings
+from material_register.ui.settings.settings_widgets.period_export_settings import (
+    PeriodExportSettings,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:

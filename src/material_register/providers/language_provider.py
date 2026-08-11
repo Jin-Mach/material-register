@@ -1,4 +1,7 @@
-from material_register.config.language_constants import DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES
+from material_register.config.language_constants import (
+    DEFAULT_LANGUAGE,
+    SUPPORTED_LANGUAGES,
+)
 
 
 class LanguageProvider:

@@ -1,18 +1,35 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QRegularExpression
-from PySide6.QtGui import QShowEvent, Qt, QRegularExpressionValidator
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QDialogButtonBox, \
-    QSizePolicy, QHBoxLayout, QCompleter, QWidget
+from PySide6.QtGui import QRegularExpressionValidator, QShowEvent, Qt
+from PySide6.QtWidgets import (
+    QComboBox,
+    QCompleter,
+    QDialog,
+    QDialogButtonBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
 
-from material_register.config.ui_constants import PAYMENT_VALUES, TRANSFER_OUT, TRANSFER_IN
+from material_register.config.ui_constants import (
+    PAYMENT_VALUES,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
+    from material_register.db.models.customers_completer_model import (
+        CustomersCompleterModel,
+    )
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
-    from material_register.db.models.customers_completer_model import CustomersCompleterModel
 
 
 # noinspection PyTypeChecker

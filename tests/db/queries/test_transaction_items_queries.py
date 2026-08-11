@@ -1,8 +1,9 @@
 import pytest
-
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.queries.transaction_items_queries import TransactionItemsQueries
+from material_register.db.queries.transaction_items_queries import (
+    TransactionItemsQueries,
+)
 
 
 @pytest.fixture

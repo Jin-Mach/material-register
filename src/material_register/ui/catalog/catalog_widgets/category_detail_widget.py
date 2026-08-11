@@ -2,14 +2,25 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit, QGroupBox, QFormLayout, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import (
+    QFormLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import CategoryWithCommoditiesWidget
+    from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import (
+        CategoryWithCommoditiesWidget,
+    )
 
 
 class CategoryDetailWidget(QWidget):

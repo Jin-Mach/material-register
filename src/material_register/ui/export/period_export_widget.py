@@ -1,21 +1,41 @@
 from pathlib import Path
-
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt, QDate, QStandardPaths, QRegularExpression
-from PySide6.QtGui import QRegularExpressionValidator, QFontMetrics, QResizeEvent
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QHBoxLayout, QLabel, \
-    QSizePolicy, QGroupBox, QButtonGroup, QRadioButton, QDateEdit, QComboBox, QFileDialog, QDoubleSpinBox, QScrollArea, \
-    QCheckBox
+from PySide6.QtCore import QDate, QRegularExpression, QStandardPaths, Qt
+from PySide6.QtGui import QFontMetrics, QRegularExpressionValidator, QResizeEvent
+from PySide6.QtWidgets import (
+    QButtonGroup,
+    QCheckBox,
+    QComboBox,
+    QDateEdit,
+    QDoubleSpinBox,
+    QFileDialog,
+    QFormLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QRadioButton,
+    QScrollArea,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
 
-from material_register.config.ui_constants import EXPORT_PRICE_MIN_VALUE, EXPORT_PRICE_MAX_VALUE, \
-    BALANCE_PRICE_MIN_VALUE
-from material_register.controllers.period_export_controller import PeriodExportController
-from material_register.utils.date_filters import get_filter_range
+from material_register.config.ui_constants import (
+    BALANCE_PRICE_MIN_VALUE,
+    EXPORT_PRICE_MAX_VALUE,
+    EXPORT_PRICE_MIN_VALUE,
+)
+from material_register.controllers.period_export_controller import (
+    PeriodExportController,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.utils.date_filters import get_filter_range
 from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:

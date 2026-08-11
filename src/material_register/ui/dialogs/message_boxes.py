@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QDialog
+from PySide6.QtWidgets import QDialog, QWidget
 
 from material_register.ui.dialogs.messagebox_dialog import MessageBoxDialog
 

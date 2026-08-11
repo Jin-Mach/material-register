@@ -1,9 +1,12 @@
 from typing import Any
 
-from PySide6.QtCore import Qt, QModelIndex
+from PySide6.QtCore import QModelIndex, Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from material_register.db.config.model_constants import ITEM_MODEL_OUT_COLUMNS, ITEM_MODEL_OUT_COLUMNS_MAP
+from material_register.db.config.model_constants import (
+    ITEM_MODEL_OUT_COLUMNS,
+    ITEM_MODEL_OUT_COLUMNS_MAP,
+)
 from material_register.domain.transaction_item_dataclass import TransactionItem
 from material_register.ui.helpers.formating_utils import format_number_to_locale
 

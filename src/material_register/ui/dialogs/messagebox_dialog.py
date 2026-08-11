@@ -1,6 +1,14 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QShowEvent
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QDialogButtonBox, QApplication, QStyle, QHBoxLayout
+from PySide6.QtWidgets import (
+    QApplication,
+    QDialog,
+    QDialogButtonBox,
+    QHBoxLayout,
+    QLabel,
+    QStyle,
+    QVBoxLayout,
+)
 
 
 # noinspection PyTypeChecker

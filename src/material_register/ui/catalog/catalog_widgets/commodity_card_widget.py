@@ -1,8 +1,18 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QSize
-from PySide6.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QFormLayout, QLabel, QPushButton, QCheckBox, \
-    QSizePolicy, QHBoxLayout, QTextEdit
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QSizePolicy,
+    QTabWidget,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
@@ -10,7 +20,9 @@ from material_register.ui.helpers.formating_utils import format_number_to_locale
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.catalog.catalog_widgets.commodities_grid_widget import CommoditiesGridWidget
+    from material_register.ui.catalog.catalog_widgets.commodities_grid_widget import (
+        CommoditiesGridWidget,
+    )
 
 
 class CommodityCardWidget(QTabWidget):

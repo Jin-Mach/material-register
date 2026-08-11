@@ -1,6 +1,6 @@
-import pytest
-
 from datetime import datetime
+
+import pytest
 
 from material_register.utils.date_filters import get_filter_range
 

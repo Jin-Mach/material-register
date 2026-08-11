@@ -4,7 +4,9 @@ from PySide6.QtCore import QObject, Signal, Slot
 
 from material_register.db.queries.period_export_queries import PeriodExportQueries
 from material_register.init.db_init import DbInit
-from material_register.services.export.excel.period.period_workbook import PeriodWorkbook
+from material_register.services.export.excel.period.period_workbook import (
+    PeriodWorkbook,
+)
 from material_register.utils.system import is_disk_writable
 
 

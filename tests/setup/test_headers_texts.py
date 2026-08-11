@@ -1,9 +1,9 @@
 import pytest
-
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItemModel
 from PySide6.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PySide6.QtWidgets import QTableView
+
 from material_register.ui.setup.headers_texts import HeadersTexts
 
 

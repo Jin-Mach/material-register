@@ -1,15 +1,21 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
-from material_register.ui.catalog.catalog_widgets.category_detail_widget import CategoryDetailWidget
-from material_register.ui.catalog.catalog_widgets.commodities_grid_widget import CommoditiesGridWidget
+from material_register.ui.catalog.catalog_widgets.category_detail_widget import (
+    CategoryDetailWidget,
+)
+from material_register.ui.catalog.catalog_widgets.commodities_grid_widget import (
+    CommoditiesGridWidget,
+)
 
 if TYPE_CHECKING:
-    from material_register.ui.catalog.catalog_widgets.catalog_details_widget import CatalogDetailsWidget
     from material_register.controllers.catalog_controller import CatalogController
+    from material_register.ui.catalog.catalog_widgets.catalog_details_widget import (
+        CatalogDetailsWidget,
+    )
 
 
 class CategoryWithCommoditiesWidget(QWidget):

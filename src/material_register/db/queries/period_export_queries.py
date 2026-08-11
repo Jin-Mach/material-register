@@ -1,6 +1,9 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.queries_constants import EXPORT_QUERY_IN, EXPORT_QUERY_OUT
+from material_register.db.config.queries_constants import (
+    EXPORT_QUERY_IN,
+    EXPORT_QUERY_OUT,
+)
 from material_register.domain.export_dataclass import ExportItemIn, ExportItemOut
 
 

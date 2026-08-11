@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QModelIndex, Qt
 from PySide6.QtWidgets import QDialog
 
-from material_register.db.utils.customers_filter_helper import CustomersFilterHelper
 from material_register.core.app_context import AppContext
+from material_register.db.utils.customers_filter_helper import CustomersFilterHelper
 from material_register.domain.customers_dataclass import Customer
 from material_register.init.data_init import DataInit
 from material_register.providers.texts_provider import TextsProvider
@@ -17,8 +17,8 @@ from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.utils.normalizer import normalize_text, normalize_whitespace
 
 if TYPE_CHECKING:
-    from material_register.ui.customers.customers_widget import CustomersWidget
     from material_register.db.models.customers_model import CustomersModel
+    from material_register.ui.customers.customers_widget import CustomersWidget
 
 
 class CustomersController:

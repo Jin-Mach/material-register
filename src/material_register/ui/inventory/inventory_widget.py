@@ -1,14 +1,18 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.inventory_controller import InventoryController
 from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.inventory.inventory_widgets.inventory_view import InventoryView
-from material_register.ui.inventory.inventory_widgets.inventory_actions_widget import InventoryActionsWidget
+from material_register.ui.inventory.inventory_widgets.inventory_actions_widget import (
+    InventoryActionsWidget,
+)
+from material_register.ui.inventory.inventory_widgets.inventory_view import (
+    InventoryView,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:

@@ -1,4 +1,4 @@
-from PySide6.QtCore import QSortFilterProxyModel, QModelIndex, Qt
+from PySide6.QtCore import QModelIndex, QSortFilterProxyModel, Qt
 
 from material_register.utils.normalizer import normalize_text
 

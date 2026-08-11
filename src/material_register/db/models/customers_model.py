@@ -1,8 +1,8 @@
 from dataclasses import fields
 from typing import Any
 
-from PySide6.QtCore import Qt, QModelIndex
-from PySide6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery, QSqlRecord
+from PySide6.QtCore import QModelIndex, Qt
+from PySide6.QtSql import QSqlDatabase, QSqlQuery, QSqlRecord, QSqlTableModel
 
 from material_register.db.models.base_sql_table_model import BaseSqlTableModel
 from material_register.domain.customers_dataclass import Customer

@@ -3,11 +3,26 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QRegularExpression, Qt
 from PySide6.QtGui import QRegularExpressionValidator, QShowEvent
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QComboBox, QFormLayout, QLabel, QLineEdit, QTextEdit, QHBoxLayout, \
-    QDialogButtonBox, QCheckBox
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QTextEdit,
+    QVBoxLayout,
+)
 
-from material_register.config.ui_constants import ADD_MODE, UPDATE_MODE, CUSTOMERS_DIALOG_NOTES_LENGTH, \
-    CUSTOMERS_DIALOG_COMPANY_INDEX, CUSTOMERS_DIALOG_INDIVIDUAL_INDEX
+from material_register.config.ui_constants import (
+    ADD_MODE,
+    CUSTOMERS_DIALOG_COMPANY_INDEX,
+    CUSTOMERS_DIALOG_INDIVIDUAL_INDEX,
+    CUSTOMERS_DIALOG_NOTES_LENGTH,
+    UPDATE_MODE,
+)
 from material_register.domain.customers_dataclass import Customer
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length

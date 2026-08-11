@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt, QTimer, QPropertyAnimation
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel
+from PySide6.QtCore import QPropertyAnimation, Qt, QTimer
+from PySide6.QtWidgets import QDialog, QLabel, QVBoxLayout
 
 from material_register.ui.helpers.window_positioning import get_notification_position
 

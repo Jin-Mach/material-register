@@ -1,9 +1,10 @@
 import pytest
-
 from PySide6.QtCore import Qt
 
 from material_register.db.config.model_constants import ITEM_MODEL_OUT_COLUMNS
-from material_register.db.models.transaction_items_model_out import TransactionItemsModelOut
+from material_register.db.models.transaction_items_model_out import (
+    TransactionItemsModelOut,
+)
 
 
 @pytest.fixture

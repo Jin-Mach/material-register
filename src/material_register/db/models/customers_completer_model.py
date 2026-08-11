@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QStandardItemModel, QStandardItem
+from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from material_register.domain.customers_dataclass import Customer
 

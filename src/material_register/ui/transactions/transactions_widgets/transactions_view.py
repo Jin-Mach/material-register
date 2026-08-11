@@ -1,17 +1,23 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt, QPoint
-from PySide6.QtWidgets import QTableView, QHeaderView, QSizePolicy
+from PySide6.QtCore import QPoint, Qt
+from PySide6.QtWidgets import QHeaderView, QSizePolicy, QTableView
 
 from material_register.config.ui_defaults import DEFAULT_TEXTS
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.headers_texts import HeadersTexts
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.ui.transactions.transactions_widgets.transactions_context_menu import TransactionsContextMenu
+from material_register.ui.transactions.transactions_widgets.transactions_context_menu import (
+    TransactionsContextMenu,
+)
 
 if TYPE_CHECKING:
-    from material_register.ui.transactions.transactions_widgets.transactions_tab_widget import TransactionsTabWidget
-    from material_register.controllers.transactions_controller import TransactionsController
+    from material_register.controllers.transactions_controller import (
+        TransactionsController,
+    )
+    from material_register.ui.transactions.transactions_widgets.transactions_tab_widget import (
+        TransactionsTabWidget,
+    )
 
 
 class TransactionsView(QTableView):
