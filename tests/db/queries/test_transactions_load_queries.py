@@ -59,7 +59,7 @@ def schema(connection) -> None:
     """)
 
 def get_timestamp() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
 def test_load_transaction_in(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
