@@ -28,7 +28,9 @@ class MessageBoxDialog(QDialog):
         self.text_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.informative_label = QLabel()
         self.informative_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         self.ok_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.cancel_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         texts_layout.addWidget(self.text_label)
@@ -54,7 +56,14 @@ class MessageBoxDialog(QDialog):
         self.ok_button.clicked.connect(self.accept)
         self.cancel_button.clicked.connect(self.reject)
 
-    def setup_texts(self, title: str, text: str, ok_button: str="", cancel_button: str="", informative_text: str="") -> None:
+    def setup_texts(
+        self,
+        title: str,
+        text: str,
+        ok_button: str = "",
+        cancel_button: str = "",
+        informative_text: str = "",
+    ) -> None:
         self.setWindowTitle(title)
         self.text_label.setText(text)
         if ok_button:
@@ -70,10 +79,18 @@ class MessageBoxDialog(QDialog):
     def setup_icon(self, icon_key: str | None = None) -> None:
         app_style = QApplication.style()
         icon_map = {
-            "QUESTION": app_style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxQuestion),
-            "INFORMATION": app_style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxInformation),
-            "WARNING": app_style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxWarning),
-            "CRITICAL": app_style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxCritical)
+            "QUESTION": app_style.standardIcon(
+                QStyle.StandardPixmap.SP_MessageBoxQuestion
+            ),
+            "INFORMATION": app_style.standardIcon(
+                QStyle.StandardPixmap.SP_MessageBoxInformation
+            ),
+            "WARNING": app_style.standardIcon(
+                QStyle.StandardPixmap.SP_MessageBoxWarning
+            ),
+            "CRITICAL": app_style.standardIcon(
+                QStyle.StandardPixmap.SP_MessageBoxCritical
+            ),
         }
         if icon_key is None:
             icon_key = "WARNING"

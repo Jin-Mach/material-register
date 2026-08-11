@@ -41,7 +41,9 @@ class TransactionItemsModelOut(QStandardItemModel):
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
             if key == "unitCount":
                 value.setData(transaction_item["unitCount"], Qt.ItemDataRole.UserRole)
-                value.setData(transaction_item["commoditySuffix"], Qt.ItemDataRole.UserRole + 1)
+                value.setData(
+                    transaction_item["commoditySuffix"], Qt.ItemDataRole.UserRole + 1
+                )
             items_list.append(value)
         self.appendRow(items_list)
 
@@ -53,7 +55,9 @@ class TransactionItemsModelOut(QStandardItemModel):
                 self.setData(index, data["category"], Qt.ItemDataRole.DisplayRole)
             elif key == "unitCount":
                 self.setData(index, data["unitCount"], Qt.ItemDataRole.UserRole)
-                self.setData(index, data["commoditySuffix"], Qt.ItemDataRole.UserRole + 1)
+                self.setData(
+                    index, data["commoditySuffix"], Qt.ItemDataRole.UserRole + 1
+                )
                 self.setData(index, data["unitCount"], Qt.ItemDataRole.DisplayRole)
             else:
                 self.setData(index, data[key], Qt.ItemDataRole.DisplayRole)
@@ -72,11 +76,13 @@ class TransactionItemsModelOut(QStandardItemModel):
         transaction_items = []
         for row in range(self.rowCount()):
             item = self.item(row, 0).data(Qt.ItemDataRole.UserRole)
-            transaction_items.append(TransactionItem(
-                commodity_id=item["commodityId"],
-                unit_count=item["unitCount"],
-                price_per_unit=0
-            ))
+            transaction_items.append(
+                TransactionItem(
+                    commodity_id=item["commodityId"],
+                    unit_count=item["unitCount"],
+                    price_per_unit=0,
+                )
+            )
         return transaction_items
 
     def _calculate_total_unit(self) -> tuple[int, str]:

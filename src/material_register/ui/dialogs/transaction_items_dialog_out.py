@@ -24,8 +24,13 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker
 class TransactionItemsDialogOut(QDialog):
-    def __init__(self, transactions_controller: "TransactionsController", create_data: dict[str, str | int],
-                 transactions_widget: "TransactionsWidget", transfer_type: str) -> None:
+    def __init__(
+        self,
+        transactions_controller: "TransactionsController",
+        create_data: dict[str, str | int],
+        transactions_widget: "TransactionsWidget",
+        transfer_type: str,
+    ) -> None:
         super().__init__(transactions_widget)
         self.setMinimumSize(800, 500)
         self.transactions_controller = transactions_controller
@@ -40,11 +45,19 @@ class TransactionItemsDialogOut(QDialog):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         self.transaction_info_widget = TransactionInfoWidget(self, self.transfer_type)
-        self.transactions_items_widget = TransactionsItemsWidget(self, self.transfer_type)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        self.save_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
+        self.transactions_items_widget = TransactionsItemsWidget(
+            self, self.transfer_type
+        )
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.save_transaction_button = button_box.button(
+            QDialogButtonBox.StandardButton.Ok
+        )
         self.save_transaction_button.setObjectName("saveTransactionButton")
-        self.cancel_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
+        self.cancel_transaction_button = button_box.button(
+            QDialogButtonBox.StandardButton.Cancel
+        )
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
         main_layout.addWidget(self.transaction_info_widget)
         main_layout.addWidget(self.transactions_items_widget, 3)
@@ -61,12 +74,16 @@ class TransactionItemsDialogOut(QDialog):
         self.cash_payment = ui_texts.get("CASH", "CASH")
         self.transfer_payment = ui_texts.get("TRANSFER", "TRANSFER")
         if not ui_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
@@ -74,15 +91,28 @@ class TransactionItemsDialogOut(QDialog):
     def _create_connection(self) -> None:
         self.save_transaction_button.clicked.connect(self.accept)
         self.cancel_transaction_button.clicked.connect(self.reject)
-        self.transaction_info_widget.update_transaction_info_button.clicked.connect(self._update_create_data)
-        self.transactions_items_widget.add_item_button.clicked.connect(self._add_transaction_item)
-        self.transactions_items_widget.update_item_button.clicked.connect(self._update_transaction_item)
-        self.transactions_items_widget.delete_item_button.clicked.connect(self._delete_transaction_item)
+        self.transaction_info_widget.update_transaction_info_button.clicked.connect(
+            self._update_create_data
+        )
+        self.transactions_items_widget.add_item_button.clicked.connect(
+            self._add_transaction_item
+        )
+        self.transactions_items_widget.update_item_button.clicked.connect(
+            self._update_transaction_item
+        )
+        self.transactions_items_widget.delete_item_button.clicked.connect(
+            self._delete_transaction_item
+        )
 
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)
-        self.transaction_info_widget.set_create_data(self.payment_text, self.customer,
-                                                     self.document_number, self.address, self.notes)
+        self.transaction_info_widget.set_create_data(
+            self.payment_text,
+            self.customer,
+            self.document_number,
+            self.address,
+            self.notes,
+        )
 
     def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
         self.payment_text = create_data.get("paymentText", "")
@@ -94,13 +124,17 @@ class TransactionItemsDialogOut(QDialog):
         self.notes = create_data.get("notes", "")
 
     def _update_create_data(self) -> None:
-        new_data = self.transactions_controller.create_transaction_data(self.transfer_type)
+        new_data = self.transactions_controller.create_transaction_data(
+            self.transfer_type
+        )
         if new_data is None:
             return
         self.set_create_data(new_data)
 
     def _add_transaction_item(self) -> None:
-        new_item_data = self.transactions_controller.create_category_commodity_data(self.transfer_type)
+        new_item_data = self.transactions_controller.create_category_commodity_data(
+            self.transfer_type
+        )
         if new_item_data is None:
             return
         self.transactions_items_widget.add_item(new_item_data)
@@ -108,7 +142,11 @@ class TransactionItemsDialogOut(QDialog):
     def _update_transaction_item(self) -> None:
         index, item_data = self._get_item_data()
         if item_data:
-            update_item_data = self.transactions_controller.update_category_commodity_data(item_data, self.transfer_type)
+            update_item_data = (
+                self.transactions_controller.update_category_commodity_data(
+                    item_data, self.transfer_type
+                )
+            )
             if update_item_data is None:
                 return
             self.transactions_items_widget.update_item(index, update_item_data)
@@ -117,19 +155,23 @@ class TransactionItemsDialogOut(QDialog):
         index, item_data = self._get_item_data()
         informative_text = ""
         if item_data:
-            informative_text = (
-                f"{item_data["commodity"]}\n({item_data["unitCount"]}{item_data["commoditySuffix"]})"
-            )
-        question = MessageBoxes.show_question(self, "DELETE_TRANSACTION_ITEM", informative_text)
+            informative_text = f"{item_data['commodity']}\n({item_data['unitCount']}{item_data['commoditySuffix']})"
+        question = MessageBoxes.show_question(
+            self, "DELETE_TRANSACTION_ITEM", informative_text
+        )
         if question:
             self.transactions_items_widget.delete_item(index)
             self.transactions_controller.on_item_deleted(self.transfer_type)
 
-    def _get_item_data(self) -> tuple[QModelIndex | None, dict[str, str | int | float] | None]:
+    def _get_item_data(
+        self,
+    ) -> tuple[QModelIndex | None, dict[str, str | int | float] | None]:
         index = self.transactions_items_widget.get_selected_index()
         if index is None or not index.isValid():
             return index, None
-        data = self.transactions_items_widget.current_model.get_transaction_item_data(index)
+        data = self.transactions_items_widget.current_model.get_transaction_item_data(
+            index
+        )
         return index, data
 
     def return_transaction_data(self) -> dict[str, str | int] | None:
@@ -139,7 +181,7 @@ class TransactionItemsDialogOut(QDialog):
             "transaction_type": self.transfer_type,
             "customer_id": self.customer_id,
             "payment_type": self.payment_type,
-            "notes": self.transaction_info_widget.get_notes()
+            "notes": self.transaction_info_widget.get_notes(),
         }
 
     def showEvent(self, event: QShowEvent) -> None:

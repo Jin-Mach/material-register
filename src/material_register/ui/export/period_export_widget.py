@@ -51,7 +51,9 @@ class PeriodExportWidget(QWidget):
         self.stacked_widget = stacked_widget
         self.period_export_controller = PeriodExportController(self)
         self.current_path = Path(
-            QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+            QStandardPaths.writableLocation(
+                QStandardPaths.StandardLocation.DocumentsLocation
+            )
         )
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -93,7 +95,9 @@ class PeriodExportWidget(QWidget):
         self.branch_name_line_edit = QLineEdit()
         self.branch_name_line_edit.setObjectName("branchNameLineEdit")
         self.branch_name_line_edit.setMinimumWidth(self.WIDTH)
-        self.branch_name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.branch_name_line_edit.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         form_layout.addRow(self.branch_name_label, self.branch_name_line_edit)
         main_layout.addLayout(form_layout)
         self.branch_group_box.setLayout(main_layout)
@@ -115,7 +119,9 @@ class PeriodExportWidget(QWidget):
         self.path_line_edit = QLineEdit()
         self.path_line_edit.setObjectName("pathLineEdit")
         self.path_line_edit.setMinimumWidth(self.WIDTH)
-        self.path_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.path_line_edit.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         self.path_button = QPushButton()
         self.path_button.setObjectName("pathButton")
         path_layout = QHBoxLayout()
@@ -126,7 +132,9 @@ class PeriodExportWidget(QWidget):
         self.file_name_line_edit = QLineEdit()
         self.file_name_line_edit.setObjectName("fileNameLineEdit")
         self.file_name_line_edit.setMinimumWidth(self.WIDTH)
-        self.file_name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.file_name_line_edit.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         self.suffix_label = QLabel()
         self.suffix_label.setObjectName("suffixLabel")
         name_layout = QHBoxLayout()
@@ -206,7 +214,7 @@ class PeriodExportWidget(QWidget):
         form_layout.setSpacing(self.SPACING)
         self.opening_balance_label = QLabel()
         self.opening_balance_label.setObjectName("openingBalanceLabel")
-        self.opening_balance_spinbox  =QDoubleSpinBox()
+        self.opening_balance_spinbox = QDoubleSpinBox()
         self.opening_balance_spinbox.setObjectName("openingBalanceSpinbox")
         self.income_label = QLabel()
         self.income_label.setObjectName("incomeLabel")
@@ -250,7 +258,9 @@ class PeriodExportWidget(QWidget):
         self.use_last_options_checkbox = QCheckBox()
         self.use_last_options_checkbox.setObjectName("useLastOptionsCheckbox")
         self.save_last_opening_balance_checkbox = QCheckBox()
-        self.save_last_opening_balance_checkbox.setObjectName("saveLastOpeningBalanceCheckbox")
+        self.save_last_opening_balance_checkbox.setObjectName(
+            "saveLastOpeningBalanceCheckbox"
+        )
         main_layout.addWidget(self.use_last_options_checkbox)
         main_layout.addWidget(self.save_last_opening_balance_checkbox)
         self.other_settings_group_box.setLayout(main_layout)
@@ -285,39 +295,58 @@ class PeriodExportWidget(QWidget):
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
-        self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Export Folder")
+        self.folder_dialog_title = ui_texts.get(
+            "folderDialogTitle", "Select Export Folder"
+        )
         self.price_suffix = ui_texts.get("priceSuffix", "")
         type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
         if not type_items:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.file_type_combobox.addItems(type_items)
         if UiTexts.set_ui_texts(self, widgets):
-            self.default_name = ui_texts.get(f"{self.file_name_line_edit.objectName()}Text", "Export")
+            self.default_name = ui_texts.get(
+                f"{self.file_name_line_edit.objectName()}Text", "Export"
+            )
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
 
     def apply_settings(self) -> None:
         if not UiSettings.set_ui_settings("export", self.findChildren(QWidget)):
-            ErrorHandler.handle_error(f"Settings load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return
         self._set_folder_path()
         if not self.file_name_line_edit.text().strip():
             today = QDate.currentDate()
-            self.file_name_line_edit.setText(f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}")
+            self.file_name_line_edit.setText(
+                f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}"
+            )
         self.today_radio_button.setChecked(True)
 
     def _create_connection(self) -> None:
-        date_radiobuttons = [self.today_radio_button, self.week_radio_button, self.month_radio_button,
-                             self.year_radio_button, self.custom_radio_button]
+        date_radiobuttons = [
+            self.today_radio_button,
+            self.week_radio_button,
+            self.month_radio_button,
+            self.year_radio_button,
+            self.custom_radio_button,
+        ]
         self.branch_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
         self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
         self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
@@ -329,7 +358,11 @@ class PeriodExportWidget(QWidget):
         self.export_button.clicked.connect(self.period_export_controller.start_export)
 
     def _setup_spinboxes(self) -> None:
-        spinboxes = [self.opening_balance_spinbox, self.income_spinbox, self.expense_spinbox]
+        spinboxes = [
+            self.opening_balance_spinbox,
+            self.income_spinbox,
+            self.expense_spinbox,
+        ]
         for spinbox in spinboxes:
             minimum = EXPORT_PRICE_MIN_VALUE
             if spinbox == self.opening_balance_spinbox:
@@ -343,14 +376,18 @@ class PeriodExportWidget(QWidget):
                 spinbox.setSuffix(f" {self.price_suffix}")
 
     def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}"))
+        name_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}")
+        )
         self.branch_name_line_edit.setValidator(name_validator)
         self.file_name_line_edit.setValidator(name_validator)
 
     def _set_folder_path(self) -> None:
         if not self.path_line_edit.text().strip():
             self.current_path = Path(
-                QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+                QStandardPaths.writableLocation(
+                    QStandardPaths.StandardLocation.DocumentsLocation
+                )
             )
         else:
             self.current_path = Path(self.path_line_edit.text().strip())
@@ -360,7 +397,9 @@ class PeriodExportWidget(QWidget):
         self.path_line_edit.setReadOnly(True)
 
     def _set_file_suffix(self) -> None:
-        self.suffix_label.setText(PeriodExportWidget._get_file_suffix(self.file_type_combobox.currentText()))
+        self.suffix_label.setText(
+            PeriodExportWidget._get_file_suffix(self.file_type_combobox.currentText())
+        )
 
     def _on_text_or_value_changed(self) -> None:
         self._apply_export_action_state()
@@ -375,7 +414,10 @@ class PeriodExportWidget(QWidget):
             self.to_date_edit.setEnabled(False)
 
     def _apply_export_action_state(self) -> None:
-        if self.branch_name_line_edit.text().strip() != "" and self.file_name_line_edit.text().strip() != "":
+        if (
+            self.branch_name_line_edit.text().strip() != ""
+            and self.file_name_line_edit.text().strip() != ""
+        ):
             self.export_button.setEnabled(True)
         else:
             self.export_button.setEnabled(False)
@@ -408,18 +450,24 @@ class PeriodExportWidget(QWidget):
 
     def _set_elided_path(self, path: str) -> None:
         metrics = QFontMetrics(self.path_line_edit.font())
-        elided_path = metrics.elidedText(path, Qt.TextElideMode.ElideMiddle, self.path_line_edit.width())
+        elided_path = metrics.elidedText(
+            path, Qt.TextElideMode.ElideMiddle, self.path_line_edit.width()
+        )
         self.path_line_edit.setText(elided_path)
 
     def _select_export_folder(self) -> None:
-        folder = QFileDialog.getExistingDirectory(self, self.folder_dialog_title, str(self.current_path))
+        folder = QFileDialog.getExistingDirectory(
+            self, self.folder_dialog_title, str(self.current_path)
+        )
         if folder:
             self.current_path = Path(folder)
             self._set_elided_path(str(self.current_path))
             self.path_line_edit.setToolTip(str(folder))
 
     def _get_full_path(self) -> Path:
-        return (self.current_path / self.file_name_line_edit.text().strip()).with_suffix(self.suffix_label.text())
+        return (
+            self.current_path / self.file_name_line_edit.text().strip()
+        ).with_suffix(self.suffix_label.text())
 
     def _get_date_interval(self) -> tuple[str, str]:
         date_map = {
@@ -433,8 +481,10 @@ class PeriodExportWidget(QWidget):
                 date_range = get_filter_range(value)
                 if date_range is not None:
                     return date_range
-        date_range = (self.from_date_edit.date().toString("yyyy-MM-dd 00:00:00"),
-                      self.to_date_edit.date().toString("yyyy-MM-dd 23:59:59"))
+        date_range = (
+            self.from_date_edit.date().toString("yyyy-MM-dd 00:00:00"),
+            self.to_date_edit.date().toString("yyyy-MM-dd 23:59:59"),
+        )
         return date_range
 
     @staticmethod
@@ -453,14 +503,16 @@ class PeriodExportWidget(QWidget):
             "fileNameLineEdit": self.file_name_line_edit.text().strip(),
             "from_date": from_date,
             "to_date": to_date,
-            "openingBalanceSpinbox": normalize_value(self.opening_balance_spinbox.value()),
+            "openingBalanceSpinbox": normalize_value(
+                self.opening_balance_spinbox.value()
+            ),
             "income": normalize_value(self.income_spinbox.value()),
             "expense": normalize_value(self.expense_spinbox.value()),
             "noActionRadioButton": self.no_action_radio_button.isChecked(),
             "openFolderRadioButton": self.open_folder_radio_button.isChecked(),
             "openFileRadioButton": self.open_file_radio_button.isChecked(),
             "useLastOptionsCheckbox": self.use_last_options_checkbox.isChecked(),
-            "saveLastOpeningBalanceCheckbox": self.save_last_opening_balance_checkbox.isChecked()
+            "saveLastOpeningBalanceCheckbox": self.save_last_opening_balance_checkbox.isChecked(),
         }
 
     def resizeEvent(self, event: QResizeEvent) -> None:

@@ -13,6 +13,7 @@ def connection() -> QSqlDatabase:
     conn.open()
     return conn
 
+
 @pytest.fixture
 def schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -26,23 +27,33 @@ def schema(connection) -> None:
         )
     """)
 
-@pytest.mark.parametrize("transaction_id, commodity_id, unit_count, price_per_unit", [
-    (1, 2, 1.5, 2.5),
-    (2, 1, 1, 0),
-], ids=["IN", "OUT"])
-def test_insert_into_transaction_items(connection, schema, transaction_id, commodity_id, unit_count,
-                                       price_per_unit) -> None:
-    ok, error = TransactionItemsQueries.insert_into_transaction_items(connection, transaction_id, commodity_id,
-                                                                  unit_count, price_per_unit)
+
+@pytest.mark.parametrize(
+    "transaction_id, commodity_id, unit_count, price_per_unit",
+    [
+        (1, 2, 1.5, 2.5),
+        (2, 1, 1, 0),
+    ],
+    ids=["IN", "OUT"],
+)
+def test_insert_into_transaction_items(
+    connection, schema, transaction_id, commodity_id, unit_count, price_per_unit
+) -> None:
+    ok, error = TransactionItemsQueries.insert_into_transaction_items(
+        connection, transaction_id, commodity_id, unit_count, price_per_unit
+    )
     assert ok == True
     assert error == ""
     query = QSqlQuery(connection)
-    query.exec("SELECT transaction_id, commodity_id, unit_count, price_per_unit FROM transaction_items")
+    query.exec(
+        "SELECT transaction_id, commodity_id, unit_count, price_per_unit FROM transaction_items"
+    )
     assert query.next()
     assert query.value(0) == transaction_id
     assert query.value(1) == commodity_id
     assert query.value(2) == unit_count
     assert query.value(3) == price_per_unit
+
 
 def test_delete_transaction_items(connection, schema) -> None:
     query = QSqlQuery(connection)
@@ -72,6 +83,7 @@ def test_delete_transaction_items(connection, schema) -> None:
     query.next()
     assert query.value(0) == 1
 
+
 def test_get_transaction_items(connection, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
@@ -95,8 +107,12 @@ def test_get_transaction_items(connection, schema) -> None:
         )
     """)
     query.exec("INSERT INTO categories (id, name) VALUES (1, 'FE')")
-    query.exec("INSERT INTO commodities (id, name, unit, category_id) VALUES (1, '12345', 'kg', 1)")
-    query.exec("INSERT INTO commodities (id, name, unit, category_id) VALUES (2, '67890', 'ks', 1)")
+    query.exec(
+        "INSERT INTO commodities (id, name, unit, category_id) VALUES (1, '12345', 'kg', 1)"
+    )
+    query.exec(
+        "INSERT INTO commodities (id, name, unit, category_id) VALUES (2, '67890', 'ks', 1)"
+    )
     result = TransactionItemsQueries.get_transaction_items(connection, 1)
     assert len(result) == 2
     assert result[0].commodity_id == 1

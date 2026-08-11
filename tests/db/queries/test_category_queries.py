@@ -12,6 +12,7 @@ def connection() -> QSqlDatabase:
     conn.open()
     return conn
 
+
 @pytest.fixture
 def schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -22,6 +23,7 @@ def schema(connection) -> None:
             notes TEXT
         )
     """)
+
 
 def test_create_category(connection, schema) -> None:
     ok, error, category_id = CategoryQueries.create_category(connection, "test", "note")
@@ -35,13 +37,16 @@ def test_create_category(connection, schema) -> None:
     assert query.value(0) == "test"
     assert query.value(1) == "note"
 
+
 def test_update_category(connection, schema) -> None:
     CategoryQueries.create_category(connection, "old", "note")
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM categories WHERE name='old'")
     query.next()
     category_id = query.value(0)
-    ok, error = CategoryQueries.update_category(connection, category_id, "new", "updated")
+    ok, error = CategoryQueries.update_category(
+        connection, category_id, "new", "updated"
+    )
     assert ok is True
     assert error == ""
     query = QSqlQuery(connection)
@@ -51,6 +56,7 @@ def test_update_category(connection, schema) -> None:
     assert query.next()
     assert query.value(0) == "new"
     assert query.value(1) == "updated"
+
 
 def test_get_categories(connection, schema) -> None:
     CategoryQueries.create_category(connection, "A", "n1")
@@ -62,10 +68,12 @@ def test_get_categories(connection, schema) -> None:
         Category(id=2, name="B", notes="n2"),
     ]
 
+
 def test_category_exists(connection, schema) -> None:
     CategoryQueries.create_category(connection, "A", "n")
     assert CategoryQueries.category_exists(connection, "A") is True
     assert CategoryQueries.category_exists(connection, "B") is False
+
 
 def test_category_exists_ignored_id(connection, schema) -> None:
     CategoryQueries.create_category(connection, "A", "n")
@@ -74,6 +82,7 @@ def test_category_exists_ignored_id(connection, schema) -> None:
     query.next()
     cat_id = query.value(0)
     assert CategoryQueries.category_exists(connection, "A", ignored_id=cat_id) is False
+
 
 def test_get_category_by_id(connection, schema) -> None:
     CategoryQueries.create_category(connection, "A", "note")
@@ -85,6 +94,7 @@ def test_get_category_by_id(connection, schema) -> None:
     assert data.name == "A"
     assert data.notes == "note"
     assert data.id == cat_id
+
 
 def test_get_category_by_id_not_found(connection, schema) -> None:
     data = CategoryQueries.get_category_by_id(connection, 999)

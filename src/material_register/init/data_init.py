@@ -26,9 +26,15 @@ class DataInit:
         try:
             cls.customers_model = CustomersModel(DbInit.db_connection)
             DbCache.setup_init(DbInit.db_connection)
-            cls.customers_completer_model = CustomersCompleterModel(DbCache.active_customers)
-            cls.transactions_load_model_in = TransactionsLoadModelIn(DbInit.db_connection)
-            cls.transactions_load_model_out = TransactionsLoadModelOut(DbInit.db_connection)
+            cls.customers_completer_model = CustomersCompleterModel(
+                DbCache.active_customers
+            )
+            cls.transactions_load_model_in = TransactionsLoadModelIn(
+                DbInit.db_connection
+            )
+            cls.transactions_load_model_out = TransactionsLoadModelOut(
+                DbInit.db_connection
+            )
             cls.inventory_model = InventoryModel(DbInit.db_connection)
             return True, ""
         except Exception as e:

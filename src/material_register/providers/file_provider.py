@@ -18,7 +18,6 @@ from material_register.services.error_handler import ErrorHandler
 
 
 class FileProvider:
-
     @classmethod
     def check_missing_files(cls, resources_path: Path) -> set[Path]:
         invalid_files = set()

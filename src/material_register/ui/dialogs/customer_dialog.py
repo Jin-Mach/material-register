@@ -33,9 +33,15 @@ from material_register.ui.setup.ui_texts import UiTexts
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widget import CustomersWidget
 
+
 # noinspection PyTypeChecker,PyMethodMayBeStatic
 class CustomerDialog(QDialog):
-    def __init__(self, customers_widget: "CustomersWidget", mode: str = ADD_MODE, customer_data: "Customer" = None) -> None:
+    def __init__(
+        self,
+        customers_widget: "CustomersWidget",
+        mode: str = ADD_MODE,
+        customer_data: "Customer" = None,
+    ) -> None:
         super().__init__(customers_widget)
         self.setMinimumWidth(400)
         self.mode = mode
@@ -55,7 +61,9 @@ class CustomerDialog(QDialog):
         self.subject_type = QComboBox()
         self.subject_type.setObjectName("subjectType")
         form_layout = QFormLayout()
-        form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
+        form_layout.setFieldGrowthPolicy(
+            QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow
+        )
         self.company_label = QLabel()
         self.company_label.setObjectName("companyLabel")
         self.company_input = QLineEdit()
@@ -81,7 +89,9 @@ class CustomerDialog(QDialog):
         notes_count_layout = QHBoxLayout()
         self.notes_count_label = QLabel()
         self.notes_count_label.setObjectName("notesCountLabel")
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Close)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Close
+        )
         self.save_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.save_button.setObjectName("saveButton")
         self.close_button = button_box.button(QDialogButtonBox.StandardButton.Close)
@@ -107,9 +117,19 @@ class CustomerDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
-        widgets = [self.subject_type, self.company_label, self.first_name_label, self.last_name_label,
-                   self.document_type_label, self.address_label, self.active_label, self.notes_label,
-                   self.notes_count_label, self.save_button, self.close_button]
+        widgets = [
+            self.subject_type,
+            self.company_label,
+            self.first_name_label,
+            self.last_name_label,
+            self.document_type_label,
+            self.address_label,
+            self.active_label,
+            self.notes_label,
+            self.notes_count_label,
+            self.save_button,
+            self.close_button,
+        ]
         self._setup_texts(widgets)
         self._setup_items()
         self._setup_mode()
@@ -118,8 +138,13 @@ class CustomerDialog(QDialog):
         self._update_notes_count()
 
     def _create_connection(self) -> None:
-        for widget in (self.first_name_input, self.last_name_input, self.company_input, self.document_type_input,
-                       self.address_input):
+        for widget in (
+            self.first_name_input,
+            self.last_name_input,
+            self.company_input,
+            self.document_type_input,
+            self.address_input,
+        ):
             widget.textChanged.connect(self._on_form_changed)
         self.subject_type.currentIndexChanged.connect(self._on_type_changed)
         self.document_type_input.textChanged.connect(self._on_document_type_changed)
@@ -129,20 +154,30 @@ class CustomerDialog(QDialog):
 
     def _setup_texts(self, widgets: list[QLineEdit]) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.created_label_text = texts.get(f"{self.created_label.objectName()}Text", "Created:")
-        self.notes_count_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
+        self.created_label_text = texts.get(
+            f"{self.created_label.objectName()}Text", "Created:"
+        )
+        self.notes_count_text = texts.get(
+            f"{self.notes_count_label.objectName()}Text", "Count:"
+        )
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
     def _setup_items(self) -> None:
         self.subject_type.clear()
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        items = texts.get(f"{self.subject_type.objectName()}Items", ["Individual", "Company"])
+        items = texts.get(
+            f"{self.subject_type.objectName()}Items", ["Individual", "Company"]
+        )
         if not items:
-            ErrorHandler.handle_error(f"Items texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Items texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             return
         for index, text in enumerate(items):
             self.subject_type.addItem(text, index)
@@ -154,10 +189,18 @@ class CustomerDialog(QDialog):
             self._set_update_mode(self.customer_data)
 
     def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}'\- ]{1,20}"))
-        company_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}"))
-        document_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .\-/]{1,30}"))
-        address_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,:&'()\-\/]{1,50}"))
+        name_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}'\- ]{1,20}")
+        )
+        company_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}")
+        )
+        document_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .\-/]{1,30}")
+        )
+        address_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,:&'()\-\/]{1,50}")
+        )
         self.first_name_input.setValidator(name_validator)
         self.last_name_input.setValidator(name_validator)
         self.company_input.setValidator(company_validator)
@@ -191,11 +234,20 @@ class CustomerDialog(QDialog):
         self.notes_input.setEnabled(enabled)
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes_input, self.notes_count_label, self.notes_count_text,
-                           CUSTOMERS_DIALOG_NOTES_LENGTH)
+        check_notes_length(
+            self.notes_input,
+            self.notes_count_label,
+            self.notes_count_text,
+            CUSTOMERS_DIALOG_NOTES_LENGTH,
+        )
 
     def _update_required_styles(self) -> None:
-        for widget in (self.first_name_input, self.last_name_input, self.company_input, self.address_input):
+        for widget in (
+            self.first_name_input,
+            self.last_name_input,
+            self.company_input,
+            self.address_input,
+        ):
             self._set_required_style(widget)
 
     def _set_required_style(self, widget) -> None:
@@ -212,7 +264,9 @@ class CustomerDialog(QDialog):
 
     def _update_save_button_state(self) -> None:
         type_index = self.subject_type.currentIndex()
-        self.save_button.setEnabled(self._is_input_valid(type_index) and self._is_document_valid())
+        self.save_button.setEnabled(
+            self._is_input_valid(type_index) and self._is_document_valid()
+        )
 
     def _on_form_changed(self) -> None:
         self._update_required_styles()
@@ -235,7 +289,7 @@ class CustomerDialog(QDialog):
                 document_number=self.document_type_input.text().strip(),
                 address=self.address_input.text().strip(),
                 notes=self.notes_input.toPlainText().strip(),
-                active=int(self.active_checkbox.isChecked())
+                active=int(self.active_checkbox.isChecked()),
             )
         if type_index == 1:
             return Customer(
@@ -245,7 +299,7 @@ class CustomerDialog(QDialog):
                 document_number=self.document_type_input.text().strip(),
                 address=self.address_input.text().strip(),
                 notes=self.notes_input.toPlainText().strip(),
-                active=int(self.active_checkbox.isChecked())
+                active=int(self.active_checkbox.isChecked()),
             )
         return None
 
@@ -272,10 +326,14 @@ class CustomerDialog(QDialog):
         ignored_id = None
         if self.mode != ADD_MODE:
             ignored_id = self.customer_data.id
-        return not self.customers_widget.customers_model.document_exists(document, ignored_id=ignored_id)
+        return not self.customers_widget.customers_model.document_exists(
+            document, ignored_id=ignored_id
+        )
 
     def _set_add_mode(self) -> None:
-        self.created_label.setText(f"{self.created_label_text} {datetime.now().astimezone().strftime("%d.%m.%Y")}")
+        self.created_label.setText(
+            f"{self.created_label_text} {datetime.now().astimezone().strftime('%d.%m.%Y')}"
+        )
         self.subject_type.setCurrentIndex(-1)
         self._apply_type_state()
 
@@ -288,7 +346,7 @@ class CustomerDialog(QDialog):
             self.address_input: customer_data.address,
             self.active_checkbox: customer_data.active,
             self.notes_input: customer_data.notes,
-            self.created_label: customer_data.created_at
+            self.created_label: customer_data.created_at,
         }
         self.subject_type.blockSignals(True)
         if customer_data.company is not None:
@@ -300,7 +358,7 @@ class CustomerDialog(QDialog):
         for widget, value in customer_input_map.items():
             if isinstance(widget, QLabel):
                 date = datetime.fromisoformat(value)
-                widget.setText(f"{self.created_label_text} {date.strftime("%d.%m.%Y")}")
+                widget.setText(f"{self.created_label_text} {date.strftime('%d.%m.%Y')}")
             if isinstance(widget, QLineEdit):
                 widget.setText(value)
             if isinstance(widget, QCheckBox):

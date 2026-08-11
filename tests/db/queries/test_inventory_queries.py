@@ -12,6 +12,7 @@ def connection() -> QSqlDatabase:
     conn.open()
     return conn
 
+
 @pytest.fixture
 def schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -71,16 +72,19 @@ def test_get_inventory(connection, schema) -> None:
     select_query.exec(INVENTORY_QUERY)
     rows = []
     while select_query.next():
-        rows.append((
-            select_query.value(0),
-            select_query.value(1),
-            select_query.value(2),
-            select_query.value(3),
-        ))
+        rows.append(
+            (
+                select_query.value(0),
+                select_query.value(1),
+                select_query.value(2),
+                select_query.value(3),
+            )
+        )
     assert rows == [
         ("category1", "commodity1", "kg", 11),
-        ("category2", "commodity2", "pcs", 22)
+        ("category2", "commodity2", "pcs", 22),
     ]
+
 
 def test_update_inventory_item(connection, schema) -> None:
     insert_query = QSqlQuery(connection)
@@ -118,13 +122,15 @@ def test_update_inventory_item(connection, schema) -> None:
     select_query.exec(INVENTORY_QUERY)
     rows = []
     while select_query.next():
-        rows.append((
-            select_query.value(0),
-            select_query.value(1),
-            select_query.value(2),
-            select_query.value(3),
-        ))
+        rows.append(
+            (
+                select_query.value(0),
+                select_query.value(1),
+                select_query.value(2),
+                select_query.value(3),
+            )
+        )
     assert rows == [
         ("category1", "commodity1", "kg", 22),
-        ("category2", "commodity2", "pcs", 11)
+        ("category2", "commodity2", "pcs", 11),
     ]

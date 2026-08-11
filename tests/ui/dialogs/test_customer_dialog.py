@@ -10,10 +10,12 @@ class FakeCustomersWidget(QWidget):
         super().__init__()
         self.customers_model = FakeCustomersModel()
 
+
 # noinspection PyMethodMayBeStatic
 class FakeCustomersModel:
     def document_exists(self, document: str, ignored_id: int | None = None) -> bool:
         return False
+
 
 # noinspection PyTypeChecker
 @pytest.fixture
@@ -21,12 +23,13 @@ def dialog(qtbot):
     UiTexts.UI_TEXTS = {
         "CustomerDialog": {
             "titleText": "Test",
-            "subjectTypeItems": ["Individual", "Company"]
+            "subjectTypeItems": ["Individual", "Company"],
         }
     }
     dialog = CustomerDialog(FakeCustomersWidget())
     qtbot.addWidget(dialog)
     return dialog
+
 
 def test_person_customer_valid(dialog):
     dialog.subject_type.setCurrentIndex(0)  # person
@@ -42,6 +45,7 @@ def test_person_customer_valid(dialog):
     assert customer.document_number == "666"
     assert customer.address == "Hell"
 
+
 def test_person_customer_invalid_missing_name(dialog):
     dialog.subject_type.setCurrentIndex(0)
     dialog.first_name_input.setText("")
@@ -50,6 +54,7 @@ def test_person_customer_invalid_missing_name(dialog):
     dialog.address_input.setText("Hell")
     assert dialog._is_input_valid(0) is False
     assert dialog.get_customer_data() is None
+
 
 def test_company_customer_valid(dialog):
     dialog.subject_type.setCurrentIndex(1)

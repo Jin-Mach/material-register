@@ -30,8 +30,12 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker
 class CategoryDialog(QDialog):
-    def __init__(self, catalog_widget: "CatalogWidget", mode: str = ADD_MODE,
-                 category_data: Category | None = None) -> None:
+    def __init__(
+        self,
+        catalog_widget: "CatalogWidget",
+        mode: str = ADD_MODE,
+        category_data: Category | None = None,
+    ) -> None:
         super().__init__(catalog_widget)
         self.catalog_widget = catalog_widget
         self.mode = mode
@@ -53,7 +57,9 @@ class CategoryDialog(QDialog):
         notes_count_layout = QHBoxLayout()
         self.notes_count_label = QLabel()
         self.notes_count_label.setObjectName("notesCountLabel")
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Close)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Close
+        )
         self.save_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.save_button.setObjectName("saveButton")
         self.close_button = button_box.button(QDialogButtonBox.StandardButton.Close)
@@ -69,8 +75,13 @@ class CategoryDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
-        widgets = [self.category_name_label, self.notes_label, self.notes_count_label, self.save_button,
-                   self.close_button]
+        widgets = [
+            self.category_name_label,
+            self.notes_label,
+            self.notes_count_label,
+            self.save_button,
+            self.close_button,
+        ]
         self._setup_texts(widgets)
         self._setup_mode()
         self._set_validators()
@@ -85,10 +96,14 @@ class CategoryDialog(QDialog):
 
     def _setup_texts(self, widgets: list) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.notes_count_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
+        self.notes_count_text = texts.get(
+            f"{self.notes_count_label.objectName()}Text", "Count:"
+        )
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
@@ -99,7 +114,9 @@ class CategoryDialog(QDialog):
             self._set_update_mode(self.category_data)
 
     def _set_validators(self) -> None:
-        category_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,:&%\-\/]{1,30}"))
+        category_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,:&%\-\/]{1,30}")
+        )
         self.category_name_input.setValidator(category_validator)
 
     def _set_add_mode(self) -> None:
@@ -113,16 +130,27 @@ class CategoryDialog(QDialog):
         self._update_notes_count()
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes_input, self.notes_count_label, self.notes_count_text, CATEGORY_DIALOG_NOTES_LENGTH)
+        check_notes_length(
+            self.notes_input,
+            self.notes_count_label,
+            self.notes_count_text,
+            CATEGORY_DIALOG_NOTES_LENGTH,
+        )
 
     def _update_save_button_state(self) -> None:
-        self.save_button.setEnabled(self._is_input_valid() and self._is_category_valid())
+        self.save_button.setEnabled(
+            self._is_input_valid() and self._is_category_valid()
+        )
 
     def _set_required_style(self, widget) -> None:
         text = widget.text().strip()
         if widget == self.category_name_input:
-            invalid = (not text) or self.catalog_widget.catalog_controller.category_exists(
-                text, ignored_id=self.category_data.id if self.mode == UPDATE_MODE else None)
+            invalid = (
+                not text
+            ) or self.catalog_widget.catalog_controller.category_exists(
+                text,
+                ignored_id=self.category_data.id if self.mode == UPDATE_MODE else None,
+            )
         else:
             invalid = not text
         if invalid:
@@ -145,14 +173,16 @@ class CategoryDialog(QDialog):
         ignored_id = None
         if self.mode == UPDATE_MODE and self.category_data:
             ignored_id = self.category_data.id
-        return not self.catalog_widget.catalog_controller.category_exists(name, ignored_id=ignored_id)
+        return not self.catalog_widget.catalog_controller.category_exists(
+            name, ignored_id=ignored_id
+        )
 
     def get_category_data(self) -> Category | None:
         if not self._is_input_valid():
             return None
         return Category(
             name=self.category_name_input.text().strip(),
-            notes=self.notes_input.toPlainText()
+            notes=self.notes_input.toPlainText(),
         )
 
     def showEvent(self, event: QShowEvent) -> None:

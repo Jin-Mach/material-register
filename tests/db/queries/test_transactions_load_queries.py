@@ -15,6 +15,7 @@ def connection() -> QSqlDatabase:
     conn.open()
     return conn
 
+
 @pytest.fixture
 def schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -58,38 +59,45 @@ def schema(connection) -> None:
         )
     """)
 
+
 def get_timestamp() -> str:
     return datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
+
 
 def test_load_transaction_in(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("INSERT INTO commodities VALUES (1, 'kg')")
-    query.exec("INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
+    query.exec(
+        "INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)"
+    )
     query.prepare("""
         INSERT INTO transactions (id, type, customer_id, created_at, payment_type)
         VALUES (?, ?, ?, ?, ?)
     """)
     query.addBindValue(1)
-    query.addBindValue('IN')
+    query.addBindValue("IN")
     query.addBindValue(1)
     query.addBindValue(get_timestamp())
-    query.addBindValue('TRANSFER')
+    query.addBindValue("TRANSFER")
     query.exec()
     query.exec("INSERT INTO transaction_items VALUES (1, 1, 1, 10, 20)")
     results = TransactionsLoadQueries.load_transaction_in(connection)
     assert len(results) > 0, "No results returned"
     assert results[0].total == 200, f"Expected 200, got {results[0].total}"
 
+
 def test_load_transaction_out(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("INSERT INTO commodities VALUES (1, 'kg')")
-    query.exec("INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)")
+    query.exec(
+        "INSERT INTO customers VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)"
+    )
     query.prepare("""
         INSERT INTO transactions (id, type, customer_id, created_at, payment_type)
         VALUES (?, ?, ?, ?, ?)
     """)
     query.addBindValue(1)
-    query.addBindValue('OUT')
+    query.addBindValue("OUT")
     query.addBindValue(1)
     query.addBindValue(get_timestamp())
     query.addBindValue(None)

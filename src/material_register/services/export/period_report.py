@@ -7,9 +7,10 @@ from material_register.domain.export_dataclass import (
 
 
 class PeriodReport:
-
     @staticmethod
-    def get_period_data_in(in_data: list[ExportItemIn]) -> dict[str, list[PeriodItemIn]]:
+    def get_period_data_in(
+        in_data: list[ExportItemIn],
+    ) -> dict[str, list[PeriodItemIn]]:
         report_data = {}
         for in_item in in_data:
             if in_item.category_name not in report_data:
@@ -18,14 +19,17 @@ class PeriodReport:
                     commodity_unit=in_item.commodity_unit,
                     price_per_unit=in_item.price_per_unit,
                     total_quantity=in_item.total_quantity,
-                    total_price=in_item.total_price
+                    total_price=in_item.total_price,
                 )
                 report_data[in_item.category_name] = [period_item_in]
             else:
                 items = report_data[in_item.category_name]
                 found = False
                 for item in items:
-                    if item.commodity_name == in_item.commodity_name and item.price_per_unit == in_item.price_per_unit:
+                    if (
+                        item.commodity_name == in_item.commodity_name
+                        and item.price_per_unit == in_item.price_per_unit
+                    ):
                         item.total_quantity += in_item.total_quantity
                         item.total_price += in_item.total_price
                         found = True
@@ -36,19 +40,21 @@ class PeriodReport:
                         commodity_unit=in_item.commodity_unit,
                         price_per_unit=in_item.price_per_unit,
                         total_quantity=in_item.total_quantity,
-                        total_price=in_item.total_price
+                        total_price=in_item.total_price,
                     )
                     items.append(period_item_in)
         return report_data
 
     @staticmethod
-    def get_period_data_out(out_data: list[ExportItemOut]) -> dict[str, list[PeriodItemOut]]:
+    def get_period_data_out(
+        out_data: list[ExportItemOut],
+    ) -> dict[str, list[PeriodItemOut]]:
         report_data = {}
         for out_item in out_data:
             period_item_out = PeriodItemOut(
                 commodity_name=out_item.commodity_name,
                 commodity_unit=out_item.commodity_unit,
-                total_quantity=out_item.total_quantity
+                total_quantity=out_item.total_quantity,
             )
             if out_item.category_name not in report_data:
                 report_data[out_item.category_name] = []

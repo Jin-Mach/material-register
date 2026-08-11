@@ -34,7 +34,9 @@ class MainWindow(QMainWindow):
     def _ui_setup(self) -> None:
         if UiTexts.set_ui_texts(self, []):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = True
         if UiTexts.set_default_texts(self, []):
             return
@@ -46,10 +48,12 @@ class MainWindow(QMainWindow):
             self.side_panel.export_button: 2,
             self.side_panel.customers_button: 3,
             self.side_panel.catalog_button: 4,
-            self.side_panel.settings_button: 5
+            self.side_panel.settings_button: 5,
         }
         for button, index in buttons_map.items():
-            button.clicked.connect(lambda _, i=index: self.stacked_widget.setCurrentIndex(i))
+            button.clicked.connect(
+                lambda _, i=index: self.stacked_widget.setCurrentIndex(i)
+            )
 
     @staticmethod
     def _handle_startup_errors() -> None:

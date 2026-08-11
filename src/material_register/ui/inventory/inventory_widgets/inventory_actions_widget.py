@@ -32,7 +32,9 @@ class InventoryActionsWidget(QWidget):
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return

@@ -34,7 +34,12 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker
 class CreateTransactionDialog(QDialog):
-    def __init__(self, transactions_widget: "TransactionsWidget", completer_model: "CustomersCompleterModel", transfer_type: str) -> None:
+    def __init__(
+        self,
+        transactions_widget: "TransactionsWidget",
+        completer_model: "CustomersCompleterModel",
+        transfer_type: str,
+    ) -> None:
         super().__init__(transactions_widget)
         self.completer_model = completer_model
         self.transfer_type = transfer_type
@@ -58,21 +63,31 @@ class CreateTransactionDialog(QDialog):
         self.customer_name_input = QLineEdit()
         self.customer_name_input.setObjectName("customerNameInput")
         self.customer_name_input.setMinimumWidth(300)
-        self.customer_name_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.customer_name_input.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         self.customer_document_number_label = QLabel()
         self.customer_document_number_label.setObjectName("customerDocumentNumberLabel")
         self.customer_document_number = QLabel()
         self.customer_address_label = QLabel()
         self.customer_address_label.setObjectName("customerAddressLabel")
         self.customer_address = QLabel()
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        self.continue_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.continue_transaction_button = button_box.button(
+            QDialogButtonBox.StandardButton.Ok
+        )
         self.continue_transaction_button.setObjectName("continueTransactionButton")
-        self.cancel_transaction_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
+        self.cancel_transaction_button = button_box.button(
+            QDialogButtonBox.StandardButton.Cancel
+        )
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
         type_form_layout.addRow(self.payment_type_label, self.payment_type_combobox)
         customer_form_layout.addRow(self.customer_name_label, self.customer_name_input)
-        customer_form_layout.addRow(self.customer_document_number_label, self.customer_document_number)
+        customer_form_layout.addRow(
+            self.customer_document_number_label, self.customer_document_number
+        )
         customer_form_layout.addRow(self.customer_address_label, self.customer_address)
         type_layout.addStretch()
         type_layout.addLayout(type_form_layout)
@@ -83,9 +98,14 @@ class CreateTransactionDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
-        widgets = [self.payment_type_label, self.customer_name_label,
-                   self.customer_document_number_label, self.customer_address_label,
-                   self.continue_transaction_button, self.cancel_transaction_button]
+        widgets = [
+            self.payment_type_label,
+            self.customer_name_label,
+            self.customer_document_number_label,
+            self.customer_address_label,
+            self.continue_transaction_button,
+            self.cancel_transaction_button,
+        ]
         self._setup_texts(widgets)
         self._set_validators()
         self._set_required_style()
@@ -101,19 +121,25 @@ class CreateTransactionDialog(QDialog):
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
     def _setup_items(self) -> None:
         payment_values = PAYMENT_VALUES
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        payment_items = texts.get(f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"])
+        payment_items = texts.get(
+            f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"]
+        )
         for text, value in zip(payment_items, payment_values):
             self.payment_type_combobox.addItem(text, value)
 
     def _set_validators(self) -> None:
-        customer_validator = QRegularExpressionValidator(QRegularExpression(r"^[\p{L}0-9 .,&\-]{1,50}$"))
+        customer_validator = QRegularExpressionValidator(
+            QRegularExpression(r"^[\p{L}0-9 .,&\-]{1,50}$")
+        )
         self.customer_name_input.setValidator(customer_validator)
 
     def _apply_transfer_type(self) -> None:
@@ -174,7 +200,7 @@ class CreateTransactionDialog(QDialog):
             "customerId": self.selected_customer.id,
             "customer": self.customer_name_input.text().strip(),
             "documentNumber": self.customer_document_number.text(),
-            "address": self.customer_address.text()
+            "address": self.customer_address.text(),
         }
 
     def showEvent(self, event: QShowEvent) -> None:

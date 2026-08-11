@@ -12,7 +12,11 @@ if TYPE_CHECKING:
 
 
 class CustomersContextMenu(QMenu):
-    def __init__(self, customers_view: "CustomersView", customers_controller: "CustomersController") -> None:
+    def __init__(
+        self,
+        customers_view: "CustomersView",
+        customers_controller: "CustomersController",
+    ) -> None:
         super().__init__(customers_view)
         self.customers_controller = customers_controller
         self._create_ui()

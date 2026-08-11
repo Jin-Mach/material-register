@@ -36,7 +36,11 @@ if TYPE_CHECKING:
 
 
 class TransactionsItemsWidget(QWidget):
-    def __init__(self, transaction_items_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut", transfer_type: str):
+    def __init__(
+        self,
+        transaction_items_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut",
+        transfer_type: str,
+    ):
         super().__init__(transaction_items_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.transaction_items_dialog = transaction_items_dialog
@@ -69,7 +73,12 @@ class TransactionsItemsWidget(QWidget):
         return main_layout
 
     def _setup_ui(self) -> None:
-        widgets = [self.add_item_button, self.update_item_button, self.delete_item_button, self.total_price_label]
+        widgets = [
+            self.add_item_button,
+            self.update_item_button,
+            self.delete_item_button,
+            self.total_price_label,
+        ]
         disabled_buttons = [self.update_item_button, self.delete_item_button]
         for button in disabled_buttons:
             button.setEnabled(False)
@@ -81,10 +90,14 @@ class TransactionsItemsWidget(QWidget):
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS
-        self.price_suffix = ui_texts.get(self.__class__.__name__, {}).get("priceSuffix", "")
+        self.price_suffix = ui_texts.get(self.__class__.__name__, {}).get(
+            "priceSuffix", ""
+        )
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
@@ -137,7 +150,9 @@ class TransactionsItemsWidget(QWidget):
         self.current_model.add_item(new_item_data)
         self.setup_total_value(self.current_model)
 
-    def update_item(self, index: QModelIndex, item_data: dict[str, str | int | float]) -> None:
+    def update_item(
+        self, index: QModelIndex, item_data: dict[str, str | int | float]
+    ) -> None:
         if item_data is None:
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
@@ -149,5 +164,7 @@ class TransactionsItemsWidget(QWidget):
         self.current_model.delete_item(index)
         self.setup_total_value(self.current_model)
 
-    def setup_total_value(self, current_model: TransactionItemsModelIn | TransactionItemsModelOut) -> None:
+    def setup_total_value(
+        self, current_model: TransactionItemsModelIn | TransactionItemsModelOut
+    ) -> None:
         self.total_value_label.setText(current_model.return_total())

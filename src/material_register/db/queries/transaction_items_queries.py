@@ -7,10 +7,14 @@ from material_register.domain.transaction_item_detail_dataclass import (
 
 
 class TransactionItemsQueries:
-
     @staticmethod
-    def insert_into_transaction_items(db_connection: QSqlDatabase, transaction_id: int, commodity_id: int,
-                                      unit_count: float, price_per_unit: float) -> tuple[bool, str]:
+    def insert_into_transaction_items(
+        db_connection: QSqlDatabase,
+        transaction_id: int,
+        commodity_id: int,
+        unit_count: float,
+        price_per_unit: float,
+    ) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
         query.prepare("""
                 INSERT INTO transaction_items (
@@ -31,7 +35,9 @@ class TransactionItemsQueries:
         return ok, error
 
     @staticmethod
-    def delete_transaction_items(db_connection: QSqlDatabase, transaction_id: int) -> tuple[bool, str]:
+    def delete_transaction_items(
+        db_connection: QSqlDatabase, transaction_id: int
+    ) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
         query.prepare("""
                 DELETE FROM transaction_items WHERE transaction_id = ?
@@ -44,7 +50,9 @@ class TransactionItemsQueries:
         return ok, error
 
     @staticmethod
-    def get_transaction_items(db_connection: QSqlDatabase, transaction_id: int) -> list[TransactionItemDetail]:
+    def get_transaction_items(
+        db_connection: QSqlDatabase, transaction_id: int
+    ) -> list[TransactionItemDetail]:
         query = QSqlQuery(db_connection)
         query.prepare(SELECTED_TRANSACTION_DATA)
         query.addBindValue(transaction_id)
@@ -59,7 +67,7 @@ class TransactionItemsQueries:
                     price_per_unit=query.value(2),
                     commodity_name=query.value(3),
                     commodity_suffix=query.value(4),
-                    category_name=query.value(5)
+                    category_name=query.value(5),
                 )
             )
         return result

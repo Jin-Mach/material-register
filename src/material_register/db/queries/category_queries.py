@@ -4,9 +4,10 @@ from material_register.domain.category_dataclass import Category
 
 
 class CategoryQueries:
-
     @staticmethod
-    def create_category(connection: QSqlDatabase, name: str, notes: str) -> tuple[bool, str, int | None]:
+    def create_category(
+        connection: QSqlDatabase, name: str, notes: str
+    ) -> tuple[bool, str, int | None]:
         query = QSqlQuery(connection)
         query.prepare("INSERT INTO categories (name, notes) VALUES (?, ?)")
         query.addBindValue(name)
@@ -21,7 +22,9 @@ class CategoryQueries:
         return ok, error, category_id
 
     @staticmethod
-    def update_category(connection: QSqlDatabase, category_id: int, name: str, notes: str) -> tuple[bool, str]:
+    def update_category(
+        connection: QSqlDatabase, category_id: int, name: str, notes: str
+    ) -> tuple[bool, str]:
         query = QSqlQuery(connection)
         query.prepare("UPDATE categories SET name=?, notes=? WHERE id=?")
         query.addBindValue(name)
@@ -50,7 +53,9 @@ class CategoryQueries:
         return results
 
     @staticmethod
-    def category_exists(connection: QSqlDatabase, name: str, ignored_id: int | None = None) -> bool:
+    def category_exists(
+        connection: QSqlDatabase, name: str, ignored_id: int | None = None
+    ) -> bool:
         query = QSqlQuery(connection)
         sql = "SELECT 1 FROM categories WHERE name = ?"
         if ignored_id is not None:
@@ -64,7 +69,9 @@ class CategoryQueries:
         return query.next()
 
     @staticmethod
-    def get_category_by_id(connection: QSqlDatabase, category_id: int) -> Category | None:
+    def get_category_by_id(
+        connection: QSqlDatabase, category_id: int
+    ) -> Category | None:
         query = QSqlQuery(connection)
         query.prepare("SELECT name, notes FROM categories WHERE id = ?")
         query.addBindValue(category_id)
@@ -72,11 +79,7 @@ class CategoryQueries:
             return None
         if not query.next():
             return None
-        return Category(
-            id=category_id,
-            name=query.value(0),
-            notes=query.value(1)
-        )
+        return Category(id=category_id, name=query.value(0), notes=query.value(1))
 
     @staticmethod
     def get_total_count(connection: QSqlDatabase) -> int:

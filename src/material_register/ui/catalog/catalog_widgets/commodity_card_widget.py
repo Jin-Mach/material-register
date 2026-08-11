@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 
 class CommodityCardWidget(QTabWidget):
-    def __init__(self,  commodities_grid_widget: "CommoditiesGridWidget") -> None:
+    def __init__(self, commodities_grid_widget: "CommoditiesGridWidget") -> None:
         super().__init__(commodities_grid_widget)
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.detail_widget = self._create_ui()
@@ -68,24 +68,35 @@ class CommodityCardWidget(QTabWidget):
         return detail_widget
 
     def setup_texts(self, ui_texts: dict[str, str]) -> None:
-        widgets = [self.unit_label, self.default_price_label, self.active_label, self.notes_label,
-                   self.update_commodity_button]
+        widgets = [
+            self.unit_label,
+            self.default_price_label,
+            self.active_label,
+            self.notes_label,
+            self.update_commodity_button,
+        ]
         if not ui_texts:
             return
         if UiTexts.set_texts(ui_texts, self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
     def set_commodity_details(self, commodity: Commodity) -> None:
         self.setTabText(0, commodity.name)
         self.unit_value.setText(commodity.unit)
-        self.default_price_value.setText(format_number_to_locale(commodity.default_price))
+        self.default_price_value.setText(
+            format_number_to_locale(commodity.default_price)
+        )
         self.active_value.setChecked(bool(commodity.active))
         self.notes_value.setPlainText(commodity.notes)
 
     def create_connection(self, commodity: Commodity, on_update_clicked) -> None:
-        self.update_commodity_button.clicked.connect(lambda: on_update_clicked(commodity))
+        self.update_commodity_button.clicked.connect(
+            lambda: on_update_clicked(commodity)
+        )
 
     def sizeHint(self) -> QSize:
         return QSize(250, 180)

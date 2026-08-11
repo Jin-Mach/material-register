@@ -50,9 +50,13 @@ class TransactionItemsModelIn(QStandardItemModel):
                 value.setData(transaction_item, Qt.ItemDataRole.UserRole)
             if key == "unitCount":
                 value.setData(transaction_item["unitCount"], Qt.ItemDataRole.UserRole)
-                value.setData(transaction_item["commoditySuffix"], Qt.ItemDataRole.UserRole + 1)
+                value.setData(
+                    transaction_item["commoditySuffix"], Qt.ItemDataRole.UserRole + 1
+                )
             items_list.append(value)
-        total = TransactionItemsModelIn.get_item_total_count(transaction_item["unitCount"], transaction_item["pricePerUnit"])
+        total = TransactionItemsModelIn.get_item_total_count(
+            transaction_item["unitCount"], transaction_item["pricePerUnit"]
+        )
         items_list.append(total)
         self.appendRow(items_list)
 
@@ -64,10 +68,14 @@ class TransactionItemsModelIn(QStandardItemModel):
                 self.setData(index, data["category"], Qt.ItemDataRole.DisplayRole)
             elif key == "unitCount":
                 self.setData(index, data["unitCount"], Qt.ItemDataRole.UserRole)
-                self.setData(index, data["commoditySuffix"], Qt.ItemDataRole.UserRole + 1)
+                self.setData(
+                    index, data["commoditySuffix"], Qt.ItemDataRole.UserRole + 1
+                )
                 self.setData(index, data["unitCount"], Qt.ItemDataRole.DisplayRole)
             elif key == "totalPrice":
-                total = self._calculate_total_count(data["unitCount"], data["pricePerUnit"])
+                total = self._calculate_total_count(
+                    data["unitCount"], data["pricePerUnit"]
+                )
                 self.setData(index, total, Qt.ItemDataRole.UserRole)
                 self.setData(index, total, Qt.ItemDataRole.DisplayRole)
             else:
@@ -80,18 +88,22 @@ class TransactionItemsModelIn(QStandardItemModel):
         total_count = format_number_to_locale(self._calculate_total_price())
         return f"{total_count} {self.price_suffix}"
 
-    def get_transaction_item_data(self, index: QModelIndex) -> dict[str, str | int | float]:
+    def get_transaction_item_data(
+        self, index: QModelIndex
+    ) -> dict[str, str | int | float]:
         return self.item(index.row(), 0).data(Qt.ItemDataRole.UserRole)
 
     def get_data(self) -> list[TransactionItem]:
         transaction_items = []
         for row in range(self.rowCount()):
             item = self.item(row, 0).data(Qt.ItemDataRole.UserRole)
-            transaction_items.append(TransactionItem(
-                commodity_id=item["commodityId"],
-                unit_count=item["unitCount"],
-                price_per_unit=item["pricePerUnit"]
-            ))
+            transaction_items.append(
+                TransactionItem(
+                    commodity_id=item["commodityId"],
+                    unit_count=item["unitCount"],
+                    price_per_unit=item["pricePerUnit"],
+                )
+            )
         return transaction_items
 
     def _calculate_total_price(self) -> float:

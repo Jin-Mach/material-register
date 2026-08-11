@@ -25,19 +25,27 @@ class TransactionView(QTableView):
     def setup_ui(self) -> None:
         model = self.model()
         if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
-            ErrorHandler.handle_error(f"Invalid model instance: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Invalid model instance: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
             return
         self._setup_texts(model)
         self._setup_columns(model)
         self._setup_behavior()
 
-    def _setup_texts(self, model: TransactionItemsModelIn | TransactionItemsModelOut) -> None:
+    def _setup_texts(
+        self, model: TransactionItemsModelIn | TransactionItemsModelOut
+    ) -> None:
         if not HeadersTexts.set_headers_text(self, model):
-            ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
-    def _setup_columns(self, model: TransactionItemsModelIn| TransactionItemsModelOut) -> None:
+    def _setup_columns(
+        self, model: TransactionItemsModelIn | TransactionItemsModelOut
+    ) -> None:
         column_map = model.get_columns_map()
         for name in TRANSACTION_VIEW_HIDDEN_COLUMNS:
             index = column_map.get(name)

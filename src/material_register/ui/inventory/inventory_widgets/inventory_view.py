@@ -24,8 +24,9 @@ class InventoryView(QTableView):
         if not isinstance(model, InventoryProxyFilter):
             return
         if not HeadersTexts.set_inventory_headers_text(self, model):
-            ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}",
-                                      "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = error
         self._setup_columns()
         self._setup_headers(model)

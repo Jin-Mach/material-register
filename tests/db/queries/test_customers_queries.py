@@ -6,10 +6,11 @@ from material_register.db.queries.customers_queries import CustomersQueries
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase('QSQLITE')
+    conn = QSqlDatabase.addDatabase("QSQLITE")
     conn.setDatabaseName(":memory:")
     conn.open()
     return conn
+
 
 @pytest.fixture
 def schema(connection) -> None:
@@ -32,6 +33,7 @@ def schema(connection) -> None:
         )
     """)
     assert ok, query.lastError().text()
+
 
 def test_get_customers(connection, schema):
     query = QSqlQuery(connection)

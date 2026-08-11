@@ -29,6 +29,7 @@ def category_schema(connection) -> None:
         VALUES (1, 'test')
     """)
 
+
 @pytest.fixture
 def commodity_schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -45,6 +46,7 @@ def commodity_schema(connection) -> None:
         VALUES (2, 'Test commodity', 1, 'kg')
     """)
 
+
 @pytest.fixture
 def transaction_schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -58,6 +60,7 @@ def transaction_schema(connection) -> None:
             notes TEXT
         )
     """)
+
 
 @pytest.fixture
 def items_schema(connection) -> None:
@@ -75,6 +78,7 @@ def items_schema(connection) -> None:
         )
     """)
 
+
 @pytest.fixture
 def inventory_schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -89,6 +93,7 @@ def inventory_schema(connection) -> None:
         VALUES (2, 0)
     """)
 
+
 @pytest.fixture
 def dialog_data() -> dict[str, str | int]:
     return {
@@ -98,31 +103,33 @@ def dialog_data() -> dict[str, str | int]:
         "notes": "some notes",
     }
 
+
 @pytest.fixture
 def items_data() -> list[TransactionItem]:
-    return [
-        TransactionItem(
-            commodity_id=2,
-            unit_count=10,
-            price_per_unit=12.5
-        )
-    ]
+    return [TransactionItem(commodity_id=2, unit_count=10, price_per_unit=12.5)]
 
-@pytest.mark.parametrize("transfer_type, insert_stock, expected_stock",
-                         [("IN", 10, 10),
-                          ("OUT", 10, -10)]
-                         )
-def test_create_transaction(connection, transaction_schema, items_schema, inventory_schema, dialog_data, items_data,
-                            transfer_type, insert_stock, expected_stock) -> None:
+
+@pytest.mark.parametrize(
+    "transfer_type, insert_stock, expected_stock", [("IN", 10, 10), ("OUT", 10, -10)]
+)
+def test_create_transaction(
+    connection,
+    transaction_schema,
+    items_schema,
+    inventory_schema,
+    dialog_data,
+    items_data,
+    transfer_type,
+    insert_stock,
+    expected_stock,
+) -> None:
     dialog_data["transaction_type"] = transfer_type
     items_data = [
-        TransactionItem(
-            commodity_id=2,
-            unit_count=insert_stock,
-            price_per_unit=12.5
-        )
+        TransactionItem(commodity_id=2, unit_count=insert_stock, price_per_unit=12.5)
     ]
-    ok, error = TransactionsService.create_transaction(connection, dialog_data, items_data)
+    ok, error = TransactionsService.create_transaction(
+        connection, dialog_data, items_data
+    )
     assert ok == True
     assert error == ""
     query = QSqlQuery(connection)
@@ -137,7 +144,10 @@ def test_create_transaction(connection, transaction_schema, items_schema, invent
     stock = query.value(0)
     assert stock == expected_stock
 
-def test_update_transaction(connection, transaction_schema, items_schema, inventory_schema, dialog_data) -> None:
+
+def test_update_transaction(
+    connection, transaction_schema, items_schema, inventory_schema, dialog_data
+) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transactions (
@@ -156,21 +166,12 @@ def test_update_transaction(connection, transaction_schema, items_schema, invent
         VALUES (2, 0)
     """)
     updated_items_data = [
-        TransactionItem(
-            commodity_id=2,
-            unit_count=999,
-            price_per_unit=12.5
-        )
+        TransactionItem(commodity_id=2, unit_count=999, price_per_unit=12.5)
     ]
-    old_items_data = [
-        TransactionItem(
-            commodity_id=2,
-            unit_count=10,
-            price_per_unit=5
-        )
-    ]
-    ok, error, changed = TransactionsService.update_transaction(connection, 1, dialog_data,
-                                                                updated_items_data, old_items_data)
+    old_items_data = [TransactionItem(commodity_id=2, unit_count=10, price_per_unit=5)]
+    ok, error, changed = TransactionsService.update_transaction(
+        connection, 1, dialog_data, updated_items_data, old_items_data
+    )
     assert ok is True
     assert error == ""
     assert changed is True
@@ -206,7 +207,10 @@ def test_update_transaction(connection, transaction_schema, items_schema, invent
     assert query.next()
     assert query.value(0) == 989
 
-def test_update_transaction_remove_item(connection, transaction_schema, items_schema, inventory_schema, dialog_data) -> None:
+
+def test_update_transaction_remove_item(
+    connection, transaction_schema, items_schema, inventory_schema, dialog_data
+) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transactions (
@@ -225,16 +229,11 @@ def test_update_transaction_remove_item(connection, transaction_schema, items_sc
         SET stock = 10
         WHERE commodity_id = 2
     """)
-    old_items_data = [
-        TransactionItem(
-            commodity_id=2,
-            unit_count=10,
-            price_per_unit=5
-        )
-    ]
+    old_items_data = [TransactionItem(commodity_id=2, unit_count=10, price_per_unit=5)]
     new_items_data = []
-    ok, error, changed = TransactionsService.update_transaction(connection, 1, dialog_data, new_items_data,
-                                                                old_items_data)
+    ok, error, changed = TransactionsService.update_transaction(
+        connection, 1, dialog_data, new_items_data, old_items_data
+    )
     assert ok is True
     assert error == ""
     assert changed is True
@@ -253,6 +252,7 @@ def test_update_transaction_remove_item(connection, transaction_schema, items_sc
     assert query.next()
     assert query.value(0) == 0
 
+
 @pytest.mark.parametrize(
     "transfer_type, initial_stock, expected_stock",
     [
@@ -260,8 +260,17 @@ def test_update_transaction_remove_item(connection, transaction_schema, items_sc
         ("OUT", -10, 0),
     ],
 )
-def test_delete_transaction(connection, category_schema, commodity_schema, transaction_schema, items_schema, inventory_schema,
-                            transfer_type, initial_stock, expected_stock) -> None:
+def test_delete_transaction(
+    connection,
+    category_schema,
+    commodity_schema,
+    transaction_schema,
+    items_schema,
+    inventory_schema,
+    transfer_type,
+    initial_stock,
+    expected_stock,
+) -> None:
     query = QSqlQuery(connection)
     query.exec(f"""
         UPDATE inventory

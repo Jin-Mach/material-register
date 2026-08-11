@@ -23,7 +23,9 @@ class InventoryModel(QSqlQueryModel):
         if role == Qt.ItemDataRole.DisplayRole:
             if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
                 stock = super().data(index, Qt.ItemDataRole.DisplayRole)
-                unit_index = self.index(index.row(), INVENTORY_COLUMNS_MAP["commodity_unit"])
+                unit_index = self.index(
+                    index.row(), INVENTORY_COLUMNS_MAP["commodity_unit"]
+                )
                 unit = super().data(unit_index, Qt.ItemDataRole.DisplayRole)
                 return f"{format_number_to_locale(stock)} {unit}"
             if column == INVENTORY_COLUMNS_MAP["commodity_active"]:
@@ -32,11 +34,17 @@ class InventoryModel(QSqlQueryModel):
             if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
-        if role == Qt.ItemDataRole.ForegroundRole and column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
+        if (
+            role == Qt.ItemDataRole.ForegroundRole
+            and column == INVENTORY_COLUMNS_MAP["inventory_stock"]
+        ):
             stock = super().data(index, Qt.ItemDataRole.DisplayRole)
             if isinstance(stock, float) and stock < 0:
                 return QColor(INVENTORY_STOCK_STYLE)
-        if role == Qt.ItemDataRole.DecorationRole and column == INVENTORY_COLUMNS_MAP["commodity_active"]:
+        if (
+            role == Qt.ItemDataRole.DecorationRole
+            and column == INVENTORY_COLUMNS_MAP["commodity_active"]
+        ):
             active = super().data(index, Qt.ItemDataRole.DisplayRole)
             if isinstance(active, int):
                 if active == 1:

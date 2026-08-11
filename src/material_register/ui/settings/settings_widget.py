@@ -32,11 +32,15 @@ class SettingsWidget(QWidget):
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self._export_tab_title = ui_texts.get("periodExportTabTitle", "Records")
 
     def _setup_tabs(self) -> None:
         self.period_export_settings = PeriodExportSettings(self)
-        self.settings_tab_widget.addTab(self.period_export_settings, self._export_tab_title)
+        self.settings_tab_widget.addTab(
+            self.period_export_settings, self._export_tab_title
+        )

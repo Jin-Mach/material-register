@@ -14,7 +14,6 @@ from material_register.utils.system import is_disk_writable
 
 
 class DownloadProvider:
-
     @classmethod
     def download_files(cls, invalid_files: set[Path], resource_path: Path) -> bool:
         try:
@@ -47,5 +46,7 @@ class DownloadProvider:
 
     @staticmethod
     def is_ready_for_download(resource_path: Path) -> dict[str, bool]:
-        return {"internet": is_internet_available(),
-                "writable": is_disk_writable(resource_path)}
+        return {
+            "internet": is_internet_available(),
+            "writable": is_disk_writable(resource_path),
+        }

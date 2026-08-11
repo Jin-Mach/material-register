@@ -9,7 +9,9 @@ if TYPE_CHECKING:
 
 
 class InventoryController:
-    def __init__(self, inventory_widget: "InventoryWidget", inventory_model: "InventoryModel") -> None:
+    def __init__(
+        self, inventory_widget: "InventoryWidget", inventory_model: "InventoryModel"
+    ) -> None:
         self.inventory_widget = inventory_widget
         self.inventory_model = inventory_model
 
@@ -27,5 +29,7 @@ class InventoryController:
         self.update_counts()
 
     def update_counts(self) -> None:
-        self.inventory_widget.set_count_text(self.inventory_widget.active_proxy.rowCount(),
-                                             self.inventory_model.rowCount())
+        self.inventory_widget.set_count_text(
+            self.inventory_widget.active_proxy.rowCount(),
+            self.inventory_model.rowCount(),
+        )

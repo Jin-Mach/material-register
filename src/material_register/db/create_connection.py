@@ -5,7 +5,9 @@ from PySide6.QtSql import QSqlDatabase, QSqlQuery
 from material_register.services.error_handler import ErrorHandler
 
 
-def create_connection(database_path: Path | None, db_name: str, connection_name: str) -> QSqlDatabase | None:
+def create_connection(
+    database_path: Path | None, db_name: str, connection_name: str
+) -> QSqlDatabase | None:
     if database_path is None:
         ErrorHandler.handle_error("Database path is None", "db", "critical")
         return None
@@ -21,6 +23,7 @@ def create_connection(database_path: Path | None, db_name: str, connection_name:
         ErrorHandler.handle_error(last_query.lastError().text(), "db", "critical")
         return None
     return connection
+
 
 def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
     query = QSqlQuery(connection)
@@ -156,7 +159,7 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
     indexes = [
         "CREATE INDEX IF NOT EXISTS idx_commodities_category ON commodities(category_id)",
         "CREATE INDEX IF NOT EXISTS idx_transactions_customer ON transactions(customer_id)",
-        "CREATE INDEX IF NOT EXISTS idx_items_transaction ON transaction_items(transaction_id)"
+        "CREATE INDEX IF NOT EXISTS idx_items_transaction ON transaction_items(transaction_id)",
     ]
 
     for sql in indexes:

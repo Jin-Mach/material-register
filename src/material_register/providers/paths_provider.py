@@ -23,7 +23,11 @@ class PathsProvider:
         cls.resources = cls.root / "resources"
         cls.resources.mkdir(parents=True, exist_ok=True)
         if getattr(sys, "frozen", False) or "__compiled__" in globals():
-            app_data_dir = Path(QStandardPaths.writableLocation(QStandardPaths.StandardLocation.AppLocalDataLocation))
+            app_data_dir = Path(
+                QStandardPaths.writableLocation(
+                    QStandardPaths.StandardLocation.AppLocalDataLocation
+                )
+            )
             cls.database = app_data_dir / "database"
             cls.logs = app_data_dir / "logs"
         else:

@@ -51,13 +51,17 @@ class InventoryWidget(QWidget):
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.count_text = ui_texts.get("countLabelText", "Count:")
 
     def _create_connection(self) -> None:
-        self.inventory_actions_widget.search_line_edit.textChanged.connect(self._on_text_changed)
+        self.inventory_actions_widget.search_line_edit.textChanged.connect(
+            self._on_text_changed
+        )
 
     def _setup_model(self) -> None:
         self.inventory_proxy_filter = InventoryProxyFilter()

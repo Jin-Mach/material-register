@@ -12,7 +12,9 @@ class UiTexts:
         cls.UI_TEXTS = ui_texts.copy()
 
     @classmethod
-    def set_ui_texts(cls, parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000) -> bool:
+    def set_ui_texts(
+        cls, parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000
+    ) -> bool:
         try:
             ui_texts = cls.UI_TEXTS.get(parent.__class__.__name__, {})
             if not ui_texts:
@@ -22,7 +24,9 @@ class UiTexts:
             return False
 
     @staticmethod
-    def set_default_texts(parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000) -> bool:
+    def set_default_texts(
+        parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000
+    ) -> bool:
         try:
             ui_texts = DEFAULT_TEXTS.get(parent.__class__.__name__, {})
             if not ui_texts:
@@ -32,7 +36,12 @@ class UiTexts:
             return False
 
     @staticmethod
-    def set_texts(ui_texts: dict[str, str], parent: QWidget, widgets: list[QWidget], tooltip_duration: int = 5000) -> bool:
+    def set_texts(
+        ui_texts: dict[str, str],
+        parent: QWidget,
+        widgets: list[QWidget],
+        tooltip_duration: int = 5000,
+    ) -> bool:
         try:
             if hasattr(parent, "setWindowTitle") and "titleText" in ui_texts:
                 parent.setWindowTitle(ui_texts["titleText"])

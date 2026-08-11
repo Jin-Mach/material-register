@@ -19,7 +19,10 @@ def centre_dialog(dialog: QDialog) -> None:
     frame.moveCenter(geometry.center())
     dialog.move(frame.topLeft())
 
-def get_notification_position(dialog: "NotificationDialog", margin: int = 10) -> QPoint | None:
+
+def get_notification_position(
+    dialog: "NotificationDialog", margin: int = 10
+) -> QPoint | None:
     main_window = AppContext.MAIN_WINDOW
     if main_window is None:
         return None

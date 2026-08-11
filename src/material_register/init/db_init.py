@@ -14,7 +14,9 @@ class DbInit:
     @classmethod
     def init_db(cls) -> tuple[bool, str]:
         try:
-            cls.db_connection = create_connection(PathsProvider.database, cls.DATABASE_NAME, "main_connection")
+            cls.db_connection = create_connection(
+                PathsProvider.database, cls.DATABASE_NAME, "main_connection"
+            )
             if cls.db_connection is None:
                 return False, "DATABASE_FAILED"
             schema_ok, schema_error = is_schema_valid(cls.db_connection)
@@ -27,8 +29,16 @@ class DbInit:
             return False, "DATABASE_FAILED"
 
     @classmethod
-    def thread_connection(cls, connection_name: str) -> tuple[bool, str, QSqlDatabase | None, ]:
-        thread_connection = create_connection(PathsProvider.database, cls.DATABASE_NAME, connection_name)
+    def thread_connection(
+        cls, connection_name: str
+    ) -> tuple[
+        bool,
+        str,
+        QSqlDatabase | None,
+    ]:
+        thread_connection = create_connection(
+            PathsProvider.database, cls.DATABASE_NAME, connection_name
+        )
         if thread_connection is None:
             return False, "THREAD_CONNECTION_FAILED", None
         return True, "", thread_connection

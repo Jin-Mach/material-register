@@ -4,9 +4,15 @@ from PySide6.QtWidgets import QDialog, QLabel, QProgressBar, QVBoxLayout, QWidge
 
 
 class ProgressDialog(QDialog):
-    def __init__(self, export_texts: dict[str, dict[str, str]], parent: QWidget) -> None:
+    def __init__(
+        self, export_texts: dict[str, dict[str, str]], parent: QWidget
+    ) -> None:
         super().__init__(parent)
-        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(
+            Qt.WindowType.Dialog
+            | Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.WindowStaysOnTopHint
+        )
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
         self.progress_texts = export_texts.get(self.__class__.__name__, {})
         self.setLayout(self._create_ui())

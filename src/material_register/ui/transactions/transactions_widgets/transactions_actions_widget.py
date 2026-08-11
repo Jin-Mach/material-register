@@ -34,17 +34,25 @@ class TransactionsActionsWidget(QWidget):
         return main_layout
 
     def _ui_setup(self) -> None:
-        widgets = [self.in_transaction_button, self.out_transaction_button, self.search_line_edit]
+        widgets = [
+            self.in_transaction_button,
+            self.out_transaction_button,
+            self.search_line_edit,
+        ]
         self._setup_texts(widgets)
         self.base_filter_combobox.setCurrentIndex(0)
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        filter_items = ui_texts.get(f"{self.base_filter_combobox.objectName()}Items", [])
+        filter_items = ui_texts.get(
+            f"{self.base_filter_combobox.objectName()}Items", []
+        )
         self.base_filter_combobox.addItems(filter_items)
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return

@@ -9,6 +9,7 @@ log_structure = {
     "error": ("error_logs", "error.log"),
 }
 
+
 def test_init_loggers(tmp_path: Path) -> None:
     LoggerProvider.init_loggers(tmp_path, log_structure)
     LoggerProvider.ui.error("error message")

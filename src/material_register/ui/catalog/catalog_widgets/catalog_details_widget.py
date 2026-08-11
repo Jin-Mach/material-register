@@ -16,7 +16,9 @@ if TYPE_CHECKING:
 
 
 class CatalogDetailsWidget(QWidget):
-    def __init__(self, catalog_widget: "CatalogWidget", catalog_controller: "CatalogController") -> None:
+    def __init__(
+        self, catalog_widget: "CatalogWidget", catalog_controller: "CatalogController"
+    ) -> None:
         super().__init__(catalog_widget)
         self.catalog_widget = catalog_widget
         self.catalog_controller = catalog_controller
@@ -27,7 +29,9 @@ class CatalogDetailsWidget(QWidget):
         main_layout = QVBoxLayout()
         self.stacked_widget = QStackedWidget()
         self.catalog_default_widget = CatalogDefaultWidget(self)
-        self.category_with_commodities_widget = CategoryWithCommoditiesWidget(self, self.catalog_controller)
+        self.category_with_commodities_widget = CategoryWithCommoditiesWidget(
+            self, self.catalog_controller
+        )
         main_layout.addWidget(self.stacked_widget)
         return main_layout
 
@@ -37,4 +41,6 @@ class CatalogDetailsWidget(QWidget):
             self.stacked_widget.addWidget(widget)
 
     def refresh_category_data(self, category_data: Category) -> None:
-        self.category_with_commodities_widget.category_detail_widget.set_category_texts(category_data)
+        self.category_with_commodities_widget.category_detail_widget.set_category_texts(
+            category_data
+        )

@@ -41,18 +41,24 @@ class PeriodExportController(QObject):
             MessageBoxes.show_error(self.period_export_widget, "INVALID_DATA")
             return
         if not self.export_texts:
-            PeriodExportController._handle_export_error("Export texts not loaded",
-                                                        f"{self.__class__.__name__}.start_export",
-                                                        "TEXTS_LOAD_FAILED")
+            PeriodExportController._handle_export_error(
+                "Export texts not loaded",
+                f"{self.__class__.__name__}.start_export",
+                "TEXTS_LOAD_FAILED",
+            )
             return
         self.export_path = self.export_settings.get("export_path", None)
         if self.export_path is None:
-            PeriodExportController._handle_export_error("Export path is None",
-                                                  f"{self.__class__.__name__}.start_export",
-                                                  "PATH_ERROR")
+            PeriodExportController._handle_export_error(
+                "Export path is None",
+                f"{self.__class__.__name__}.start_export",
+                "PATH_ERROR",
+            )
             return
         if self.export_path.exists():
-            question = MessageBoxes.show_question(self.period_export_widget, "PATH_EXISTS")
+            question = MessageBoxes.show_question(
+                self.period_export_widget, "PATH_EXISTS"
+            )
             if not question:
                 return
         self.progress_dialog = ProgressDialog(self.export_texts, AppContext.MAIN_WINDOW)
@@ -60,8 +66,11 @@ class PeriodExportController(QObject):
         self.progress_dialog.show()
         self._start_worker(self.export_settings, self.export_texts)
 
-    def _start_worker(self, export_settings: dict[str, Path | str | float | bool],
-                      export_texts: dict[str, dict[str, str]]) -> None:
+    def _start_worker(
+        self,
+        export_settings: dict[str, Path | str | float | bool],
+        export_texts: dict[str, dict[str, str]],
+    ) -> None:
         self.thread = QThread()
         self.worker = PeriodExportWorker(export_settings, export_texts)
         self.worker.moveToThread(self.thread)
@@ -76,7 +85,9 @@ class PeriodExportController(QObject):
         self._clean_thread()
         self.progress_dialog.close()
         self._reset_variables()
-        QTimer.singleShot(100, lambda: MessageBoxes.show_error(self.period_export_widget, key))
+        QTimer.singleShot(
+            100, lambda: MessageBoxes.show_error(self.period_export_widget, key)
+        )
 
     def _update_texts(self) -> None:
         self.progress_dialog.set_label_text("exportInProgressText")
@@ -114,14 +125,26 @@ class PeriodExportController(QObject):
     def _finish_export(self, error: str | None = None) -> None:
         self.progress_dialog.close()
         if error is not None:
-            PeriodExportController._handle_export_error(error, f"{self.__class__.__name__}._export_error")
+            PeriodExportController._handle_export_error(
+                error, f"{self.__class__.__name__}._export_error"
+            )
             self._reset_variables()
             return
-        PeriodExportController._notification_handler(self.notification_texts, "EXPORT_COMPLETED", "Export completed")
-        if self.export_settings.get("openFolderRadioButton", False) and not open_file_in_explorer(self.export_path):
-            MessageBoxes.show_error(self.period_export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION")
-        if self.export_settings.get("openFileRadioButton", False) and not open_file_in_default(self.export_path):
-            MessageBoxes.show_error(self.period_export_widget, "OPEN_FILE_FAILED", "INFORMATION")
+        PeriodExportController._notification_handler(
+            self.notification_texts, "EXPORT_COMPLETED", "Export completed"
+        )
+        if self.export_settings.get(
+            "openFolderRadioButton", False
+        ) and not open_file_in_explorer(self.export_path):
+            MessageBoxes.show_error(
+                self.period_export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION"
+            )
+        if self.export_settings.get(
+            "openFileRadioButton", False
+        ) and not open_file_in_default(self.export_path):
+            MessageBoxes.show_error(
+                self.period_export_widget, "OPEN_FILE_FAILED", "INFORMATION"
+            )
 
         self._reset_variables()
 
@@ -162,19 +185,30 @@ class PeriodExportController(QObject):
             "openFolderRadioButton",
             "openFileRadioButton",
             "useLastOptionsCheckbox",
-            "saveLastOpeningBalanceCheckbox"
+            "saveLastOpeningBalanceCheckbox",
         ]
         for key in required_keys:
             if key not in self.export_settings:
                 return False
-        for key in ["branchNameLineEdit", "pathLineEdit", "fileNameLineEdit", "from_date", "to_date"]:
+        for key in [
+            "branchNameLineEdit",
+            "pathLineEdit",
+            "fileNameLineEdit",
+            "from_date",
+            "to_date",
+        ]:
             if self.export_settings[key] in (None, ""):
                 return False
         for key in ["openingBalanceSpinbox", "income", "expense"]:
             if not isinstance(self.export_settings[key], (int, float)):
                 return False
-        for key in ["noActionRadioButton", "openFolderRadioButton", "openFileRadioButton", "useLastOptionsCheckbox",
-                    "saveLastOpeningBalanceCheckbox"]:
+        for key in [
+            "noActionRadioButton",
+            "openFolderRadioButton",
+            "openFileRadioButton",
+            "useLastOptionsCheckbox",
+            "saveLastOpeningBalanceCheckbox",
+        ]:
             if not isinstance(self.export_settings[key], bool):
                 return False
         return True
@@ -192,7 +226,9 @@ class PeriodExportController(QObject):
         AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
 
     @staticmethod
-    def _handle_export_error(error: str, method: str, error_key: str = "EXPORT_ERROR") -> None:
+    def _handle_export_error(
+        error: str, method: str, error_key: str = "EXPORT_ERROR"
+    ) -> None:
         if not error:
             error = f"Unknown export error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", "export", "critical")
@@ -200,8 +236,12 @@ class PeriodExportController(QObject):
         dialog.show_dialog(error_key, False)
 
     @staticmethod
-    def _notification_handler(notification_texts: dict[str, str], key: str, default: str) -> None:
+    def _notification_handler(
+        notification_texts: dict[str, str], key: str, default: str
+    ) -> None:
         if notification_texts is None:
             return
-        notification = NotificationDialog(AppContext.MAIN_WINDOW, notification_texts.get(key, default))
+        notification = NotificationDialog(
+            AppContext.MAIN_WINDOW, notification_texts.get(key, default)
+        )
         notification.show_notification()

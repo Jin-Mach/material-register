@@ -10,12 +10,15 @@ class FakeCatalogWidget(QWidget):
         super().__init__()
         self.catalog_controller = FakeCatalogController()
 
+
 # noinspection PyMethodMayBeStatic
 class FakeCatalogController:
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return False
+
     def commodity_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return False
+
 
 # noinspection PyTypeChecker
 @pytest.fixture
@@ -30,12 +33,15 @@ def dialog(qtbot):
             "notesLabelText": "Notes",
             "notesCountLabelText": "Count:",
             "saveButtonText": "Save",
-            "closeButtonText": "Close"
+            "closeButtonText": "Close",
         }
     }
-    dialog = CommodityDialog(FakeCatalogWidget(), category_id=1, category_name="Test Category")
+    dialog = CommodityDialog(
+        FakeCatalogWidget(), category_id=1, category_name="Test Category"
+    )
     qtbot.addWidget(dialog)
     return dialog
+
 
 def test_commodity_valid(dialog):
     dialog.name_input.setText("Steel")
@@ -51,6 +57,7 @@ def test_commodity_valid(dialog):
     assert data.notes == "notes"
     assert data.category_id == 1
     assert data.active == 1
+
 
 def test_commodity_invalid_missing_fields(dialog):
     dialog.name_input.setText("")

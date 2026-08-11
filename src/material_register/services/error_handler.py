@@ -17,11 +17,13 @@ class ErrorHandler:
             "db": logger_provider.db,
             "export": logger_provider.export,
             "settings": logger_provider.settings,
-            "error": logger_provider.error
+            "error": logger_provider.error,
         }
 
     @classmethod
-    def handle_error(cls, error: Exception | str, logger_name: str, level: str, exc_info: bool = True) -> None:
+    def handle_error(
+        cls, error: Exception | str, logger_name: str, level: str, exc_info: bool = True
+    ) -> None:
         if not cls.loggers_map:
             return
         logger = cls.loggers_map.get(logger_name) or cls.loggers_map["error"]

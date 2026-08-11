@@ -32,7 +32,11 @@ if TYPE_CHECKING:
 
 
 class TransactionInfoWidget(QWidget):
-    def __init__(self, transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut", transfer_type: str) -> None:
+    def __init__(
+        self,
+        transaction_item_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut",
+        transfer_type: str,
+    ) -> None:
         super().__init__(transaction_item_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.transfer_type = transfer_type
@@ -52,7 +56,9 @@ class TransactionInfoWidget(QWidget):
         customer_layout = QVBoxLayout()
         customer_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         customer_form_layout = QFormLayout()
-        customer_form_layout.setFormAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        customer_form_layout.setFormAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+        )
         self.customer_name_label = QLabel()
         self.customer_name_label.setObjectName("customerNameLabel")
         self.customer_name = QLabel()
@@ -92,18 +98,27 @@ class TransactionInfoWidget(QWidget):
         return main_layout
 
     def _setup_ui(self) -> None:
-        widgets = [self.customer_name_label, self.document_number_label, self.address_label, self.notes_count_label,
-                   self.update_transaction_info_button]
+        widgets = [
+            self.customer_name_label,
+            self.document_number_label,
+            self.address_label,
+            self.notes_count_label,
+            self.update_transaction_info_button,
+        ]
         self._setup_texts(widgets)
         self._setup_style()
         self._update_notes_count()
 
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.notes_count_text = ui_texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
+        self.notes_count_text = ui_texts.get(
+            f"{self.notes_count_label.objectName()}Text", "Count:"
+        )
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
@@ -116,16 +131,26 @@ class TransactionInfoWidget(QWidget):
         self.notes.textChanged.connect(self._update_notes_count)
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes, self.notes_count_label, self.notes_count_text,
-                           TRANSACTION_INFO_WIDGET_NOTES_LENGTH)
+        check_notes_length(
+            self.notes,
+            self.notes_count_label,
+            self.notes_count_text,
+            TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
+        )
 
     def _apply_transfer_type(self, payment_text: str) -> None:
         if self.transfer_type == TRANSFER_OUT:
             self.payment_info.hide()
         self.payment_info.setText(payment_text)
 
-    def set_create_data(self, payment_text: str, customer: str, document_number: str,
-                        address: str, notes: str) -> None:
+    def set_create_data(
+        self,
+        payment_text: str,
+        customer: str,
+        document_number: str,
+        address: str,
+        notes: str,
+    ) -> None:
         self._apply_transfer_type(payment_text)
         self.customer_name.setText(customer)
         self.document_number.setText(document_number)

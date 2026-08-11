@@ -10,10 +10,12 @@ class FakeCatalogWidget(QWidget):
         super().__init__()
         self.catalog_controller = FakeCatalogController()
 
+
 # noinspection PyMethodMayBeStatic
 class FakeCatalogController:
     def category_exists(self, name: str, ignored_id: int | None = None) -> bool:
         return False
+
 
 # noinspection PyTypeChecker
 @pytest.fixture
@@ -24,12 +26,13 @@ def dialog(qtbot):
             "notesLabelText": "Notes",
             "notesCountLabelText": "Count:",
             "saveButtonText": "Save",
-            "closeButtonText": "Close"
+            "closeButtonText": "Close",
         }
     }
     dialog = CategoryDialog(FakeCatalogWidget())
     qtbot.addWidget(dialog)
     return dialog
+
 
 def test_category_valid(dialog):
     dialog.category_name_input.setText("Hardware")
@@ -41,13 +44,17 @@ def test_category_valid(dialog):
     assert data.name == "Hardware"
     assert data.notes == "Test notes"
 
+
 def test_category_invalid_empty_name(dialog):
     dialog.category_name_input.setText("")
     dialog.notes_input.setText("Some notes")
     assert dialog._is_input_valid() is False
     assert dialog.get_category_data() is None
 
+
 def test_category_invalid_duplicate(dialog):
-    dialog.catalog_widget.catalog_controller.category_exists = lambda name, ignored_id=None: True
+    dialog.catalog_widget.catalog_controller.category_exists = (
+        lambda name, ignored_id=None: True
+    )
     dialog.category_name_input.setText("Hardware")
     assert dialog._is_category_valid() is False

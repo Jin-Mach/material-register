@@ -8,12 +8,18 @@ from material_register.domain.transaction_dataclass import Transaction
 
 
 class TransactionsQueries:
-
     @staticmethod
-    def insert_into_transactions(db_connection: QSqlDatabase, transaction_type: str, customer_id: int,
-                                payment_type: str | None, notes: str) -> tuple[bool, str, int | None]:
+    def insert_into_transactions(
+        db_connection: QSqlDatabase,
+        transaction_type: str,
+        customer_id: int,
+        payment_type: str | None,
+        notes: str,
+    ) -> tuple[bool, str, int | None]:
         query = QSqlQuery(db_connection)
-        query.prepare("INSERT INTO transactions (type, customer_id, payment_type, notes) VALUES (?, ?, ?, ?)")
+        query.prepare(
+            "INSERT INTO transactions (type, customer_id, payment_type, notes) VALUES (?, ?, ?, ?)"
+        )
         query.addBindValue(transaction_type)
         query.addBindValue(customer_id)
         query.addBindValue(payment_type)
@@ -28,12 +34,20 @@ class TransactionsQueries:
         return ok, error, transaction_id
 
     @staticmethod
-    def update_transaction(db_connection: QSqlDatabase, transaction_id: int, transaction_type: str,
-                           customer_id: int, payment_type: str | None, notes: str) -> tuple[bool, str]:
+    def update_transaction(
+        db_connection: QSqlDatabase,
+        transaction_id: int,
+        transaction_type: str,
+        customer_id: int,
+        payment_type: str | None,
+        notes: str,
+    ) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
-        query.prepare("UPDATE transactions SET "
-                      "type = ?, customer_id = ?, payment_type = ?, notes = ? "
-                      "WHERE id = ?")
+        query.prepare(
+            "UPDATE transactions SET "
+            "type = ?, customer_id = ?, payment_type = ?, notes = ? "
+            "WHERE id = ?"
+        )
         query.addBindValue(transaction_type)
         query.addBindValue(customer_id)
         query.addBindValue(payment_type)
@@ -46,7 +60,9 @@ class TransactionsQueries:
         return ok, error
 
     @staticmethod
-    def delete_transaction(db_connection: QSqlDatabase, transaction_id: int) -> tuple[bool, str]:
+    def delete_transaction(
+        db_connection: QSqlDatabase, transaction_id: int
+    ) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
         query.prepare("DELETE FROM transactions WHERE id = ?")
         query.addBindValue(transaction_id)
@@ -57,7 +73,12 @@ class TransactionsQueries:
         return ok, error
 
     @staticmethod
-    def get_basic_filter_data(db_connection: QSqlDatabase, transaction_type: str, from_date: str, end_date: str) -> list[Transaction]:
+    def get_basic_filter_data(
+        db_connection: QSqlDatabase,
+        transaction_type: str,
+        from_date: str,
+        end_date: str,
+    ) -> list[Transaction]:
         query = QSqlQuery(db_connection)
         query.prepare(TRANSACTIONS_BASIC_FILTER_QUERY)
         query.addBindValue(transaction_type)
@@ -67,27 +88,31 @@ class TransactionsQueries:
             return []
         results = []
         while query.next():
-            results.append(Transaction(
-                transaction_id=query.value("transaction_id"),
-                transaction_type=query.value("transaction_type"),
-                transaction_created_at=query.value("transaction_created_at"),
-                payment_type=query.value("transaction_payment_type"),
-                customer_id=query.value("customer_id"),
-                customer_document_number=query.value("customer_document_number"),
-                customer_address=query.value("customer_address"),
-                customer_name=query.value("customer_name"),
-                transaction_notes=query.value("transaction_notes"),
-                total=query.value("total"),
-                suffix=query.value("suffix"),
-                company_normalized=query.value("company_normalized"),
-                first_name_normalized=query.value("first_name_normalized"),
-                last_name_normalized=query.value("last_name_normalized"),
-                address_normalized=query.value("address_normalized"),
-            ))
+            results.append(
+                Transaction(
+                    transaction_id=query.value("transaction_id"),
+                    transaction_type=query.value("transaction_type"),
+                    transaction_created_at=query.value("transaction_created_at"),
+                    payment_type=query.value("transaction_payment_type"),
+                    customer_id=query.value("customer_id"),
+                    customer_document_number=query.value("customer_document_number"),
+                    customer_address=query.value("customer_address"),
+                    customer_name=query.value("customer_name"),
+                    transaction_notes=query.value("transaction_notes"),
+                    total=query.value("total"),
+                    suffix=query.value("suffix"),
+                    company_normalized=query.value("company_normalized"),
+                    first_name_normalized=query.value("first_name_normalized"),
+                    last_name_normalized=query.value("last_name_normalized"),
+                    address_normalized=query.value("address_normalized"),
+                )
+            )
         return results
 
     @staticmethod
-    def get_total_price(db_connection: QSqlDatabase, from_date: str, end_date: str) -> float:
+    def get_total_price(
+        db_connection: QSqlDatabase, from_date: str, end_date: str
+    ) -> float:
         query = QSqlQuery(db_connection)
         query.prepare(TRANSACTION_TOTAL_PRICE)
         query.addBindValue(from_date)

@@ -27,15 +27,21 @@ class TransactionsTabWidget(QTabWidget):
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.in_tab_title = ui_texts.get("inTabTitleText", "IN")
         self.out_tab_title = ui_texts.get("outTabTitleText", "OUT")
 
     def _setup_tabs(self) -> None:
-        self.transaction_in_view = TransactionsView(self, self.transactions_widget.transactions_controller)
-        self.transactions_out_view = TransactionsView(self, self.transactions_widget.transactions_controller)
+        self.transaction_in_view = TransactionsView(
+            self, self.transactions_widget.transactions_controller
+        )
+        self.transactions_out_view = TransactionsView(
+            self, self.transactions_widget.transactions_controller
+        )
         self.addTab(self.transaction_in_view, self.in_tab_title)
         self.addTab(self.transactions_out_view, self.out_tab_title)
 

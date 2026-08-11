@@ -10,5 +10,7 @@ class ErrorTexts:
 
     @classmethod
     def set_error_text(cls, error_key: str, widget: QLabel) -> None:
-        error_text = cls.ERROR_TEXTS.get(error_key, cls.ERROR_TEXTS.get("UNKNOWN_ERROR"))
+        error_text = cls.ERROR_TEXTS.get(
+            error_key, cls.ERROR_TEXTS.get("UNKNOWN_ERROR")
+        )
         widget.setText(error_text)

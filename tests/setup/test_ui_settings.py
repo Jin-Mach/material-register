@@ -9,16 +9,11 @@ def test_set_ui_settings_line_edit(qtbot):
     line_edit.setObjectName("branchNameLineEdit")
     qtbot.addWidget(widget)
     qtbot.addWidget(line_edit)
-    UiSettings.setup_init({
-        "export": {
-            "user": {
-                "branchNameLineEdit": "Some branch"
-            }
-        }
-    })
+    UiSettings.setup_init({"export": {"user": {"branchNameLineEdit": "Some branch"}}})
     result = UiSettings().set_ui_settings("export", [line_edit])
     assert result is True
     assert line_edit.text() == "Some branch"
+
 
 def test_set_ui_settings_spinbox(qtbot):
     widget = QWidget()
@@ -27,16 +22,11 @@ def test_set_ui_settings_spinbox(qtbot):
     spinbox.setRange(0, 10000)
     qtbot.addWidget(widget)
     qtbot.addWidget(spinbox)
-    UiSettings.setup_init({
-        "export": {
-            "user": {
-                "openingBalanceSpinbox": 1000
-            }
-        }
-    })
+    UiSettings.setup_init({"export": {"user": {"openingBalanceSpinbox": 1000}}})
     result = UiSettings().set_ui_settings("export", [spinbox])
     assert result is True
     assert spinbox.value() == 1000
+
 
 def test_set_ui_settings_checkbox(qtbot):
     widget = QWidget()
@@ -44,16 +34,11 @@ def test_set_ui_settings_checkbox(qtbot):
     checkbox.setObjectName("saveLastBalanceCheckbox")
     qtbot.addWidget(widget)
     qtbot.addWidget(checkbox)
-    UiSettings.setup_init({
-        "export": {
-            "user": {
-                "saveLastBalanceCheckbox": True
-            }
-        }
-    })
+    UiSettings.setup_init({"export": {"user": {"saveLastBalanceCheckbox": True}}})
     result = UiSettings().set_ui_settings("export", [checkbox])
     assert result is True
     assert checkbox.isChecked() is True
+
 
 def test_set_ui_settings_radiobutton(qtbot):
     widget = QWidget()
@@ -61,16 +46,11 @@ def test_set_ui_settings_radiobutton(qtbot):
     radio.setObjectName("openFolderRadioButton")
     qtbot.addWidget(widget)
     qtbot.addWidget(radio)
-    UiSettings.setup_init({
-        "export": {
-            "user": {
-                "openFolderRadioButton": True
-            }
-        }
-    })
+    UiSettings.setup_init({"export": {"user": {"openFolderRadioButton": True}}})
     result = UiSettings().set_ui_settings("export", [radio])
     assert result is True
     assert radio.isChecked() is True
+
 
 def test_set_ui_settings_multiple_widgets(qtbot):
     widget = QWidget()
@@ -81,21 +61,21 @@ def test_set_ui_settings_multiple_widgets(qtbot):
     qtbot.addWidget(widget)
     qtbot.addWidget(branch)
     qtbot.addWidget(save_checkbox)
-    UiSettings.setup_init({
-        "export": {
-            "user": {
-                "branchNameLineEdit": "Warehouse",
-                "saveLastBalanceCheckbox": False
+    UiSettings.setup_init(
+        {
+            "export": {
+                "user": {
+                    "branchNameLineEdit": "Warehouse",
+                    "saveLastBalanceCheckbox": False,
+                }
             }
         }
-    })
-    result = UiSettings().set_ui_settings(
-        "export",
-        [branch, save_checkbox]
     )
+    result = UiSettings().set_ui_settings("export", [branch, save_checkbox])
     assert result is True
     assert branch.text() == "Warehouse"
     assert save_checkbox.isChecked() is False
+
 
 def test_set_ui_settings_missing_data(qtbot):
     widget = QWidget()
@@ -108,19 +88,14 @@ def test_set_ui_settings_missing_data(qtbot):
     assert result is False
     assert line_edit.text() == ""
 
+
 def test_set_ui_settings_missing_key(qtbot):
     widget = QWidget()
     line_edit = QLineEdit()
     line_edit.setObjectName("branchNameLineEdit")
     qtbot.addWidget(widget)
     qtbot.addWidget(line_edit)
-    UiSettings.setup_init({
-        "export": {
-            "user": {
-                "otherSetting": "X"
-            }
-        }
-    })
+    UiSettings.setup_init({"export": {"user": {"otherSetting": "X"}}})
     result = UiSettings().set_ui_settings("export", [line_edit])
     assert result is True
     assert line_edit.text() == ""

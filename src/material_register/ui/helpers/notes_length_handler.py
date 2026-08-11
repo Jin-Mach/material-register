@@ -3,7 +3,9 @@ from PySide6.QtWidgets import QLabel, QTextEdit
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 
 
-def check_notes_length(notes_widget: QTextEdit, notes_label: QLabel, notes_text: str, notes_length: int) -> None:
+def check_notes_length(
+    notes_widget: QTextEdit, notes_label: QLabel, notes_text: str, notes_length: int
+) -> None:
     text = notes_widget.toPlainText()
     if len(text) > notes_length:
         notes_widget.setStyleSheet(INVALID_INPUT_STYLE)

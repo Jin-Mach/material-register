@@ -59,21 +59,26 @@ if TYPE_CHECKING:
 
 
 class TransactionsController:
-    def __init__(self, transactions_widget: "TransactionsWidget",
-                 transactions_model_in: "TransactionsLoadModelIn",
-                 transactions_model_out: "TransactionsLoadModelOut") -> None:
+    def __init__(
+        self,
+        transactions_widget: "TransactionsWidget",
+        transactions_model_in: "TransactionsLoadModelIn",
+        transactions_model_out: "TransactionsLoadModelOut",
+    ) -> None:
         self.transactions_widget = transactions_widget
         self.db_connection = DbInit.db_connection
         self.transactions_model_in = transactions_model_in
         self.transactions_model_out = transactions_model_out
         self.customers_model = DataInit.customers_model
         self.inventory_model = DataInit.inventory_model
-        self.notification_text = TextsProvider.NOTIFICATION_TEXTS.get("TRANSACTIONS", None)
+        self.notification_text = TextsProvider.NOTIFICATION_TEXTS.get(
+            "TRANSACTIONS", None
+        )
         self.active_commodity_unit = None
         self.items_dialog = None
         self._models_map = {
             0: (self.transactions_model_in, TRANSFER_IN),
-            1: (self.transactions_model_out, TRANSFER_OUT)
+            1: (self.transactions_model_out, TRANSFER_OUT),
         }
 
     def create_transaction(self, transfer_type: str) -> None:
@@ -81,25 +86,36 @@ class TransactionsController:
         if create_data is None:
             return
         if transfer_type == TRANSFER_IN:
-            self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transfer_type)
+            self.items_dialog = TransactionItemsDialogIn(
+                self, create_data, self.transactions_widget, transfer_type
+            )
         if transfer_type == TRANSFER_OUT:
-            self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transfer_type)
+            self.items_dialog = TransactionItemsDialogOut(
+                self, create_data, self.transactions_widget, transfer_type
+            )
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
             model = self.items_dialog.transactions_items_widget.current_model
             if not TransactionsController._check_transaction_data(dialog_data, model):
-                MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
+                MessageBoxes.show_error(
+                    self.transactions_widget, "INVALID_DATA", "WARNING"
+                )
                 return
-            ok, error = TransactionsService.create_transaction(self.db_connection, dialog_data, model.get_data())
+            ok, error = TransactionsService.create_transaction(
+                self.db_connection, dialog_data, model.get_data()
+            )
             if not ok:
-                TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.create_transaction")
+                TransactionsController._handle_db_error(
+                    error, f"{self.__class__.__name__}.create_transaction"
+                )
                 return
             self._refresh_models_data()
             self.inventory_model.load_inventory_data()
             self.items_dialog = None
-            TransactionsController._notification_handler(self.notification_text, "ADD_TRANSACTION",
-                                                         "Transaction added")
+            TransactionsController._notification_handler(
+                self.notification_text, "ADD_TRANSACTION", "Transaction added"
+            )
 
     def update_transaction(self, proxy_index: QModelIndex) -> None:
         tab_context = self._get_tab_context()
@@ -111,12 +127,18 @@ class TransactionsController:
             return
         transaction = model.transaction_data[model_index.row()]
         transaction_id = transaction.transaction_id
-        items_data = TransactionItemsQueries.get_transaction_items(self.db_connection, transaction_id)
+        items_data = TransactionItemsQueries.get_transaction_items(
+            self.db_connection, transaction_id
+        )
         create_data = TransactionsController._transaction_to_dict(transaction)
         if transaction_type == TRANSFER_IN:
-            self.items_dialog = TransactionItemsDialogIn(self, create_data, self.transactions_widget, transaction_type)
+            self.items_dialog = TransactionItemsDialogIn(
+                self, create_data, self.transactions_widget, transaction_type
+            )
         if transaction_type == TRANSFER_OUT:
-            self.items_dialog = TransactionItemsDialogOut(self, create_data, self.transactions_widget, transaction_type)
+            self.items_dialog = TransactionItemsDialogOut(
+                self, create_data, self.transactions_widget, transaction_type
+            )
             self.active_commodity_unit = items_data[0].commodity_suffix
         item_model = self.items_dialog.transactions_items_widget.current_model
         if item_model is None:
@@ -127,22 +149,33 @@ class TransactionsController:
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
-            if not TransactionsController._check_transaction_data(dialog_data, item_model):
-                MessageBoxes.show_error(self.transactions_widget, "INVALID_DATA", "WARNING")
+            if not TransactionsController._check_transaction_data(
+                dialog_data, item_model
+            ):
+                MessageBoxes.show_error(
+                    self.transactions_widget, "INVALID_DATA", "WARNING"
+                )
                 return
-            ok, error, changed = TransactionsService.update_transaction(self.db_connection, transaction_id,
-                                                                        dialog_data, item_model.get_data(),
-                                                                        old_items_data)
+            ok, error, changed = TransactionsService.update_transaction(
+                self.db_connection,
+                transaction_id,
+                dialog_data,
+                item_model.get_data(),
+                old_items_data,
+            )
             if not ok:
-                TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.update_transaction")
+                TransactionsController._handle_db_error(
+                    error, f"{self.__class__.__name__}.update_transaction"
+                )
                 return
             if not changed:
                 self.items_dialog = None
                 return
             self._refresh_models_data()
             self.inventory_model.load_inventory_data()
-            TransactionsController._notification_handler(self.notification_text, "UPDATE_TRANSACTION",
-                                                         "Transaction updated")
+            TransactionsController._notification_handler(
+                self.notification_text, "UPDATE_TRANSACTION", "Transaction updated"
+            )
 
     def delete_transaction(self, proxy_index: QModelIndex) -> None:
         tab_context = self._get_tab_context()
@@ -153,26 +186,38 @@ class TransactionsController:
         if not model_index.isValid():
             return
         transaction = model.transaction_data[model_index.row()]
-        question = MessageBoxes.show_question(self.transactions_widget, "DELETE_TRANSACTION", transaction.customer_name)
+        question = MessageBoxes.show_question(
+            self.transactions_widget, "DELETE_TRANSACTION", transaction.customer_name
+        )
         if question:
             transaction_id = transaction.transaction_id
-            ok, error = TransactionsService.delete_transaction(self.db_connection, transaction_id,
-                                                               transaction.transaction_type)
+            ok, error = TransactionsService.delete_transaction(
+                self.db_connection, transaction_id, transaction.transaction_type
+            )
             if not ok:
-                TransactionsController._handle_db_error(error, f"{self.__class__.__name__}.delete_transaction")
+                TransactionsController._handle_db_error(
+                    error, f"{self.__class__.__name__}.delete_transaction"
+                )
                 return
             model.removeRow(model_index.row())
             self.inventory_model.load_inventory_data()
             self._update_counts()
             self.update_total_price()
-            TransactionsController._notification_handler(self.notification_text, "DELETE_TRANSACTION",
-                                                         "Transaction deleted")
+            TransactionsController._notification_handler(
+                self.notification_text, "DELETE_TRANSACTION", "Transaction deleted"
+            )
 
-    def create_transaction_data(self, transfer_type: str) -> dict[str, str | int | None] | None:
+    def create_transaction_data(
+        self, transfer_type: str
+    ) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:
-            MessageBoxes.show_error(self.transactions_widget, "NO_CUSTOMERS", "INFORMATION")
+            MessageBoxes.show_error(
+                self.transactions_widget, "NO_CUSTOMERS", "INFORMATION"
+            )
             return None
-        dialog = CreateTransactionDialog(self.transactions_widget, DataInit.customers_completer_model, transfer_type)
+        dialog = CreateTransactionDialog(
+            self.transactions_widget, DataInit.customers_completer_model, transfer_type
+        )
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         data = dialog.get_create_data()
@@ -183,12 +228,18 @@ class TransactionsController:
             return None
         return data
 
-    def create_category_commodity_data(self, transfer_type: str)-> dict[str, str | int | float] | None:
+    def create_category_commodity_data(
+        self, transfer_type: str
+    ) -> dict[str, str | int | float] | None:
         categories_count = CategoryQueries.get_total_count(self.db_connection)
         if categories_count == 0:
-            MessageBoxes.show_error(self.transactions_widget, "NO_CATEGORY", "INFORMATION")
+            MessageBoxes.show_error(
+                self.transactions_widget, "NO_CATEGORY", "INFORMATION"
+            )
             return None
-        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type)
+        dialog = CategoryCommodityDialog(
+            DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type
+        )
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         data = dialog.get_category_commodity_data()
@@ -200,12 +251,17 @@ class TransactionsController:
                 self.active_commodity_unit = unit
             elif self.active_commodity_unit != unit:
                 MessageBoxes.show_error(
-                    self.transactions_widget, "INVALID_COMMODITY_UNIT", "WARNING")
+                    self.transactions_widget, "INVALID_COMMODITY_UNIT", "WARNING"
+                )
                 return None
         return data
 
-    def update_category_commodity_data(self, item_data: dict[str, str | int | float], transfer_type: str) -> dict[str, str | int | float] | None:
-        dialog = CategoryCommodityDialog(DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type)
+    def update_category_commodity_data(
+        self, item_data: dict[str, str | int | float], transfer_type: str
+    ) -> dict[str, str | int | float] | None:
+        dialog = CategoryCommodityDialog(
+            DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type
+        )
         dialog.setup_update(item_data)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
@@ -219,7 +275,9 @@ class TransactionsController:
                 self.active_commodity_unit = unit
                 return data
             if self.active_commodity_unit != unit:
-                MessageBoxes.show_error(self.transactions_widget, "INVALID_COMMODITY_UNIT", "WARNING")
+                MessageBoxes.show_error(
+                    self.transactions_widget, "INVALID_COMMODITY_UNIT", "WARNING"
+                )
                 return None
         return data
 
@@ -236,8 +294,9 @@ class TransactionsController:
             return
         model, transaction_type = tab_context
         from_date, to_date = get_filter_range(key)
-        filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type,
-                                                                  from_date, to_date)
+        filtered_data = TransactionsQueries.get_basic_filter_data(
+            self.db_connection, transaction_type, from_date, to_date
+        )
         model.set_basic_filter(filtered_data)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
         self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
@@ -264,8 +323,9 @@ class TransactionsController:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
         from_date, to_date = get_filter_range(key)
         for model, transaction_type in self._models_map.values():
-            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type,
-                                                                      from_date, to_date)
+            filtered_data = TransactionsQueries.get_basic_filter_data(
+                self.db_connection, transaction_type, from_date, to_date
+            )
             model.set_basic_filter(filtered_data)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
         self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
@@ -281,7 +341,9 @@ class TransactionsController:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
         from_date, to_date = get_filter_range(key)
         for model, transfer_type in self._models_map.values():
-            filtered_data = TransactionsQueries.get_basic_filter_data(self.db_connection, transaction_type, from_date, to_date)
+            filtered_data = TransactionsQueries.get_basic_filter_data(
+                self.db_connection, transaction_type, from_date, to_date
+            )
             model.set_basic_filter(filtered_data)
         self._update_counts()
         self.update_total_price()
@@ -291,7 +353,9 @@ class TransactionsController:
         if current_tab == 0:
             key = self.transactions_widget.transactions_actions_widget.get_filter_key()
             from_date, to_date = get_filter_range(key)
-            total = TransactionsQueries.get_total_price(self.db_connection, from_date, to_date)
+            total = TransactionsQueries.get_total_price(
+                self.db_connection, from_date, to_date
+            )
             self.transactions_widget.set_price_text(total)
         self.transactions_widget.price_count_label.setVisible(current_tab == 0)
         self.transactions_widget.price_count_value.setVisible(current_tab == 0)
@@ -306,7 +370,9 @@ class TransactionsController:
             model = self.transactions_model_out
         self.transactions_widget.set_count_text(proxy.rowCount(), model.rowCount())
 
-    def _get_tab_context(self) -> tuple["TransactionsLoadModelIn | TransactionsLoadModelOut", str] | None:
+    def _get_tab_context(
+        self,
+    ) -> tuple["TransactionsLoadModelIn | TransactionsLoadModelOut", str] | None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
         tab_context = self._models_map.get(current_tab)
         if tab_context is None:
@@ -323,8 +389,10 @@ class TransactionsController:
         return True
 
     @staticmethod
-    def _check_transaction_data(dialog_data: dict[str, str | int | None],
-                                model: TransactionItemsModelIn | TransactionItemsModelOut) -> bool:
+    def _check_transaction_data(
+        dialog_data: dict[str, str | int | None],
+        model: TransactionItemsModelIn | TransactionItemsModelOut,
+    ) -> bool:
         if not TransactionsController._is_dialog_data_valid(dialog_data):
             return False
         if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
@@ -332,28 +400,34 @@ class TransactionsController:
         return bool(model.get_data())
 
     @staticmethod
-    def _transaction_to_dict(transaction: Transaction) -> dict[str, str | int | float | None]:
+    def _transaction_to_dict(
+        transaction: Transaction,
+    ) -> dict[str, str | int | float | None]:
         return {
             "paymentType": transaction.payment_type,
             "customerId": transaction.customer_id,
             "customer": transaction.customer_name,
             "documentNumber": transaction.customer_document_number,
             "address": transaction.customer_address,
-            "notes": transaction.transaction_notes
+            "notes": transaction.transaction_notes,
         }
 
     @staticmethod
-    def _load_items_to_model(model: TransactionItemsModelIn | TransactionItemsModelOut,
-                             items: list[TransactionItemDetail]) -> None:
+    def _load_items_to_model(
+        model: TransactionItemsModelIn | TransactionItemsModelOut,
+        items: list[TransactionItemDetail],
+    ) -> None:
         for item in items:
-            model.add_item({
-                "category": item.category_name,
-                "commodity": item.commodity_name,
-                "commoditySuffix": item.commodity_suffix,
-                "commodityId": item.commodity_id,
-                "unitCount": item.unit_count,
-                "pricePerUnit": item.price_per_unit,
-            })
+            model.add_item(
+                {
+                    "category": item.category_name,
+                    "commodity": item.commodity_name,
+                    "commoditySuffix": item.commodity_suffix,
+                    "commodityId": item.commodity_id,
+                    "unitCount": item.unit_count,
+                    "pricePerUnit": item.price_per_unit,
+                }
+            )
 
     @staticmethod
     def _is_dialog_data_valid(dialog_data: dict[str, str | int | None]) -> bool:
@@ -377,8 +451,12 @@ class TransactionsController:
         dialog.show_dialog("DATABASE_ERROR", False)
 
     @staticmethod
-    def _notification_handler(notification_texts: dict[str, str], key: str, default: str) -> None:
+    def _notification_handler(
+        notification_texts: dict[str, str], key: str, default: str
+    ) -> None:
         if notification_texts is None:
             return
-        notification = NotificationDialog(AppContext.MAIN_WINDOW, notification_texts.get(key, default))
+        notification = NotificationDialog(
+            AppContext.MAIN_WINDOW, notification_texts.get(key, default)
+        )
         notification.show_notification()

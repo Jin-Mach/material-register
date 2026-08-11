@@ -16,9 +16,11 @@ def open_file_in_default(file_path: Path | str) -> bool:
             subprocess.run(["xdg-open", file_path], check=True)
         return True
     except Exception as e:
-        ErrorHandler.handle_error(f"Open file {file_path} failed. Error: {e}",
-                                  "app", "warning")
+        ErrorHandler.handle_error(
+            f"Open file {file_path} failed. Error: {e}", "app", "warning"
+        )
         return False
+
 
 def open_file_in_explorer(file_path: Path | str) -> bool:
     try:
@@ -31,6 +33,7 @@ def open_file_in_explorer(file_path: Path | str) -> bool:
             subprocess.run(["xdg-open", os.path.dirname(path)], check=True)
         return True
     except Exception as e:
-        ErrorHandler.handle_error(f"Open file {file_path} failed. Error: {e}",
-                                  "app", "warning")
+        ErrorHandler.handle_error(
+            f"Open file {file_path} failed. Error: {e}", "app", "warning"
+        )
         return False

@@ -21,7 +21,7 @@ class ErrorDialog(QDialog):
         "PERMISSION_ERROR": "Application has no permission to write to disk.",
         "DOWNLOAD_FAILED": "Failed to download required application files.",
         "TEXTS_LOAD_FAILED": "Failed to load application text resources.",
-        "UNKNOWN_ERROR": "An unexpected error occurred."
+        "UNKNOWN_ERROR": "An unexpected error occurred.",
     }
 
     def __init__(self) -> None:
@@ -37,8 +37,13 @@ class ErrorDialog(QDialog):
         font = QFont()
         font.setBold(True)
         self.error_text_label.setFont(font)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Cancel | QDialogButtonBox.StandardButton.Close)
-        self.close_dialog_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Cancel
+            | QDialogButtonBox.StandardButton.Close
+        )
+        self.close_dialog_button = button_box.button(
+            QDialogButtonBox.StandardButton.Cancel
+        )
         self.close_dialog_button.setObjectName("closeDialogButton")
         self.close_app_button = button_box.button(QDialogButtonBox.StandardButton.Close)
         self.close_app_button.setObjectName("closeAppButton")
@@ -57,7 +62,9 @@ class ErrorDialog(QDialog):
         self.close_app_button.clicked.connect(ErrorDialog._close_app)
 
     def show_dialog(self, error_key: str, close_app: bool) -> None:
-        text = ErrorTexts.ERROR_TEXTS.get(error_key, self.DEFAULT_ERROR_TEXTS.get(error_key, "UNKNOWN_ERROR"))
+        text = ErrorTexts.ERROR_TEXTS.get(
+            error_key, self.DEFAULT_ERROR_TEXTS.get(error_key, "UNKNOWN_ERROR")
+        )
         self.error_text_label.setText(text)
         self.close_dialog_button.setVisible(not close_app)
         self.close_app_button.setVisible(close_app)

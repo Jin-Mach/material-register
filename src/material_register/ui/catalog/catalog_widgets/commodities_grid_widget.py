@@ -25,8 +25,11 @@ if TYPE_CHECKING:
 
 
 class CommoditiesGridWidget(QWidget):
-    def __init__(self, category_with_commodities_widget: "CategoryWithCommoditiesWidget",
-                 catalog_controller: "CatalogController") -> None:
+    def __init__(
+        self,
+        category_with_commodities_widget: "CategoryWithCommoditiesWidget",
+        catalog_controller: "CatalogController",
+    ) -> None:
         super().__init__(category_with_commodities_widget)
         self.category_with_commodities_widget = category_with_commodities_widget
         self.catalog_controller = catalog_controller
@@ -42,8 +45,12 @@ class CommoditiesGridWidget(QWidget):
         self.scroll_area = QScrollArea()
         self.scroll_area.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        )
+        self.scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
         container = QWidget()
         self.grid_layout = QGridLayout()
         self.grid_layout.setSpacing(10)
@@ -59,11 +66,13 @@ class CommoditiesGridWidget(QWidget):
         main_layout.addWidget(self.commodities_group_box)
         return main_layout
 
-    def _setup_texts(self)-> None:
+    def _setup_texts(self) -> None:
         widgets = [self.commodities_group_box, self.no_commodities_label]
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return

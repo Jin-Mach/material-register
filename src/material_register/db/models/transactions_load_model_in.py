@@ -44,16 +44,23 @@ class TransactionsLoadModelIn(QAbstractTableModel):
             if column == "total":
                 return float(transaction.total)
             parts_list = []
-            for part in (transaction.company_normalized, transaction.first_name_normalized,
-                         transaction.last_name_normalized, transaction.customer_document_number,
-                         transaction.address_normalized):
+            for part in (
+                transaction.company_normalized,
+                transaction.first_name_normalized,
+                transaction.last_name_normalized,
+                transaction.customer_document_number,
+                transaction.address_normalized,
+            ):
                 if part:
                     parts_list.append(part)
             return " ".join(parts_list).lower()
         return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole) -> Any:
-        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
+        if (
+            orientation == Qt.Orientation.Horizontal
+            and role == Qt.ItemDataRole.DisplayRole
+        ):
             return self.headers.get(section)
         return super().headerData(section, orientation, role)
 
@@ -73,13 +80,15 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         if parent is None:
             parent = QModelIndex()
         self.beginRemoveRows(parent, row, row + count - 1)
-        del self.transaction_data[row:row + count]
+        del self.transaction_data[row : row + count]
         self.endRemoveRows()
         return True
 
     def load_transactions_data(self) -> list[Transaction]:
         self.beginResetModel()
-        self.transaction_data = TransactionsLoadQueries.load_transaction_in(self.db_connection)
+        self.transaction_data = TransactionsLoadQueries.load_transaction_in(
+            self.db_connection
+        )
         self.endResetModel()
         self.total_count = len(self.transaction_data)
         return self.transaction_data

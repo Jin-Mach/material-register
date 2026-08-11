@@ -1,7 +1,5 @@
 DEFAULT_TEXTS = {
-    "MainWindow": {
-        "titleText": "Material Register"
-    },
+    "MainWindow": {"titleText": "Material Register"},
     "SidePanel": {
         "transactionsButtonText": "Transactions",
         "transactionsButtonTooltipText": "Displays the list of transactions",
@@ -14,16 +12,16 @@ DEFAULT_TEXTS = {
         "inventoryButtonText": "Inventory",
         "inventoryButtonTooltipText": "Displays stock status",
         "settingsButtonText": "Settings",
-        "settingsButtonTooltipText": "Displays application settings"
+        "settingsButtonTooltipText": "Displays application settings",
     },
     "TransactionsWidget": {
         "modelInSuffix": "CZK",
         "itemsCountLabelText": "Displayed:",
-        "priceSuffix": "CZK"
+        "priceSuffix": "CZK",
     },
     "TransactionsView": {
         "updateTransactionActionText": "Edit transaction",
-        "deleteTransactionActionText": "Delete transaction"
+        "deleteTransactionActionText": "Delete transaction",
     },
     "TransactionsActionsWidget": {
         "inTransactionButtonText": "Add purchase",
@@ -31,30 +29,21 @@ DEFAULT_TEXTS = {
         "outTransactionButtonText": "Add sale",
         "outTransactionButtonTooltipText": "Add a new sale transaction",
         "baseFilterComboboxItems": ["Today", "This week", "This month", "This year"],
-        "searchLineEditPlaceholderText": "Enter search text..."
+        "searchLineEditPlaceholderText": "Enter search text...",
     },
-    "TransactionsTabWidget": {
-        "inTabTitleText": "Purchase",
-        "outTabTitleText": "Sale"
-    },
+    "TransactionsTabWidget": {"inTabTitleText": "Purchase", "outTabTitleText": "Sale"},
     "CustomersActionsWidget": {
         "addCustomerButtonText": "Add customer",
         "addCustomerButtonTooltipText": "Add a new customer",
-        "searchLineEditPlaceholderText": "Enter search text..."
+        "searchLineEditPlaceholderText": "Enter search text...",
     },
-    "CustomersWidget": {
-        "countLabelText": "Displayed:"
-    },
+    "CustomersWidget": {"countLabelText": "Displayed:"},
     "CustomersView": {
         "updateCustomerActionText": "Edit record",
-        "activeCustomerActionText": "Activate/Deactivate customer"
+        "activeCustomerActionText": "Activate/Deactivate customer",
     },
-    "InventoryWidget": {
-        "countLabelText": "Displayed:"
-    },
-    "InventoryActionsWidget": {
-        "searchLineEditPlaceholderText": "Enter search text..."
-    },
+    "InventoryWidget": {"countLabelText": "Displayed:"},
+    "InventoryActionsWidget": {"searchLineEditPlaceholderText": "Enter search text..."},
     "PeriodExportWidget": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
@@ -88,22 +77,19 @@ DEFAULT_TEXTS = {
         "useLastOptionsCheckboxText": "Remember last settings",
         "saveLastOpeningBalanceCheckboxText": "Remember last balance",
         "exportButtonText": "Export",
-        "exportButtonTooltipText": "Exports data according to the selected parameters"
+        "exportButtonTooltipText": "Exports data according to the selected parameters",
     },
     "ErrorDialog": {
         "closeDialogButtonText": "Close",
         "closeDialogButtonTooltipText": "Close error dialog",
         "closeAppButtonText": "Exit",
-        "closeAppButtonTooltipText": "Exit application"
+        "closeAppButtonTooltipText": "Exit application",
     },
     "CustomerDialog": {
         "titleText": "Customer",
         "createdLabelText": "Created:",
         "subjectTypePlaceholderText": "Select customer type...",
-        "subjectTypeItems": [
-            "Individual",
-            "Company"
-        ],
+        "subjectTypeItems": ["Individual", "Company"],
         "companyLabelText": "Company:",
         "firstNameLabelText": "First name:",
         "lastNameLabelText": "Last name:",
@@ -115,7 +101,7 @@ DEFAULT_TEXTS = {
         "saveButtonText": "Save",
         "saveButtonTooltipText": "Saves customer",
         "closeButtonText": "Close",
-        "closeButtonTooltipText": "Closes dialog"
+        "closeButtonTooltipText": "Closes dialog",
     },
     "CategoryDialog": {
         "titleText": "Category",
@@ -125,7 +111,7 @@ DEFAULT_TEXTS = {
         "saveButtonText": "Save",
         "saveButtonTooltipText": "Saves category",
         "closeButtonText": "Close",
-        "closeButtonTooltipText": "Closes dialog"
+        "closeButtonTooltipText": "Closes dialog",
     },
     "CommodityDialog": {
         "titleText": "Item",
@@ -141,16 +127,16 @@ DEFAULT_TEXTS = {
         "saveButtonText": "Save",
         "saveButtonTooltipText": "Saves item",
         "closeButtonText": "Close",
-        "closeButtonTooltipText": "Closes dialog"
+        "closeButtonTooltipText": "Closes dialog",
     },
     "CatalogWidget": {
         "addCategoryButtonText": "Add category",
         "addCategoryButtonTooltipText": "Creates a new category",
-        "catalogTitleLabelText": "Item catalog"
+        "catalogTitleLabelText": "Item catalog",
     },
     "CatalogDefaultWidget": {
         "titleLabelText": "Item details",
-        "subtitleLabelText": "Select a category to display items"
+        "subtitleLabelText": "Select a category to display items",
     },
     "CategoryDetailWidget": {
         "categoryGroupBoxText": "Category",
@@ -158,11 +144,11 @@ DEFAULT_TEXTS = {
         "updateCategoryButtonText": "Edit category",
         "updateCategoryButtonTooltipText": "Edits selected category",
         "addCommodityButtonText": "Add item",
-        "addCommodityButtonTooltipText": "Creates a new item in the selected category"
+        "addCommodityButtonTooltipText": "Creates a new item in the selected category",
     },
     "CommoditiesGridWidget": {
         "commoditiesGroupBoxText": "Category items",
-        "noCommoditiesLabelText": "There are no items in this category"
+        "noCommoditiesLabelText": "There are no items in this category",
     },
     "CommodityCardWidget": {
         "unitLabelText": "Unit:",
@@ -170,7 +156,7 @@ DEFAULT_TEXTS = {
         "activeLabelText": "Active:",
         "notesLabelText": "Notes",
         "updateCommodityButtonText": "Edit item",
-        "updateCommodityButtonTooltipText": "Edits selected item"
+        "updateCommodityButtonTooltipText": "Edits selected item",
     },
     "CreateTransactionDialog": {
         "titleText": "New transaction",
@@ -182,7 +168,7 @@ DEFAULT_TEXTS = {
         "continueTransactionButtonText": "Create transaction",
         "continueTransactionButtonTooltipText": "Creates a new transaction for selected customer",
         "cancelTransactionButtonText": "Cancel",
-        "cancelTransactionButtonTooltipText": "Closes dialog"
+        "cancelTransactionButtonTooltipText": "Closes dialog",
     },
     "TransactionItemsDialogIn": {
         "titleText": "Purchase",
@@ -191,7 +177,7 @@ DEFAULT_TEXTS = {
         "cancelTransactionButtonText": "Cancel purchase",
         "cancelTransactionButtonTooltipText": "Cancels purchase and closes dialog",
         "CASH": "Cash",
-        "TRANSFER": "Bank transfer"
+        "TRANSFER": "Bank transfer",
     },
     "TransactionItemsDialogOut": {
         "titleText": "Sale",
@@ -200,7 +186,7 @@ DEFAULT_TEXTS = {
         "cancelTransactionButtonText": "Cancel sale",
         "cancelTransactionButtonTooltipText": "Cancels sale and closes dialog",
         "CASH": "Cash",
-        "TRANSFER": "Bank transfer"
+        "TRANSFER": "Bank transfer",
     },
     "TransactionInfoWidget": {
         "customerNameLabelText": "Customer:",
@@ -208,7 +194,7 @@ DEFAULT_TEXTS = {
         "addressLabelText": "Address:",
         "updateTransactionInfoButtonText": "Edit",
         "updateTransactionInfoButtonTooltipText": "Opens dialog to re-enter customer",
-        "notesCountLabelText": "Character count:"
+        "notesCountLabelText": "Character count:",
     },
     "TransactionsItemsWidget": {
         "addItemButtonText": "Add item",
@@ -218,7 +204,7 @@ DEFAULT_TEXTS = {
         "deleteButtonText": "Delete item",
         "deleteButtonTooltipText": "Deletes selected item from list",
         "totalPriceLabelText": "Total:",
-        "priceSuffix": "CZK"
+        "priceSuffix": "CZK",
     },
     "CategoryCommodityDialog": {
         "titleText": "New item",
@@ -231,11 +217,9 @@ DEFAULT_TEXTS = {
         "addButtonText": "Add item",
         "addButtonTooltipText": "Adds item to transaction",
         "cancelButtonText": "Cancel",
-        "cancelButtonTooltipText": "Closes dialog"
+        "cancelButtonTooltipText": "Closes dialog",
     },
-    "SettingsWidget": {
-        "periodExportTabTitle": "Records"
-    },
+    "SettingsWidget": {"periodExportTabTitle": "Records"},
     "PeriodExportSettings": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
@@ -256,6 +240,6 @@ DEFAULT_TEXTS = {
         "restoreButtonText": "Restore default",
         "restoreButtonTooltipText": "Restores default export values",
         "saveButtonText": "Save",
-        "saveButtonTooltipText": "Saves current export settings"
-    }
+        "saveButtonTooltipText": "Saves current export settings",
+    },
 }

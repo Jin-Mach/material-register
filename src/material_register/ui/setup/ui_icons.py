@@ -12,4 +12,6 @@ class UiIcons:
     def setup_init(cls, resources_path: Path) -> None:
         cls.IMAGES_PATH = resources_path / "images"
         cls.ACTIVE_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "activeIcon.png"))
-        cls.INACTIVE_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "inactiveIcon.png"))
+        cls.INACTIVE_ICON = QIcon(
+            str(cls.IMAGES_PATH / "ui_icons" / "inactiveIcon.png")
+        )

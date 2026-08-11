@@ -30,6 +30,7 @@ def _create_test_db() -> QSqlDatabase:
     """)
     return db
 
+
 def _add_customer() -> Customer:
     customer = Customer(
         company="Test s.r.o.",
@@ -38,19 +39,20 @@ def _add_customer() -> Customer:
     )
     return customer
 
+
 def _update_customer() -> Customer:
     customer = Customer(
-        company=" New Test s.r.o.",
-        document_number=" New 123",
-        address=" New City"
+        company=" New Test s.r.o.", document_number=" New 123", address=" New City"
     )
     return customer
+
 
 def test_add_customer() -> None:
     db = _create_test_db()
     model = CustomersModel(db)
     ok = model.add_customer(_add_customer())
     assert ok
+
 
 def test_update_customer() -> None:
     db = _create_test_db()
@@ -67,6 +69,7 @@ def test_update_customer() -> None:
     assert new_customer.company == record.value("company")
     assert new_customer.document_number == model.data(model.index(row, document_number))
     assert new_customer.address == model.data(model.index(row, address))
+
 
 def test_deactivate_customer() -> None:
     db = _create_test_db()

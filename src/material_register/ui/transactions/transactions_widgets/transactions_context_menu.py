@@ -14,7 +14,11 @@ if TYPE_CHECKING:
 
 
 class TransactionsContextMenu(QMenu):
-    def __init__(self, transactions_view: "TransactionsView", transactions_controller: "TransactionsController") -> None:
+    def __init__(
+        self,
+        transactions_view: "TransactionsView",
+        transactions_controller: "TransactionsController",
+    ) -> None:
         super().__init__(transactions_view)
         self.transactions_controller = transactions_controller
         self._create_ui()
@@ -41,7 +45,7 @@ class TransactionsContextMenu(QMenu):
         self.delete_transaction_action.triggered.connect(self._delete_transaction)
 
     def set_customer_index(self, index: QModelIndex) -> None:
-        self.transaction_index= index
+        self.transaction_index = index
 
     def _update_transaction(self) -> None:
         if self.transaction_index is None:

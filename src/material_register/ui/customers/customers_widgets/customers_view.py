@@ -35,11 +35,15 @@ class CustomersView(QTableView):
         if not isinstance(model, CustomersModel):
             return
         if not HeadersTexts.set_headers_text(self, model):
-            ErrorHandler.handle_error(f"Headers text load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = error
         self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not self.menu_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = error
             self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
         self._setup_columns(model)
@@ -74,7 +78,9 @@ class CustomersView(QTableView):
         for col in range(model.columnCount()):
             if col in (address_column, active_column):
                 continue
-            self.setColumnWidth(col, self.columnWidth(col) + CUSTOMERS_HORIZONTAL_PADDING)
+            self.setColumnWidth(
+                col, self.columnWidth(col) + CUSTOMERS_HORIZONTAL_PADDING
+            )
 
     def _setup_behavior(self) -> None:
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
@@ -95,7 +101,9 @@ class CustomersView(QTableView):
         menu = CustomersContextMenu(self, self.customers_widget.customers_controller)
         menu.set_customer_index(index)
         if not self.menu_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = True
         menu.set_ui_texts(self.menu_texts)
         menu.exec(self.mapToGlobal(position))

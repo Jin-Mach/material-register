@@ -11,6 +11,7 @@ def connection() -> QSqlDatabase:
     conn.open()
     return conn
 
+
 @pytest.fixture
 def schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -24,6 +25,7 @@ def schema(connection) -> None:
             notes TEXT
         )
     """)
+
 
 @pytest.fixture
 def filter_schema(connection):
@@ -67,6 +69,7 @@ def filter_schema(connection):
         )
     """)
 
+
 def test_insert_into_transactions(connection, schema) -> None:
     ok, error, transaction_id = TransactionsQueries.insert_into_transactions(
         connection, "IN", 1, "CASH", "notes"
@@ -81,6 +84,7 @@ def test_insert_into_transactions(connection, schema) -> None:
     assert query.value(1) == 1
     assert query.value(2) == "CASH"
     assert query.value(3) == "notes"
+
 
 def test_delete_transaction(connection, schema) -> None:
     query = QSqlQuery(connection)
@@ -116,6 +120,7 @@ def test_delete_transaction(connection, schema) -> None:
     assert query.next()
     assert query.value(0) == id_to_check
 
+
 def test_update_transaction(connection, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
@@ -129,8 +134,9 @@ def test_update_transaction(connection, schema) -> None:
     assert query.next()
     transaction_id = query.value(0)
 
-    ok, error = TransactionsQueries.update_transaction(connection, transaction_id, "OUT", 2,
-                                                       "TRANSFER", "updated_notes")
+    ok, error = TransactionsQueries.update_transaction(
+        connection, transaction_id, "OUT", 2, "TRANSFER", "updated_notes"
+    )
     assert ok is True
     assert error == ""
     query.prepare("""
@@ -145,6 +151,7 @@ def test_update_transaction(connection, schema) -> None:
     assert query.value(1) == 2
     assert query.value(2) == "TRANSFER"
     assert query.value(3) == "updated_notes"
+
 
 def test_get_basic_filter_data(connection, filter_schema):
     query = QSqlQuery(connection)
@@ -204,12 +211,14 @@ def test_get_basic_filter_data(connection, filter_schema):
         (2, 1, 10, 5)
     """)
     result = TransactionsQueries.get_basic_filter_data(
-        connection, "IN", "2000-01-01 00:00:00", "2100-01-01 00:00:00")
+        connection, "IN", "2000-01-01 00:00:00", "2100-01-01 00:00:00"
+    )
     assert isinstance(result, list)
     assert len(result) == 2
     row = result[0]
     assert row.customer_id in (1, 2)
     assert row.transaction_type == "IN"
+
 
 def test_get_total_price(connection, filter_schema) -> None:
     query = QSqlQuery(connection)
@@ -236,6 +245,7 @@ def test_get_total_price(connection, filter_schema) -> None:
         (2, 1, 3, 5)     -- 15
     """)
     total = TransactionsQueries.get_total_price(
-        connection, "2025-01-01 00:00:00", "2025-12-31 23:59:59")
+        connection, "2025-01-01 00:00:00", "2025-12-31 23:59:59"
+    )
     assert isinstance(total, float)
     assert total == 35.0

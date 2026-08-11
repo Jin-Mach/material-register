@@ -12,6 +12,7 @@ def connection() -> QSqlDatabase:
     conn.open()
     return conn
 
+
 @pytest.fixture
 def schema(connection) -> None:
     query = QSqlQuery(connection)
@@ -27,20 +28,17 @@ def schema(connection) -> None:
         )
     """)
 
+
 def test_create_commodity(connection, schema) -> None:
     ok, error = CommoditiesQueries.create_commodity(
-        connection,
-        "A",
-        1,
-        "kg",
-        10.0,
-        "note",
-        1
+        connection, "A", 1, "kg", 10.0, "note", 1
     )
     assert ok is True
     assert error == ""
     query = QSqlQuery(connection)
-    query.exec("SELECT name, category_id, unit, default_price, notes, active FROM commodities")
+    query.exec(
+        "SELECT name, category_id, unit, default_price, notes, active FROM commodities"
+    )
     assert query.next()
     assert query.value(0) == "A"
     assert query.value(1) == 1
@@ -49,23 +47,15 @@ def test_create_commodity(connection, schema) -> None:
     assert query.value(4) == "note"
     assert query.value(5) == 1
 
+
 def test_update_commodity(connection, schema) -> None:
-    CommoditiesQueries.create_commodity(
-        connection, "old", 1, "kg", 5.0, "note", 1
-    )
+    CommoditiesQueries.create_commodity(connection, "old", 1, "kg", 5.0, "note", 1)
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM commodities WHERE name='old'")
     query.next()
     commodity_id = query.value(0)
     ok, error = CommoditiesQueries.update_commodity(
-        connection,
-        commodity_id,
-        "new",
-        2,
-        "pcs",
-        20.0,
-        "updated",
-        0
+        connection, commodity_id, "new", 2, "pcs", 20.0, "updated", 0
     )
     assert ok is True
     assert error == ""
@@ -85,10 +75,9 @@ def test_update_commodity(connection, schema) -> None:
     assert query.value(4) == "updated"
     assert query.value(5) == 0
 
+
 def test_change_active(connection, schema) -> None:
-    CommoditiesQueries.create_commodity(
-        connection, "A", 1, "kg", 10.0, "note", 1
-    )
+    CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "note", 1)
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM commodities WHERE name='A'")
     query.next()
@@ -102,15 +91,33 @@ def test_change_active(connection, schema) -> None:
     assert query.next()
     assert query.value(0) == 0
 
+
 def test_get_commodities(connection, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "n1", 1)
     CommoditiesQueries.create_commodity(connection, "B", 2, "pcs", 20.0, "n2", 0)
     data = CommoditiesQueries.get_commodities(connection)
     assert len(data) == 2
     assert data == [
-        Commodity(id=1, name="A", category_id=1, unit="kg", default_price=10.0, notes="n1", active=1),
-        Commodity(id=2, name="B", category_id=2, unit="pcs", default_price=20.0, notes="n2", active=0),
+        Commodity(
+            id=1,
+            name="A",
+            category_id=1,
+            unit="kg",
+            default_price=10.0,
+            notes="n1",
+            active=1,
+        ),
+        Commodity(
+            id=2,
+            name="B",
+            category_id=2,
+            unit="pcs",
+            default_price=20.0,
+            notes="n2",
+            active=0,
+        ),
     ]
+
 
 def test_commodity_exists(connection, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "note", 1)

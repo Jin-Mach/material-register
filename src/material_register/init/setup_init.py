@@ -14,7 +14,6 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 
 class SetupInit:
-
     @classmethod
     def init_setup(cls) -> tuple[bool, str]:
         try:
@@ -25,14 +24,25 @@ class SetupInit:
                     return False, "CONNECTION_ERROR"
                 if not state["writable"]:
                     return False, "PERMISSION_ERROR"
-                if not DownloadProvider.download_files(invalid_files, PathsProvider.resources):
+                if not DownloadProvider.download_files(
+                    invalid_files, PathsProvider.resources
+                ):
                     return False, "DOWNLOAD_FAILED"
             SettingsProvider.provider_init(PathsProvider.resources)
             if not SettingsProvider.SETTINGS:
                 return False, "CONFIG_LOAD_FAILED"
             UiSettings.setup_init(SettingsProvider.SETTINGS)
-            TextsProvider.provider_init(LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources)
-            if not all([TextsProvider.UI_TEXTS, TextsProvider.ERROR_TEXTS, TextsProvider.HEADERS_TEXTS, TextsProvider.CONFIRM_TEXTS]):
+            TextsProvider.provider_init(
+                LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources
+            )
+            if not all(
+                [
+                    TextsProvider.UI_TEXTS,
+                    TextsProvider.ERROR_TEXTS,
+                    TextsProvider.HEADERS_TEXTS,
+                    TextsProvider.CONFIRM_TEXTS,
+                ]
+            ):
                 return False, "TEXTS_LOAD_FAILED"
             UiTexts.setup_init(TextsProvider.UI_TEXTS)
             HeadersTexts.setup_init(TextsProvider.HEADERS_TEXTS)

@@ -9,6 +9,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widget import CustomersWidget
 
+
 class CustomersActionsWidget(QWidget):
     def __init__(self, customer_widget: "CustomersWidget") -> None:
         super().__init__(customer_widget)
@@ -35,7 +36,9 @@ class CustomersActionsWidget(QWidget):
         widgets = [self.add_customer_button, self.search_line_edit]
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
@@ -47,7 +50,9 @@ class CustomersActionsWidget(QWidget):
         self.filter_timer.start()
 
     def _apply_filter(self) -> None:
-        self.customer_widget.customers_controller.filter_customers(self.search_line_edit.text().strip())
+        self.customer_widget.customers_controller.filter_customers(
+            self.search_line_edit.text().strip()
+        )
 
     def _apply_timer(self) -> None:
         self.filter_timer = QTimer(self)

@@ -16,7 +16,11 @@ class PeriodExportWorker(QObject):
     export_started = Signal()
     error = Signal(str)
 
-    def __init__(self, export_settings: dict[str, Path | str | float | bool], export_texts: dict[str, dict[str, str]]) -> None:
+    def __init__(
+        self,
+        export_settings: dict[str, Path | str | float | bool],
+        export_texts: dict[str, dict[str, str]],
+    ) -> None:
         super().__init__()
         self.export_settings = export_settings
         self.export_texts = export_texts
@@ -28,15 +32,21 @@ class PeriodExportWorker(QObject):
             export_path = self.export_settings["export_path"]
             from_date = self.export_settings["from_date"]
             to_date = self.export_settings["to_date"]
-            ok, error, self.db_connection = DbInit.thread_connection("export_connection")
+            ok, error, self.db_connection = DbInit.thread_connection(
+                "export_connection"
+            )
             if not ok:
                 self.error.emit(error)
                 return
-            ok, error, in_data = PeriodExportQueries.load_export_data_in(self.db_connection, from_date, to_date)
+            ok, error, in_data = PeriodExportQueries.load_export_data_in(
+                self.db_connection, from_date, to_date
+            )
             if not ok:
                 self.error.emit(error)
                 return
-            ok, error, out_data = PeriodExportQueries.load_export_data_out(self.db_connection, from_date, to_date)
+            ok, error, out_data = PeriodExportQueries.load_export_data_out(
+                self.db_connection, from_date, to_date
+            )
             if not ok:
                 self.error.emit(error)
                 return
@@ -44,7 +54,9 @@ class PeriodExportWorker(QObject):
                 self.no_export_data.emit("NO_DATA")
                 return
             self.export_started.emit()
-            workbook, last_balance = PeriodWorkbook.create_workbook(self.export_settings, self.export_texts, in_data, out_data)
+            workbook, last_balance = PeriodWorkbook.create_workbook(
+                self.export_settings, self.export_texts, in_data, out_data
+            )
             if not is_disk_writable(export_path.parent):
                 self.error.emit(f"Export path {export_path} is not writable")
                 return

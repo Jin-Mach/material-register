@@ -13,6 +13,7 @@ def connection() -> QSqlDatabase:
     create_db_tables(conn)
     return conn
 
+
 @pytest.fixture
 def empty_connection() -> QSqlDatabase:
     conn = QSqlDatabase.addDatabase("QSQLITE", "empty_schema_test")
@@ -20,8 +21,10 @@ def empty_connection() -> QSqlDatabase:
     conn.open()
     return conn
 
+
 def test_schema_is_valid(connection: QSqlDatabase) -> None:
     assert is_schema_valid(connection) == (True, "")
+
 
 def test_schema_missing_column(empty_connection: QSqlDatabase) -> None:
     query = QSqlQuery(empty_connection)
@@ -34,6 +37,7 @@ def test_schema_missing_column(empty_connection: QSqlDatabase) -> None:
     assert valid is False
     assert "Schema mismatch in table 'customers'" in error
     assert "Missing:" in error
+
 
 def test_schema_extra_column(empty_connection: QSqlDatabase) -> None:
     query = QSqlQuery(empty_connection)

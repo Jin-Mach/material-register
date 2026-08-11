@@ -16,9 +16,11 @@ class FakeLogger:
     def critical(self, msg, exc_info=None):
         self.calls.append(("critical", msg, bool(exc_info)))
 
+
 @pytest.fixture
 def fake_logger():
     return FakeLogger()
+
 
 @pytest.mark.parametrize(
     "level, expected",
@@ -33,6 +35,7 @@ def test_handle_error(level, expected, fake_logger):
     ErrorHandler.loggers_map = {"app": fake_logger}
     ErrorHandler.handle_error("fail", "app", level)
     assert fake_logger.calls[0] == expected
+
 
 def test_handle_error_exception(fake_logger):
     ErrorHandler.loggers_map = {"app": fake_logger}

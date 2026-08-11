@@ -13,6 +13,7 @@ def reset_headers():
     yield
     HeadersTexts.HEADERS_TEXTS = {}
 
+
 @pytest.fixture
 def sql_model(qtbot):
     db = QSqlDatabase.addDatabase("QSQLITE", "test_conn")
@@ -26,31 +27,25 @@ def sql_model(qtbot):
     model.select()
     return model
 
+
 def test_set_headers_text_success(qtbot, sql_model):
     view = QTableView()
     qtbot.addWidget(view)
-    HeadersTexts.setup_init({
-        "QTableView": {
-            "id": "ID Column",
-            "name": "Name Column"
-        }
-    })
+    HeadersTexts.setup_init({"QTableView": {"id": "ID Column", "name": "Name Column"}})
     result = HeadersTexts.set_headers_text(view, sql_model)
     assert result is True
     assert sql_model.headerData(0, Qt.Orientation.Horizontal) == "ID Column"
     assert sql_model.headerData(1, Qt.Orientation.Horizontal) == "Name Column"
 
+
 def test_set_headers_text_partial_mapping(qtbot, sql_model):
     view = QTableView()
     qtbot.addWidget(view)
-    HeadersTexts.setup_init({
-        "QTableView": {
-            "name": "Only Name"
-        }
-    })
+    HeadersTexts.setup_init({"QTableView": {"name": "Only Name"}})
     result = HeadersTexts.set_headers_text(view, sql_model)
     assert result is True
     assert sql_model.headerData(1, Qt.Orientation.Horizontal) == "Only Name"
+
 
 def test_set_headers_text_no_config(qtbot, sql_model):
     view = QTableView()
@@ -59,29 +54,29 @@ def test_set_headers_text_no_config(qtbot, sql_model):
     result = HeadersTexts.set_headers_text(view, sql_model)
     assert result is False
 
+
 def test_set_headers_text_invalid_key(qtbot, sql_model):
     view = QTableView()
     qtbot.addWidget(view)
-    HeadersTexts.setup_init({
-        "QTableView": {
-            "wrong_column": "X"
-        }
-    })
+    HeadersTexts.setup_init({"QTableView": {"wrong_column": "X"}})
     result = HeadersTexts.set_headers_text(view, sql_model)
     assert result is True
+
 
 def test_set_headers_text_standard_item_model(qtbot):
     view = QTableView()
     qtbot.addWidget(view)
     model = QStandardItemModel()
     model.setColumnCount(3)
-    HeadersTexts.setup_init({
-        "QTableView": {
-            "column1": "First Column",
-            "column2": "Second Column",
-            "column3": "Third Column"
+    HeadersTexts.setup_init(
+        {
+            "QTableView": {
+                "column1": "First Column",
+                "column2": "Second Column",
+                "column3": "Third Column",
+            }
         }
-    })
+    )
     result = HeadersTexts.set_headers_text(view, model)
     assert result is True
     assert model.headerData(0, Qt.Orientation.Horizontal) == "First Column"

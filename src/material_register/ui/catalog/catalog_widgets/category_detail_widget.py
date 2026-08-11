@@ -24,7 +24,9 @@ if TYPE_CHECKING:
 
 
 class CategoryDetailWidget(QWidget):
-    def __init__(self, category_with_commodities_widget: "CategoryWithCommoditiesWidget") -> None:
+    def __init__(
+        self, category_with_commodities_widget: "CategoryWithCommoditiesWidget"
+    ) -> None:
         super().__init__(category_with_commodities_widget)
         self.category_with_commodities_widget = category_with_commodities_widget
         self.setLayout(self._create_ui())
@@ -62,11 +64,18 @@ class CategoryDetailWidget(QWidget):
         main_layout.addWidget(self.category_group_box)
         return main_layout
 
-    def _setup_texts(self)-> None:
-        widgets = [self.category_group_box, self.notes_label, self.update_category_button, self.add_commodity_button]
+    def _setup_texts(self) -> None:
+        widgets = [
+            self.category_group_box,
+            self.notes_label,
+            self.update_category_button,
+            self.add_commodity_button,
+        ]
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return

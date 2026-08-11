@@ -19,5 +19,6 @@ def run_app() -> None:
     init_controller.start_thread()
     sys.exit(app.exec())
 
+
 if __name__ == "__main__":
     run_app()

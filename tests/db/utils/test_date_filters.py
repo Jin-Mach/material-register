@@ -24,6 +24,7 @@ def test_filter_range_start_dates(monkeypatch, key: str, expected_start: str) ->
     assert start == expected_start
     assert end == "2026-07-11 15:30:45"
 
+
 def test_week_filter_is_monday_to_current_day(monkeypatch) -> None:
     fixed_now = datetime(2026, 7, 11, 15, 30, 45, tzinfo=UTC)
     monkeypatch.setattr(
@@ -34,6 +35,7 @@ def test_week_filter_is_monday_to_current_day(monkeypatch) -> None:
     assert start == "2026-07-06 00:00:00"
     assert end == "2026-07-11 15:30:45"
 
+
 @pytest.mark.parametrize(
     "fixed_date, expected_start",
     [
@@ -43,7 +45,9 @@ def test_week_filter_is_monday_to_current_day(monkeypatch) -> None:
         (datetime(2026, 12, 31, 12, 0, tzinfo=UTC), "2026-12-01 00:00:00"),
     ],
 )
-def test_month_filter_starts_first_day(monkeypatch, fixed_date: datetime, expected_start: str) -> None:
+def test_month_filter_starts_first_day(
+    monkeypatch, fixed_date: datetime, expected_start: str
+) -> None:
     monkeypatch.setattr(
         "material_register.utils.date_filters._now",
         lambda: fixed_date,
@@ -51,6 +55,7 @@ def test_month_filter_starts_first_day(monkeypatch, fixed_date: datetime, expect
     start, end = get_filter_range("month")
     assert start == expected_start
     assert end == fixed_date.strftime("%Y-%m-%d %H:%M:%S")
+
 
 @pytest.mark.parametrize(
     "fixed_date",
@@ -68,6 +73,7 @@ def test_year_filter_starts_first_january(monkeypatch, fixed_date: datetime) -> 
     start, end = get_filter_range("year")
     assert start == "2026-01-01 00:00:00"
     assert end == fixed_date.strftime("%Y-%m-%d %H:%M:%S")
+
 
 def test_invalid_filter_returns_none(monkeypatch) -> None:
     fixed_now = datetime(2026, 7, 11, 15, 30, 45, tzinfo=UTC)

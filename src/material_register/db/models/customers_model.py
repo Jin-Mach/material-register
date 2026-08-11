@@ -30,7 +30,9 @@ class CustomersModel(BaseSqlTableModel):
             return super().data(index, role)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
-        if role == Qt.ItemDataRole.DecorationRole and column == self.fieldIndex("active"):
+        if role == Qt.ItemDataRole.DecorationRole and column == self.fieldIndex(
+            "active"
+        ):
             record = self.record(index.row())
             if record.value("active") == 1:
                 return UiIcons.ACTIVE_ICON
@@ -112,7 +114,9 @@ class CustomersModel(BaseSqlTableModel):
             address_normalized=record.value("address_normalized"),
         )
 
-    def document_exists(self, document_number: str, ignored_id: int | None = None) -> bool:
+    def document_exists(
+        self, document_number: str, ignored_id: int | None = None
+    ) -> bool:
         query = QSqlQuery(self.database)
         sql = "SELECT 1 FROM customers WHERE document_number = ?"
         if ignored_id is not None:

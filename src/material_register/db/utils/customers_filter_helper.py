@@ -2,7 +2,6 @@ from material_register.db.config.model_constants import NORMALIZED_COLUMNS
 
 
 class CustomersFilterHelper:
-
     @staticmethod
     def get_filter(text: str) -> str:
         text = CustomersFilterHelper.escape(text)

@@ -25,7 +25,9 @@ class CustomersController:
     def __init__(self, customers_widget: "CustomersWidget") -> None:
         self.customers_model = DataInit.customers_model
         self.customers_widget = customers_widget
-        self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("CUSTOMERS", None)
+        self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get(
+            "CUSTOMERS", None
+        )
 
     def add_customer(self) -> None:
         dialog = CustomerDialog(self.customers_widget)
@@ -36,19 +38,29 @@ class CustomersController:
                 return
             CustomersController._normalize_customer(customer)
             if not self.customers_model.add_customer(customer):
-                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.add_customers")
+                CustomersController._handle_db_error(
+                    self.customers_model, f"{self.__class__.__name__}.add_customers"
+                )
                 return
             CustomersController._refresh_cache()
             self.update_counts()
-            CustomersController._notification_handler(self.notification_texts, "ADD_CUSTOMER", "Customer added")
+            CustomersController._notification_handler(
+                self.notification_texts, "ADD_CUSTOMER", "Customer added"
+            )
 
     def update_customer(self, customer_index: QModelIndex) -> None:
         customer_id = CustomersController._get_id_from_index(customer_index)
         if customer_id == -1:
-            ErrorHandler.handle_error(f"Invalid customer selection index: {self.__class__.__name__}", "ui", "debug")
+            ErrorHandler.handle_error(
+                f"Invalid customer selection index: {self.__class__.__name__}",
+                "ui",
+                "debug",
+            )
             return
         customer_data = self.customers_model.get_customer_by_id(customer_id)
-        dialog = CustomerDialog(self.customers_widget, mode="UPDATE", customer_data=customer_data)
+        dialog = CustomerDialog(
+            self.customers_widget, mode="UPDATE", customer_data=customer_data
+        )
         if dialog.exec() == QDialog.DialogCode.Accepted:
             customer = dialog.get_customer_data()
             if customer is None:
@@ -56,10 +68,14 @@ class CustomersController:
                 return
             CustomersController._normalize_customer(customer)
             if not self.customers_model.update_customer(customer_id, customer):
-                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.update_customers")
+                CustomersController._handle_db_error(
+                    self.customers_model, f"{self.__class__.__name__}.update_customers"
+                )
                 return
             CustomersController._refresh_cache()
-            CustomersController._notification_handler(self.notification_texts, "UPDATE_CUSTOMER", "Record updated")
+            CustomersController._notification_handler(
+                self.notification_texts, "UPDATE_CUSTOMER", "Record updated"
+            )
 
     def change_customer_active(self, customer_index: QModelIndex) -> None:
         customer_id = CustomersController._get_id_from_index(customer_index)
@@ -67,13 +83,22 @@ class CustomersController:
             return
         customer_data = self.customers_model.get_customer_by_id(customer_id)
         customer_name = CustomersController._handle_customer_name(customer_data)
-        question = MessageBoxes.show_question(self.customers_widget, "ACTIVE", customer_name)
+        question = MessageBoxes.show_question(
+            self.customers_widget, "ACTIVE", customer_name
+        )
         if question:
-            if not self.customers_model.set_active(customer_id, not customer_data.active):
-                CustomersController._handle_db_error(self.customers_model, f"{self.__class__.__name__}.change_customer_active")
+            if not self.customers_model.set_active(
+                customer_id, not customer_data.active
+            ):
+                CustomersController._handle_db_error(
+                    self.customers_model,
+                    f"{self.__class__.__name__}.change_customer_active",
+                )
                 return
             CustomersController._refresh_cache()
-            CustomersController._notification_handler(self.notification_texts, "CHANGE_ACTIVE", "Status changed")
+            CustomersController._notification_handler(
+                self.notification_texts, "CHANGE_ACTIVE", "Status changed"
+            )
 
     def filter_customers(self, search_text: str) -> None:
         normalized_text = normalize_text(search_text)
@@ -131,8 +156,12 @@ class CustomersController:
         return customer.company
 
     @staticmethod
-    def _notification_handler(notification_texts: dict[str, str], key: str, default: str) -> None:
+    def _notification_handler(
+        notification_texts: dict[str, str], key: str, default: str
+    ) -> None:
         if notification_texts is None:
             return
-        notification = NotificationDialog(AppContext.MAIN_WINDOW, notification_texts.get(key, default))
+        notification = NotificationDialog(
+            AppContext.MAIN_WINDOW, notification_texts.get(key, default)
+        )
         notification.show_notification()

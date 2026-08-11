@@ -25,7 +25,13 @@ class StackedWidget(QStackedWidget):
         self.init_setup()
 
     def init_setup(self) -> None:
-        widgets = [self.transactions_widget, self.inventory_widget, self.period_export_widget, self.customers_widget,
-                   self.catalog_widget, self.settings_widget]
+        widgets = [
+            self.transactions_widget,
+            self.inventory_widget,
+            self.period_export_widget,
+            self.customers_widget,
+            self.catalog_widget,
+            self.settings_widget,
+        ]
         for widget in widgets:
             self.addWidget(widget)

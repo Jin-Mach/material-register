@@ -19,7 +19,11 @@ if TYPE_CHECKING:
 
 
 class CategoryWithCommoditiesWidget(QWidget):
-    def __init__(self, catalog_details_widget: "CatalogDetailsWidget", catalog_controller: "CatalogController") -> None:
+    def __init__(
+        self,
+        catalog_details_widget: "CatalogDetailsWidget",
+        catalog_controller: "CatalogController",
+    ) -> None:
         super().__init__(catalog_details_widget)
         self.catalog_controller = catalog_controller
         self.setLayout(self._create_ui())
@@ -27,7 +31,9 @@ class CategoryWithCommoditiesWidget(QWidget):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         self.category_detail_widget = CategoryDetailWidget(self)
-        self.commodities_grid_widget = CommoditiesGridWidget(self, self.catalog_controller)
+        self.commodities_grid_widget = CommoditiesGridWidget(
+            self, self.catalog_controller
+        )
         main_layout.addWidget(self.category_detail_widget, 1)
         main_layout.addWidget(self.commodities_grid_widget, 3)
         return main_layout

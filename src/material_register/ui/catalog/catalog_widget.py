@@ -54,11 +54,17 @@ class CatalogWidget(QWidget):
         self._setup_texts()
         self._reload_data()
 
-    def _setup_texts(self)-> None:
-        widgets = [self.add_category_button, self.catalog_title_label, self.details_widget]
+    def _setup_texts(self) -> None:
+        widgets = [
+            self.add_category_button,
+            self.catalog_title_label,
+            self.details_widget,
+        ]
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
@@ -67,9 +73,11 @@ class CatalogWidget(QWidget):
         self.tree_widget.itemSelectionChanged.connect(self._on_selection_changed)
         self.add_category_button.clicked.connect(self.catalog_controller.add_category)
         self.details_widget.category_with_commodities_widget.category_detail_widget.update_category_button.clicked.connect(
-            self.catalog_controller.update_category)
+            self.catalog_controller.update_category
+        )
         self.details_widget.category_with_commodities_widget.category_detail_widget.add_commodity_button.clicked.connect(
-            self.catalog_controller.add_commodity)
+            self.catalog_controller.add_commodity
+        )
 
     def _reload_data(self) -> None:
         self.catalog_controller.reload_catalog_tree()

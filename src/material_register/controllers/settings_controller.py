@@ -21,15 +21,17 @@ class SettingsController:
         user_settings = self.settings.get("user", {})
         new_data = self.export_settings.get_export_settings_data()
         if not user_settings or not new_data:
-            SettingsController._handle_settings_error("Update settings failed",
-                                                      f"{self.__class__.__name__}.update_settings")
+            SettingsController._handle_settings_error(
+                "Update settings failed", f"{self.__class__.__name__}.update_settings"
+            )
             return
         for key, value in new_data.items():
             if key in user_settings:
                 user_settings[key] = value
         if not SettingsProvider.save_settings():
-            SettingsController._handle_settings_error("Update settings failed",
-                                                      f"{self.__class__.__name__}.update_settings")
+            SettingsController._handle_settings_error(
+                "Update settings failed", f"{self.__class__.__name__}.update_settings"
+            )
             return
         self._reload_settings()
         AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
@@ -38,12 +40,16 @@ class SettingsController:
         question = MessageBoxes.show_question(self.export_settings, "RESTORE_SETTINGS")
         if question:
             if not SettingsProvider.restore_settings("export"):
-                SettingsController._handle_settings_error("Restore settings failed",
-                                                          f"{self.__class__.__name__}.restore_settings")
+                SettingsController._handle_settings_error(
+                    "Restore settings failed",
+                    f"{self.__class__.__name__}.restore_settings",
+                )
                 return
             if not SettingsProvider.save_settings():
-                SettingsController._handle_settings_error("Restore settings failed",
-                                                          f"{self.__class__.__name__}.restore_settings")
+                SettingsController._handle_settings_error(
+                    "Restore settings failed",
+                    f"{self.__class__.__name__}.restore_settings",
+                )
                 return
             self.export_settings.apply_settings()
             self._reload_settings()

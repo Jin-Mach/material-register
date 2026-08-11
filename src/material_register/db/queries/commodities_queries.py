@@ -4,10 +4,16 @@ from material_register.domain.commodities_dataclass import Commodity
 
 
 class CommoditiesQueries:
-
     @staticmethod
-    def create_commodity(connection: QSqlDatabase, name: str, category_id: int, unit: str, default_price: float,
-                         notes: str, active: int) -> tuple[bool, str]:
+    def create_commodity(
+        connection: QSqlDatabase,
+        name: str,
+        category_id: int,
+        unit: str,
+        default_price: float,
+        notes: str,
+        active: int,
+    ) -> tuple[bool, str]:
         query = QSqlQuery(connection)
         query.prepare("""
             INSERT INTO commodities (
@@ -27,8 +33,16 @@ class CommoditiesQueries:
         return ok, error
 
     @staticmethod
-    def update_commodity(connection: QSqlDatabase, commodity_id: int, name: str, category_id: int, unit: str,
-                         default_price: float, notes: str, active: int) -> tuple[bool, str]:
+    def update_commodity(
+        connection: QSqlDatabase,
+        commodity_id: int,
+        name: str,
+        category_id: int,
+        unit: str,
+        default_price: float,
+        notes: str,
+        active: int,
+    ) -> tuple[bool, str]:
         query = QSqlQuery(connection)
         query.prepare("""
             UPDATE commodities SET
@@ -54,7 +68,9 @@ class CommoditiesQueries:
         return ok, error
 
     @staticmethod
-    def change_active(connection: QSqlDatabase, commodity_id: int, active: int) -> tuple[bool, str]:
+    def change_active(
+        connection: QSqlDatabase, commodity_id: int, active: int
+    ) -> tuple[bool, str]:
         query = QSqlQuery(connection)
         query.prepare("UPDATE commodities SET active=? WHERE id=?")
         query.addBindValue(active)
@@ -84,12 +100,15 @@ class CommoditiesQueries:
                     unit=query.value(3),
                     default_price=query.value(4),
                     notes=query.value(5),
-                    active=query.value(6)
-                ))
+                    active=query.value(6),
+                )
+            )
         return results
 
     @staticmethod
-    def commodity_exists(connection: QSqlDatabase, name: str, ignored_id: int | None = None) -> bool:
+    def commodity_exists(
+        connection: QSqlDatabase, name: str, ignored_id: int | None = None
+    ) -> bool:
         query = QSqlQuery(connection)
         sql = "SELECT 1 FROM commodities WHERE name = ?"
         if ignored_id is not None:

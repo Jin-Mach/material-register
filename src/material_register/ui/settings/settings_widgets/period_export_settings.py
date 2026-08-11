@@ -73,7 +73,9 @@ class PeriodExportSettings(QWidget):
         self.branch_name_line_edit = QLineEdit()
         self.branch_name_line_edit.setObjectName("branchNameLineEdit")
         self.branch_name_line_edit.setMinimumWidth(self.WIDTH)
-        self.branch_name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.branch_name_line_edit.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         form_layout.addRow(self.branch_name_label, self.branch_name_line_edit)
         main_layout.addLayout(form_layout)
         self.branch_group_box.setLayout(main_layout)
@@ -90,7 +92,9 @@ class PeriodExportSettings(QWidget):
         self.path_line_edit = QLineEdit()
         self.path_line_edit.setObjectName("pathLineEdit")
         self.path_line_edit.setMinimumWidth(self.WIDTH)
-        self.path_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.path_line_edit.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         self.path_button = QPushButton()
         self.path_button.setObjectName("pathButton")
         path_layout = QHBoxLayout()
@@ -101,7 +105,9 @@ class PeriodExportSettings(QWidget):
         self.file_name_line_edit = QLineEdit()
         self.file_name_line_edit.setObjectName("fileNameLineEdit")
         self.file_name_line_edit.setMinimumWidth(self.WIDTH)
-        self.file_name_line_edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.file_name_line_edit.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
         name_layout = QHBoxLayout()
         name_layout.addWidget(self.file_name_line_edit)
         form_layout.addRow(self.path_label, path_layout)
@@ -135,7 +141,9 @@ class PeriodExportSettings(QWidget):
         self.use_last_options_checkbox = QCheckBox()
         self.use_last_options_checkbox.setObjectName("useLastOptionsCheckbox")
         self.save_last_opening_balance_checkbox = QCheckBox()
-        self.save_last_opening_balance_checkbox.setObjectName("saveLastOpeningBalanceCheckbox")
+        self.save_last_opening_balance_checkbox.setObjectName(
+            "saveLastOpeningBalanceCheckbox"
+        )
         main_layout.addWidget(self.use_last_options_checkbox)
         main_layout.addWidget(self.save_last_opening_balance_checkbox)
         self.other_settings_group_box.setLayout(main_layout)
@@ -166,20 +174,28 @@ class PeriodExportSettings(QWidget):
         widgets = self.findChildren(QWidget)
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
-            ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
-        self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Export Folder")
+        self.folder_dialog_title = ui_texts.get(
+            "folderDialogTitle", "Select Export Folder"
+        )
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
 
     def apply_settings(self) -> None:
         if not UiSettings.set_ui_settings("export", self.findChildren(QWidget)):
-            ErrorHandler.handle_error(f"Settings load failed: {self.__class__.__name__}", "ui", "warning")
+            ErrorHandler.handle_error(
+                f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
+            )
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return
 
@@ -189,13 +205,17 @@ class PeriodExportSettings(QWidget):
         self.save_button.clicked.connect(self.settings_controller.update_settings)
 
     def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}"))
+        name_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}")
+        )
         self.branch_name_line_edit.setValidator(name_validator)
         self.file_name_line_edit.setValidator(name_validator)
 
     def _set_folder_path(self) -> None:
         if not self.path_line_edit.text().strip():
-            self.current_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+            self.current_path = QStandardPaths.writableLocation(
+                QStandardPaths.StandardLocation.DocumentsLocation
+            )
         else:
             self.current_path = self.path_line_edit.text().strip()
         self._set_elided_path(self.current_path)
@@ -205,11 +225,15 @@ class PeriodExportSettings(QWidget):
 
     def _set_elided_path(self, path: str) -> None:
         metrics = QFontMetrics(self.path_line_edit.font())
-        elided_path = metrics.elidedText(path, Qt.TextElideMode.ElideMiddle, self.path_line_edit.width())
+        elided_path = metrics.elidedText(
+            path, Qt.TextElideMode.ElideMiddle, self.path_line_edit.width()
+        )
         self.path_line_edit.setText(elided_path)
 
     def _select_export_path(self) -> None:
-        folder = QFileDialog.getExistingDirectory(self, self.folder_dialog_title, self.current_path)
+        folder = QFileDialog.getExistingDirectory(
+            self, self.folder_dialog_title, self.current_path
+        )
         if folder:
             self.current_path = folder
             self._set_elided_path(self.current_path)

@@ -38,8 +38,14 @@ if TYPE_CHECKING:
 
 # noinspection PyTypeChecker,PyMethodMayBeStatic
 class CommodityDialog(QDialog):
-    def __init__(self, catalog_widget: "CatalogWidget", category_id: int, category_name: str, mode: str = ADD_MODE,
-                 commodity_data: Commodity | None = None) -> None:
+    def __init__(
+        self,
+        catalog_widget: "CatalogWidget",
+        category_id: int,
+        category_name: str,
+        mode: str = ADD_MODE,
+        commodity_data: Commodity | None = None,
+    ) -> None:
         super().__init__(catalog_widget)
         self.setMinimumWidth(400)
         self.catalog_widget = catalog_widget
@@ -54,7 +60,9 @@ class CommodityDialog(QDialog):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         form_layout = QFormLayout()
-        form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
+        form_layout.setFieldGrowthPolicy(
+            QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow
+        )
         self.category_label = QLabel()
         self.category_label.setObjectName("categoryLabel")
         self.category_value = QLabel()
@@ -92,7 +100,9 @@ class CommodityDialog(QDialog):
         self.notes_count_label.setObjectName("notesCountLabel")
         notes_count_layout.addWidget(self.notes_count_label)
         notes_count_layout.addStretch()
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Close)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Close
+        )
         self.save_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.save_button.setObjectName("saveButton")
         self.close_button = button_box.button(QDialogButtonBox.StandardButton.Close)
@@ -121,7 +131,7 @@ class CommodityDialog(QDialog):
             self.notes_label,
             self.notes_count_label,
             self.save_button,
-            self.close_button
+            self.close_button,
         ]
         self._setup_texts(widgets)
         self._setup_mode()
@@ -139,12 +149,18 @@ class CommodityDialog(QDialog):
     def _setup_texts(self, widgets: list[QWidget]) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.category_value.setText(self.category_name)
-        self.units_items = texts.get(f"{self.unit_input.objectName()}Items", ["kg", "pcs"])
-        self.notes_text = texts.get(f"{self.notes_count_label.objectName()}Text", "Count:")
+        self.units_items = texts.get(
+            f"{self.unit_input.objectName()}Items", ["kg", "pcs"]
+        )
+        self.notes_text = texts.get(
+            f"{self.notes_count_label.objectName()}Text", "Count:"
+        )
         self.unit_input.addItems(self.units_items)
         if UiTexts.set_ui_texts(self, widgets):
             return
-        ErrorHandler.handle_error(f"Texts load failed: {self.__class__.__name__}", "ui", "warning")
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
@@ -158,7 +174,9 @@ class CommodityDialog(QDialog):
             self._set_update_mode(self.commodity_data)
 
     def _set_validators(self) -> None:
-        commodity_validator = QRegularExpressionValidator(QRegularExpression(r"[\p{L}0-9 .,:&%\-\/]{1,30}"))
+        commodity_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,:&%\-\/]{1,30}")
+        )
         self.name_input.setValidator(commodity_validator)
 
     def _set_add_mode(self) -> None:
@@ -179,7 +197,12 @@ class CommodityDialog(QDialog):
         self.unit_input.setEnabled(False)
 
     def _update_notes_count(self) -> None:
-        check_notes_length(self.notes_input, self.notes_count_label, self.notes_text, COMMODITY_DIALOG_NOTES_LENGTH)
+        check_notes_length(
+            self.notes_input,
+            self.notes_count_label,
+            self.notes_text,
+            COMMODITY_DIALOG_NOTES_LENGTH,
+        )
 
     def _update_required_styles(self) -> None:
         self._set_required_style(self.name_input)
@@ -196,7 +219,9 @@ class CommodityDialog(QDialog):
         self._update_save_button_state()
 
     def _update_save_button_state(self) -> None:
-        self.save_button.setEnabled(self._is_input_valid() and self._is_commodity_valid())
+        self.save_button.setEnabled(
+            self._is_input_valid() and self._is_commodity_valid()
+        )
 
     def _is_input_valid(self) -> bool:
         name = self.name_input.text().strip()
@@ -209,7 +234,9 @@ class CommodityDialog(QDialog):
         ignored_id = None
         if self.mode == UPDATE_MODE and self.commodity_data:
             ignored_id = self.commodity_data.id
-        return not self.catalog_widget.catalog_controller.commodity_exists(name, ignored_id)
+        return not self.catalog_widget.catalog_controller.commodity_exists(
+            name, ignored_id
+        )
 
     def get_commodity_data(self) -> Commodity | None:
         if not self._is_input_valid():
@@ -224,7 +251,7 @@ class CommodityDialog(QDialog):
             unit=self.unit_input.currentText(),
             default_price=normalize_value(self.price_input.value()),
             notes=self.notes_input.toPlainText().strip(),
-            active=int(self.active_checkbox.isChecked())
+            active=int(self.active_checkbox.isChecked()),
         )
 
     def showEvent(self, event: QShowEvent) -> None:

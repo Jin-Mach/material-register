@@ -16,7 +16,9 @@ class CatalogTreeWidget(QTreeWidget):
         super().__init__(catalog_widget)
         self.setHeaderHidden(True)
 
-    def reload_tree(self, categories: list[Category], commodities: list[Commodity]) -> None:
+    def reload_tree(
+        self, categories: list[Category], commodities: list[Commodity]
+    ) -> None:
         self.blockSignals(True)
         self.setUpdatesEnabled(False)
         try:
@@ -46,8 +48,10 @@ class CatalogTreeWidget(QTreeWidget):
         if item.parent() is None:
             return item.data(0, Qt.ItemDataRole.UserRole), None
         category_item = item.parent()
-        return (category_item.data(0, Qt.ItemDataRole.UserRole),
-                item.data(0, Qt.ItemDataRole.UserRole))
+        return (
+            category_item.data(0, Qt.ItemDataRole.UserRole),
+            item.data(0, Qt.ItemDataRole.UserRole),
+        )
 
     def find_item_by_id(self, category_id: int) -> QTreeWidgetItem | None:
         for i in range(self.topLevelItemCount()):
@@ -57,7 +61,9 @@ class CatalogTreeWidget(QTreeWidget):
                 return item
         return None
 
-    def create_commodity_item(self, commodity: Commodity) -> tuple[QTreeWidgetItem | None, QTreeWidgetItem | None]:
+    def create_commodity_item(
+        self, commodity: Commodity
+    ) -> tuple[QTreeWidgetItem | None, QTreeWidgetItem | None]:
         category_id = commodity.category_id
         parent_item = self.find_item_by_id(category_id)
         if not parent_item:
