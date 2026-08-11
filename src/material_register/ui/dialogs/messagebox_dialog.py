@@ -67,7 +67,7 @@ class MessageBoxDialog(QDialog):
             self.informative_label.setText(informative_text)
             self.informative_label.show()
 
-    def setup_icon(self, icon_key: str=None) -> None:
+    def setup_icon(self, icon_key: str | None = None) -> None:
         app_style = QApplication.style()
         icon_map = {
             "QUESTION": app_style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxQuestion),

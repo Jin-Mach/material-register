@@ -418,8 +418,7 @@ class PeriodSheet:
             for cell in column_cells:
                 if cell.value is not None:
                     length = len(str(cell.value))
-                    if length > max_length:
-                        max_length = length
+                    max_length = max(max_length, length)
             sheet.column_dimensions[column_letter].width = max_length + 3
 
     @staticmethod

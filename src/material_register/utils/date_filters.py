@@ -4,7 +4,7 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 def _now() -> datetime:
-    return datetime.now()
+    return datetime.now().astimezone()
 
 def get_filter_range(key: str) -> tuple[str, str] | None:
     now = _now()

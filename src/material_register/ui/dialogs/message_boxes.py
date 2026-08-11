@@ -22,7 +22,7 @@ class MessageBoxes:
         return dialog.exec() == QDialog.DialogCode.Accepted
 
     @classmethod
-    def show_error(cls, parent: QWidget, error_key: str, icon_key: str=None) -> None:
+    def show_error(cls, parent: QWidget, error_key: str, icon_key: str | None = None) -> None:
         texts = cls.CONFIRM_TEXTS.get(error_key, {})
         if not texts:
             return

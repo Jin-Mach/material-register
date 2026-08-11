@@ -275,7 +275,7 @@ class CustomerDialog(QDialog):
         return not self.customers_widget.customers_model.document_exists(document, ignored_id=ignored_id)
 
     def _set_add_mode(self) -> None:
-        self.created_label.setText(f"{self.created_label_text} {datetime.today().strftime("%d.%m.%Y")}")
+        self.created_label.setText(f"{self.created_label_text} {datetime.now().astimezone().strftime("%d.%m.%Y")}")
         self.subject_type.setCurrentIndex(-1)
         self._apply_type_state()
 

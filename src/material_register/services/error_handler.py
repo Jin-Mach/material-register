@@ -21,14 +21,13 @@ class ErrorHandler:
         }
 
     @classmethod
-    def handle_error(cls, error: Exception | str, logger_name: str, level: str) -> None:
+    def handle_error(cls, error: Exception | str, logger_name: str, level: str, exc_info: bool = True) -> None:
         if not cls.loggers_map:
             return
         logger = cls.loggers_map.get(logger_name) or cls.loggers_map["error"]
         if level not in cls.LEVELS:
             level = "warning"
         if isinstance(error, Exception):
-            msg = str(error)
-            logger.error(msg, exc_info=True)
+            logger.error(str(error), exc_info=exc_info)
         else:
             getattr(logger, level)(error)

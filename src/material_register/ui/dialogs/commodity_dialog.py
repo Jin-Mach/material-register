@@ -200,9 +200,7 @@ class CommodityDialog(QDialog):
 
     def _is_input_valid(self) -> bool:
         name = self.name_input.text().strip()
-        if not name:
-            return False
-        return True
+        return bool(name)
 
     def _is_commodity_valid(self) -> bool:
         name = self.name_input.text().strip()

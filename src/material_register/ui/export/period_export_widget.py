@@ -428,9 +428,9 @@ class PeriodExportWidget(QWidget):
             self.month_radio_button: "month",
             self.year_radio_button: "year",
         }
-        for key in date_map:
+        for key, value in date_map.items():
             if key.isChecked():
-                date_range = get_filter_range(date_map[key])
+                date_range = get_filter_range(value)
                 if date_range is not None:
                     return date_range
         date_range = (self.from_date_edit.date().toString("yyyy-MM-dd 00:00:00"),

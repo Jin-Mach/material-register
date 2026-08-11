@@ -40,4 +40,4 @@ target-version = "py313"
 src = ["src", "tests"]
 
 [tool.ruff.lint]
-ignore = ["BLE001", "RUF012"]
+ignore = ["BLE001", "RUF012","LOG014"]
