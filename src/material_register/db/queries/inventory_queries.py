@@ -9,7 +9,7 @@ class InventoryQueries:
     """
 
     @staticmethod
-    def update_inventory_item(db_connection: QSqlDatabase, commodity_id: int, amount: int | float) -> tuple[bool, str]:
+    def update_inventory_item(db_connection: QSqlDatabase, commodity_id: int, amount: float) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
         query.prepare(InventoryQueries.BASE_QUERY)
         query.addBindValue(amount)

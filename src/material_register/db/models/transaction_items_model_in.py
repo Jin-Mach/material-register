@@ -105,14 +105,14 @@ class TransactionItemsModelIn(QStandardItemModel):
         self.setColumnCount(len(ITEM_MODEL_IN_COLUMNS))
 
     @staticmethod
-    def get_item_total_count(unit: int | float, price_per_unit: int | float) -> QStandardItem:
+    def get_item_total_count(unit: float, price_per_unit: float) -> QStandardItem:
         total = TransactionItemsModelIn._calculate_total_count(unit, price_per_unit)
         item = QStandardItem(str(total))
         item.setData(total, Qt.ItemDataRole.UserRole)
         return item
 
     @staticmethod
-    def _calculate_total_count(unit: int | float, price_per_unit: int | float) -> float:
+    def _calculate_total_count(unit: float, price_per_unit: float) -> float:
         return round(unit * price_per_unit, 2)
 
     @staticmethod

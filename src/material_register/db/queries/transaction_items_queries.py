@@ -10,7 +10,7 @@ class TransactionItemsQueries:
 
     @staticmethod
     def insert_into_transaction_items(db_connection: QSqlDatabase, transaction_id: int, commodity_id: int,
-                                      unit_count: int | float, price_per_unit: int | float) -> tuple[bool, str]:
+                                      unit_count: float, price_per_unit: float) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
         query.prepare("""
                 INSERT INTO transaction_items (

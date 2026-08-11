@@ -118,7 +118,7 @@ class TransactionsService:
             return False, str(e)
 
     @staticmethod
-    def _get_amount(transfer_type: str, amount: int| float, negate: bool = False) -> int | float:
+    def _get_amount(transfer_type: str, amount: float, negate: bool = False) -> int | float:
         operator = 1
         if transfer_type == TRANSFER_OUT:
             operator = -1
