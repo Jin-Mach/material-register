@@ -73,26 +73,24 @@ class TransactionsItemsWidget(QWidget):
         return main_layout
 
     def _setup_ui(self) -> None:
+        disabled_buttons = [self.update_item_button, self.delete_item_button]
+        for button in disabled_buttons:
+            button.setEnabled(False)
+        self._setup_texts()
+        self._setup_style()
+        self._setup_model(self.transfer_type)
+        self.transactions_items_view.setup_ui()
+        self._create_connection()
+
+    def _setup_texts(self) -> None:
         widgets = [
             self.add_item_button,
             self.update_item_button,
             self.delete_item_button,
             self.total_price_label,
         ]
-        disabled_buttons = [self.update_item_button, self.delete_item_button]
-        for button in disabled_buttons:
-            button.setEnabled(False)
-        self._setup_texts(widgets)
-        self._setup_style()
-        self._setup_model(self.transfer_type)
-        self.transactions_items_view.setup_ui()
-        self._create_connection()
-
-    def _setup_texts(self, widgets: list[QWidget]) -> None:
-        ui_texts = UiTexts.UI_TEXTS
-        self.price_suffix = ui_texts.get(self.__class__.__name__, {}).get(
-            "priceSuffix", ""
-        )
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.price_suffix = ui_texts.get("priceSuffix", "")
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(

@@ -98,6 +98,13 @@ class CreateTransactionDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._set_validators()
+        self._set_required_style()
+        self._update_continue_button_state()
+        self._apply_transfer_type()
+
+    def _setup_texts(self) -> None:
         widgets = [
             self.payment_type_label,
             self.customer_name_label,
@@ -106,19 +113,6 @@ class CreateTransactionDialog(QDialog):
             self.continue_transaction_button,
             self.cancel_transaction_button,
         ]
-        self._setup_texts(widgets)
-        self._set_validators()
-        self._set_required_style()
-        self._update_continue_button_state()
-        self._apply_transfer_type()
-
-    def _create_connection(self) -> None:
-        self.continue_transaction_button.clicked.connect(self.accept)
-        self.cancel_transaction_button.clicked.connect(self.reject)
-        self.completer.activated.connect(self._on_customer_selected)
-        self.customer_name_input.textEdited.connect(self._customer_name_edited)
-
-    def _setup_texts(self, widgets: list[QWidget]) -> None:
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
@@ -126,6 +120,12 @@ class CreateTransactionDialog(QDialog):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        self.continue_transaction_button.clicked.connect(self.accept)
+        self.cancel_transaction_button.clicked.connect(self.reject)
+        self.completer.activated.connect(self._on_customer_selected)
+        self.customer_name_input.textEdited.connect(self._customer_name_edited)
 
     def _setup_items(self) -> None:
         payment_values = PAYMENT_VALUES

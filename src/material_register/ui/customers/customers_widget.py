@@ -27,7 +27,6 @@ class CustomersWidget(QWidget):
         self.stacked_widget = stacked_widget
         self.setLayout(self._create_ui())
         self._setup_ui()
-        self._setup_texts()
         self._init_counts()
         self._create_connection()
 
@@ -55,6 +54,7 @@ class CustomersWidget(QWidget):
         self.customers_controller.update_counts()
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
         self.customers_view.setModel(self.customers_model)
         QTimer.singleShot(0, self.customers_view.setup_ui)
         self.customers_view.customContextMenuRequested.connect(

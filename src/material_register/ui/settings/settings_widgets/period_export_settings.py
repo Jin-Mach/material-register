@@ -173,12 +173,6 @@ class PeriodExportSettings(QWidget):
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        if not ui_texts:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
-            )
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
         self.folder_dialog_title = ui_texts.get(
             "folderDialogTitle", "Select Export Folder"
         )
@@ -188,8 +182,7 @@ class PeriodExportSettings(QWidget):
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
+        UiTexts.set_default_texts(self, widgets)
 
     def apply_settings(self) -> None:
         if not UiSettings.set_ui_settings("export", self.findChildren(QWidget)):

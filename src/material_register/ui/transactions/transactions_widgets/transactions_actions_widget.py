@@ -13,7 +13,7 @@ class TransactionsActionsWidget(QWidget):
     def __init__(self, transactions_widget: "TransactionsWidget") -> None:
         super().__init__(transactions_widget)
         self.setLayout(self.create_ui())
-        self._ui_setup()
+        self._setup_ui()
 
     def create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
@@ -33,7 +33,7 @@ class TransactionsActionsWidget(QWidget):
         main_layout.addStretch()
         return main_layout
 
-    def _ui_setup(self) -> None:
+    def _setup_ui(self) -> None:
         widgets = [
             self.in_transaction_button,
             self.out_transaction_button,
@@ -54,8 +54,7 @@ class TransactionsActionsWidget(QWidget):
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
+        UiTexts.set_default_texts(self, widgets)
 
     def get_filter_key(self) -> str:
         filter_map = {

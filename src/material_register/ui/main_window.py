@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self._create_ui())
         self.status_bar = StatusBar(self)
         self.setStatusBar(self.status_bar)
-        self._ui_setup()
+        self._setup_ui()
         self._create_connection()
         self.settings_manager = SettingsManager(self)
 
@@ -31,13 +31,13 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(main_layout)
         return central_widget
 
-    def _ui_setup(self) -> None:
+    def _setup_ui(self) -> None:
         if UiTexts.set_ui_texts(self, []):
             return
         ErrorHandler.handle_error(
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
         )
-        ErrorHandler.ui_texts_error = True
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, []):
             return
 

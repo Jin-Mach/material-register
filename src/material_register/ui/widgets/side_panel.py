@@ -14,7 +14,7 @@ class SidePanel(QWidget):
         super().__init__(main_window)
         self.main_window = main_window
         self.setLayout(self._create_ui())
-        self._ui_setup()
+        self._setup_texts()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -39,7 +39,7 @@ class SidePanel(QWidget):
         main_layout.addWidget(self.settings_button)
         return main_layout
 
-    def _ui_setup(self) -> None:
+    def _setup_texts(self) -> None:
         widgets = [
             self.transactions_button,
             self.inventory_button,
@@ -54,5 +54,4 @@ class SidePanel(QWidget):
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
+        UiTexts.set_default_texts(self, widgets)

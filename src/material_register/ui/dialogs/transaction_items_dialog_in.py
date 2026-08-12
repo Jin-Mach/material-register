@@ -65,11 +65,11 @@ class TransactionItemsDialogIn(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
-        widgets = [self.save_transaction_button, self.cancel_transaction_button]
         self.save_transaction_button.setEnabled(False)
-        self._setup_texts(widgets)
+        self._setup_texts()
 
-    def _setup_texts(self, widgets: list[QWidget]) -> None:
+    def _setup_texts(self) -> None:
+        widgets = [self.save_transaction_button, self.cancel_transaction_button]
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.cash_payment = ui_texts.get("CASH", "CASH")
         self.transfer_payment = ui_texts.get("TRANSFER", "TRANSFER")

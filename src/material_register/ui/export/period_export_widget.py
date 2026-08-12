@@ -280,8 +280,7 @@ class PeriodExportWidget(QWidget):
         return self.export_action_group_box
 
     def _setup_ui(self) -> None:
-        widgets = self.findChildren(QWidget)
-        self._setup_texts(widgets)
+        self._setup_texts()
         self._setup_spinboxes()
         self.apply_settings()
         self._set_folder_path()
@@ -292,7 +291,8 @@ class PeriodExportWidget(QWidget):
         self._set_required_style()
         self._apply_export_action_state()
 
-    def _setup_texts(self, widgets: list[QWidget]) -> None:
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
             ErrorHandler.handle_error(

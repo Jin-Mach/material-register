@@ -98,6 +98,11 @@ class TransactionInfoWidget(QWidget):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_style()
+        self._update_notes_count()
+
+    def _setup_texts(self) -> None:
         widgets = [
             self.customer_name_label,
             self.document_number_label,
@@ -105,11 +110,6 @@ class TransactionInfoWidget(QWidget):
             self.notes_count_label,
             self.update_transaction_info_button,
         ]
-        self._setup_texts(widgets)
-        self._setup_style()
-        self._update_notes_count()
-
-    def _setup_texts(self, widgets: list[QWidget]) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.notes_count_text = ui_texts.get(
             f"{self.notes_count_label.objectName()}Text", "Count:"
@@ -120,7 +120,8 @@ class TransactionInfoWidget(QWidget):
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
+        if UiTexts.set_default_texts(self, widgets):
+            return
 
     def _setup_style(self) -> None:
         font = QFont()

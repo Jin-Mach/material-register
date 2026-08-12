@@ -13,7 +13,7 @@ class InventoryActionsWidget(QWidget):
     def __init__(self, inventory_widget: "InventoryWidget") -> None:
         super().__init__(inventory_widget)
         self.setLayout(self._create_ui())
-        self._ui_setup()
+        self._setup_ui()
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
@@ -25,7 +25,7 @@ class InventoryActionsWidget(QWidget):
         main_layout.addStretch()
         return main_layout
 
-    def _ui_setup(self) -> None:
+    def _setup_ui(self) -> None:
         widgets = [self.search_line_edit]
         self._setup_texts(widgets)
 
@@ -36,5 +36,4 @@ class InventoryActionsWidget(QWidget):
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
+        UiTexts.set_default_texts(self, widgets)

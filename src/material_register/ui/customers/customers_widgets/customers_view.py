@@ -31,24 +31,31 @@ class CustomersView(QTableView):
 
     def setup_ui(self) -> None:
         model = self.model()
-        error = "TEXTS_LOAD_FAILED"
         if not isinstance(model, CustomersModel):
             return
-        if not HeadersTexts.set_headers_text(self, model):
-            ErrorHandler.handle_error(
-                f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
-            )
-            ErrorHandler.ui_texts_error = error
-        self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        if not self.menu_texts:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
-            )
-            ErrorHandler.ui_texts_error = error
-            self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
+        self._setup_texts()
+        self._setup_headers_texts(model)
         self._setup_columns(model)
         self._setup_headers(model)
         self._setup_behavior()
+
+    def _setup_texts(self) -> None:
+        self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        if self.menu_texts:
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
+
+    def _setup_headers_texts(self, model: CustomersModel) -> None:
+        if HeadersTexts.set_headers_text(self, model):
+            return
+        ErrorHandler.handle_error(
+            f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
     def _setup_columns(self, model: CustomersModel) -> None:
         for name in CUSTOMERS_HIDDEN_COLUMNS:
@@ -104,6 +111,6 @@ class CustomersView(QTableView):
             ErrorHandler.handle_error(
                 f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
             )
-            ErrorHandler.ui_texts_error = True
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         menu.set_ui_texts(self.menu_texts)
         menu.exec(self.mapToGlobal(position))

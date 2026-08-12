@@ -75,6 +75,13 @@ class CategoryDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_mode()
+        self._set_validators()
+        self._set_required_style(self.category_name_input)
+        self._update_save_button_state()
+
+    def _setup_texts(self) -> None:
         widgets = [
             self.category_name_label,
             self.notes_label,
@@ -82,19 +89,6 @@ class CategoryDialog(QDialog):
             self.save_button,
             self.close_button,
         ]
-        self._setup_texts(widgets)
-        self._setup_mode()
-        self._set_validators()
-        self._set_required_style(self.category_name_input)
-        self._update_save_button_state()
-
-    def _create_connection(self) -> None:
-        self.category_name_input.textChanged.connect(self._on_form_changed)
-        self.notes_input.textChanged.connect(self._update_notes_count)
-        self.save_button.clicked.connect(self.accept)
-        self.close_button.clicked.connect(self.reject)
-
-    def _setup_texts(self, widgets: list) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.notes_count_text = texts.get(
             f"{self.notes_count_label.objectName()}Text", "Count:"
@@ -106,6 +100,12 @@ class CategoryDialog(QDialog):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        self.category_name_input.textChanged.connect(self._on_form_changed)
+        self.notes_input.textChanged.connect(self._update_notes_count)
+        self.save_button.clicked.connect(self.accept)
+        self.close_button.clicked.connect(self.reject)
 
     def _setup_mode(self) -> None:
         if self.mode == ADD_MODE:

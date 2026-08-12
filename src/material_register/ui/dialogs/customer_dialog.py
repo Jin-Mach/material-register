@@ -117,6 +117,17 @@ class CustomerDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_items()
+        self._setup_mode()
+        self._set_validators()
+        self._update_save_button_state()
+        self._update_notes_count()
+
+    def _create_connection(self) -> None:
+        ...
+
+    def _setup_texts(self) -> None:
         widgets = [
             self.subject_type,
             self.company_label,
@@ -130,29 +141,6 @@ class CustomerDialog(QDialog):
             self.save_button,
             self.close_button,
         ]
-        self._setup_texts(widgets)
-        self._setup_items()
-        self._setup_mode()
-        self._set_validators()
-        self._update_save_button_state()
-        self._update_notes_count()
-
-    def _create_connection(self) -> None:
-        for widget in (
-            self.first_name_input,
-            self.last_name_input,
-            self.company_input,
-            self.document_type_input,
-            self.address_input,
-        ):
-            widget.textChanged.connect(self._on_form_changed)
-        self.subject_type.currentIndexChanged.connect(self._on_type_changed)
-        self.document_type_input.textChanged.connect(self._on_document_type_changed)
-        self.notes_input.textChanged.connect(self._update_notes_count)
-        self.save_button.clicked.connect(self.accept)
-        self.close_button.clicked.connect(self.reject)
-
-    def _setup_texts(self, widgets: list[QLineEdit]) -> None:
         texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.created_label_text = texts.get(
             f"{self.created_label.objectName()}Text", "Created:"

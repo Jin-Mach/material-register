@@ -15,7 +15,7 @@ class CustomersActionsWidget(QWidget):
         super().__init__(customer_widget)
         self.customer_widget = customer_widget
         self.setLayout(self._create_ui())
-        self._ui_setup()
+        self._setup_texts()
         self._create_connection()
         self._apply_timer()
 
@@ -32,7 +32,7 @@ class CustomersActionsWidget(QWidget):
         main_layout.addStretch()
         return main_layout
 
-    def _ui_setup(self) -> None:
+    def _setup_texts(self) -> None:
         widgets = [self.add_customer_button, self.search_line_edit]
         if UiTexts.set_ui_texts(self, widgets):
             return

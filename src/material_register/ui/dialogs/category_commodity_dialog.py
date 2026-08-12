@@ -86,6 +86,13 @@ class CategoryCommodityDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self._setup_widgets()
+        self._setup_spinboxes()
+        self._setup_texts()
+        self._setup_categories_items()
+        self._on_value_changed()
+
+    def _setup_texts(self) -> None:
         widgets = [
             self.category_label,
             self.category_combo_box,
@@ -96,13 +103,6 @@ class CategoryCommodityDialog(QDialog):
             self.add_button,
             self.cancel_button,
         ]
-        self._setup_widgets()
-        self._setup_spinboxes()
-        self._setup_texts(widgets)
-        self._setup_categories_items()
-        self._on_value_changed()
-
-    def _setup_texts(self, widgets: list[QWidget]) -> None:
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(

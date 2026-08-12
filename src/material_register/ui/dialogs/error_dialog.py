@@ -27,7 +27,7 @@ class ErrorDialog(QDialog):
     def __init__(self) -> None:
         super().__init__()
         self.setLayout(self._create_ui())
-        self._ui_setup()
+        self._setup_texts()
         self._create_connection()
 
     def _create_ui(self) -> QVBoxLayout:
@@ -51,7 +51,7 @@ class ErrorDialog(QDialog):
         main_layout.addWidget(button_box)
         return main_layout
 
-    def _ui_setup(self) -> None:
+    def _setup_texts(self) -> None:
         widgets = [self.close_dialog_button, self.close_app_button]
         if UiTexts.set_ui_texts(self, widgets):
             return
