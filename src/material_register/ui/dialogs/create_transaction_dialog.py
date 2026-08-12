@@ -13,7 +13,6 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QSizePolicy,
     QVBoxLayout,
-    QWidget,
 )
 
 from material_register.config.ui_constants import (

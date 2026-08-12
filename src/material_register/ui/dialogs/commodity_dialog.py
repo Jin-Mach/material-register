@@ -14,7 +14,6 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QTextEdit,
     QVBoxLayout,
-    QWidget,
 )
 
 from material_register.config.ui_constants import (

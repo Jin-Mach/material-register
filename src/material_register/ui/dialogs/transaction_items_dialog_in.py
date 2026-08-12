@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.message_boxes import MessageBoxes
