@@ -15,11 +15,8 @@ def run_app() -> None:
     app.setApplicationName(APPLICATION_NAME)
     app.setOrganizationName(ORGANIZATION_NAME)
     PathsProvider.paths_init(LOG_STRUCTURE)
-    init_controller = InitController(PathsProvider.resources)
+    init_controller = InitController(PathsProvider.resources, app)
     init_controller.start_thread()
-    qss_path = PathsProvider.get_base_path() / "resources" / "styles" / "dark_blue.qss"
-    with open(qss_path, "r", encoding="utf-8") as f:
-        app.setStyleSheet(f.read())
     sys.exit(app.exec())
 
 
