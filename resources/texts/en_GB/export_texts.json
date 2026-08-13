@@ -21,6 +21,7 @@
     "quantityText": "Quantity",
     "totalPriceText": "Total price",
     "summaryPriceText": "Total",
-    "exportText": "Dispatch"
+    "exportText": "Dispatch",
+    "pageText": "Page"
   }
 }

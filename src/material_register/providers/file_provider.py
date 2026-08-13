@@ -28,7 +28,7 @@ class FileProvider:
         invalid_files.update(images_folder)
         config_files = cls._check_config_files(resources_path)
         invalid_files.update(config_files)
-        style_files = cls._check_style_files(resources_path / "styles")
+        style_files = cls._check_style_files(resources_path)
         invalid_files.update(style_files)
         return invalid_files
 
