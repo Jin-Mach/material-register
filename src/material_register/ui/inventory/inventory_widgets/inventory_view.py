@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QHeaderView, QTableView
 
+from material_register.config.ui_constants import INVENTORY_HORIZONTAL_PADDING
 from material_register.db.config.model_constants import (
     INVENTORY_COLUMNS_MAP,
     INVENTORY_VIEW_HIDDEN_COLUMNS,
@@ -48,6 +49,10 @@ class InventoryView(QTableView):
             else:
                 header.setSectionResizeMode(col, QHeaderView.ResizeMode.Stretch)
         self.resizeColumnsToContents()
+        self.setColumnWidth(
+            active_column,
+            self.columnWidth(active_column) + (INVENTORY_HORIZONTAL_PADDING)
+        )
 
     def _setup_behavior(self) -> None:
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
