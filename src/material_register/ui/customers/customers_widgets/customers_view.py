@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 class CustomersView(QTableView):
     def __init__(self, customers_widget: "CustomersWidget") -> None:
         super().__init__(customers_widget)
+        self.setObjectName("customersView")
         self.customers_widget = customers_widget
 
     def setModel(self, model: CustomersModel) -> None:

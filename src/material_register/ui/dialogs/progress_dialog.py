@@ -8,6 +8,7 @@ class ProgressDialog(QDialog):
         self, export_texts: dict[str, dict[str, str]], parent: QWidget
     ) -> None:
         super().__init__(parent)
+        self.setObjectName("progressDialog")
         self.setWindowFlags(
             Qt.WindowType.Dialog
             | Qt.WindowType.FramelessWindowHint

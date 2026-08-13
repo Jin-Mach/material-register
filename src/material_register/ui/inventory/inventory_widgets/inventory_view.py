@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 class InventoryView(QTableView):
     def __init__(self, inventory_widget: "InventoryWidget") -> None:
         super().__init__(inventory_widget)
+        self.setObjectName("inventoryView")
 
     def setup_ui(self) -> None:
         model = self.model()

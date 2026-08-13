@@ -423,6 +423,12 @@ class PeriodExportWidget(QWidget):
             self.export_button.setEnabled(False)
 
     def _setup_date_edits(self) -> None:
+        date_edits = [self.from_date_edit, self.to_date_edit]
+        for date_edit in date_edits:
+            calendar = date_edit.calendarWidget()
+            if calendar:
+                calendar.setMinimumWidth(250)
+                calendar.setMinimumHeight(200)
         today = QDate.currentDate()
         start_of_year = QDate(today.year(), 1, 1)
         self.from_date_edit.setMinimumDate(start_of_year)

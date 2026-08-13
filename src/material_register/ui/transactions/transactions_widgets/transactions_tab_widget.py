@@ -22,7 +22,6 @@ class TransactionsTabWidget(QTabWidget):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_tabs()
-        self._setup_behavior()
 
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
@@ -44,7 +43,3 @@ class TransactionsTabWidget(QTabWidget):
         )
         self.addTab(self.transaction_in_view, self.in_tab_title)
         self.addTab(self.transactions_out_view, self.out_tab_title)
-
-    def _setup_behavior(self) -> None:
-        self.setDocumentMode(True)
-        self.tabBar().setExpanding(True)
