@@ -14,6 +14,7 @@ FILES_MAP = {
     "texts/cs_CZ/export_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/cs_CZ/export_texts.json",
     "texts/en_GB/export_texts.json": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/texts/en_GB/export_texts.json",
     "config/settings.toml": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/config/settings.toml",
+    "styles/dark_blue.qss": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/styles/dark_blue.qss"
 }
 
 ICONS_MAP = {

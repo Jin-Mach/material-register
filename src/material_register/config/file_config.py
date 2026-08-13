@@ -27,6 +27,10 @@ REQUIRED_IMAGES = [
     Path("ui_icons") / "inactiveIcon.png",
 ]
 
+REQUIRED_STYLES_FILES = [
+    Path("styles") / "dark_blue.qss",
+]
+
 UI_KEYS = [
     ("MainWindow", "titleText"),
     ("SidePanel", "transactionsButtonText"),

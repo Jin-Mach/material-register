@@ -11,6 +11,7 @@ from material_register.config.file_config import (
     REQUIRED_CONFIG_FILES,
     REQUIRED_IMAGES,
     REQUIRED_JSON_FILES,
+    REQUIRED_STYLES_FILES,
     STATUS_KEYS,
     UI_KEYS,
 )
@@ -27,6 +28,8 @@ class FileProvider:
         invalid_files.update(images_folder)
         config_files = cls._check_config_files(resources_path)
         invalid_files.update(config_files)
+        style_files = cls._check_style_files(resources_path / "styles")
+        invalid_files.update(style_files)
         return invalid_files
 
     @classmethod
@@ -63,6 +66,18 @@ class FileProvider:
         return invalid_files
 
     @classmethod
+    def _check_style_files(cls, base_path: Path) -> set[Path]:
+        invalid_files = set()
+        for path in REQUIRED_STYLES_FILES:
+            file_path = base_path / path
+            if not file_path.exists():
+                invalid_files.add(file_path)
+                continue
+            if not cls._is_qss_valid(file_path):
+                invalid_files.add(file_path)
+        return invalid_files
+
+    @classmethod
     def _is_file_valid(cls, file: Path) -> bool:
         try:
             name = file.stem
@@ -92,6 +107,14 @@ class FileProvider:
             with open(file, "rb") as settings_file:
                 tomllib.load(settings_file)
             return True
+        except Exception as e:
+            ErrorHandler.handle_error(e, "app", "error")
+            return False
+
+    @staticmethod
+    def _is_qss_valid(file: Path) -> bool:
+        try:
+            return bool(file.read_text(encoding="utf-8").strip())
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")
             return False
