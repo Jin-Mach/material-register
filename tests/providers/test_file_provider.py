@@ -102,7 +102,7 @@ def test_check_missing_files(tmp_path: Path) -> None:
     write_json(base / "texts" / "en_GB" / "ui_texts.json", create_valid_ui())
     write_image(base / "images" / "system" / "splash.png")
     write_settings(base / "config" / "settings.toml")
-    write_style(base / "styles" / "dark_blue.qss")
+    write_style(base / "dark_blue.qss")
     result = FileProvider.check_missing_files(base)
     assert len(result) == 0
 
