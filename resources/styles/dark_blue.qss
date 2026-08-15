@@ -327,6 +327,24 @@ QFrame#notesFrame {
     border-radius: 4px;
 }
 
+QStatusBar {
+    background-color: #252526;
+    color: #d4d4d4;
+    border: none;
+}
+
+QStatusBar::item {
+    background-color: transparent;
+    border: none;
+}
+
+QStatusBar QLabel {
+    background-color: transparent;
+    color: #d4d4d4;
+    border: none;
+    padding: 0 6px;
+}
+
 QMenu {
     background-color: #252526;
     border: 1px solid #3e3e42;
@@ -408,7 +426,7 @@ QProgressBar::chunk {
 QDialog,
 QMessageBox {
     background: #252526;
-    border: 2px solid #007acc;
+    border: none;
     border-radius: 6px;
 }
 
@@ -419,6 +437,12 @@ QMessageBox QLabel {
 }
 
 QDialog#notificationDialog {
+    background-color: #252526;
+    border: 2px solid #007acc;
+    border-radius: 6px;
+}
+
+QDialog#progressDialog {
     background-color: #252526;
     border: 2px solid #007acc;
     border-radius: 6px;
