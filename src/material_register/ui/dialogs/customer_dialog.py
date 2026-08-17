@@ -125,7 +125,18 @@ class CustomerDialog(QDialog):
         self._update_notes_count()
 
     def _create_connection(self) -> None:
-        ...
+        for widget in (
+                self.first_name_input,
+                self.last_name_input,
+                self.company_input,
+                self.document_type_input,
+                self.address_input,
+        ):
+            widget.textChanged.connect(self._on_form_changed)
+        self.subject_type.currentIndexChanged.connect(self._on_type_changed)
+        self.document_type_input.textChanged.connect(self._on_document_type_changed)
+        self.save_button.clicked.connect(self.accept)
+        self.close_button.clicked.connect(self.reject)
 
     def _setup_texts(self) -> None:
         widgets = [

@@ -214,6 +214,12 @@ QCheckBox::indicator:disabled {
     border-color: #3e3e42;
 }
 
+QRadioButton::indicator:checked:disabled,
+QCheckBox::indicator:checked:disabled {
+    background-color: #007acc;
+    border-color: #007acc;
+}
+
 QTableView,
 QTreeView,
 QListWidget {
@@ -317,7 +323,8 @@ QGroupBox > QWidget {
 }
 
 QGroupBox QLabel {
-    background-color: transparent;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
 }
 
 QFrame#customerFrame,
@@ -499,4 +506,19 @@ QLabel#priceCountLabel {
     background-color: #252526;
     color: #d4d4d4;
     font-weight: bold;
+}
+
+QGroupBox#exportOptionsGroupBox QRadioButton,
+QGroupBox#otherSettingsGroupBox QCheckBox {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+}
+
+QLabel#unitLabel,
+QLabel#unitValue,
+QLabel#defaultPriceLabel,
+QLabel#defaultPriceValue,
+QLabel#activeLabel,
+QLabel#notesLabel {
+    background-color: transparent;
 }
