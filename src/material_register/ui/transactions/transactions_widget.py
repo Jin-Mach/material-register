@@ -49,6 +49,7 @@ class TransactionsWidget(QWidget):
         self.price_count_label = QLabel()
         self.price_count_label.setObjectName("priceCountLabel")
         self.price_count_value = QLabel()
+        self.price_count_value.setObjectName("priceCountValue")
         count_layout.addWidget(self.items_count_label)
         count_layout.addStretch()
         count_layout.addWidget(self.price_count_label)

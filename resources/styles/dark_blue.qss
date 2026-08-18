@@ -276,12 +276,12 @@ QTabBar {
 }
 
 QTabBar::tab {
-    background-color: #252526;
+    background-color: #1e1e1e;
     border: 1px solid #3e3e42;
     border-bottom: none;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    color: #d4d4d4;
+    color: #858585;
     margin-right: 2px;
     padding: 6px 12px;
     min-width: 80px;
@@ -289,17 +289,18 @@ QTabBar::tab {
     min-height: 24px;
 }
 
-QTabBar::tab:selected {
-    background-color: #252526;
-    border: 2px solid #007acc;
-    border-bottom: none;
-    margin-bottom: -2px;
+QTabBar::tab:hover {
+    background-color: #2d2d30;
+    color: #d4d4d4;
 }
 
-QTabBar::tab:!selected {
-    background-color: #1e1e1e;
-    border: 1px solid #3e3e42;
+QTabBar::tab:selected {
+    background-color: #007acc;
+    border: 1px solid #007acc;
     border-bottom: none;
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: -2px;
 }
 
 QGroupBox {
@@ -338,6 +339,7 @@ QStatusBar {
     background-color: #252526;
     color: #d4d4d4;
     border: none;
+    border-top: 1px solid #007acc;
 }
 
 QStatusBar::item {
@@ -519,6 +521,10 @@ QLabel#unitValue,
 QLabel#defaultPriceLabel,
 QLabel#defaultPriceValue,
 QLabel#activeLabel,
-QLabel#notesLabel {
+QLabel#notesLabel,
+QLabel#countLabel,
+QLabel#itemsCountLabel,
+QLabel#priceCountLabel,
+QLabel#priceCountValue {
     background-color: transparent;
 }

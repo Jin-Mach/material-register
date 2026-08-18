@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
     def _create_ui(self) -> QWidget:
         central_widget = QWidget()
         main_layout = QHBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
         self.side_panel = SidePanel(self)
         self.stacked_widget = StackedWidget(self)
         main_layout.addWidget(self.side_panel)
