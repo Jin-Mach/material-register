@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QWidget
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.settings_manager import SettingsManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.settings_dialog import SettingsDialog
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.widgets.side_panel import SidePanel
 from material_register.ui.widgets.stacked_widget import StackedWidget
@@ -49,12 +50,16 @@ class MainWindow(QMainWindow):
             self.side_panel.export_button: 2,
             self.side_panel.customers_button: 3,
             self.side_panel.catalog_button: 4,
-            self.side_panel.settings_button: 5,
         }
         for button, index in buttons_map.items():
             button.clicked.connect(
                 lambda _, i=index: self.stacked_widget.setCurrentIndex(i)
             )
+        self.side_panel.settings_button.clicked.connect(self._show_settings_dialog)
+
+    def _show_settings_dialog(self) -> None:
+        self.settings_dialog = SettingsDialog(self)
+        self.settings_dialog.exec()
 
     @staticmethod
     def _handle_startup_errors() -> None:

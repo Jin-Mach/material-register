@@ -55,6 +55,15 @@
   "InventoryActionsWidget": {
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
+  "SettingsDialog": {
+    "titleText": "Nastavení",
+    "closeButtonText": "Zavřít",
+    "closeButtonTooltipText": "Zavře dialog"
+  },
+  "SettingsSidePanel": {
+    "exportButtonText": "Export",
+    "exportButtonTooltipText": "Zobrazí nastavení exportu"
+  },
   "PeriodExportWidget": {
     "branchGroupBoxText": "Pobočka",
     "branchNameLabelText": "Pobočka:",

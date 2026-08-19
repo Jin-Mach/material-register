@@ -17,17 +17,20 @@ class SetupInit:
     @classmethod
     def init_setup(cls) -> tuple[bool, str]:
         try:
+            DEV_MODE = True
             invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
-            if invalid_files:
-                state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
-                if not state["internet"]:
-                    return False, "CONNECTION_ERROR"
-                if not state["writable"]:
-                    return False, "PERMISSION_ERROR"
-                if not DownloadProvider.download_files(
-                    invalid_files, PathsProvider.resources
-                ):
-                    return False, "DOWNLOAD_FAILED"
+            print("invalid_files: ", invalid_files)
+            if not DEV_MODE:
+                if invalid_files:
+                    state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
+                    if not state["internet"]:
+                        return False, "CONNECTION_ERROR"
+                    if not state["writable"]:
+                        return False, "PERMISSION_ERROR"
+                    if not DownloadProvider.download_files(
+                        invalid_files, PathsProvider.resources
+                    ):
+                        return False, "DOWNLOAD_FAILED"
             SettingsProvider.provider_init(PathsProvider.resources)
             if not SettingsProvider.SETTINGS:
                 return False, "CONFIG_LOAD_FAILED"
