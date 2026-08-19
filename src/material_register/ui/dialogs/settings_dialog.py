@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtGui import QShowEvent, QCloseEvent
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QHBoxLayout, QVBoxLayout
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.settings_widgets.settings_side_panel import (
     SettingsSidePanel,
 )
@@ -18,6 +20,7 @@ if TYPE_CHECKING:
 class SettingsDialog(QDialog):
     def __init__(self, main_window: "MainWindow") -> None:
         super().__init__(main_window)
+        self.main_window = main_window
         self.setMinimumSize(900, 600)
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -49,3 +52,16 @@ class SettingsDialog(QDialog):
 
     def _create_connection(self):
         self.close_button.clicked.connect(self.close)
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        if not WindowStateManager.load_geometry(self, self.__class__.__name__):
+            screen = self.main_window.screen()
+            geometry = screen.availableGeometry()
+            frame = self.frameGeometry()
+            frame.moveCenter(geometry.center())
+            self.move(frame.topLeft())
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        super().closeEvent(event)
+        WindowStateManager.save_geometry(self, self.__class__.__name__)

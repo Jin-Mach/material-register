@@ -5,6 +5,7 @@ from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_info_widget import (
     TransactionInfoWidget,
@@ -187,4 +188,9 @@ class TransactionItemsDialogIn(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        centre_dialog(self)
+        if not WindowStateManager.load_geometry(self, self.__class__.__name__):
+            centre_dialog(self)
+
+    def done(self, result: int) -> None:
+        WindowStateManager.save_geometry(self, self.__class__.__name__)
+        super().done(result)

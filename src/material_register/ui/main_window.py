@@ -2,7 +2,7 @@ from PySide6.QtGui import QCloseEvent, QShowEvent
 from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QWidget
 
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.settings_manager import SettingsManager
+from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.settings_dialog import SettingsDialog
 from material_register.ui.setup.ui_texts import UiTexts
@@ -20,7 +20,6 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.status_bar)
         self._setup_ui()
         self._create_connection()
-        self.settings_manager = SettingsManager(self)
 
     def _create_ui(self) -> QWidget:
         central_widget = QWidget()
@@ -70,7 +69,7 @@ class MainWindow(QMainWindow):
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        if not self.settings_manager.load_settings():
+        if not WindowStateManager.load_geometry(self, self.__class__.__name__):
             screen = self.screen()
             geometry = screen.availableGeometry()
             frame = self.frameGeometry()
@@ -80,4 +79,4 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         super().closeEvent(event)
-        self.settings_manager.save_settings()
+        WindowStateManager.save_geometry(self, self.__class__.__name__)
