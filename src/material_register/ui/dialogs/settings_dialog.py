@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtGui import QShowEvent, QCloseEvent
+from PySide6.QtGui import QCloseEvent, QShowEvent
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QHBoxLayout, QVBoxLayout
 
 from material_register.services.error_handler import ErrorHandler

@@ -135,6 +135,7 @@ class CustomerDialog(QDialog):
             widget.textChanged.connect(self._on_form_changed)
         self.subject_type.currentIndexChanged.connect(self._on_type_changed)
         self.document_type_input.textChanged.connect(self._on_document_type_changed)
+        self.notes_input.textChanged.connect(self._update_notes_count)
         self.save_button.clicked.connect(self.accept)
         self.close_button.clicked.connect(self.reject)
 
