@@ -11,10 +11,10 @@ def test_set_ui_settings_line_edit(qtbot):
     qtbot.addWidget(line_edit)
 
     UiSettings.setup_init(
-        {"summary": {"export": {"user": {"branchNameLineEdit": "Some branch"}}}}
+        {"export": {"summary": {"user": {"branchNameLineEdit": "Some branch"}}}}
     )
 
-    result = UiSettings().apply_settings("summary", "export", [line_edit])
+    result = UiSettings().apply_settings("export", "summary", [line_edit])
 
     assert result is True
     assert line_edit.text() == "Some branch"
@@ -29,10 +29,10 @@ def test_set_ui_settings_spinbox(qtbot):
     qtbot.addWidget(spinbox)
 
     UiSettings.setup_init(
-        {"summary": {"export": {"user": {"openingBalanceSpinbox": 1000}}}}
+        {"export": {"summary": {"user": {"openingBalanceSpinbox": 1000}}}}
     )
 
-    result = UiSettings().apply_settings("summary", "export", [spinbox])
+    result = UiSettings().apply_settings("export", "summary", [spinbox])
 
     assert result is True
     assert spinbox.value() == 1000
@@ -46,10 +46,10 @@ def test_set_ui_settings_checkbox(qtbot):
     qtbot.addWidget(checkbox)
 
     UiSettings.setup_init(
-        {"summary": {"export": {"user": {"saveLastBalanceCheckbox": True}}}}
+        {"export": {"summary": {"user": {"saveLastBalanceCheckbox": True}}}}
     )
 
-    result = UiSettings().apply_settings("summary", "export", [checkbox])
+    result = UiSettings().apply_settings("export", "summary", [checkbox])
 
     assert result is True
     assert checkbox.isChecked() is True
@@ -63,10 +63,10 @@ def test_set_ui_settings_radiobutton(qtbot):
     qtbot.addWidget(radio)
 
     UiSettings.setup_init(
-        {"summary": {"export": {"user": {"openFolderRadioButton": True}}}}
+        {"export": {"summary": {"user": {"openFolderRadioButton": True}}}}
     )
 
-    result = UiSettings().apply_settings("summary", "export", [radio])
+    result = UiSettings().apply_settings("export", "summary", [radio])
 
     assert result is True
     assert radio.isChecked() is True
@@ -84,8 +84,8 @@ def test_set_ui_settings_multiple_widgets(qtbot):
 
     UiSettings.setup_init(
         {
-            "summary": {
-                "export": {
+            "export": {
+                "summary": {
                     "user": {
                         "branchNameLineEdit": "Warehouse",
                         "saveLastBalanceCheckbox": False,
@@ -96,8 +96,8 @@ def test_set_ui_settings_multiple_widgets(qtbot):
     )
 
     result = UiSettings().apply_settings(
-        "summary",
         "export",
+        "summary",
         [branch, save_checkbox],
     )
 
@@ -116,8 +116,8 @@ def test_set_ui_settings_missing_data(qtbot):
     UiSettings.setup_init({})
 
     result = UiSettings().apply_settings(
-        "summary",
         "export",
+        "summary",
         [line_edit],
     )
 
@@ -132,11 +132,11 @@ def test_set_ui_settings_missing_key(qtbot):
     qtbot.addWidget(widget)
     qtbot.addWidget(line_edit)
 
-    UiSettings.setup_init({"summary": {"export": {"user": {"otherSetting": "X"}}}})
+    UiSettings.setup_init({"export": {"summary": {"user": {"otherSetting": "X"}}}})
 
     result = UiSettings().apply_settings(
-        "summary",
         "export",
+        "summary",
         [line_edit],
     )
 

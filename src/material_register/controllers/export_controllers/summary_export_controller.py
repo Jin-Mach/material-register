@@ -101,9 +101,12 @@ class SummaryExportController(QObject):
         QTimer.singleShot(1000, lambda: self._finish_export(error=error))
 
     def _export_ok(self, last_value: float) -> None:
+        print("last_value:", last_value)
         if self.export_settings.get("useLastOptionsCheckbox", False):
+            print("pamatovat si nastavení")
             self._last_settings_saved()
         if self.export_settings.get("saveLastOpeningBalanceCheckbox", False):
+            print("pamatovat si balance")
             SummaryExportController._new_balance_saved(last_value)
         self._clean_thread()
         QTimer.singleShot(1000, self._finish_export)
@@ -162,8 +165,8 @@ class SummaryExportController(QObject):
             "openFileRadioButton",
         ]
         user_settings = (
-            SettingsProvider.SETTINGS.get("summary", {})
-            .get("export", {})
+            SettingsProvider.SETTINGS.get("export", {})
+            .get("summary", {})
             .get("user", {})
         )
         if not user_settings:
@@ -224,8 +227,8 @@ class SummaryExportController(QObject):
     @staticmethod
     def _new_balance_saved(new_balance: float) -> None:
         user_settings = (
-            SettingsProvider.SETTINGS.get("summary", {})
-            .get("export", {})
+            SettingsProvider.SETTINGS.get("export", {})
+            .get("summary", {})
             .get("user", {})
         )
         if not user_settings:
