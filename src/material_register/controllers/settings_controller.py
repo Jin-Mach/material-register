@@ -52,6 +52,7 @@ class SettingsController:
                 )
                 return
             self.export_settings.apply_settings()
+            self.export_settings.set_folder_path()
             SettingsController._reload_settings()
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_RESTORED")
 

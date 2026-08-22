@@ -167,7 +167,7 @@ class PeriodExportSettings(QWidget):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self.apply_settings()
-        self._set_folder_path()
+        self.set_folder_path()
         self._set_validators()
 
     def _setup_texts(self) -> None:
@@ -192,6 +192,18 @@ class PeriodExportSettings(QWidget):
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return
 
+    def set_folder_path(self) -> None:
+        if not self.path_line_edit.text().strip():
+            self.current_path = QStandardPaths.writableLocation(
+                QStandardPaths.StandardLocation.DocumentsLocation
+            )
+        else:
+            self.current_path = self.path_line_edit.text().strip()
+        self._set_elided_path(self.current_path)
+        self.path_line_edit.setToolTip(self.current_path)
+        self.path_line_edit.setToolTipDuration(3000)
+        self.path_line_edit.setReadOnly(True)
+
     def _create_connection(self) -> None:
         self.path_button.clicked.connect(self._select_export_path)
         self.restore_button.clicked.connect(self.settings_controller.restore_settings)
@@ -203,18 +215,6 @@ class PeriodExportSettings(QWidget):
         )
         self.branch_name_line_edit.setValidator(name_validator)
         self.file_name_line_edit.setValidator(name_validator)
-
-    def _set_folder_path(self) -> None:
-        if not self.path_line_edit.text().strip():
-            self.current_path = QStandardPaths.writableLocation(
-                QStandardPaths.StandardLocation.DocumentsLocation
-            )
-        else:
-            self.current_path = self.path_line_edit.text().strip()
-        self._set_elided_path(self.current_path)
-        self.path_line_edit.setToolTip(self.current_path)
-        self.path_line_edit.setToolTipDuration(3000)
-        self.path_line_edit.setReadOnly(True)
 
     def _set_elided_path(self, path: str) -> None:
         metrics = QFontMetrics(self.path_line_edit.font())
@@ -232,10 +232,15 @@ class PeriodExportSettings(QWidget):
             self._set_elided_path(self.current_path)
             self.path_line_edit.setToolTip(self.current_path)
 
+    def _get_settings_path(self) -> str:
+        if not self.path_line_edit.text().strip():
+            return ""
+        return str(self.current_path)
+
     def get_export_settings_data(self):
         return {
             self.branch_name_line_edit.objectName(): self.branch_name_line_edit.text().strip(),
-            self.path_line_edit.objectName(): self.current_path,
+            self.path_line_edit.objectName(): self._get_settings_path(),
             self.file_name_line_edit.objectName(): self.file_name_line_edit.text().strip(),
             self.no_action_radio_button.objectName(): self.no_action_radio_button.isChecked(),
             self.open_folder_radio_button.objectName(): self.open_folder_radio_button.isChecked(),
