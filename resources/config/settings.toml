@@ -10,8 +10,8 @@ saveLastOpeningBalanceCheckbox = false
 openingBalanceSpinbox = 0.0
 
 [export.summary.user]
-branchNameLineEdit = "ppp"
-pathLineEdit = "/Users/jindrichmachytka/Documents"
+branchNameLineEdit = ""
+pathLineEdit = ""
 fileNameLineEdit = ""
 noActionRadioButton = true
 openFolderRadioButton = false
