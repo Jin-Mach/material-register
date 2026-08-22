@@ -1,20 +1,20 @@
-from material_register.domain.export_dataclass import (
-    ExportItemIn,
-    ExportItemOut,
-    PeriodItemIn,
-    PeriodItemOut,
+from material_register.domain.export_dataclass.summary_dataclass import (
+    SummaryExportItemIn,
+    SummaryExportItemOut,
+    SummaryItemDataIn,
+    SummaryItemDataOut,
 )
 
 
-class PeriodReport:
+class SummaryReport:
     @staticmethod
-    def get_period_data_in(
-        in_data: list[ExportItemIn],
-    ) -> dict[str, list[PeriodItemIn]]:
+    def get_summary_data_in(
+        in_data: list[SummaryExportItemIn],
+    ) -> dict[str, list[SummaryItemDataIn]]:
         report_data = {}
         for in_item in in_data:
             if in_item.category_name not in report_data:
-                period_item_in = PeriodItemIn(
+                period_item_in = SummaryItemDataIn(
                     commodity_name=in_item.commodity_name,
                     commodity_unit=in_item.commodity_unit,
                     price_per_unit=in_item.price_per_unit,
@@ -35,7 +35,7 @@ class PeriodReport:
                         found = True
                         break
                 if not found:
-                    period_item_in = PeriodItemIn(
+                    period_item_in = SummaryItemDataIn(
                         commodity_name=in_item.commodity_name,
                         commodity_unit=in_item.commodity_unit,
                         price_per_unit=in_item.price_per_unit,
@@ -46,12 +46,12 @@ class PeriodReport:
         return report_data
 
     @staticmethod
-    def get_period_data_out(
-        out_data: list[ExportItemOut],
-    ) -> dict[str, list[PeriodItemOut]]:
+    def get_summary_data_out(
+        out_data: list[SummaryExportItemOut],
+    ) -> dict[str, list[SummaryItemDataOut]]:
         report_data = {}
         for out_item in out_data:
-            period_item_out = PeriodItemOut(
+            period_item_out = SummaryItemDataOut(
                 commodity_name=out_item.commodity_name,
                 commodity_unit=out_item.commodity_unit,
                 total_quantity=out_item.total_quantity,

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class ExportItemIn:
+class SummaryExportItemIn:
     category_name: str | None = None
     commodity_name: str | None = None
     commodity_unit: str | None = None
@@ -12,7 +12,7 @@ class ExportItemIn:
 
 
 @dataclass(frozen=True)
-class ExportItemOut:
+class SummaryExportItemOut:
     category_name: str | None = None
     commodity_name: str | None = None
     commodity_unit: str | None = None
@@ -20,7 +20,7 @@ class ExportItemOut:
 
 
 @dataclass
-class PeriodItemIn:
+class SummaryItemDataIn:
     commodity_name: str | None = None
     commodity_unit: str | None = None
     price_per_unit: float | None = None
@@ -29,7 +29,7 @@ class PeriodItemIn:
 
 
 @dataclass(frozen=True)
-class PeriodItemOut:
+class SummaryItemDataOut:
     commodity_name: str | None = None
     commodity_unit: str | None = None
     total_quantity: float = 0.0

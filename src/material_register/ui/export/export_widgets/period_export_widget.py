@@ -28,8 +28,8 @@ from material_register.config.ui_constants import (
     EXPORT_PRICE_MAX_VALUE,
     EXPORT_PRICE_MIN_VALUE,
 )
-from material_register.controllers.period_export_controller import (
-    PeriodExportController,
+from material_register.controllers.export_controllers.period_export_controller import (
+    SummaryExportController,
 )
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
@@ -48,7 +48,7 @@ class PeriodExportWidget(QWidget):
 
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__(export_widget)
-        self.period_export_controller = PeriodExportController(self)
+        self.summary_period_controller = SummaryExportController(self)
         self.current_path = Path(
             QStandardPaths.writableLocation(
                 QStandardPaths.StandardLocation.DocumentsLocation
@@ -354,7 +354,7 @@ class PeriodExportWidget(QWidget):
             radio_button.toggled.connect(self._apply_date_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
-        self.export_button.clicked.connect(self.period_export_controller.start_export)
+        self.export_button.clicked.connect(self.summary_period_controller.start_export)
 
     def _setup_spinboxes(self) -> None:
         spinboxes = [

@@ -4,14 +4,17 @@ from material_register.db.config.queries_constants import (
     EXPORT_QUERY_IN,
     EXPORT_QUERY_OUT,
 )
-from material_register.domain.export_dataclass import ExportItemIn, ExportItemOut
+from material_register.domain.export_dataclass.summary_dataclass import (
+    SummaryExportItemIn,
+    SummaryExportItemOut,
+)
 
 
 class PeriodExportQueries:
     @staticmethod
     def load_export_data_in(
         db_connection: QSqlDatabase, from_date: str, to_date: str
-    ) -> tuple[bool, str, list[ExportItemIn]]:
+    ) -> tuple[bool, str, list[SummaryExportItemIn]]:
         query = QSqlQuery(db_connection)
         if not query.prepare(EXPORT_QUERY_IN):
             return False, query.lastError().text(), []
@@ -23,7 +26,7 @@ class PeriodExportQueries:
         results = []
         while query.next():
             results.append(
-                ExportItemIn(
+                SummaryExportItemIn(
                     category_name=query.value(0),
                     commodity_name=query.value(1),
                     commodity_unit=query.value(2),
@@ -37,7 +40,7 @@ class PeriodExportQueries:
     @staticmethod
     def load_export_data_out(
         db_connection: QSqlDatabase, from_date: str, to_date: str
-    ) -> tuple[bool, str, list[ExportItemOut]]:
+    ) -> tuple[bool, str, list[SummaryExportItemOut]]:
         query = QSqlQuery(db_connection)
         if not query.prepare(EXPORT_QUERY_OUT):
             return False, query.lastError().text(), []
@@ -49,7 +52,7 @@ class PeriodExportQueries:
         results = []
         while query.next():
             results.append(
-                ExportItemOut(
+                SummaryExportItemOut(
                     category_name=query.value(0),
                     commodity_name=query.value(1),
                     commodity_unit=query.value(2),

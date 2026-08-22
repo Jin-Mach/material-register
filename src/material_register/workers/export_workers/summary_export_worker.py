@@ -4,13 +4,13 @@ from PySide6.QtCore import QObject, Signal, Slot
 
 from material_register.db.queries.period_export_queries import PeriodExportQueries
 from material_register.init.db_init import DbInit
-from material_register.services.export.excel.period.period_workbook import (
-    PeriodWorkbook,
+from material_register.services.export.excel.summary_export.summary_workbook import (
+    SummaryWorkbook,
 )
 from material_register.utils.system import is_disk_writable
 
 
-class PeriodExportWorker(QObject):
+class SummaryExportWorker(QObject):
     finished = Signal(float)
     no_export_data = Signal(str)
     export_started = Signal()
@@ -54,7 +54,7 @@ class PeriodExportWorker(QObject):
                 self.no_export_data.emit("NO_DATA")
                 return
             self.export_started.emit()
-            workbook, last_balance = PeriodWorkbook.create_workbook(
+            workbook, last_balance = SummaryWorkbook.create_workbook(
                 self.export_settings, self.export_texts, in_data, out_data
             )
             if not is_disk_writable(export_path.parent):

@@ -17,7 +17,9 @@ from material_register.utils.file_launchers import (
     open_file_in_explorer,
 )
 from material_register.utils.normalizer import normalize_value
-from material_register.workers.period_export_worker import PeriodExportWorker
+from material_register.workers.export_workers.summary_export_worker import (
+    SummaryExportWorker,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.export.export_widgets.period_export_widget import (
@@ -25,7 +27,7 @@ if TYPE_CHECKING:
     )
 
 
-class PeriodExportController(QObject):
+class SummaryExportController(QObject):
     def __init__(self, period_export_widget: "PeriodExportWidget") -> None:
         super().__init__()
         self.period_export_widget = period_export_widget
@@ -43,7 +45,7 @@ class PeriodExportController(QObject):
             MessageBoxes.show_error(self.period_export_widget, "INVALID_DATA")
             return
         if not self.export_texts:
-            PeriodExportController._handle_export_error(
+            SummaryExportController._handle_export_error(
                 "Export texts not loaded",
                 f"{self.__class__.__name__}.start_export",
                 "TEXTS_LOAD_FAILED",
@@ -51,7 +53,7 @@ class PeriodExportController(QObject):
             return
         self.export_path = self.export_settings.get("export_path", None)
         if self.export_path is None:
-            PeriodExportController._handle_export_error(
+            SummaryExportController._handle_export_error(
                 "Export path is None",
                 f"{self.__class__.__name__}.start_export",
                 "PATH_ERROR",
@@ -74,7 +76,7 @@ class PeriodExportController(QObject):
         export_texts: dict[str, dict[str, str]],
     ) -> None:
         self.thread = QThread()
-        self.worker = PeriodExportWorker(export_settings, export_texts)
+        self.worker = SummaryExportWorker(export_settings, export_texts)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._export_error)
@@ -102,7 +104,7 @@ class PeriodExportController(QObject):
         if self.export_settings.get("useLastOptionsCheckbox", False):
             self._last_settings_saved()
         if self.export_settings.get("saveLastOpeningBalanceCheckbox", False):
-            PeriodExportController._new_balance_saved(last_value)
+            SummaryExportController._new_balance_saved(last_value)
         self._clean_thread()
         QTimer.singleShot(1000, self._finish_export)
 
@@ -127,12 +129,12 @@ class PeriodExportController(QObject):
     def _finish_export(self, error: str | None = None) -> None:
         self.progress_dialog.close()
         if error is not None:
-            PeriodExportController._handle_export_error(
+            SummaryExportController._handle_export_error(
                 error, f"{self.__class__.__name__}._export_error"
             )
             self._reset_variables()
             return
-        PeriodExportController._notification_handler(
+        SummaryExportController._notification_handler(
             self.notification_texts, "EXPORT_COMPLETED", "Export completed"
         )
         if self.export_settings.get(
