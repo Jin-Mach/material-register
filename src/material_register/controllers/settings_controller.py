@@ -7,13 +7,13 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 
 if TYPE_CHECKING:
-    from material_register.ui.settings.settings_widgets.period_export_settings import (
-        PeriodExportSettings,
+    from material_register.ui.settings.settings_widgets.summary_export_settings import (
+        SummaryExportSettings,
     )
 
 
 class SettingsController:
-    def __init__(self, export_settings: "PeriodExportSettings") -> None:
+    def __init__(self, export_settings: "SummaryExportSettings") -> None:
         self.export_settings = export_settings
         self.settings = SettingsProvider.SETTINGS.get("export", {})
 

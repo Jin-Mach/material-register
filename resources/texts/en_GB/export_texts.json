@@ -3,7 +3,7 @@
     "loadingDataText": "Loading data...",
     "exportInProgressText": "Export in progress..."
   },
-  "PeriodSheet": {
+  "SummarySheet": {
     "sheetName": "Evidence",
     "titleText": "Material Register",
     "rangeText": "Period:",

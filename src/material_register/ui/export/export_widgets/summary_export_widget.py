@@ -28,7 +28,7 @@ from material_register.config.ui_constants import (
     SUMMARY_EXPORT_PRICE_MAX_VALUE,
     SUMMARY_EXPORT_PRICE_MIN_VALUE,
 )
-from material_register.controllers.export_controllers.period_export_controller import (
+from material_register.controllers.export_controllers.summary_export_controller import (
     SummaryExportController,
 )
 from material_register.services.error_handler import ErrorHandler
@@ -42,13 +42,13 @@ if TYPE_CHECKING:
     from material_register.ui.export.export_widget import ExportWidget
 
 
-class PeriodExportWidget(QWidget):
+class SummaryExportWidget(QWidget):
     WIDTH = 400
     SPACING = 20
 
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__(export_widget)
-        self.summary_period_controller = SummaryExportController(self)
+        self.summary_export_controller = SummaryExportController(self)
         self.current_path = Path(
             QStandardPaths.writableLocation(
                 QStandardPaths.StandardLocation.DocumentsLocation
@@ -356,7 +356,7 @@ class PeriodExportWidget(QWidget):
             radio_button.toggled.connect(self._apply_date_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
-        self.export_button.clicked.connect(self.summary_period_controller.start_export)
+        self.export_button.clicked.connect(self.summary_export_controller.start_export)
 
     def _setup_spinboxes(self) -> None:
         spinboxes = [
@@ -399,7 +399,7 @@ class PeriodExportWidget(QWidget):
 
     def _set_file_suffix(self) -> None:
         self.suffix_label.setText(
-            PeriodExportWidget._get_file_suffix(self.file_type_combobox.currentText())
+            SummaryExportWidget._get_file_suffix(self.file_type_combobox.currentText())
         )
 
     def _on_text_or_value_changed(self) -> None:

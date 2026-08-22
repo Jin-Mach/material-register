@@ -14,14 +14,14 @@ class SummaryReport:
         report_data = {}
         for in_item in in_data:
             if in_item.category_name not in report_data:
-                period_item_in = SummaryItemDataIn(
+                summary_item_in = SummaryItemDataIn(
                     commodity_name=in_item.commodity_name,
                     commodity_unit=in_item.commodity_unit,
                     price_per_unit=in_item.price_per_unit,
                     total_quantity=in_item.total_quantity,
                     total_price=in_item.total_price,
                 )
-                report_data[in_item.category_name] = [period_item_in]
+                report_data[in_item.category_name] = [summary_item_in]
             else:
                 items = report_data[in_item.category_name]
                 found = False
@@ -35,14 +35,14 @@ class SummaryReport:
                         found = True
                         break
                 if not found:
-                    period_item_in = SummaryItemDataIn(
+                    summary_item_in = SummaryItemDataIn(
                         commodity_name=in_item.commodity_name,
                         commodity_unit=in_item.commodity_unit,
                         price_per_unit=in_item.price_per_unit,
                         total_quantity=in_item.total_quantity,
                         total_price=in_item.total_price,
                     )
-                    items.append(period_item_in)
+                    items.append(summary_item_in)
         return report_data
 
     @staticmethod
@@ -51,12 +51,12 @@ class SummaryReport:
     ) -> dict[str, list[SummaryItemDataOut]]:
         report_data = {}
         for out_item in out_data:
-            period_item_out = SummaryItemDataOut(
+            summary_item_out = SummaryItemDataOut(
                 commodity_name=out_item.commodity_name,
                 commodity_unit=out_item.commodity_unit,
                 total_quantity=out_item.total_quantity,
             )
             if out_item.category_name not in report_data:
                 report_data[out_item.category_name] = []
-            report_data[out_item.category_name].append(period_item_out)
+            report_data[out_item.category_name].append(summary_item_out)
         return report_data

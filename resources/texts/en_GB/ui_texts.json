@@ -67,7 +67,7 @@
     "exportButtonText": "Export",
     "exportButtonTooltipText": "Displays export settings"
   },
-  "PeriodExportWidget": {
+  "SummaryExportWidget": {
     "branchGroupBoxText": "Branch",
     "branchNameLabelText": "Branch:",
     "branchNameLineEditPlaceholderText": "Enter branch name",
@@ -247,9 +247,9 @@
     "cancelButtonTooltipText": "Closes dialog"
   },
   "SettingsWidget": {
-    "periodExportTabTitle": "Records"
+    "summaryExportTabTitle": "Records"
   },
-  "PeriodExportSettings": {
+  "SummaryExportSettings": {
     "branchGroupBoxText": "Branch",
     "branchNameLabelText": "Branch:",
     "branchNameLineEditPlaceholderText": "Enter branch name",

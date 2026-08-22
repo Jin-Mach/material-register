@@ -122,21 +122,27 @@ def result_data_out() -> dict[str, list[SummaryItemDataOut]]:
     return {
         "A": [
             SummaryItemDataOut(
-                commodity_name="12345", commodity_unit="kg", total_quantity=600.0
+                commodity_name="12345",
+                commodity_unit="kg",
+                total_quantity=600.0,
             ),
             SummaryItemDataOut(
-                commodity_name="67890", commodity_unit="kg", total_quantity=100.0
+                commodity_name="67890",
+                commodity_unit="kg",
+                total_quantity=100.0,
             ),
         ],
         "B": [
             SummaryItemDataOut(
-                commodity_name="54321", commodity_unit="kg", total_quantity=100.0
+                commodity_name="54321",
+                commodity_unit="kg",
+                total_quantity=100.0,
             )
         ],
     }
 
 
-def test_get_period_data_in(
+def test_get_summary_data_in(
     export_data_in: list[SummaryExportItemIn],
     result_data_in: dict[str, list[SummaryItemDataIn]],
 ) -> None:
@@ -144,12 +150,12 @@ def test_get_period_data_in(
     assert result == result_data_in
 
 
-def test_get_period_data_in_empty() -> None:
+def test_get_summary_data_in_empty() -> None:
     result = SummaryReport.get_summary_data_in([])
     assert result == {}
 
 
-def test_get_period_data_out(
+def test_get_summary_data_out(
     export_data_out: list[SummaryExportItemOut],
     result_data_out: dict[str, list[SummaryItemDataOut]],
 ) -> None:
@@ -157,6 +163,6 @@ def test_get_period_data_out(
     assert result == result_data_out
 
 
-def test_get_period_data_out_empty() -> None:
+def test_get_summary_data_out_empty() -> None:
     result = SummaryReport.get_summary_data_out([])
     assert result == {}

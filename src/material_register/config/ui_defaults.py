@@ -54,7 +54,7 @@ DEFAULT_TEXTS = {
         "exportButtonText": "Export",
         "exportButtonTooltipText": "Displays export settings",
     },
-    "PeriodExportWidget": {
+    "SummaryExportWidget": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
         "pathNameGroupBoxText": "File",
@@ -229,8 +229,8 @@ DEFAULT_TEXTS = {
         "cancelButtonText": "Cancel",
         "cancelButtonTooltipText": "Closes dialog",
     },
-    "SettingsWidget": {"periodExportTabTitle": "Records"},
-    "PeriodExportSettings": {
+    "SettingsWidget": {"summaryExportTabTitle": "Records"},
+    "SummaryExportSettings": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
         "branchNameLineEditPlaceholderText": "Enter branch name",

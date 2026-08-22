@@ -34,8 +34,8 @@ class SummarySheet:
         data_in: list[SummaryExportItemIn],
         out_data: list[SummaryExportItemOut],
     ) -> tuple[Worksheet, float]:
-        period_in_data = SummaryReport.get_summary_data_in(data_in)
-        period_out_data = SummaryReport.get_summary_data_out(out_data)
+        summary_in_data = SummaryReport.get_summary_data_in(data_in)
+        summary_out_data = SummaryReport.get_summary_data_out(out_data)
         row = SummarySheet.START_ROW
         row = SummarySheet._create_header(
             sheet, row, SummarySheet.LAST_COLUMN, export_settings, export_texts
@@ -50,7 +50,7 @@ class SummarySheet:
             data_section_row,
             SummarySheet.LAST_COLUMN,
             export_texts,
-            period_in_data,
+            summary_in_data,
         )
         total_value = SummarySheet._update_buyback_value(
             buyback_cell, buyback_value, total_value
@@ -60,7 +60,7 @@ class SummarySheet:
             data_section_row,
             SummarySheet.LAST_COLUMN,
             export_texts,
-            period_out_data,
+            summary_out_data,
         )
         row = SummarySheet._create_data_spacer(
             sheet, in_section_row, out_section_row, SummarySheet.LAST_COLUMN

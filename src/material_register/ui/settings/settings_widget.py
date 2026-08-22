@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QTabWidget, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.settings.settings_widgets.period_export_settings import (
-    PeriodExportSettings,
+from material_register.ui.settings.settings_widgets.summary_export_settings import (
+    SummaryExportSettings,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -31,7 +31,7 @@ class SettingsWidget(QWidget):
 
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self._export_tab_title = ui_texts.get("periodExportTabTitle", "Records")
+        self._export_tab_title = ui_texts.get("summaryExportTabTitle", "Records")
         if ui_texts:
             return
         ErrorHandler.handle_error(
@@ -40,7 +40,7 @@ class SettingsWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
     def _setup_tabs(self) -> None:
-        self.period_export_settings = PeriodExportSettings(self)
+        self.summary_export_widget = SummaryExportSettings(self)
         self.settings_tab_widget.addTab(
-            self.period_export_settings, self._export_tab_title
+            self.summary_export_widget, self._export_tab_title
         )

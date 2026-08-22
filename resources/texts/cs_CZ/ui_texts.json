@@ -67,7 +67,7 @@
     "exportButtonText": "Export",
     "exportButtonTooltipText": "Zobrazí nastavení exportu"
   },
-  "PeriodExportWidget": {
+  "SummaryExportWidget": {
     "branchGroupBoxText": "Pobočka",
     "branchNameLabelText": "Pobočka:",
     "branchNameLineEditPlaceholderText": "Zadej název pobočky",
@@ -247,9 +247,9 @@
     "cancelButtonTooltipText": "Zavře dialog"
   },
   "SettingsWidget": {
-    "periodExportTabTitle": "Evidence"
+    "summaryExportTabTitle": "Evidence"
   },
-  "PeriodExportSettings": {
+  "SummaryExportSettings": {
     "branchGroupBoxText": "Pobočka",
     "branchNameLabelText": "Pobočka:",
     "branchNameLineEditPlaceholderText": "Zadej název pobočky",

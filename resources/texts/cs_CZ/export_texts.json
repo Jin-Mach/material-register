@@ -3,7 +3,7 @@
     "loadingDataText": "Načítání dat...",
     "exportInProgressText": "Probíhá export..."
   },
-  "PeriodSheet": {
+  "SummarySheet": {
     "sheetName": "Evidence",
     "titleText": "Evidence materiálu",
     "rangeText": "Období:",

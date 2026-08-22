@@ -8,7 +8,7 @@ from material_register.db.queries.export_queries.summary_export_queries import (
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase("QSQLITE", "period_export_test")
+    conn = QSqlDatabase.addDatabase("QSQLITE", "summary_export_test")
     conn.setDatabaseName(":memory:")
     conn.open()
     return conn

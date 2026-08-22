@@ -22,15 +22,15 @@ from material_register.workers.export_workers.summary_export_worker import (
 )
 
 if TYPE_CHECKING:
-    from material_register.ui.export.export_widgets.period_export_widget import (
-        PeriodExportWidget,
+    from material_register.ui.export.export_widgets.summary_export_widget import (
+        SummaryExportWidget,
     )
 
 
 class SummaryExportController(QObject):
-    def __init__(self, period_export_widget: "PeriodExportWidget") -> None:
+    def __init__(self, summary_export_widget: "SummaryExportWidget") -> None:
         super().__init__()
-        self.period_export_widget = period_export_widget
+        self.summary_export_widget = summary_export_widget
         self.export_path = None
         self.progress_dialog = None
         self.export_settings = {}
@@ -40,9 +40,9 @@ class SummaryExportController(QObject):
         self.export_texts = TextsProvider.EXPORT_TEXTS
 
     def start_export(self) -> None:
-        self.export_settings = self.period_export_widget.get_export_data()
+        self.export_settings = self.summary_export_widget.get_export_data()
         if not self._is_export_settings_valid():
-            MessageBoxes.show_error(self.period_export_widget, "INVALID_DATA")
+            MessageBoxes.show_error(self.summary_export_widget, "INVALID_DATA")
             return
         if not self.export_texts:
             SummaryExportController._handle_export_error(
@@ -61,7 +61,7 @@ class SummaryExportController(QObject):
             return
         if self.export_path.exists():
             question = MessageBoxes.show_question(
-                self.period_export_widget, "PATH_EXISTS"
+                self.summary_export_widget, "PATH_EXISTS"
             )
             if not question:
                 return
@@ -90,7 +90,7 @@ class SummaryExportController(QObject):
         self.progress_dialog.close()
         self._reset_variables()
         QTimer.singleShot(
-            100, lambda: MessageBoxes.show_error(self.period_export_widget, key)
+            100, lambda: MessageBoxes.show_error(self.summary_export_widget, key)
         )
 
     def _update_texts(self) -> None:
@@ -141,13 +141,13 @@ class SummaryExportController(QObject):
             "openFolderRadioButton", False
         ) and not open_file_in_explorer(self.export_path):
             MessageBoxes.show_error(
-                self.period_export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION"
+                self.summary_export_widget, "OPEN_EXPLORER_FAILED", "INFORMATION"
             )
         if self.export_settings.get(
             "openFileRadioButton", False
         ) and not open_file_in_default(self.export_path):
             MessageBoxes.show_error(
-                self.period_export_widget, "OPEN_FILE_FAILED", "INFORMATION"
+                self.summary_export_widget, "OPEN_FILE_FAILED", "INFORMATION"
             )
 
         self._reset_variables()
@@ -161,7 +161,11 @@ class SummaryExportController(QObject):
             "openFolderRadioButton",
             "openFileRadioButton",
         ]
-        user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
+        user_settings = (
+            SettingsProvider.SETTINGS.get("summary", {})
+            .get("export", {})
+            .get("user", {})
+        )
         if not user_settings:
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
@@ -219,7 +223,11 @@ class SummaryExportController(QObject):
 
     @staticmethod
     def _new_balance_saved(new_balance: float) -> None:
-        user_settings = SettingsProvider.SETTINGS.get("export", {}).get("user", {})
+        user_settings = (
+            SettingsProvider.SETTINGS.get("summary", {})
+            .get("export", {})
+            .get("user", {})
+        )
         if not user_settings:
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_FAILED")
             return
