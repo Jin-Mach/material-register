@@ -22,7 +22,9 @@ class SetupInit:
             print("invalid_files: ", invalid_files)
             if not DEV_MODE:
                 if invalid_files:
-                    state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
+                    state = DownloadProvider.is_ready_for_download(
+                        PathsProvider.resources
+                    )
                     if not state["internet"]:
                         return False, "CONNECTION_ERROR"
                     if not state["writable"]:

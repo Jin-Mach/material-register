@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtGui import QCloseEvent, QShowEvent
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QHBoxLayout, QVBoxLayout
+from PySide6.QtWidgets import QDialog, QHBoxLayout, QPushButton, QVBoxLayout
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
@@ -29,15 +29,17 @@ class SettingsDialog(QDialog):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         widgets_layout = QHBoxLayout()
-        settings_side_panel = SettingsSidePanel(self)
-        settings_stacked_widget = SettingsStackedWidget(self)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Cancel)
-        self.close_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
+        self.settings_side_panel = SettingsSidePanel(self)
+        self.settings_stacked_widget = SettingsStackedWidget(self)
+        buttons_layout = QHBoxLayout()
+        self.close_button = QPushButton()
         self.close_button.setObjectName("closeButton")
-        widgets_layout.addWidget(settings_side_panel)
-        widgets_layout.addWidget(settings_stacked_widget)
+        widgets_layout.addWidget(self.settings_side_panel)
+        widgets_layout.addWidget(self.settings_stacked_widget)
+        buttons_layout.addStretch()
+        buttons_layout.addWidget(self.close_button)
         main_layout.addLayout(widgets_layout)
-        main_layout.addWidget(button_box)
+        main_layout.addLayout(buttons_layout)
         return main_layout
 
     def _setup_ui(self) -> None:
@@ -51,6 +53,11 @@ class SettingsDialog(QDialog):
             return
 
     def _create_connection(self):
+        buttons_map = {self.settings_side_panel.export_button: 0}
+        for button, index in buttons_map.items():
+            button.clicked.connect(
+                lambda _, i=index: self.settings_stacked_widget.setCurrentIndex(i)
+            )
         self.close_button.clicked.connect(self.close)
 
     def showEvent(self, event: QShowEvent) -> None:

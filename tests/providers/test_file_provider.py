@@ -33,9 +33,11 @@ def write_image(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("img", encoding="utf-8")
 
+
 def write_style(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("QWidget { color: white; }", encoding="utf-8")
+
 
 def create_valid_ui() -> dict:
     data = {}
@@ -105,6 +107,7 @@ def test_check_missing_files(tmp_path: Path) -> None:
     write_style(base / "dark_blue.qss")
     result = FileProvider.check_missing_files(base)
     assert len(result) == 0
+
 
 def test_check_missing_files_reports_missing(tmp_path: Path) -> None:
     base = tmp_path / "resources"

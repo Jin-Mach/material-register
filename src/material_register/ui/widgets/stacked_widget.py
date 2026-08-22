@@ -20,9 +20,9 @@ class StackedWidget(QStackedWidget):
         self.period_export_widget = PeriodExportWidget(self)
         self.customers_widget = CustomersWidget(self)
         self.catalog_widget = CatalogWidget(self)
-        self.init_setup()
+        self._init_setup()
 
-    def init_setup(self) -> None:
+    def _init_setup(self) -> None:
         widgets = [
             self.transactions_widget,
             self.inventory_widget,

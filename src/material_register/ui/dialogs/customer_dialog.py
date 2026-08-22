@@ -126,11 +126,11 @@ class CustomerDialog(QDialog):
 
     def _create_connection(self) -> None:
         for widget in (
-                self.first_name_input,
-                self.last_name_input,
-                self.company_input,
-                self.document_type_input,
-                self.address_input,
+            self.first_name_input,
+            self.last_name_input,
+            self.company_input,
+            self.document_type_input,
+            self.address_input,
         ):
             widget.textChanged.connect(self._on_form_changed)
         self.subject_type.currentIndexChanged.connect(self._on_type_changed)

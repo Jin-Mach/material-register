@@ -51,7 +51,7 @@ class InventoryView(QTableView):
         self.resizeColumnsToContents()
         self.setColumnWidth(
             active_column,
-            self.columnWidth(active_column) + (INVENTORY_HORIZONTAL_PADDING)
+            self.columnWidth(active_column) + (INVENTORY_HORIZONTAL_PADDING),
         )
 
     def _setup_behavior(self) -> None:

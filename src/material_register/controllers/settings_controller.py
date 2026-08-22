@@ -33,7 +33,7 @@ class SettingsController:
                 "Update settings failed", f"{self.__class__.__name__}.update_settings"
             )
             return
-        self._reload_settings()
+        SettingsController._reload_settings()
         AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_SAVED")
 
     def restore_settings(self) -> None:
@@ -52,11 +52,12 @@ class SettingsController:
                 )
                 return
             self.export_settings.apply_settings()
-            self._reload_settings()
+            SettingsController._reload_settings()
             AppContext.MAIN_WINDOW.status_bar.show_message("SETTINGS_RESTORED")
 
-    def _reload_settings(self) -> None:
-        stacked_widget = self.export_settings.settings_widget.stacked_widget
+    @staticmethod
+    def _reload_settings() -> None:
+        stacked_widget = AppContext.MAIN_WINDOW.stacked_widget
         export_widget = stacked_widget.period_export_widget
         if hasattr(export_widget, "apply_settings"):
             export_widget.apply_settings()

@@ -9,13 +9,13 @@ from material_register.ui.settings.settings_widgets.period_export_settings impor
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.widgets.stacked_widget import StackedWidget
+    from material_register.ui.dialogs.settings_dialog import SettingsDialog
 
 
 class SettingsWidget(QWidget):
-    def __init__(self, stacked_widget: "StackedWidget") -> None:
-        super().__init__(stacked_widget)
-        self.stacked_widget = stacked_widget
+    def __init__(self, settings_dialog: "SettingsDialog") -> None:
+        super().__init__(settings_dialog)
+        self.settings_dialog = settings_dialog
         self.setLayout(self._create_ui())
         self._setup_ui()
 

@@ -45,14 +45,14 @@ DEFAULT_TEXTS = {
     "InventoryWidget": {"countLabelText": "Displayed:"},
     "InventoryActionsWidget": {"searchLineEditPlaceholderText": "Enter search text..."},
     "SettingsDialog": {
-      "titleText": "Settings",
-      "closeButtonText": "Close",
-      "closeButtonTooltipText": "Closes the dialog"
-      },
-      "SettingsSidePanel": {
+        "titleText": "Settings",
+        "closeButtonText": "Close",
+        "closeButtonTooltipText": "Closes the dialog",
+    },
+    "SettingsSidePanel": {
         "exportButtonText": "Export",
-        "exportButtonTooltipText": "Displays export settings"
-      },
+        "exportButtonTooltipText": "Displays export settings",
+    },
     "PeriodExportWidget": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
