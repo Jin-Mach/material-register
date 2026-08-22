@@ -1,8 +1,8 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.config.queries_constants import (
-    EXPORT_QUERY_IN,
-    EXPORT_QUERY_OUT,
+    SUMMARY_QUERY_IN,
+    SUMMARY_QUERY_OUT,
 )
 from material_register.domain.export_dataclass.summary_dataclass import (
     SummaryExportItemIn,
@@ -10,13 +10,13 @@ from material_register.domain.export_dataclass.summary_dataclass import (
 )
 
 
-class PeriodExportQueries:
+class SummaryExportQueries:
     @staticmethod
     def load_export_data_in(
         db_connection: QSqlDatabase, from_date: str, to_date: str
     ) -> tuple[bool, str, list[SummaryExportItemIn]]:
         query = QSqlQuery(db_connection)
-        if not query.prepare(EXPORT_QUERY_IN):
+        if not query.prepare(SUMMARY_QUERY_IN):
             return False, query.lastError().text(), []
         query.addBindValue(from_date)
         query.addBindValue(to_date)
@@ -42,7 +42,7 @@ class PeriodExportQueries:
         db_connection: QSqlDatabase, from_date: str, to_date: str
     ) -> tuple[bool, str, list[SummaryExportItemOut]]:
         query = QSqlQuery(db_connection)
-        if not query.prepare(EXPORT_QUERY_OUT):
+        if not query.prepare(SUMMARY_QUERY_OUT):
             return False, query.lastError().text(), []
         query.addBindValue(from_date)
         query.addBindValue(to_date)

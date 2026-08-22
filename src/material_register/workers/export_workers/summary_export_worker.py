@@ -2,7 +2,9 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal, Slot
 
-from material_register.db.queries.period_export_queries import PeriodExportQueries
+from material_register.db.queries.export_queries.summary_export_queries import (
+    SummaryExportQueries,
+)
 from material_register.init.db_init import DbInit
 from material_register.services.export.excel.summary_export.summary_workbook import (
     SummaryWorkbook,
@@ -38,13 +40,13 @@ class SummaryExportWorker(QObject):
             if not ok:
                 self.error.emit(error)
                 return
-            ok, error, in_data = PeriodExportQueries.load_export_data_in(
+            ok, error, in_data = SummaryExportQueries.load_export_data_in(
                 self.db_connection, from_date, to_date
             )
             if not ok:
                 self.error.emit(error)
                 return
-            ok, error, out_data = PeriodExportQueries.load_export_data_out(
+            ok, error, out_data = SummaryExportQueries.load_export_data_out(
                 self.db_connection, from_date, to_date
             )
             if not ok:

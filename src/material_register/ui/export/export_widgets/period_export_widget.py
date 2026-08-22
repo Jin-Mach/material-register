@@ -24,9 +24,9 @@ from PySide6.QtWidgets import (
 )
 
 from material_register.config.ui_constants import (
-    BALANCE_PRICE_MIN_VALUE,
-    EXPORT_PRICE_MAX_VALUE,
-    EXPORT_PRICE_MIN_VALUE,
+    SUMMARY_BALANCE_PRICE_MIN_VALUE,
+    SUMMARY_EXPORT_PRICE_MAX_VALUE,
+    SUMMARY_EXPORT_PRICE_MIN_VALUE,
 )
 from material_register.controllers.export_controllers.period_export_controller import (
     SummaryExportController,
@@ -363,11 +363,11 @@ class PeriodExportWidget(QWidget):
             self.expense_spinbox,
         ]
         for spinbox in spinboxes:
-            minimum = EXPORT_PRICE_MIN_VALUE
+            minimum = SUMMARY_EXPORT_PRICE_MIN_VALUE
             if spinbox == self.opening_balance_spinbox:
-                minimum = BALANCE_PRICE_MIN_VALUE
+                minimum = SUMMARY_BALANCE_PRICE_MIN_VALUE
             spinbox.setMinimum(minimum)
-            spinbox.setMaximum(EXPORT_PRICE_MAX_VALUE)
+            spinbox.setMaximum(SUMMARY_EXPORT_PRICE_MAX_VALUE)
             spinbox.setDecimals(1)
             spinbox.setSingleStep(0.1)
             spinbox.setGroupSeparatorShown(True)

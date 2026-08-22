@@ -178,7 +178,7 @@ INVENTORY_QUERY = """
             ORDER BY categories.name ASC
 """
 
-EXPORT_QUERY_IN = """
+SUMMARY_QUERY_IN = """
             SELECT
                 category.name AS category,
                 
@@ -218,7 +218,7 @@ EXPORT_QUERY_IN = """
                 items.price_per_unit
 """
 
-EXPORT_QUERY_OUT = """
+SUMMARY_QUERY_OUT = """
             SELECT
             
                 category.name AS category,
