@@ -70,6 +70,7 @@ UI_KEYS = [
     ("CustomersView", "activeCustomerActionText"),
     ("InventoryWidget", "countLabelText"),
     ("InventoryActionsWidget", "searchLineEditPlaceholderText"),
+    ("ExportWidget", "summaryTabTitle"),
     ("PeriodExportWidget", "pathNameGroupBoxText"),
     ("PeriodExportWidget", "fileTypeLabelText"),
     ("PeriodExportWidget", "fileTypeComboBoxItems"),

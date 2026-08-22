@@ -20,7 +20,9 @@ from material_register.utils.normalizer import normalize_value
 from material_register.workers.period_export_worker import PeriodExportWorker
 
 if TYPE_CHECKING:
-    from material_register.ui.export.period_export_widget import PeriodExportWidget
+    from material_register.ui.export.export_widgets.period_export_widget import (
+        PeriodExportWidget,
+    )
 
 
 class PeriodExportController(QObject):

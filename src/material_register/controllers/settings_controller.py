@@ -58,9 +58,9 @@ class SettingsController:
     @staticmethod
     def _reload_settings() -> None:
         stacked_widget = AppContext.MAIN_WINDOW.stacked_widget
-        export_widget = stacked_widget.period_export_widget
-        if hasattr(export_widget, "apply_settings"):
-            export_widget.apply_settings()
+        summary_export_widget = stacked_widget.export_widget.summary_export_widget
+        if hasattr(summary_export_widget, "apply_settings"):
+            summary_export_widget.apply_settings()
 
     @staticmethod
     def _handle_settings_error(error: str, method: str) -> None:

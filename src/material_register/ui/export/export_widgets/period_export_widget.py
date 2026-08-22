@@ -39,16 +39,15 @@ from material_register.utils.date_filters import get_filter_range
 from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:
-    from material_register.ui.widgets.stacked_widget import StackedWidget
+    from material_register.ui.export.export_widget import ExportWidget
 
 
 class PeriodExportWidget(QWidget):
     WIDTH = 400
     SPACING = 20
 
-    def __init__(self, stacked_widget: "StackedWidget") -> None:
-        super().__init__(stacked_widget)
-        self.stacked_widget = stacked_widget
+    def __init__(self, export_widget: "ExportWidget") -> None:
+        super().__init__(export_widget)
         self.period_export_controller = PeriodExportController(self)
         self.current_path = Path(
             QStandardPaths.writableLocation(

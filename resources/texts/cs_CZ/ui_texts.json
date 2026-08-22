@@ -55,6 +55,9 @@
   "InventoryActionsWidget": {
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
+  "ExportWidget": {
+    "summaryTabTitle": "Evidence"
+  },
   "SettingsDialog": {
     "titleText": "Nastavení",
     "closeButtonText": "Zavřít",

@@ -44,6 +44,7 @@ DEFAULT_TEXTS = {
     },
     "InventoryWidget": {"countLabelText": "Displayed:"},
     "InventoryActionsWidget": {"searchLineEditPlaceholderText": "Enter search text..."},
+    "ExportWidget": {"summaryTabTitle": "Records"},
     "SettingsDialog": {
         "titleText": "Settings",
         "closeButtonText": "Close",
