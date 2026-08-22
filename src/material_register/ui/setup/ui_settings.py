@@ -18,10 +18,14 @@ class UiSettings:
         cls.SETTINGS = settings
 
     @classmethod
-    def set_ui_settings(
-        cls, main_key: str, widgets: list[QWidget], sub_key: str = "user"
+    def apply_settings(
+        cls,
+        main_key: str,
+        sub_key: str,
+        widgets: list[QWidget],
+        settings_key: str = "user",
     ) -> bool:
-        settings = cls.SETTINGS.get(main_key, {}).get(sub_key, {})
+        settings = cls.SETTINGS.get(main_key, {}).get(sub_key, {}).get(settings_key, {})
         if not settings:
             return False
         for widget in widgets:

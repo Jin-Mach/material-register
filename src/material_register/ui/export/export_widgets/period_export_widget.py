@@ -324,7 +324,9 @@ class PeriodExportWidget(QWidget):
             return
 
     def apply_settings(self) -> None:
-        if not UiSettings.set_ui_settings("export", self.findChildren(QWidget)):
+        if not UiSettings.apply_settings(
+            "export", "summary", self.findChildren(QWidget)
+        ):
             ErrorHandler.handle_error(
                 f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
             )

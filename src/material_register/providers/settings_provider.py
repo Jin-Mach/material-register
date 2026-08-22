@@ -27,9 +27,9 @@ class SettingsProvider:
             return False
 
     @classmethod
-    def restore_settings(cls, section: str) -> bool:
+    def restore_settings(cls, section: str, sub_section: str) -> bool:
         try:
-            settings = cls.SETTINGS.get(section, {})
+            settings = cls.SETTINGS.get(section, {}).get(sub_section, {})
             default = settings.get("default", {})
             user = settings.get("user", {})
             if not default or not user:

@@ -136,7 +136,9 @@ class SummarySheet:
         cell = sheet.cell(row=row, column=branch_label_column, value=branch_text)
         SummarySheet._cell_alignment(cell, horizontal="left")
         SummarySheet._cell_font(cell, SummarySheet.DEFAULT_FONT_SIZE, bold=True)
-        branch_value = export_settings.get("branchNameLineEdit", SummarySheet.ERROR_TEXT)
+        branch_value = export_settings.get(
+            "branchNameLineEdit", SummarySheet.ERROR_TEXT
+        )
         cell = sheet.cell(row=row, column=branch_value_column, value=branch_value)
         sheet.merge_cells(
             start_row=row,

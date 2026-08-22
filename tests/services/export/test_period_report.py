@@ -137,7 +137,8 @@ def result_data_out() -> dict[str, list[SummaryItemDataOut]]:
 
 
 def test_get_period_data_in(
-    export_data_in: list[SummaryExportItemIn], result_data_in: dict[str, list[SummaryItemDataIn]]
+    export_data_in: list[SummaryExportItemIn],
+    result_data_in: dict[str, list[SummaryItemDataIn]],
 ) -> None:
     result = SummaryReport.get_summary_data_in(export_data_in)
     assert result == result_data_in

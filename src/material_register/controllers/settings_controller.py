@@ -18,7 +18,7 @@ class SettingsController:
         self.settings = SettingsProvider.SETTINGS.get("export", {})
 
     def update_settings(self) -> None:
-        user_settings = self.settings.get("user", {})
+        user_settings = self.settings.get("summary", {}).get("user", {})
         new_data = self.export_settings.get_export_settings_data()
         if not user_settings or not new_data:
             SettingsController._handle_settings_error(
@@ -39,7 +39,7 @@ class SettingsController:
     def restore_settings(self) -> None:
         question = MessageBoxes.show_question(self.export_settings, "RESTORE_SETTINGS")
         if question:
-            if not SettingsProvider.restore_settings("export"):
+            if not SettingsProvider.restore_settings("export", "summary"):
                 SettingsController._handle_settings_error(
                     "Restore settings failed",
                     f"{self.__class__.__name__}.restore_settings",
