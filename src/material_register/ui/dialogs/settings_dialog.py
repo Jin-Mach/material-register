@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QCloseEvent, QShowEvent
-from PySide6.QtWidgets import QDialog, QHBoxLayout, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 
+from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.settings_widgets.settings_side_panel import (
@@ -21,6 +23,7 @@ class SettingsDialog(QDialog):
     def __init__(self, main_window: "MainWindow") -> None:
         super().__init__(main_window)
         self.main_window = main_window
+        self.status_texts = TextsProvider.STATUS_TEXTS
         self.setMinimumSize(900, 600)
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -30,16 +33,20 @@ class SettingsDialog(QDialog):
         main_layout = QVBoxLayout()
         widgets_layout = QHBoxLayout()
         self.settings_side_panel = SettingsSidePanel(self)
+        stacked_layout = QVBoxLayout()
         self.settings_stacked_widget = SettingsStackedWidget(self)
         buttons_layout = QHBoxLayout()
+        self.info_label = QLabel()
         self.close_button = QPushButton()
         self.close_button.setObjectName("closeButton")
-        widgets_layout.addWidget(self.settings_side_panel)
-        widgets_layout.addWidget(self.settings_stacked_widget)
+        buttons_layout.addWidget(self.info_label)
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.close_button)
+        stacked_layout.addWidget(self.settings_stacked_widget)
+        stacked_layout.addLayout(buttons_layout)
+        widgets_layout.addWidget(self.settings_side_panel)
+        widgets_layout.addLayout(stacked_layout)
         main_layout.addLayout(widgets_layout)
-        main_layout.addLayout(buttons_layout)
         return main_layout
 
     def _setup_ui(self) -> None:
@@ -59,6 +66,12 @@ class SettingsDialog(QDialog):
                 lambda _, i=index: self.settings_stacked_widget.setCurrentIndex(i)
             )
         self.close_button.clicked.connect(self.close)
+
+    def set_info_text(self, key: str, time_sleep: int = 3000) -> None:
+        if not self.status_texts:
+            return
+        self.info_label.setText(self.status_texts.get(key, ""))
+        QTimer.singleShot(time_sleep, lambda: self.info_label.setText(""))
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

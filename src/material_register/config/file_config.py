@@ -209,7 +209,7 @@ UI_KEYS = [
     ("CategoryCommodityDialog", "addButtonTooltipText"),
     ("CategoryCommodityDialog", "cancelButtonText"),
     ("CategoryCommodityDialog", "cancelButtonTooltipText"),
-    ("SettingsWidget", "summaryExportTabTitle"),
+    ("SettingsExportWidget", "summaryExportTabTitle"),
     ("SummaryExportSettings", "branchGroupBoxText"),
     ("SummaryExportSettings", "branchNameLabelText"),
     ("SummaryExportSettings", "branchNameLineEditPlaceholderText"),

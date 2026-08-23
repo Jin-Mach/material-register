@@ -246,7 +246,7 @@
     "cancelButtonText": "Zrušit",
     "cancelButtonTooltipText": "Zavře dialog"
   },
-  "SettingsWidget": {
+  "SettingsExportWidget": {
     "summaryExportTabTitle": "Evidence"
   },
   "SummaryExportSettings": {

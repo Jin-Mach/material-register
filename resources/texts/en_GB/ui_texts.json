@@ -246,7 +246,7 @@
     "cancelButtonText": "Cancel",
     "cancelButtonTooltipText": "Closes dialog"
   },
-  "SettingsWidget": {
+  "SettingsExportWidget": {
     "summaryExportTabTitle": "Records"
   },
   "SummaryExportSettings": {

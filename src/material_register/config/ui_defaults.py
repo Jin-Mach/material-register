@@ -229,7 +229,7 @@ DEFAULT_TEXTS = {
         "cancelButtonText": "Cancel",
         "cancelButtonTooltipText": "Closes dialog",
     },
-    "SettingsWidget": {"summaryExportTabTitle": "Records"},
+    "SettingsExportWidget": {"summaryExportTabTitle": "Records"},
     "SummaryExportSettings": {
         "branchGroupBoxText": "Branch",
         "branchNameLabelText": "Branch:",
