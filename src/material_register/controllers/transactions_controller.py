@@ -139,6 +139,12 @@ class TransactionsController:
             self.items_dialog = TransactionItemsDialogOut(
                 self, create_data, self.transactions_widget, transaction_type
             )
+            if not items_data:
+                TransactionsController._handle_db_error(
+                    "Transaction has no items during update",
+                    f"{self.__class__.__name__}.update_transaction",
+                )
+                return
             self.active_commodity_unit = items_data[0].commodity_suffix
         item_model = self.items_dialog.get_current_model()
         if item_model is None:
@@ -337,12 +343,11 @@ class TransactionsController:
         tab_context = self._get_tab_context()
         if tab_context is None:
             return
-        model, transaction_type = tab_context
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
         from_date, to_date = get_filter_range(key)
         for model, transfer_type in self._models_map.values():
             filtered_data = TransactionsQueries.get_basic_filter_data(
-                self.db_connection, transaction_type, from_date, to_date
+                self.db_connection, transfer_type, from_date, to_date
             )
             model.set_basic_filter(filtered_data)
         self._update_counts()
@@ -434,7 +439,7 @@ class TransactionsController:
         for key, value in dialog_data.items():
             if key == "notes":
                 continue
-            if key == "payment_type":
+            if key == "paymentType":
                 if value is not None and value not in PAYMENT_VALUES:
                     return False
                 continue
