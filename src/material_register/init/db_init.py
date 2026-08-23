@@ -1,6 +1,6 @@
 from PySide6.QtSql import QSqlDatabase
 
-from material_register.db.config.db_constatns import DATABASE_NAME
+from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.db.create_connection import create_connection
 from material_register.db.utils.schema_validator import is_schema_valid
 from material_register.providers.paths_provider import PathsProvider

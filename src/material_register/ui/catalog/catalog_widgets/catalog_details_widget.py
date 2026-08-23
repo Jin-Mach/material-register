@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
 
 from material_register.domain.category_dataclass import Category
+from material_register.domain.commodities_dataclass import Commodity
 from material_register.ui.catalog.catalog_widgets.catalog_default_widget import (
     CatalogDefaultWidget,
 )
@@ -44,3 +45,12 @@ class CatalogDetailsWidget(QWidget):
         self.category_with_commodities_widget.category_detail_widget.set_category_texts(
             category_data
         )
+
+    def show_default_details(self) -> None:
+        self.stacked_widget.setCurrentIndex(0)
+
+    def show_category_details(
+        self, category: Category, commodities: list[Commodity]
+    ) -> None:
+        self.stacked_widget.setCurrentIndex(1)
+        self.category_with_commodities_widget.setup_ui(category, commodities)

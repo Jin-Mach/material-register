@@ -185,13 +185,10 @@ class CatalogController:
     def setup_details_widget(self) -> None:
         category, _ = self.catalog_widget.tree_widget.get_selected_data()
         if category is None:
-            self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(0)
+            self.catalog_widget.details_widget.show_default_details()
             return
         commodities = CatalogController._get_commodities_for_category(category.id)
-        self.catalog_widget.details_widget.stacked_widget.setCurrentIndex(1)
-        self.catalog_widget.details_widget.category_with_commodities_widget.setup_ui(
-            category, commodities
-        )
+        self.catalog_widget.details_widget.show_category_details(category, commodities)
 
     @staticmethod
     def _refresh_cache() -> None:

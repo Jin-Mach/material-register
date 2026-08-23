@@ -1,6 +1,6 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.db_constatns import DATABASE_SCHEMA
+from material_register.db.config.db_constants import DATABASE_SCHEMA
 
 
 def is_schema_valid(connection: QSqlDatabase) -> tuple[bool, str]:
