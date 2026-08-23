@@ -36,7 +36,7 @@ class SummaryExportWorker(QObject):
             from_date = self.export_settings["from_date"]
             to_date = self.export_settings["to_date"]
             ok, error, self.db_connection = DbInit.thread_connection(
-                "export_connection"
+                "summary_export_connection"
             )
             if not ok:
                 self.error.emit(error)
