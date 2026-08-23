@@ -96,7 +96,7 @@ class TransactionsController:
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
-            model = self.items_dialog.transactions_items_widget.current_model
+            model = self.items_dialog.get_current_model()
             if not TransactionsController._check_transaction_data(dialog_data, model):
                 MessageBoxes.show_error(
                     self.transactions_widget, "INVALID_DATA", "WARNING"
@@ -140,12 +140,12 @@ class TransactionsController:
                 self, create_data, self.transactions_widget, transaction_type
             )
             self.active_commodity_unit = items_data[0].commodity_suffix
-        item_model = self.items_dialog.transactions_items_widget.current_model
+        item_model = self.items_dialog.get_current_model()
         if item_model is None:
             return
         TransactionsController._load_items_to_model(item_model, items_data)
         old_items_data = item_model.get_data()
-        self.items_dialog.transactions_items_widget.setup_total_value(item_model)
+        self.items_dialog.setup_total_value(item_model)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
@@ -268,7 +268,7 @@ class TransactionsController:
         data = dialog.get_category_commodity_data()
         if not TransactionsController._check_data(data):
             return None
-        model = self.items_dialog.transactions_items_widget.current_model
+        model = self.items_dialog.get_current_model()
         if isinstance(model, TransactionItemsModelOut):
             unit = data["commoditySuffix"]
             if model.rowCount() == 1:
@@ -284,7 +284,7 @@ class TransactionsController:
     def on_item_deleted(self, transfer_type: str) -> None:
         if transfer_type != TRANSFER_OUT:
             return
-        model = self.items_dialog.transactions_items_widget.current_model
+        model = self.items_dialog.get_current_model()
         if isinstance(model, TransactionItemsModelOut) and model.rowCount() == 0:
             self.active_commodity_unit = None
 

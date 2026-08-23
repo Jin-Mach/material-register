@@ -185,6 +185,14 @@ class TransactionItemsDialogOut(QDialog):
             "notes": self.transaction_info_widget.get_notes(),
         }
 
+    def get_current_model(self):
+        """Return the current items model held by the items widget."""
+        return self.transactions_items_widget.current_model
+
+    def setup_total_value(self, model):
+        """Delegate total value setup to the items widget."""
+        self.transactions_items_widget.setup_total_value(model)
+
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
