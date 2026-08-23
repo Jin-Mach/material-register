@@ -208,6 +208,8 @@ __marimo__/
 
 # project files/folders
 /database
+/config
+/logs
 
 # MacOS files/folders
 .DS_Store

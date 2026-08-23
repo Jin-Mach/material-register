@@ -35,9 +35,13 @@ class SetupInit:
                         invalid_files, PathsProvider.resources
                     ):
                         return False, "DOWNLOAD_FAILED"
-            SettingsProvider.provider_init(PathsProvider.resources)
+            SettingsProvider.provider_init(
+                PathsProvider.resources, PathsProvider.config
+            )
             if not SettingsProvider.SETTINGS:
                 return False, "CONFIG_LOAD_FAILED"
+            if not SettingsProvider.update_settings():
+                return False, "UPDATE_SETTINGS_FAILED"
             UiSettings.setup_init(SettingsProvider.SETTINGS)
             TextsProvider.provider_init(
                 LanguageProvider.CURRENT_LANGUAGE, PathsProvider.resources
