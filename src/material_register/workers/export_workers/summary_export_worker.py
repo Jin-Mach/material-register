@@ -6,6 +6,7 @@ from material_register.db.queries.export_queries.summary_export_queries import (
     SummaryExportQueries,
 )
 from material_register.init.db_init import DbInit
+from material_register.services.error_handler import ErrorHandler
 from material_register.services.export.excel.summary_export.summary_workbook import (
     SummaryWorkbook,
 )
@@ -65,4 +66,5 @@ class SummaryExportWorker(QObject):
             workbook.save(export_path)
             self.finished.emit(last_balance)
         except Exception as e:
+            ErrorHandler.handle_error(e, "export", "error")
             self.error.emit(f"Export failed: {e}")

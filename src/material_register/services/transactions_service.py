@@ -7,6 +7,7 @@ from material_register.db.queries.transaction_items_queries import (
 )
 from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.domain.transaction_item_dataclass import TransactionItem
+from material_register.services.error_handler import ErrorHandler
 
 
 class TransactionsService:
@@ -58,7 +59,11 @@ class TransactionsService:
             db_connection.commit()
             return True, ""
         except Exception as e:
-            db_connection.rollback()
+            ErrorHandler.handle_error(e, "db", "critical")
+            try:
+                db_connection.rollback()
+            except Exception as rb_e:
+                ErrorHandler.handle_error(rb_e, "db", "warning")
             return False, str(e)
 
     @staticmethod
@@ -117,7 +122,11 @@ class TransactionsService:
             db_connection.commit()
             return True, "", True
         except Exception as e:
-            db_connection.rollback()
+            ErrorHandler.handle_error(e, "db", "critical")
+            try:
+                db_connection.rollback()
+            except Exception as rb_e:
+                ErrorHandler.handle_error(rb_e, "db", "warning")
             return False, str(e), False
 
     @staticmethod
@@ -148,7 +157,11 @@ class TransactionsService:
             db_connection.commit()
             return True, ""
         except Exception as e:
-            db_connection.rollback()
+            ErrorHandler.handle_error(e, "db", "critical")
+            try:
+                db_connection.rollback()
+            except Exception as rb_e:
+                ErrorHandler.handle_error(rb_e, "db", "warning")
             return False, str(e)
 
     @staticmethod

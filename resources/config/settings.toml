@@ -5,7 +5,7 @@ fileNameLineEdit = ""
 noActionRadioButton = true
 openFolderRadioButton = false
 openFileRadioButton = false
-useLastOptionsCheckbox = true
+useLastOptionsCheckbox = false
 saveLastOpeningBalanceCheckbox = false
 openingBalanceSpinbox = 0.0
 

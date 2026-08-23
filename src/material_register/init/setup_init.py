@@ -1,3 +1,5 @@
+import traceback
+
 from material_register.providers.download_provider import DownloadProvider
 from material_register.providers.file_provider import FileProvider
 from material_register.providers.language_provider import LanguageProvider
@@ -56,5 +58,9 @@ class SetupInit:
             UiIcons.setup_init(PathsProvider.resources)
             return True, ""
         except Exception as e:
-            ErrorHandler.handle_error(e, "error", "critical")
+            if getattr(ErrorHandler, "loggers_map", None):
+                ErrorHandler.handle_error(e, "error", "critical")
+            else:
+                print("SetupInit error before logger initialization:")
+                traceback.print_exc()
             return False, "UNKNOWN_ERROR"

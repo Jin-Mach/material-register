@@ -5,6 +5,8 @@ from PySide6.QtGui import QStandardItemModel
 from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
+from material_register.services.error_handler import ErrorHandler
+
 if TYPE_CHECKING:
     from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
     from material_register.db.models.transactions_load_model_in import (
@@ -44,7 +46,8 @@ class HeadersTexts:
                 for column, text in enumerate(headers_text.values()):
                     model.setHeaderData(column, Qt.Orientation.Horizontal, text)
             return True
-        except Exception:
+        except Exception as e:
+            ErrorHandler.handle_error(e, "ui", "warning")
             return False
 
     @classmethod
@@ -66,7 +69,8 @@ class HeadersTexts:
                 Qt.Orientation.Horizontal, 0, model.columnCount() - 1
             )
             return True
-        except Exception:
+        except Exception as e:
+            ErrorHandler.handle_error(e, "ui", "warning")
             return False
 
     @classmethod
@@ -80,5 +84,6 @@ class HeadersTexts:
             for index, text in headers_texts.items():
                 model.setHeaderData(int(index), Qt.Orientation.Horizontal, text)
             return True
-        except Exception:
+        except Exception as e:
+            ErrorHandler.handle_error(e, "ui", "warning")
             return False

@@ -1,4 +1,5 @@
 import logging
+import traceback
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
@@ -29,6 +30,7 @@ class LoggerProvider:
             return True
         except Exception as e:
             print(f"{cls.__name__}: {e}")
+            traceback.print_exc()
             return False
 
     @classmethod

@@ -1,3 +1,5 @@
+import traceback
+
 from PySide6.QtCore import QLocale
 
 from material_register.config.logging_config import LOG_STRUCTURE
@@ -27,5 +29,9 @@ class AppInit:
             LanguageProvider.language_init(QLocale().name())
             return True, ""
         except Exception as e:
-            ErrorHandler.handle_error(e, "error", "critical")
+            if getattr(ErrorHandler, "loggers_map", None):
+                ErrorHandler.handle_error(e, "error", "critical")
+            else:
+                print("AppInit error before logger initialization:")
+                traceback.print_exc()
             return False, "UNKNOWN_ERROR"
