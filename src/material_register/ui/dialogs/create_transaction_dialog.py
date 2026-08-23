@@ -120,21 +120,6 @@ class CreateTransactionDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
-    def _create_connection(self) -> None:
-        self.continue_transaction_button.clicked.connect(self.accept)
-        self.cancel_transaction_button.clicked.connect(self.reject)
-        self.completer.activated.connect(self._on_customer_selected)
-        self.customer_name_input.textEdited.connect(self._customer_name_edited)
-
-    def _setup_items(self) -> None:
-        payment_values = PAYMENT_VALUES
-        texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        payment_items = texts.get(
-            f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"]
-        )
-        for text, value in zip(payment_items, payment_values):
-            self.payment_type_combobox.addItem(text, value)
-
     def _set_validators(self) -> None:
         customer_validator = QRegularExpressionValidator(
             QRegularExpression(r"^[\p{L}0-9 .,&\-]{1,50}$")
@@ -148,10 +133,14 @@ class CreateTransactionDialog(QDialog):
             return
         self._setup_items()
 
-    def _set_dialog_size(self, width: int = 500) -> None:
-        self.setFixedWidth(width)
-        self.adjustSize()
-        self.setFixedSize(width, self.size().height())
+    def _setup_items(self) -> None:
+        payment_values = PAYMENT_VALUES
+        texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        payment_items = texts.get(
+            f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"]
+        )
+        for text, value in zip(payment_items, payment_values):
+            self.payment_type_combobox.addItem(text, value)
 
     def _setup_completer(self, completer_model: "CustomersCompleterModel") -> None:
         self.completer = QCompleter()
@@ -161,6 +150,12 @@ class CreateTransactionDialog(QDialog):
         self.completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.completer.setFilterMode(Qt.MatchFlag.MatchContains)
         self.customer_name_input.setCompleter(self.completer)
+
+    def _create_connection(self) -> None:
+        self.continue_transaction_button.clicked.connect(self.accept)
+        self.cancel_transaction_button.clicked.connect(self.reject)
+        self.completer.activated.connect(self._on_customer_selected)
+        self.customer_name_input.textEdited.connect(self._customer_name_edited)
 
     def _on_customer_selected(self, text: str) -> None:
         customer = self.completer_model.get_customer_by_text(text)
@@ -187,6 +182,11 @@ class CreateTransactionDialog(QDialog):
             self.customer_name_input.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             self.customer_name_input.setStyleSheet("")
+
+    def _set_dialog_size(self, width: int = 500) -> None:
+        self.setFixedWidth(width)
+        self.adjustSize()
+        self.setFixedSize(width, self.size().height())
 
     def get_create_data(self) -> dict[str, str | int | None] | None:
         if self.selected_customer is None:

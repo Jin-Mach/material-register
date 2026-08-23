@@ -92,39 +92,6 @@ class CategoryCommodityDialog(QDialog):
         self._setup_categories_items()
         self._on_value_changed()
 
-    def _setup_texts(self) -> None:
-        widgets = [
-            self.category_label,
-            self.category_combo_box,
-            self.commodity_label,
-            self.commodity_combo_box,
-            self.unit_label,
-            self.price_label,
-            self.add_button,
-            self.cancel_button,
-        ]
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
-
-    def _create_connection(self) -> None:
-        self.category_combo_box.currentIndexChanged.connect(
-            self._setup_commodities_items
-        )
-        self.category_combo_box.currentIndexChanged.connect(self._on_value_changed)
-        self.commodity_combo_box.currentIndexChanged.connect(
-            self._setup_commodity_values
-        )
-        self.commodity_combo_box.currentIndexChanged.connect(self._on_value_changed)
-        self.unit_spinbox.valueChanged.connect(self._on_value_changed)
-        self.price_spinbox.valueChanged.connect(self._on_value_changed)
-        self.add_button.clicked.connect(self.accept)
-        self.cancel_button.clicked.connect(self.reject)
-
     def _setup_widgets(self) -> None:
         for widget in (
             self.commodity_combo_box,
@@ -154,6 +121,25 @@ class CategoryCommodityDialog(QDialog):
         self.price_spinbox.setDecimals(1)
         self.price_spinbox.setSingleStep(0.1)
         self.price_spinbox.setGroupSeparatorShown(True)
+
+    def _setup_texts(self) -> None:
+        widgets = [
+            self.category_label,
+            self.category_combo_box,
+            self.commodity_label,
+            self.commodity_combo_box,
+            self.unit_label,
+            self.price_label,
+            self.add_button,
+            self.cancel_button,
+        ]
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
 
     def _setup_categories_items(self) -> None:
         self.category_combo_box.clear()
@@ -216,6 +202,20 @@ class CategoryCommodityDialog(QDialog):
         self.unit_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
         self.unit_spinbox.setSuffix("")
         self.price_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
+
+    def _create_connection(self) -> None:
+        self.category_combo_box.currentIndexChanged.connect(
+            self._setup_commodities_items
+        )
+        self.category_combo_box.currentIndexChanged.connect(self._on_value_changed)
+        self.commodity_combo_box.currentIndexChanged.connect(
+            self._setup_commodity_values
+        )
+        self.commodity_combo_box.currentIndexChanged.connect(self._on_value_changed)
+        self.unit_spinbox.valueChanged.connect(self._on_value_changed)
+        self.price_spinbox.valueChanged.connect(self._on_value_changed)
+        self.add_button.clicked.connect(self.accept)
+        self.cancel_button.clicked.connect(self.reject)
 
     def _on_value_changed(self) -> None:
         self._set_required_style()

@@ -124,21 +124,6 @@ class CustomerDialog(QDialog):
         self._update_save_button_state()
         self._update_notes_count()
 
-    def _create_connection(self) -> None:
-        for widget in (
-            self.first_name_input,
-            self.last_name_input,
-            self.company_input,
-            self.document_type_input,
-            self.address_input,
-        ):
-            widget.textChanged.connect(self._on_form_changed)
-        self.subject_type.currentIndexChanged.connect(self._on_type_changed)
-        self.document_type_input.textChanged.connect(self._on_document_type_changed)
-        self.notes_input.textChanged.connect(self._update_notes_count)
-        self.save_button.clicked.connect(self.accept)
-        self.close_button.clicked.connect(self.reject)
-
     def _setup_texts(self) -> None:
         widgets = [
             self.subject_type,
@@ -187,6 +172,45 @@ class CustomerDialog(QDialog):
             self._set_add_mode()
         elif self.mode == UPDATE_MODE and self.customer_data:
             self._set_update_mode(self.customer_data)
+
+    def _set_add_mode(self) -> None:
+        self.created_label.setText(
+            f"{self.created_label_text} {datetime.now().astimezone().strftime('%d.%m.%Y')}"
+        )
+        self.subject_type.setCurrentIndex(-1)
+        self._apply_type_state()
+
+    def _set_update_mode(self, customer_data: Customer) -> None:
+        customer_input_map = {
+            self.company_input: customer_data.company,
+            self.first_name_input: customer_data.first_name,
+            self.last_name_input: customer_data.last_name,
+            self.document_type_input: customer_data.document_number,
+            self.address_input: customer_data.address,
+            self.active_checkbox: customer_data.active,
+            self.notes_input: customer_data.notes,
+            self.created_label: customer_data.created_at,
+        }
+        self.subject_type.blockSignals(True)
+        if customer_data.company is not None:
+            self.subject_type.setCurrentIndex(CUSTOMERS_DIALOG_COMPANY_INDEX)
+        else:
+            self.subject_type.setCurrentIndex(CUSTOMERS_DIALOG_INDIVIDUAL_INDEX)
+        self.subject_type.blockSignals(False)
+        self._apply_type_state()
+        for widget, value in customer_input_map.items():
+            if isinstance(widget, QLabel):
+                date = datetime.fromisoformat(value)
+                widget.setText(f"{self.created_label_text} {date.strftime('%d.%m.%Y')}")
+            if isinstance(widget, QLineEdit):
+                widget.setText(value)
+            if isinstance(widget, QCheckBox):
+                widget.setChecked(value)
+            if isinstance(widget, QTextEdit):
+                widget.setPlainText(value)
+                self.notes_count_label.setText(
+                    f"{self.notes_count_text} {len(value)}/{CUSTOMERS_DIALOG_NOTES_LENGTH}"
+                )
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(
@@ -240,6 +264,21 @@ class CustomerDialog(QDialog):
             self.notes_count_text,
             CUSTOMERS_DIALOG_NOTES_LENGTH,
         )
+
+    def _create_connection(self) -> None:
+        for widget in (
+            self.first_name_input,
+            self.last_name_input,
+            self.company_input,
+            self.document_type_input,
+            self.address_input,
+        ):
+            widget.textChanged.connect(self._on_form_changed)
+        self.subject_type.currentIndexChanged.connect(self._on_type_changed)
+        self.document_type_input.textChanged.connect(self._on_document_type_changed)
+        self.notes_input.textChanged.connect(self._update_notes_count)
+        self.save_button.clicked.connect(self.accept)
+        self.close_button.clicked.connect(self.reject)
 
     def _update_required_styles(self) -> None:
         for widget in (
@@ -329,45 +368,6 @@ class CustomerDialog(QDialog):
         return not self.customers_widget.customers_model.document_exists(
             document, ignored_id=ignored_id
         )
-
-    def _set_add_mode(self) -> None:
-        self.created_label.setText(
-            f"{self.created_label_text} {datetime.now().astimezone().strftime('%d.%m.%Y')}"
-        )
-        self.subject_type.setCurrentIndex(-1)
-        self._apply_type_state()
-
-    def _set_update_mode(self, customer_data: Customer) -> None:
-        customer_input_map = {
-            self.company_input: customer_data.company,
-            self.first_name_input: customer_data.first_name,
-            self.last_name_input: customer_data.last_name,
-            self.document_type_input: customer_data.document_number,
-            self.address_input: customer_data.address,
-            self.active_checkbox: customer_data.active,
-            self.notes_input: customer_data.notes,
-            self.created_label: customer_data.created_at,
-        }
-        self.subject_type.blockSignals(True)
-        if customer_data.company is not None:
-            self.subject_type.setCurrentIndex(CUSTOMERS_DIALOG_COMPANY_INDEX)
-        else:
-            self.subject_type.setCurrentIndex(CUSTOMERS_DIALOG_INDIVIDUAL_INDEX)
-        self.subject_type.blockSignals(False)
-        self._apply_type_state()
-        for widget, value in customer_input_map.items():
-            if isinstance(widget, QLabel):
-                date = datetime.fromisoformat(value)
-                widget.setText(f"{self.created_label_text} {date.strftime('%d.%m.%Y')}")
-            if isinstance(widget, QLineEdit):
-                widget.setText(value)
-            if isinstance(widget, QCheckBox):
-                widget.setChecked(value)
-            if isinstance(widget, QTextEdit):
-                widget.setPlainText(value)
-                self.notes_count_label.setText(
-                    f"{self.notes_count_text} {len(value)}/{CUSTOMERS_DIALOG_NOTES_LENGTH}"
-                )
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)

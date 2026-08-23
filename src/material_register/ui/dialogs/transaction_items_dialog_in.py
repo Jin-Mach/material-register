@@ -89,22 +89,6 @@ class TransactionItemsDialogIn(QDialog):
         if UiTexts.set_default_texts(self, widgets):
             return
 
-    def _create_connection(self) -> None:
-        self.save_transaction_button.clicked.connect(self.accept)
-        self.cancel_transaction_button.clicked.connect(self.reject)
-        self.transaction_info_widget.update_transaction_info_button.clicked.connect(
-            self._update_create_data
-        )
-        self.transactions_items_widget.add_item_button.clicked.connect(
-            self._add_transaction_item
-        )
-        self.transactions_items_widget.update_item_button.clicked.connect(
-            self._update_transaction_item
-        )
-        self.transactions_items_widget.delete_item_button.clicked.connect(
-            self._delete_transaction_item
-        )
-
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)
         self.transaction_info_widget.set_create_data(
@@ -135,6 +119,22 @@ class TransactionItemsDialogIn(QDialog):
         if new_data is None:
             return
         self.set_create_data(new_data)
+
+    def _create_connection(self) -> None:
+        self.save_transaction_button.clicked.connect(self.accept)
+        self.cancel_transaction_button.clicked.connect(self.reject)
+        self.transaction_info_widget.update_transaction_info_button.clicked.connect(
+            self._update_create_data
+        )
+        self.transactions_items_widget.add_item_button.clicked.connect(
+            self._add_transaction_item
+        )
+        self.transactions_items_widget.update_item_button.clicked.connect(
+            self._update_transaction_item
+        )
+        self.transactions_items_widget.delete_item_button.clicked.connect(
+            self._delete_transaction_item
+        )
 
     def _add_transaction_item(self) -> None:
         new_item_data = self.transactions_controller.create_category_commodity_data(
