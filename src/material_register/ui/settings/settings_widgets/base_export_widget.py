@@ -219,10 +219,14 @@ class BaseExportWidget(QWidget):
     def _create_connection(self) -> None:
         self.path_button.clicked.connect(self._select_export_path)
         self.restore_button.clicked.connect(
-            lambda: self.export_settings_controller.restore_summary_settings(self.export_type, self)
+            lambda: self.export_settings_controller.restore_summary_settings(
+                self.export_type, self
+            )
         )
         self.save_button.clicked.connect(
-            lambda: self.export_settings_controller.update_summary_settings(self.export_type, self)
+            lambda: self.export_settings_controller.update_summary_settings(
+                self.export_type, self
+            )
         )
 
     def _set_validators(self) -> None:

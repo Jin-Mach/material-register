@@ -24,9 +24,10 @@ from PySide6.QtWidgets import (
 )
 
 from material_register.config.ui_constants import (
+    EXPORT_TYPE_SUMMARY,
     SUMMARY_BALANCE_PRICE_MIN_VALUE,
     SUMMARY_EXPORT_PRICE_MAX_VALUE,
-    SUMMARY_EXPORT_PRICE_MIN_VALUE, EXPORT_TYPE_SUMMARY,
+    SUMMARY_EXPORT_PRICE_MIN_VALUE,
 )
 from material_register.controllers.export_controllers.summary_export_controller import (
     SummaryExportController,
