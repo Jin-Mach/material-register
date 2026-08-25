@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     )
 
 
-class SummaryExportSettings(QWidget):
+class BaseExportWidget(QWidget):
     WIDTH = 400
     SPACING = 20
 
@@ -251,14 +251,90 @@ class SummaryExportSettings(QWidget):
             return ""
         return str(self.current_path)
 
-    def get_export_settings_data(self):
-        return {
-            self.branch_name_line_edit.objectName(): self.branch_name_line_edit.text().strip(),
-            self.path_line_edit.objectName(): self._get_settings_path(),
-            self.file_name_line_edit.objectName(): self.file_name_line_edit.text().strip(),
-            self.no_action_radio_button.objectName(): self.no_action_radio_button.isChecked(),
-            self.open_folder_radio_button.objectName(): self.open_folder_radio_button.isChecked(),
-            self.open_file_radio_button.objectName(): self.open_file_radio_button.isChecked(),
-            self.use_last_options_checkbox.objectName(): self.use_last_options_checkbox.isChecked(),
-            self.save_last_opening_balance_checkbox.objectName(): self.save_last_opening_balance_checkbox.isChecked(),
+    def set_visible_widgets(
+        self,
+        branch_group_box: bool = True,
+        branch_name_label: bool = True,
+        branch_name_line_edit: bool = True,
+        path_name_group_box: bool = True,
+        path_label: bool = True,
+        path_line_edit: bool = True,
+        path_button: bool = True,
+        file_name_label: bool = True,
+        file_name_line_edit: bool = True,
+        export_options_group_box: bool = True,
+        no_action_radio_button: bool = True,
+        open_folder_radio_button: bool = True,
+        open_file_radio_button: bool = True,
+        other_settings_group_box: bool = True,
+        use_last_options_checkbox: bool = True,
+        save_last_opening_balance_checkbox: bool = True,
+        actions_group_box: bool = True,
+        restore_button: bool = True,
+        save_button: bool = True,
+    ) -> None:
+        self.branch_name_label.setVisible(branch_name_label)
+        self.branch_name_line_edit.setVisible(branch_name_line_edit)
+        self.branch_group_box.setVisible(
+            branch_group_box and (branch_name_label or branch_name_line_edit)
+        )
+        self.path_label.setVisible(path_label)
+        self.path_line_edit.setVisible(path_line_edit)
+        self.path_button.setVisible(path_button)
+        self.file_name_label.setVisible(file_name_label)
+        self.file_name_line_edit.setVisible(file_name_line_edit)
+        self.path_name_group_box.setVisible(
+            path_name_group_box
+            and any(
+                (
+                    path_label,
+                    path_line_edit,
+                    path_button,
+                    file_name_label,
+                    file_name_line_edit,
+                )
+            )
+        )
+        self.no_action_radio_button.setVisible(no_action_radio_button)
+        self.open_folder_radio_button.setVisible(open_folder_radio_button)
+        self.open_file_radio_button.setVisible(open_file_radio_button)
+        self.export_options_group_box.setVisible(
+            export_options_group_box
+            and any(
+                (
+                    no_action_radio_button,
+                    open_folder_radio_button,
+                    open_file_radio_button,
+                )
+            )
+        )
+        self.use_last_options_checkbox.setVisible(use_last_options_checkbox)
+        self.save_last_opening_balance_checkbox.setVisible(
+            save_last_opening_balance_checkbox
+        )
+        self.other_settings_group_box.setVisible(
+            other_settings_group_box
+            and any((use_last_options_checkbox, save_last_opening_balance_checkbox))
+        )
+        self.restore_button.setVisible(restore_button)
+        self.save_button.setVisible(save_button)
+        self.actions_group_box.setVisible(
+            actions_group_box and any((restore_button, save_button))
+        )
+
+    def get_export_settings_data(self) -> dict[str, str | bool]:
+        return_data = {}
+        widgets_map = {
+            self.branch_name_line_edit: self.branch_name_line_edit.text().strip(),
+            self.path_line_edit: self._get_settings_path(),
+            self.file_name_line_edit: self.file_name_line_edit.text().strip(),
+            self.no_action_radio_button: self.no_action_radio_button.isChecked(),
+            self.open_folder_radio_button: self.open_folder_radio_button.isChecked(),
+            self.open_file_radio_button: self.open_file_radio_button.isChecked(),
+            self.use_last_options_checkbox: self.use_last_options_checkbox.isChecked(),
+            self.save_last_opening_balance_checkbox: self.save_last_opening_balance_checkbox.isChecked(),
         }
+        for widget, value in widgets_map.items():
+            if widget.isVisible():
+                return_data[widget.objectName()] = value
+        return return_data

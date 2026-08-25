@@ -6,8 +6,8 @@ from material_register.controllers.export_settings_controller import (
     ExportSettingsController,
 )
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.settings.settings_widgets.summary_export_settings import (
-    SummaryExportSettings,
+from material_register.ui.settings.settings_widgets.base_export_widget import (
+    BaseExportWidget,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -35,7 +35,10 @@ class SettingsExportWidget(QWidget):
 
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self._export_tab_title = ui_texts.get("summaryExportTabTitle", "Records")
+        self._summary_tab_title = ui_texts.get("summaryExportTabTitle", "Records")
+        self.transactions_tab_title = ui_texts.get(
+            "transactionsExportTabTitle", "Transactions"
+        )
         if ui_texts:
             return
         ErrorHandler.handle_error(
@@ -44,9 +47,18 @@ class SettingsExportWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
     def _setup_tabs(self) -> None:
-        self.summary_export_settings = SummaryExportSettings(
+        self.summary_export_settings = BaseExportWidget(
             self.export_settings_controller, self
         )
+        self.transaction_export_settings = BaseExportWidget(
+            self.export_settings_controller, self
+        )
+        self.transaction_export_settings.set_visible_widgets(
+            save_last_opening_balance_checkbox=False
+        )
         self.settings_tab_widget.addTab(
-            self.summary_export_settings, self._export_tab_title
+            self.summary_export_settings, self._summary_tab_title
+        )
+        self.settings_tab_widget.addTab(
+            self.transaction_export_settings, self.transactions_tab_title
         )

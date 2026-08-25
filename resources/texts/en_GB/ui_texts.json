@@ -300,9 +300,10 @@
     "cancelButtonTooltipText": "Closes dialog"
   },
   "SettingsExportWidget": {
-    "summaryExportTabTitle": "Records"
+    "summaryExportTabTitle": "Material summary",
+    "transactionsExportTabTitle": "Transactions"
   },
-  "SummaryExportSettings": {
+  "BaseExportWidget": {
     "branchGroupBoxText": "Branch",
     "branchNameLabelText": "Branch:",
     "branchNameLineEditPlaceholderText": "Enter branch name",

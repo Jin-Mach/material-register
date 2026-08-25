@@ -285,9 +285,10 @@
     "cancelButtonTooltipText": "Zavře dialog"
   },
   "SettingsExportWidget": {
-    "summaryExportTabTitle": "Evidence"
+    "summaryExportTabTitle": "Evidence materiálu",
+    "transactionsExportTabTitle": "Přehled transakcí"
   },
-  "SummaryExportSettings": {
+  "BaseExportWidget": {
     "branchGroupBoxText": "Pobočka",
     "branchNameLabelText": "Pobočka:",
     "branchNameLineEditPlaceholderText": "Zadej název pobočky",
