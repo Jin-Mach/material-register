@@ -37,10 +37,12 @@ class BaseExportWidget(QWidget):
 
     def __init__(
         self,
+        export_type: str,
         export_settings_controller: "ExportSettingsController",
         settings_widget: "SettingsExportWidget",
     ) -> None:
         super().__init__(settings_widget)
+        self.export_type = export_type
         self.export_settings_controller = export_settings_controller
         self.settings_widget = settings_widget
         self.current_path = ""
@@ -194,7 +196,7 @@ class BaseExportWidget(QWidget):
 
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
-            "export", "summary", self.findChildren(QWidget)
+            "export", self.export_type, self.findChildren(QWidget)
         ):
             ErrorHandler.handle_error(
                 f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
@@ -217,10 +219,10 @@ class BaseExportWidget(QWidget):
     def _create_connection(self) -> None:
         self.path_button.clicked.connect(self._select_export_path)
         self.restore_button.clicked.connect(
-            self.export_settings_controller.restore_summary_settings
+            lambda: self.export_settings_controller.restore_summary_settings(self.export_type, self)
         )
         self.save_button.clicked.connect(
-            self.export_settings_controller.update_summary_settings
+            lambda: self.export_settings_controller.update_summary_settings(self.export_type, self)
         )
 
     def _set_validators(self) -> None:

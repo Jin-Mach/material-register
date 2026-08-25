@@ -19,3 +19,21 @@ openFileRadioButton = false
 useLastOptionsCheckbox = false
 saveLastOpeningBalanceCheckbox = false
 openingBalanceSpinbox = 0.0
+
+[export.transactions.default]
+branchNameLineEdit = ""
+pathLineEdit = ""
+fileNameLineEdit = ""
+noActionRadioButton = true
+openFolderRadioButton = false
+openFileRadioButton = false
+useLastOptionsCheckbox = false
+
+[export.transactions.user]
+branchNameLineEdit = ""
+pathLineEdit = ""
+fileNameLineEdit = ""
+noActionRadioButton = true
+openFolderRadioButton = false
+openFileRadioButton = false
+useLastOptionsCheckbox = false

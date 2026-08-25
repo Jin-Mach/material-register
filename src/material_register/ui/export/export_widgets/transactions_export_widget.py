@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.config.ui_constants import EXPORT_TYPE_TRANSACTIONS
 from material_register.db.models.customers_completer_model import (
     CustomersCompleterModel,
 )
@@ -347,7 +348,7 @@ class TransactionsExportWidget(QWidget):
 
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
-            "export", "summary", self.findChildren(QWidget)
+            "export", EXPORT_TYPE_TRANSACTIONS, self.findChildren(QWidget)
         ):
             ErrorHandler.handle_error(
                 f"Settings load failed: {self.__class__.__name__}", "ui", "warning"

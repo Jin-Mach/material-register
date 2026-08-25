@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
 
+from material_register.config.ui_constants import EXPORT_TYPE_SUMMARY
 from material_register.core.app_context import AppContext
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.providers.texts_provider import TextsProvider
@@ -163,7 +164,7 @@ class SummaryExportController(QObject):
         ]
         user_settings = (
             SettingsProvider.SETTINGS.get("export", {})
-            .get("summary", {})
+            .get(EXPORT_TYPE_SUMMARY, {})
             .get("user", {})
         )
         if not user_settings:
@@ -225,7 +226,7 @@ class SummaryExportController(QObject):
     def _new_balance_saved(new_balance: float) -> None:
         user_settings = (
             SettingsProvider.SETTINGS.get("export", {})
-            .get("summary", {})
+            .get(EXPORT_TYPE_SUMMARY, {})
             .get("user", {})
         )
         if not user_settings:

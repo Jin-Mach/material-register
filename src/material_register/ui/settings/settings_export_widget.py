@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QTabWidget, QVBoxLayout, QWidget
 
+from material_register.config.ui_constants import EXPORT_TYPE_SUMMARY, EXPORT_TYPE_TRANSACTIONS
 from material_register.controllers.export_settings_controller import (
     ExportSettingsController,
 )
@@ -48,10 +49,10 @@ class SettingsExportWidget(QWidget):
 
     def _setup_tabs(self) -> None:
         self.summary_export_settings = BaseExportWidget(
-            self.export_settings_controller, self
+            EXPORT_TYPE_SUMMARY, self.export_settings_controller, self
         )
         self.transaction_export_settings = BaseExportWidget(
-            self.export_settings_controller, self
+            EXPORT_TYPE_TRANSACTIONS, self.export_settings_controller, self
         )
         self.transaction_export_settings.set_visible_widgets(
             save_last_opening_balance_checkbox=False

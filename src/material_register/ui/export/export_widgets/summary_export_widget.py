@@ -26,7 +26,7 @@ from PySide6.QtWidgets import (
 from material_register.config.ui_constants import (
     SUMMARY_BALANCE_PRICE_MIN_VALUE,
     SUMMARY_EXPORT_PRICE_MAX_VALUE,
-    SUMMARY_EXPORT_PRICE_MIN_VALUE,
+    SUMMARY_EXPORT_PRICE_MIN_VALUE, EXPORT_TYPE_SUMMARY,
 )
 from material_register.controllers.export_controllers.summary_export_controller import (
     SummaryExportController,
@@ -325,7 +325,7 @@ class SummaryExportWidget(QWidget):
 
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
-            "export", "summary", self.findChildren(QWidget)
+            "export", EXPORT_TYPE_SUMMARY, self.findChildren(QWidget)
         ):
             ErrorHandler.handle_error(
                 f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
