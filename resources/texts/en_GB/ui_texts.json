@@ -17,9 +17,9 @@
     "settingsButtonTooltipText": "Displays application settings"
   },
   "TransactionsWidget": {
-    "modelInSuffix": "CZK",
+    "modelInSuffix": "£",
     "itemsCountLabelText": "Displayed:",
-    "priceSuffix": "CZK"
+    "priceSuffix": "£"
   },
   "TransactionsView": {
     "updateTransactionActionText": "Edit transaction",
@@ -30,7 +30,12 @@
     "inTransactionButtonTooltipText": "Add a new purchase transaction",
     "outTransactionButtonText": "Add sale",
     "outTransactionButtonTooltipText": "Add a new sale transaction",
-    "baseFilterComboboxItems": ["Today", "This week", "This month", "This year"],
+    "baseFilterComboboxItems": [
+      "Today",
+      "This week",
+      "This month",
+      "This year"
+    ],
     "searchLineEditPlaceholderText": "Enter search text..."
   },
   "TransactionsTabWidget": {
@@ -56,12 +61,13 @@
     "searchLineEditPlaceholderText": "Enter search text..."
   },
   "ExportWidget": {
-    "summaryTabTitle": "Records"
+    "summaryTabTitle": "Material summary",
+    "transactionsTabTitle": "Transactions"
   },
   "SettingsDialog": {
-  "titleText": "Settings",
-  "closeButtonText": "Close",
-  "closeButtonTooltipText": "Closes the dialog"
+    "titleText": "Settings",
+    "closeButtonText": "Close",
+    "closeButtonTooltipText": "Closes the dialog"
   },
   "SettingsSidePanel": {
     "exportButtonText": "Export",
@@ -73,12 +79,14 @@
     "branchNameLineEditPlaceholderText": "Enter branch name",
     "pathNameGroupBoxText": "File",
     "fileTypeLabelText": "File type:",
-    "fileTypeComboBoxItems": ["Excel"],
+    "fileTypeComboBoxItems": [
+      "Excel"
+    ],
     "pathLabelText": "Path:",
     "pathButtonText": "Select folder",
     "folderDialogTitle": "Select export folder",
     "fileNameLabelText": "File name:",
-    "fileNameLineEditText": "Export",
+    "fileNameLineEditText": "Summary",
     "nameLineEditPlaceholderText": "Enter file name (without extension)",
     "dateOptionsGroupBoxText": "Period",
     "todayRadioButtonText": "Today",
@@ -89,10 +97,49 @@
     "fromDateLabelText": "from:",
     "toDateLabelText": "to:",
     "financialDataGroupBoxText": "Finance",
-    "priceSuffix": "CZK",
+    "priceSuffix": "£",
     "openingBalanceLabelText": "Opening balance:",
     "incomeLabelText": "Additional income:",
     "expenseLabelText": "External expenses:",
+    "exportOptionsGroupBoxText": "After export",
+    "noActionRadioButtonText": "Do nothing",
+    "openFolderRadioButtonText": "Open folder",
+    "openFileRadioButtonText": "Open file",
+    "otherSettingsGroupBoxText": "Other",
+    "useLastOptionsCheckboxText": "Remember last settings",
+    "saveLastOpeningBalanceCheckboxText": "Remember last balance",
+    "exportButtonText": "Export",
+    "exportButtonTooltipText": "Exports data according to the selected parameters"
+  },
+  "TransactionsExportWidget": {
+    "branchGroupBoxText": "Branch",
+    "branchNameLabelText": "Branch:",
+    "branchNameLineEditPlaceholderText": "Enter branch name",
+    "pathNameGroupBoxText": "File",
+    "fileTypeLabelText": "File type:",
+    "fileTypeComboBoxItems": [
+      "Excel"
+    ],
+    "pathLabelText": "Path:",
+    "pathButtonText": "Select folder",
+    "folderDialogTitle": "Select export folder",
+    "fileNameLabelText": "File name:",
+    "fileNameLineEditText": "Transactions",
+    "nameLineEditPlaceholderText": "Enter file name (without extension)",
+    "dateOptionsGroupBoxText": "Period",
+    "todayRadioButtonText": "Today",
+    "weekRadioButtonText": "This week",
+    "monthRadioButtonText": "This month",
+    "yearRadioButtonText": "This year",
+    "customRadioButtonText": "Custom",
+    "fromDateLabelText": "from:",
+    "toDateLabelText": "to:",
+    "transactionOptionsGroupBoxText": "Transactions",
+    "customerLabelText": "Customer:",
+    "transactionTypeLabelText": "Movement:",
+    "allRadioButtonText": "All",
+    "inRadioButtonText": "In",
+    "outRadioButtonText": "Out",
     "exportOptionsGroupBoxText": "After export",
     "noActionRadioButtonText": "Do nothing",
     "openFolderRadioButtonText": "Open folder",
@@ -145,7 +192,10 @@
     "categoryLabelText": "Category:",
     "nameLabelText": "Name:",
     "unitLabelText": "Unit:",
-    "unitInputItems": ["kg", "pcs"],
+    "unitInputItems": [
+      "kg",
+      "pcs"
+    ],
     "warningLabelText": "The unit cannot be changed after creating the item",
     "defaultPriceLabelText": "Unit price (CZK):",
     "activeLabelText": "Active",
@@ -188,7 +238,10 @@
   "CreateTransactionDialog": {
     "titleText": "New transaction",
     "paymentTypeLabelText": "Payment:",
-    "paymentTypeComboboxItems": ["Cash", "Bank transfer"],
+    "paymentTypeComboboxItems": [
+      "Cash",
+      "Bank transfer"
+    ],
     "customerNameLabelText": "Customer:",
     "customerDocumentNumberLabelText": "Document:",
     "customerAddressLabelText": "Address:",
@@ -231,7 +284,7 @@
     "deleteButtonText": "Delete item",
     "deleteButtonTooltipText": "Deletes selected item from list",
     "totalPriceLabelText": "Total:",
-    "priceSuffix": "CZK"
+    "priceSuffix": "£"
   },
   "CategoryCommodityDialog": {
     "titleText": "New item",

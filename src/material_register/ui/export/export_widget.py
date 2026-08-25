@@ -6,6 +6,9 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.export.export_widgets.summary_export_widget import (
     SummaryExportWidget,
 )
+from material_register.ui.export.export_widgets.transactions_export_widget import (
+    TransactionsExportWidget,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -31,7 +34,10 @@ class ExportWidget(QWidget):
 
     def _setup_texts(self) -> None:
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.summary_tab_title = ui_texts.get("summaryTabTitle", "Records")
+        self.summary_tab_title = ui_texts.get("summaryTabTitle", "Material Summary")
+        self.transactions_tab_title = ui_texts.get(
+            "transactionsTabTitle", "Transactions"
+        )
         if ui_texts:
             return
         ErrorHandler.handle_error(
@@ -41,6 +47,10 @@ class ExportWidget(QWidget):
 
     def _setup_tabs(self) -> None:
         self.summary_export_widget = SummaryExportWidget(self)
+        self.transactions_export_widget = TransactionsExportWidget(self)
         self.export_tab_widget.addTab(
             self.summary_export_widget, self.summary_tab_title
+        )
+        self.export_tab_widget.addTab(
+            self.transactions_export_widget, self.transactions_tab_title
         )
