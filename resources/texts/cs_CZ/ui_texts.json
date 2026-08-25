@@ -127,6 +127,7 @@
     "toDateLabelText": "do:",
     "transactionOptionsGroupBoxText": "Transakce",
     "customerLabelText": "Zákazník:",
+    "allCustomersText": "Všichni zákazníci",
     "transactionTypeLabelText": "Pohyb:",
     "allRadioButtonText": "Vše",
     "inRadioButtonText": "Výkup",
@@ -137,7 +138,6 @@
     "openFileRadioButtonText": "Otevřít soubor",
     "otherSettingsGroupBoxText": "Ostatní",
     "useLastOptionsCheckboxText": "Pamatovat si poslední nastavení",
-    "saveLastOpeningBalanceCheckboxText": "Pamatovat si poslední zůstatek",
     "exportButtonText": "Exportovat",
     "exportButtonTooltipText": "Exportuje data dle nastavených parametrů"
   },

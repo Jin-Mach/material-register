@@ -1,12 +1,13 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QDate, QRegularExpression, QStandardPaths, Qt
+from PySide6.QtCore import QDate, QRegularExpression, QStandardPaths, Qt, QTimer
 from PySide6.QtGui import QFontMetrics, QRegularExpressionValidator, QResizeEvent
 from PySide6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
     QComboBox,
+    QCompleter,
     QDateEdit,
     QFileDialog,
     QFormLayout,
@@ -22,6 +23,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.db.models.customers_completer_model import (
+    CustomersCompleterModel,
+)
+from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_settings import UiSettings
@@ -38,6 +43,7 @@ class TransactionsExportWidget(QWidget):
 
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__(export_widget)
+        self.completer_model = CustomersCompleterModel(DbCache.customers)
         self.current_path = Path(
             QStandardPaths.writableLocation(
                 QStandardPaths.StandardLocation.DocumentsLocation
@@ -239,7 +245,6 @@ class TransactionsExportWidget(QWidget):
         self.export_options_group_box = QGroupBox()
         self.export_options_group_box.setObjectName("exportOptionsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
         self.no_action_radio_button = QRadioButton()
         self.no_action_radio_button.setObjectName("noActionRadioButton")
         self.open_folder_radio_button = QRadioButton()
@@ -257,7 +262,6 @@ class TransactionsExportWidget(QWidget):
         self.other_settings_group_box = QGroupBox()
         self.other_settings_group_box.setObjectName("otherSettingsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
         self.use_last_options_checkbox = QCheckBox()
         self.use_last_options_checkbox.setObjectName("useLastOptionsCheckbox")
         main_layout.addWidget(self.use_last_options_checkbox)
@@ -282,6 +286,8 @@ class TransactionsExportWidget(QWidget):
         self.apply_settings()
         self._set_folder_path()
         self._set_file_suffix()
+        self._setup_combobox()
+        self._setup_completer()
         self._set_validators()
         self._apply_date_state()
         self._setup_date_edits()
@@ -308,6 +314,7 @@ class TransactionsExportWidget(QWidget):
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.file_type_combobox.addItems(type_items)
+        self.all_customers_text = ui_texts.get("allCustomersText", "All customers...")
         if UiTexts.set_ui_texts(self, widgets):
             self.default_name = ui_texts.get(
                 f"{self.file_name_line_edit.objectName()}Text", "Export"
@@ -319,6 +326,24 @@ class TransactionsExportWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
+
+    def _setup_combobox(self) -> None:
+        self.customer_combobox.addItem(self.all_customers_text, None)
+        for customer in DbCache.customers:
+            name, address = self.completer_model.format_customer(customer)
+            self.customer_combobox.addItem(
+                f"{name} - {address}",
+                customer.id,
+            )
+
+    def _setup_completer(self) -> None:
+        completer = QCompleter()
+        completer.setModel(self.completer_model)
+        completer.setCompletionRole(Qt.ItemDataRole.UserRole + 10)
+        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        self.customer_combobox.setCompleter(completer)
 
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
@@ -336,6 +361,7 @@ class TransactionsExportWidget(QWidget):
                 f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}"
             )
         self.today_radio_button.setChecked(True)
+        self.customer_combobox.setEditable(True)
         self.in_radio_button.setChecked(True)
 
     def _create_connection(self) -> None:
@@ -354,6 +380,12 @@ class TransactionsExportWidget(QWidget):
             radio_button.toggled.connect(self._apply_date_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+        self.customer_combobox.currentIndexChanged.connect(
+            self._on_customer_selection_changed
+        )
+        self.customer_combobox.lineEdit().textEdited.connect(
+            self._on_customer_text_edited
+        )
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(
@@ -387,6 +419,34 @@ class TransactionsExportWidget(QWidget):
         self._apply_export_action_state()
         self._set_required_style()
 
+    def _on_customer_selection_changed(self, index: int) -> None:
+        self._apply_export_action_state()
+
+    def _on_customer_text_edited(self, text: str) -> None:
+        if not text:
+            QTimer.singleShot(300, self._reset_customer_selection)
+        self._apply_export_action_state()
+
+    def _reset_customer_selection(self) -> None:
+        if self.customer_combobox.currentText().strip():
+            return
+        self.customer_combobox.setCurrentIndex(0)
+        self._apply_export_action_state()
+
+    def _is_customer_selection_valid(self) -> bool:
+        text = self.customer_combobox.currentText().strip()
+        if text == self.all_customers_text:
+            return self.customer_combobox.currentIndex() == 0
+        index = self.customer_combobox.findText(
+            text,
+            Qt.MatchFlag.MatchExactly,
+        )
+        if index < 1:
+            return False
+        return (
+            self.customer_combobox.itemData(index, Qt.ItemDataRole.UserRole) is not None
+        )
+
     def _apply_date_state(self) -> None:
         if self.custom_radio_button.isChecked():
             self.from_date_edit.setEnabled(True)
@@ -399,6 +459,7 @@ class TransactionsExportWidget(QWidget):
         if (
             self.branch_name_line_edit.text().strip() != ""
             and self.file_name_line_edit.text().strip() != ""
+            and self._is_customer_selection_valid()
         ):
             self.export_button.setEnabled(True)
         else:
@@ -482,7 +543,7 @@ class TransactionsExportWidget(QWidget):
         }
         return file_map[file_type]
 
-    def get_export_data(self) -> dict[str, Path | str | float | bool]:
+    def get_export_data(self) -> dict[str, Path | str | int | None | bool]:
         from_date, to_date = self._get_date_interval()
         return {
             "branchNameLineEdit": self.branch_name_line_edit.text().strip(),
@@ -491,6 +552,7 @@ class TransactionsExportWidget(QWidget):
             "fileNameLineEdit": self.file_name_line_edit.text().strip(),
             "from_date": from_date,
             "to_date": to_date,
+            "customer_id": self.customer_combobox.currentData(Qt.ItemDataRole.UserRole),
             "noActionRadioButton": self.no_action_radio_button.isChecked(),
             "openFolderRadioButton": self.open_folder_radio_button.isChecked(),
             "openFileRadioButton": self.open_file_radio_button.isChecked(),

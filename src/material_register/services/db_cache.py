@@ -19,13 +19,17 @@ class DbCache:
     @classmethod
     def setup_init(cls, db_connection: QSqlDatabase) -> None:
         cls.db_connection = db_connection
+        cls.refresh_customers_data()
         cls.refresh_catalog_data()
 
     @classmethod
-    def refresh_catalog_data(cls) -> None:
+    def refresh_customers_data(cls) -> None:
         cls.customers = cls._get_customers(cls.db_connection)
         cls.active_customers = cls._filter_active_customers()
         cls.inactive_customers = cls._filter_inactive_customers()
+
+    @classmethod
+    def refresh_catalog_data(cls) -> None:
         cls.categories = cls._get_categories(cls.db_connection)
         cls.commodities = cls._get_commodities(cls.db_connection)
 

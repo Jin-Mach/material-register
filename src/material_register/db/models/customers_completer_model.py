@@ -11,7 +11,7 @@ class CustomersCompleterModel(QStandardItemModel):
 
     def _load_customers(self, customers: list[Customer]) -> None:
         for customer in customers:
-            name, address = CustomersCompleterModel._format_customer(customer)
+            name, address = CustomersCompleterModel.format_customer(customer)
             item = QStandardItem()
             item.setData(f"{name} - {address}", Qt.ItemDataRole.DisplayRole)
             item.setData(name, Qt.ItemDataRole.UserRole + 10)
@@ -32,7 +32,7 @@ class CustomersCompleterModel(QStandardItemModel):
         return customer
 
     @staticmethod
-    def _format_customer(customer: Customer) -> tuple[str, str]:
+    def format_customer(customer: Customer) -> tuple[str, str]:
         if customer.company:
             return customer.company, customer.address
         return f"{customer.first_name} {customer.last_name}", customer.address

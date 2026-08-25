@@ -136,6 +136,7 @@
     "toDateLabelText": "to:",
     "transactionOptionsGroupBoxText": "Transactions",
     "customerLabelText": "Customer:",
+    "allCustomersText": "All customers",
     "transactionTypeLabelText": "Movement:",
     "allRadioButtonText": "All",
     "inRadioButtonText": "In",
@@ -146,7 +147,6 @@
     "openFileRadioButtonText": "Open file",
     "otherSettingsGroupBoxText": "Other",
     "useLastOptionsCheckboxText": "Remember last settings",
-    "saveLastOpeningBalanceCheckboxText": "Remember last balance",
     "exportButtonText": "Export",
     "exportButtonTooltipText": "Exports data according to the selected parameters"
   },

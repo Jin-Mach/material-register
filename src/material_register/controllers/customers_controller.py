@@ -118,7 +118,7 @@ class CustomersController:
 
     @staticmethod
     def _refresh_cache() -> None:
-        DbCache.refresh_catalog_data()
+        DbCache.refresh_customers_data()
         DataInit.customers_completer_model.reload_customers(DbCache.active_customers)
 
     @staticmethod
