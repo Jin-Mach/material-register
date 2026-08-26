@@ -178,6 +178,10 @@ class TransactionsExportWidget(QWidget):
         self.to_date_edit = QDateEdit()
         self.to_date_edit.setCalendarPopup(True)
         self.to_date_edit.setObjectName("toDateEdit")
+        month_split = QHBoxLayout()
+        self.month_split_checkbox = QCheckBox()
+        self.month_split_checkbox.setObjectName("monthSplitCheckbox")
+        self.month_split_checkbox.setEnabled(False)
         self.time_button_group.addButton(self.today_radio_button)
         self.time_button_group.addButton(self.week_radio_button)
         self.time_button_group.addButton(self.month_radio_button)
@@ -196,8 +200,11 @@ class TransactionsExportWidget(QWidget):
         custom_time_layout.addWidget(self.custom_radio_button)
         custom_time_layout.addLayout(from_to_layout)
         custom_time_layout.addStretch()
+        month_split.addWidget(self.month_split_checkbox)
+        month_split.addStretch()
         main_layout.addLayout(standard_time_layout)
         main_layout.addLayout(custom_time_layout)
+        main_layout.addLayout(month_split)
         self.date_options_group_box.setLayout(main_layout)
         return self.date_options_group_box
 
@@ -379,8 +386,11 @@ class TransactionsExportWidget(QWidget):
         self.path_button.clicked.connect(self._select_export_folder)
         for radio_button in date_radiobuttons:
             radio_button.toggled.connect(self._apply_date_state)
+            radio_button.toggled.connect(self._update_sheet_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
+        self.from_date_edit.dateChanged.connect(self._update_sheet_state)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+        self.to_date_edit.dateChanged.connect(self._update_sheet_state)
         self.customer_combobox.currentIndexChanged.connect(
             self._on_customer_selection_changed
         )
@@ -455,6 +465,24 @@ class TransactionsExportWidget(QWidget):
         else:
             self.from_date_edit.setEnabled(False)
             self.to_date_edit.setEnabled(False)
+
+    def _update_sheet_state(self) -> None:
+        if self.year_radio_button.isChecked():
+            self.month_split_checkbox.setEnabled(True)
+            self.month_split_checkbox.setChecked(True)
+            return
+        if (
+            self.custom_radio_button.isChecked()
+            and abs(
+                self.from_date_edit.date().month() - self.to_date_edit.date().month()
+            )
+            > 0
+        ):
+            self.month_split_checkbox.setEnabled(True)
+            self.month_split_checkbox.setChecked(True)
+            return
+        self.month_split_checkbox.setEnabled(False)
+        self.month_split_checkbox.setChecked(False)
 
     def _apply_export_action_state(self) -> None:
         if (
@@ -553,6 +581,7 @@ class TransactionsExportWidget(QWidget):
             "fileNameLineEdit": self.file_name_line_edit.text().strip(),
             "from_date": from_date,
             "to_date": to_date,
+            "split_by_month": self.month_split_checkbox.isChecked(),
             "customer_id": self.customer_combobox.currentData(Qt.ItemDataRole.UserRole),
             "noActionRadioButton": self.no_action_radio_button.isChecked(),
             "openFolderRadioButton": self.open_folder_radio_button.isChecked(),

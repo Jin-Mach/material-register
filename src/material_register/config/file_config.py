@@ -124,6 +124,7 @@ UI_KEYS = [
     ("TransactionsExportWidget", "customRadioButtonText"),
     ("TransactionsExportWidget", "fromDateLabelText"),
     ("TransactionsExportWidget", "toDateLabelText"),
+    ("TransactionsExportWidget", "monthSplitCheckboxText"),
     ("TransactionsExportWidget", "transactionOptionsGroupBoxText"),
     ("TransactionsExportWidget", "customerLabelText"),
     ("TransactionsExportWidget", "allCustomersText"),

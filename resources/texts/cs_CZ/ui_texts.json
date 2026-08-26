@@ -125,6 +125,7 @@
     "customRadioButtonText": "Vlastní",
     "fromDateLabelText": "od:",
     "toDateLabelText": "do:",
+    "monthSplitCheckboxText": "Rozdělit export dle měsíce",
     "transactionOptionsGroupBoxText": "Transakce",
     "customerLabelText": "Zákazník:",
     "allCustomersText": "Všichni zákazníci",

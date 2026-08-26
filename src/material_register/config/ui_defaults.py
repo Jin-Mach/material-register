@@ -114,6 +114,7 @@ DEFAULT_TEXTS = {
         "customRadioButtonText": "Custom",
         "fromDateLabelText": "from:",
         "toDateLabelText": "to:",
+        "monthSplitCheckboxText": "Split export by month",
         "transactionOptionsGroupBoxText": "Transactions",
         "customerLabelText": "Customer:",
         "allCustomersText": "All customers",
