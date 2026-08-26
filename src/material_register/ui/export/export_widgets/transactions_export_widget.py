@@ -28,6 +28,7 @@ from material_register.config.ui_constants import (
     TRANSFER_IN,
     TRANSFER_OUT,
 )
+from material_register.controllers.export_controllers.transactions_export_controller import TransactionsExportController
 from material_register.db.models.customers_completer_model import (
     CustomersCompleterModel,
 )
@@ -49,6 +50,7 @@ class TransactionsExportWidget(QWidget):
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__(export_widget)
         self.completer_model = CustomersCompleterModel(DbCache.customers)
+        self.transactions_export_controller = TransactionsExportController(self)
         self.current_path = Path(
             QStandardPaths.writableLocation(
                 QStandardPaths.StandardLocation.DocumentsLocation
@@ -401,6 +403,7 @@ class TransactionsExportWidget(QWidget):
         self.customer_combobox.lineEdit().textEdited.connect(
             self._on_customer_text_edited
         )
+        self.export_button.clicked.connect(self.transactions_export_controller.start_export)
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(
