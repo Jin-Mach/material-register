@@ -23,7 +23,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import EXPORT_TYPE_TRANSACTIONS
+from material_register.config.ui_constants import (
+    EXPORT_TYPE_TRANSACTIONS,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.db.models.customers_completer_model import (
     CustomersCompleterModel,
 )
@@ -565,6 +569,17 @@ class TransactionsExportWidget(QWidget):
         )
         return date_range
 
+    def _get_transfer_type(self) -> tuple[str | None, str | None]:
+        transfer_map = {
+            self.all_radio_button: (TRANSFER_IN, TRANSFER_OUT),
+            self.in_radio_button: (TRANSFER_IN, None),
+            self.out_radio_button: (None, TRANSFER_OUT),
+        }
+        for button, transfer_type in transfer_map.items():
+            if button.isChecked():
+                return transfer_type
+        return TRANSFER_IN, None
+
     @staticmethod
     def _get_file_suffix(file_type: str) -> str:
         file_map = {
@@ -583,6 +598,7 @@ class TransactionsExportWidget(QWidget):
             "to_date": to_date,
             "split_by_month": self.month_split_checkbox.isChecked(),
             "customer_id": self.customer_combobox.currentData(Qt.ItemDataRole.UserRole),
+            "transfer_type": self._get_transfer_type(),
             "noActionRadioButton": self.no_action_radio_button.isChecked(),
             "openFolderRadioButton": self.open_folder_radio_button.isChecked(),
             "openFileRadioButton": self.open_file_radio_button.isChecked(),
