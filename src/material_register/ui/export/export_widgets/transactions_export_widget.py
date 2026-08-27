@@ -28,7 +28,9 @@ from material_register.config.ui_constants import (
     TRANSFER_IN,
     TRANSFER_OUT,
 )
-from material_register.controllers.export_controllers.transactions_export_controller import TransactionsExportController
+from material_register.controllers.export_controllers.transactions_export_controller import (
+    TransactionsExportController,
+)
 from material_register.db.models.customers_completer_model import (
     CustomersCompleterModel,
 )
@@ -403,7 +405,9 @@ class TransactionsExportWidget(QWidget):
         self.customer_combobox.lineEdit().textEdited.connect(
             self._on_customer_text_edited
         )
-        self.export_button.clicked.connect(self.transactions_export_controller.start_export)
+        self.export_button.clicked.connect(
+            self.transactions_export_controller.start_export
+        )
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(

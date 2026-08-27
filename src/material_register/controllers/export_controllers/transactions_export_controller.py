@@ -65,9 +65,7 @@ class TransactionsExportController(QObject):
             )
             if not question:
                 return
-        self.progress_dialog = ProgressDialog(
-            self.export_texts, AppContext.MAIN_WINDOW
-        )
+        self.progress_dialog = ProgressDialog(self.export_texts, AppContext.MAIN_WINDOW)
         self.progress_dialog.set_label_text("loadingDataText")
         self.progress_dialog.show()
         self._start_worker(self.export_settings, self.export_texts)
@@ -93,9 +91,7 @@ class TransactionsExportController(QObject):
         self._reset_variables()
         QTimer.singleShot(
             100,
-            lambda: MessageBoxes.show_error(
-                self.transactions_export_widget, key
-            ),
+            lambda: MessageBoxes.show_error(self.transactions_export_widget, key),
         )
 
     def _update_texts(self) -> None:
