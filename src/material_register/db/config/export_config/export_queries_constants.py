@@ -78,10 +78,7 @@ TRANSACTIONS_QUERY_IN = """
                 date(trans.created_at) AS transaction_date,
                 trans.created_at AS created_at,
                 trans.payment_type AS payment_type,
-                
-                customer.company AS company,
-                customer.first_name AS first_name,
-                customer.last_name AS last_name,
+
                 customer.document_number AS document_number,
                 customer.address AS address,
                 
@@ -116,6 +113,7 @@ TRANSACTIONS_QUERY_IN = """
             WHERE trans.type = 'IN'
                 AND trans.created_at >= ?
                 AND trans.created_at <= ?
+                AND (? IS NULL OR customer.id = ?)
                 
             ORDER BY
                 transaction_date ASC,
