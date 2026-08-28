@@ -129,11 +129,13 @@ TRANSACTIONS_QUERY_OUT = """
                 
                 date(trans.created_at) AS transaction_date,
                 trans.created_at AS created_at,
+                NULL AS payment_type,
                 
                 customer.document_number AS document_number,
                 customer.address AS address,
                 
                 trans_items.unit_count AS unit_count,
+                NULL AS price_per_unit,
                 
                 commodity.name AS commodity_name,
                 commodity.unit AS commodity_unit,

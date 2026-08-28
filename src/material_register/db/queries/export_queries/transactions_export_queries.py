@@ -1,10 +1,12 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
+from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.config.export_config.export_queries_constants import (
     TRANSACTIONS_QUERY_IN,
+    TRANSACTIONS_QUERY_OUT,
 )
 from material_register.domain.export_dataclass.transactions_dataclass import (
-    TransactionExportItemIn,
+    TransactionExportItem,
     TransactionsExportDay,
     TransactionsExportTransaction,
 )
@@ -12,11 +14,22 @@ from material_register.domain.export_dataclass.transactions_dataclass import (
 
 class TransactionsExportQueries:
     @staticmethod
-    def load_export_data_in(
-        db_connection: QSqlDatabase, from_date: str, to_date: str, customer_id: int | None
+    def load_export_data(
+        db_connection: QSqlDatabase,
+        from_date: str,
+        to_date: str,
+        customer_id: int | None,
+        transfer_type: str,
     ) -> tuple[bool, str, list[TransactionsExportDay]]:
+        transfer_map = {
+            TRANSFER_IN: TRANSACTIONS_QUERY_IN,
+            TRANSFER_OUT: TRANSACTIONS_QUERY_OUT,
+        }
+        query_string = transfer_map.get(transfer_type, None)
+        if query_string is None:
+            return False, f"Unknown transfer type: {transfer_type}", []
         query = QSqlQuery(db_connection)
-        if not query.prepare(TRANSACTIONS_QUERY_IN):
+        if not query.prepare(transfer_map.get(transfer_type, TRANSFER_IN)):
             return False, query.lastError().text(), []
         query.addBindValue(from_date)
         query.addBindValue(to_date)
@@ -68,8 +81,8 @@ class TransactionsExportQueries:
         return transaction
 
     @staticmethod
-    def _create_transaction_item(query: QSqlQuery) -> TransactionExportItemIn:
-        return TransactionExportItemIn(
+    def _create_transaction_item(query: QSqlQuery) -> TransactionExportItem:
+        return TransactionExportItem(
             category=query.value(9),
             commodity_name=query.value(7),
             commodity_unit=query.value(8),

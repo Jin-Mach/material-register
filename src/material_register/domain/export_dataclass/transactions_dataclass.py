@@ -16,11 +16,11 @@ class TransactionsExportTransaction:
     customer_name: str | None = None
     document_number: str | None = None
     address: str | None = None
-    transaction_items: list[TransactionExportItemIn] | None = None
+    transaction_items: list[TransactionExportItem] | None = None
 
 
 @dataclass(frozen=True)
-class TransactionExportItemIn:
+class TransactionExportItem:
     category: str | None = None
     commodity_name: str | None = None
     commodity_unit: str | None = None

@@ -2,6 +2,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal, Slot
 
+from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.export_queries.transactions_export_queries import (
     TransactionsExportQueries,
 )
@@ -41,14 +42,20 @@ class TransactionsExportWorker(QObject):
             if not ok:
                 self.error.emit(error)
                 return
-            ok, error, data = TransactionsExportQueries.load_export_data_in(
-                self.db_connection, from_date, to_date, customer_id
+            in_ok, in_error, in_data = TransactionsExportQueries.load_export_data(
+                self.db_connection, from_date, to_date, customer_id, TRANSFER_IN
             )
-            if not ok:
-                print("data error:", error)
-                self.no_export_data.emit(data)
+            if not in_ok:
+                self.no_export_data.emit(in_error)
                 return
-            print("data:", data)
+            print("in data:", in_data)
+            out_ok, out_error, out_data = TransactionsExportQueries.load_export_data(
+                self.db_connection, from_date, to_date, customer_id, TRANSFER_OUT
+            )
+            if not out_ok:
+                self.no_export_data.emit(out_error)
+                return
+            print("out data:", out_data)
             self.export_started.emit()
             self.finished.emit()
         except Exception as e:
