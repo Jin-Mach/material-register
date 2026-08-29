@@ -8,9 +8,11 @@ from material_register.db.queries.export_queries.transactions_export_queries imp
 )
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.export.excel.transactions_export.transactions_report import (
-    TransactionsReport,
+
+from material_register.services.export.excel.transactions_export.transactions_workbook import (
+    TransactionsWorkbook,
 )
+from material_register.utils.system import is_disk_writable
 
 
 class TransactionsExportWorker(QObject):
@@ -48,16 +50,22 @@ class TransactionsExportWorker(QObject):
             if not in_ok:
                 self.no_export_data.emit(in_error)
                 return
-            print("in data:", in_data)
             out_ok, out_error, out_data = TransactionsExportQueries.load_export_data(
                 self.db_connection, from_date, to_date, customer_id, TRANSFER_OUT
             )
             if not out_ok:
                 self.no_export_data.emit(out_error)
+            if not in_data and not out_data:
+                self.no_export_data.emit("NO_DATA")
                 return
-            formated_in = TransactionsReport.get_split_data(in_data)
-            print("formated in:", formated_in)
             self.export_started.emit()
+            workbook = TransactionsWorkbook.create_workbook(
+                self.export_settings, self.export_texts, in_data, out_data
+            )
+            if not is_disk_writable(export_path.parent):
+                self.error.emit(f"Export path {export_path} is not writable")
+                return
+            workbook.save(export_path)
             self.finished.emit()
         except Exception as e:
             ErrorHandler.handle_error(e, "export", "error")

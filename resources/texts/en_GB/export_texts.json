@@ -9,7 +9,7 @@
     "rangeText": "Period:",
     "branchText": "Branch:",
     "notesText": "Notes",
-    "financialText": "Finance",
+    "financialText": "Financial summary",
     "openingBalanceText": "Opening balance:",
     "incomeText": "Income:",
     "buybackText": "Buyback:",
@@ -23,5 +23,28 @@
     "summaryPriceText": "Total",
     "exportText": "Dispatch",
     "pageText": "Page"
+  },
+  "TransactionsSheet": {
+    "sheetName": "Overview",
+    "titleText": "Transaction Overview",
+    "rangeText": "Period:",
+    "branchText": "Branch:",
+    "financialText": "Financial summary",
+    "customerNameText": "Customer:",
+    "documentNumberText": "Document:",
+    "addressText": "Address:",
+    "paymentTypeText": "Payment:",
+    "CASH": "Cash",
+    "TRANSFER": "Bank Transfer",
+    "createdAtText": "Time:",
+    "currencySuffix": "£",
+    "categoryText": "Category",
+    "commodityText": "Item",
+    "pricePerUnitText": "Price",
+    "quantityText": "Quantity",
+    "totalPriceText": "Total price",
+    "summaryPriceText": "Total",
+    "buybackText": "Buyback",
+    "exportText": "Dispatch"
   }
 }

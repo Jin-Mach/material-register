@@ -23,5 +23,28 @@
     "summaryPriceText": "Celkem",
     "exportText": "Výdej",
     "pageText": "Strana"
+  },
+  "TransactionsSheet": {
+    "sheetName": "Přehled",
+    "titleText": "Přehled transakcí",
+    "rangeText": "Období:",
+    "branchText": "Pobočka:",
+    "financialText": "Finance",
+    "customerNameText": "Zákazník:",
+    "documentNumberText": "Doklad:",
+    "addressText": "Adresa:",
+    "paymentTypeText": "Platba:",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod",
+    "createdAtText": "Čas:",
+    "currencySuffix": "Kč",
+    "categoryText": "Kategorie",
+    "commodityText": "Položka",
+    "pricePerUnitText": "Cena",
+    "quantityText": "Množství",
+    "totalPriceText": "Celková cena",
+    "summaryPriceText": "Celkem",
+    "buybackText": "Výkup",
+    "exportText": "Výdej"
   }
 }
