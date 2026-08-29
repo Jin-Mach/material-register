@@ -6,7 +6,9 @@ from material_register.domain.export_dataclass.summary_dataclass import (
     SummaryItemDataIn,
     SummaryItemDataOut,
 )
-from material_register.services.export.summary_report import SummaryReport
+from material_register.services.export.excel.summary_export.summary_report import (
+    SummaryReport,
+)
 
 
 @pytest.fixture
