@@ -8,6 +8,9 @@ from material_register.db.queries.export_queries.transactions_export_queries imp
 )
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.export.excel.transactions_export.transactions_report import (
+    TransactionsReport,
+)
 
 
 class TransactionsExportWorker(QObject):
@@ -33,9 +36,6 @@ class TransactionsExportWorker(QObject):
             from_date = self.export_settings["from_date"]
             to_date = self.export_settings["to_date"]
             customer_id = self.export_settings["customer_id"]
-            print("export_settings:", self.export_settings)
-            print("customer_id:", customer_id)
-            print("customer_id type:", type(customer_id))
             ok, error, self.db_connection = DbInit.thread_connection(
                 "transactions_export_connection"
             )
@@ -55,7 +55,8 @@ class TransactionsExportWorker(QObject):
             if not out_ok:
                 self.no_export_data.emit(out_error)
                 return
-            print("out data:", out_data)
+            formated_in = TransactionsReport.get_split_data(in_data)
+            print("formated in:", formated_in)
             self.export_started.emit()
             self.finished.emit()
         except Exception as e:
