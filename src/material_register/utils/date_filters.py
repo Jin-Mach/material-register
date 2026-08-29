@@ -22,3 +22,7 @@ def get_filter_range(key: str) -> tuple[str, str] | None:
         return None
     end = now
     return start.strftime(DATE_FORMAT), end.strftime(DATE_FORMAT)
+
+
+def parse_date(string_date: str) -> datetime:
+    return datetime.strptime(string_date, DATE_FORMAT)

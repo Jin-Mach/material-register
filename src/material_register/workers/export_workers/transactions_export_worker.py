@@ -8,7 +8,6 @@ from material_register.db.queries.export_queries.transactions_export_queries imp
 )
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
-
 from material_register.services.export.excel.transactions_export.transactions_workbook import (
     TransactionsWorkbook,
 )
