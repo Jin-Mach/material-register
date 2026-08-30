@@ -74,9 +74,15 @@
     "YES": "Restore",
     "NO": "Cancel"
   },
-  "PATH_EXISTS": {
+  "FILE_EXISTS": {
     "TITLE": "File already exists",
     "TEXT": "A file with the same name already exists in the destination folder.\nDo you want to continue and replace it?",
+    "YES": "Continue",
+    "NO": "Cancel"
+  },
+  "FOLDER_EXISTS": {
+    "TITLE": "Folder already exists",
+    "TEXT": "The destination folder already exists.\nDo you want to continue and overwrite the files in it?",
     "YES": "Continue",
     "NO": "Cancel"
   },

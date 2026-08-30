@@ -59,7 +59,11 @@ class TransactionsExportWorker(QObject):
             )
             if not out_ok:
                 self.no_export_data.emit(out_error)
-            if not in_data and not out_data:
+            transfer_in, transfer_out = self.export_settings.get("transfer_type", (TRANSFER_IN, None))
+            if transfer_in is not None and not in_data:
+                self.no_export_data.emit("NO_DATA")
+                return
+            if transfer_out is not None and not out_data:
                 self.no_export_data.emit("NO_DATA")
                 return
             self.export_started.emit()
@@ -105,9 +109,7 @@ class TransactionsExportWorker(QObject):
                 transfer_type,
             )
             transfer_text = self.transactions_texts.get(transfer_type, transfer_type)
-            export_path = self.export_path.with_name(
-                f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}"
-            )
+            export_path = self.export_path / f"{transfer_text}.xlsx"
             if not is_disk_writable(export_path.parent):
                 return False, export_path
             workbook.save(export_path)
@@ -141,9 +143,7 @@ class TransactionsExportWorker(QObject):
                     transfer_type,
                 )
                 transfer_text = f"{self.transactions_texts.get(transfer_type, transfer_type)}_{month:02d}"
-                export_path = self.export_path.with_name(
-                    f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}"
-                )
+                export_path = self.export_path / f"{transfer_text}.xlsx"
                 if not is_disk_writable(export_path.parent):
                     return False, export_path
                 workbook.save(export_path)

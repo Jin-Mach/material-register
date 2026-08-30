@@ -62,7 +62,7 @@ class SummaryExportController(QObject):
             return
         if self.export_path.exists():
             question = MessageBoxes.show_question(
-                self.summary_export_widget, "PATH_EXISTS"
+                self.summary_export_widget, "FILE_EXISTS"
             )
             if not question:
                 return

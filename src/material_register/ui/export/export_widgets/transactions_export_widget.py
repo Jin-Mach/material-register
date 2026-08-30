@@ -138,11 +138,8 @@ class TransactionsExportWidget(QWidget):
         self.file_name_line_edit.setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
         )
-        self.suffix_label = QLabel()
-        self.suffix_label.setObjectName("suffixLabel")
         name_layout = QHBoxLayout()
         name_layout.addWidget(self.file_name_line_edit)
-        name_layout.addWidget(self.suffix_label)
         file_type_layout.addStretch()
         file_type_layout.addWidget(self.file_type_label)
         file_type_layout.addWidget(self.file_type_combobox)
@@ -301,7 +298,6 @@ class TransactionsExportWidget(QWidget):
         self._setup_texts()
         self.apply_settings()
         self._set_folder_path()
-        self._set_file_suffix()
         self._setup_combobox()
         self._setup_completer()
         self._set_validators()
@@ -389,7 +385,6 @@ class TransactionsExportWidget(QWidget):
             self.custom_radio_button,
         ]
         self.branch_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
-        self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
         self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
         self.path_button.clicked.connect(self._select_export_folder)
         for radio_button in date_radiobuttons:
@@ -429,13 +424,6 @@ class TransactionsExportWidget(QWidget):
         self.path_line_edit.setToolTip(str(self.current_path))
         self.path_line_edit.setToolTipDuration(3000)
         self.path_line_edit.setReadOnly(True)
-
-    def _set_file_suffix(self) -> None:
-        self.suffix_label.setText(
-            TransactionsExportWidget._get_file_suffix(
-                self.file_type_combobox.currentText()
-            )
-        )
 
     def _on_text_or_value_changed(self) -> None:
         self._apply_export_action_state()
@@ -553,10 +541,8 @@ class TransactionsExportWidget(QWidget):
             self._set_elided_path(str(self.current_path))
             self.path_line_edit.setToolTip(str(folder))
 
-    def _get_full_path(self) -> Path:
-        return (
-            self.current_path / self.file_name_line_edit.text().strip()
-        ).with_suffix(self.suffix_label.text())
+    def _get_export_path(self) -> Path:
+        return self.current_path / self.file_name_line_edit.text().strip()
 
     def _get_date_interval(self) -> tuple[str, str]:
         date_map = {
@@ -599,7 +585,7 @@ class TransactionsExportWidget(QWidget):
         return {
             "branchNameLineEdit": self.branch_name_line_edit.text().strip(),
             "pathLineEdit": str(self.current_path),
-            "export_path": self._get_full_path(),
+            "export_path": self._get_export_path(),
             "fileNameLineEdit": self.file_name_line_edit.text().strip(),
             "from_date": from_date,
             "to_date": to_date,

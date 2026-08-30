@@ -74,9 +74,15 @@
     "YES": "Obnovit",
     "NO": "Zrušit"
   },
-  "PATH_EXISTS": {
+  "FILE_EXISTS": {
     "TITLE": "Soubor již existuje",
     "TEXT": "V cílové složce je soubor se stejným názvem.\nChcete pokračovat a nahradit jej?",
+    "YES": "Pokračovat",
+    "NO": "Zrušit"
+  },
+  "FOLDER_EXISTS": {
+    "TITLE": "Složka již existuje",
+    "TEXT": "Cílová složka již existuje.\nChcete pokračovat a přepsat soubory v ní?",
     "YES": "Pokračovat",
     "NO": "Zrušit"
   },

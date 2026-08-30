@@ -115,7 +115,7 @@
     "branchGroupBoxText": "Branch",
     "branchNameLabelText": "Branch:",
     "branchNameLineEditPlaceholderText": "Enter branch name",
-    "pathNameGroupBoxText": "File",
+    "pathNameGroupBoxText": "Folder",
     "fileTypeLabelText": "File type:",
     "fileTypeComboBoxItems": [
       "Excel"
@@ -123,9 +123,9 @@
     "pathLabelText": "Path:",
     "pathButtonText": "Select folder",
     "folderDialogTitle": "Select export folder",
-    "fileNameLabelText": "File name:",
+    "fileNameLabelText": "Folder name:",
     "fileNameLineEditText": "Transactions",
-    "nameLineEditPlaceholderText": "Enter file name (without extension)",
+    "nameLineEditPlaceholderText": "Enter folder name",
     "dateOptionsGroupBoxText": "Period",
     "todayRadioButtonText": "Today",
     "weekRadioButtonText": "This week",

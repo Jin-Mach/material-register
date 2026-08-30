@@ -61,10 +61,11 @@ class TransactionsExportController(QObject):
             return
         if self.export_path.exists():
             question = MessageBoxes.show_question(
-                self.transactions_export_widget, "PATH_EXISTS"
+                self.transactions_export_widget, "FOLDER_EXISTS"
             )
             if not question:
                 return
+        self.export_path.mkdir(parents=True, exist_ok=True)
         self.progress_dialog = ProgressDialog(self.export_texts, AppContext.MAIN_WINDOW)
         self.progress_dialog.set_label_text("loadingDataText")
         self.progress_dialog.show()
