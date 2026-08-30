@@ -59,7 +59,9 @@ class TransactionsExportWorker(QObject):
             )
             if not out_ok:
                 self.no_export_data.emit(out_error)
-            transfer_in, transfer_out = self.export_settings.get("transfer_type", (TRANSFER_IN, None))
+            transfer_in, transfer_out = self.export_settings.get(
+                "transfer_type", (TRANSFER_IN, None)
+            )
             if transfer_in is not None and not in_data:
                 self.no_export_data.emit("NO_DATA")
                 return

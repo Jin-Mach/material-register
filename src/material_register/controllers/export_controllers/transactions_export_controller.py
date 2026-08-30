@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
 
-from material_register.config.ui_constants import EXPORT_TYPE_TRANSACTIONS
+from material_register.config.ui_constants import EXPORT_TYPE_TRANSACTIONS, TRANSFER_IN, TRANSFER_OUT
 from material_register.core.app_context import AppContext
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.providers.texts_provider import TextsProvider
@@ -59,9 +59,9 @@ class TransactionsExportController(QObject):
                 "PATH_ERROR",
             )
             return
-        if self.export_path.exists():
+        if self._has_existing_export_files():
             question = MessageBoxes.show_question(
-                self.transactions_export_widget, "FOLDER_EXISTS"
+                self.transactions_export_widget, "FILE_EXISTS"
             )
             if not question:
                 return
@@ -157,6 +157,29 @@ class TransactionsExportController(QObject):
             )
 
         self._reset_variables()
+
+    def _has_existing_export_files(self) -> bool:
+        export_path = self.export_settings.get("export_path")
+        if export_path is None:
+            return False
+        if not export_path.exists():
+            return False
+        transfer_in, transfer_out = self.export_settings.get(
+            "transfer_type", (TRANSFER_IN, None)
+        )
+        prefixes = []
+        if transfer_in is not None:
+            prefixes.append(
+                self.export_texts["TransactionsSheet"].get(TRANSFER_IN, TRANSFER_IN)
+            )
+        if transfer_out is not None:
+            prefixes.append(
+                self.export_texts["TransactionsSheet"].get(TRANSFER_OUT, TRANSFER_OUT)
+            )
+        for item in export_path.iterdir():
+            if item.is_file() and item.name.startswith(tuple(prefixes)):
+                return True
+        return False
 
     def _last_settings_saved(self) -> None:
         user_settings_keys = [
