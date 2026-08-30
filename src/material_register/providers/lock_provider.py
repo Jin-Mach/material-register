@@ -6,7 +6,14 @@ from material_register.config.project_constants import LOCK_FILE_NAME
 
 
 class LockProvider:
-    _lock_path = Path(QStandardPaths.writableLocation(QStandardPaths.StandardLocation.AppLocalDataLocation)) / "lock"
+    _lock_path = (
+        Path(
+            QStandardPaths.writableLocation(
+                QStandardPaths.StandardLocation.AppLocalDataLocation
+            )
+        )
+        / "lock"
+    )
     _lock_path.mkdir(parents=True, exist_ok=True)
     _lock = QLockFile(str(_lock_path / LOCK_FILE_NAME))
     _lock.setStaleLockTime(0)

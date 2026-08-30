@@ -3,7 +3,10 @@ import sys
 from PySide6.QtWidgets import QApplication
 
 from material_register.config.logging_config import LOG_STRUCTURE
-from material_register.config.project_constants import APPLICATION_NAME, ORGANIZATION_NAME
+from material_register.config.project_constants import (
+    APPLICATION_NAME,
+    ORGANIZATION_NAME,
+)
 from material_register.controllers.init_controller import InitController
 from material_register.providers.lock_provider import LockProvider
 from material_register.providers.paths_provider import PathsProvider

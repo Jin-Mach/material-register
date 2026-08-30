@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from openpyxl.cell import Cell
-from openpyxl.styles import Alignment, Border, Font, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
@@ -10,6 +9,11 @@ from material_register.domain.export_dataclass.summary_dataclass import (
     SummaryExportItemOut,
     SummaryItemDataIn,
     SummaryItemDataOut,
+)
+from material_register.services.export.excel.excel_helpers import (
+    cell_alignment,
+    cell_font,
+    set_borders,
 )
 from material_register.services.export.excel.summary_export.summary_report import (
     SummaryReport,
@@ -676,15 +680,16 @@ class SummarySheet:
     def _cell_alignment(
         cell, horizontal: str = "center", vertical: str = "center"
     ) -> None:
-        cell.alignment = Alignment(
-            horizontal=horizontal, vertical=vertical, wrap_text=True
-        )
+        cell_alignment(cell, horizontal=horizontal, vertical=vertical)
 
     @staticmethod
     def _cell_font(cell, font_size: int | None = None, bold: bool = False) -> None:
-        if font_size is None:
-            font_size = SummarySheet.DEFAULT_FONT_SIZE
-        cell.font = Font(size=font_size, bold=bold)
+        cell_font(
+            cell,
+            font_size=font_size,
+            bold=bold,
+            default_font_size=SummarySheet.DEFAULT_FONT_SIZE,
+        )
 
     @staticmethod
     def _set_borders(
@@ -695,24 +700,7 @@ class SummarySheet:
         end_column: int,
         style: str = "thin",
     ) -> None:
-        side = Side(border_style=style)
-        for row in sheet.iter_rows(
-            min_row=start_row, max_row=end_row, min_col=start_column, max_col=end_column
-        ):
-            for cell in row:
-                top = None
-                bottom = None
-                left = None
-                right = None
-                if cell.row == start_row:
-                    top = side
-                if cell.row == end_row:
-                    bottom = side
-                if cell.column == start_column:
-                    left = side
-                if cell.column == end_column:
-                    right = side
-                cell.border = Border(top=top, bottom=bottom, left=left, right=right)
+        set_borders(sheet, start_row, start_column, end_row, end_column, style=style)
 
     @staticmethod
     def _auto_size_columns(sheet: Worksheet) -> None:
