@@ -6,7 +6,9 @@ from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.export_queries.transactions_export_queries import (
     TransactionsExportQueries,
 )
-from material_register.domain.export_dataclass.transactions_dataclass import TransactionsExportDay
+from material_register.domain.export_dataclass.transactions_dataclass import (
+    TransactionsExportDay,
+)
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.export.excel.transactions_export.transactions_workbook import (
@@ -77,13 +79,24 @@ class TransactionsExportWorker(QObject):
             ErrorHandler.handle_error(e, "export", "error")
             self.error.emit(f"Export failed: {e}")
 
-    def _create_non_split_exports(self, in_data: list[TransactionsExportDay], out_data: list[TransactionsExportDay]) -> tuple[bool, Path]:
+    def _create_non_split_exports(
+        self,
+        in_data: list[TransactionsExportDay],
+        out_data: list[TransactionsExportDay],
+    ) -> tuple[bool, Path]:
         export_path = self.export_path
         for transfer_type, data in ((TRANSFER_IN, in_data), (TRANSFER_OUT, out_data)):
             if not data:
                 continue
-            transfer_in, transfer_out = self.export_settings.get("transfer_type", (TRANSFER_IN, None))
-            if transfer_type == TRANSFER_IN and transfer_in is None or transfer_type == TRANSFER_OUT and transfer_out is None:
+            transfer_in, transfer_out = self.export_settings.get(
+                "transfer_type", (TRANSFER_IN, None)
+            )
+            if (
+                transfer_type == TRANSFER_IN
+                and transfer_in is None
+                or transfer_type == TRANSFER_OUT
+                and transfer_out is None
+            ):
                 continue
             workbook = TransactionsWorkbook.create_workbook(
                 self.export_settings,
@@ -92,19 +105,32 @@ class TransactionsExportWorker(QObject):
                 transfer_type,
             )
             transfer_text = self.transactions_texts.get(transfer_type, transfer_type)
-            export_path = self.export_path.with_name(f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}")
+            export_path = self.export_path.with_name(
+                f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}"
+            )
             if not is_disk_writable(export_path.parent):
                 return False, export_path
             workbook.save(export_path)
         return True, export_path
 
-    def _create_split_exports(self, in_data: list[TransactionsExportDay], out_data: list[TransactionsExportDay]) -> tuple[bool, Path]:
+    def _create_split_exports(
+        self,
+        in_data: list[TransactionsExportDay],
+        out_data: list[TransactionsExportDay],
+    ) -> tuple[bool, Path]:
         export_path = self.export_path
         for transfer_type, data in ((TRANSFER_IN, in_data), (TRANSFER_OUT, out_data)):
             if not data:
                 continue
-            transfer_in, transfer_out = self.export_settings.get("transfer_type", (TRANSFER_IN, None))
-            if transfer_type == TRANSFER_IN and transfer_in is None or transfer_type == TRANSFER_OUT and transfer_out is None:
+            transfer_in, transfer_out = self.export_settings.get(
+                "transfer_type", (TRANSFER_IN, None)
+            )
+            if (
+                transfer_type == TRANSFER_IN
+                and transfer_in is None
+                or transfer_type == TRANSFER_OUT
+                and transfer_out is None
+            ):
                 continue
             data_months_map = TransactionsExportWorker._split_data_by_month(data)
             for month, transactions in data_months_map.items():
@@ -115,7 +141,9 @@ class TransactionsExportWorker(QObject):
                     transfer_type,
                 )
                 transfer_text = f"{self.transactions_texts.get(transfer_type, transfer_type)}_{month:02d}"
-                export_path = self.export_path.with_name(f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}")
+                export_path = self.export_path.with_name(
+                    f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}"
+                )
                 if not is_disk_writable(export_path.parent):
                     return False, export_path
                 workbook.save(export_path)

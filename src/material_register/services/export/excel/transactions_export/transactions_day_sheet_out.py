@@ -40,7 +40,7 @@ class TransactionsDaySheetOut:
             TransactionsDaySheetOut.LAST_COLUMN,
             export_settings,
             export_texts,
-            day_data
+            day_data,
         )
         row = TransactionsDaySheetOut._create_count_section(
             sheet,
@@ -138,9 +138,7 @@ class TransactionsDaySheetOut:
             TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
             bold=True,
         )
-        period_value = format_date_to_locale(
-            f"{day_data.transaction_date} 00:00:00"
-        )
+        period_value = format_date_to_locale(f"{day_data.transaction_date} 00:00:00")
         cell = sheet.cell(row=row, column=2, value=period_value)
         sheet.merge_cells(
             start_row=row,

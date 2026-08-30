@@ -439,16 +439,19 @@ class TransactionsController:
 
     @staticmethod
     def _is_dialog_data_valid(
-            dialog_data: dict[str, str | int | None],
-            transfer_type: str,
+        dialog_data: dict[str, str | int | None],
+        transfer_type: str,
     ) -> bool:
         for key, value in dialog_data.items():
             if key == "notes":
                 continue
             if key == "payment_type":
-                if transfer_type != TRANSFER_OUT:
-                    if value is not None and value not in PAYMENT_VALUES:
-                        return False
+                if (
+                    transfer_type != TRANSFER_OUT
+                    and value is not None
+                    and value not in PAYMENT_VALUES
+                ):
+                    return False
                 continue
             if value is None or value == "":
                 return False

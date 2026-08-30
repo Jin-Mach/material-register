@@ -118,9 +118,7 @@ class TransactionsDaySheetIn:
         TransactionsDaySheetIn._cell_font(
             cell, TransactionsDaySheetIn.DEFAULT_FONT_SIZE, bold=True
         )
-        period_value = format_date_to_locale(
-            f"{day_data.transaction_date} 00:00:00"
-        )
+        period_value = format_date_to_locale(f"{day_data.transaction_date} 00:00:00")
         cell = sheet.cell(row=row, column=2, value=period_value)
         sheet.merge_cells(
             start_row=row, start_column=2, end_row=row, end_column=middle_column - 1
