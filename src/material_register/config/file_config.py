@@ -387,4 +387,5 @@ EXPORT_KEYS = [
     ("TransactionsSheet", "quantityText"),
     ("TransactionsSheet", "totalPriceText"),
     ("TransactionsSheet", "summaryPriceText"),
+    ("TransactionsSheet", "countText"),
 ]

@@ -43,6 +43,7 @@
     "pricePerUnitText": "Cena",
     "quantityText": "Množství",
     "totalPriceText": "Celková cena",
-    "summaryPriceText": "Celkem"
+    "summaryPriceText": "Celkem",
+    "countText": "Celkové množství"
   }
 }

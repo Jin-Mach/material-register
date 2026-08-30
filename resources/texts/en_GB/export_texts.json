@@ -43,6 +43,7 @@
     "pricePerUnitText": "Price",
     "quantityText": "Quantity",
     "totalPriceText": "Total price",
-    "summaryPriceText": "Total"
+    "summaryPriceText": "Total",
+    "countText": "Exported quantities"
   }
 }
