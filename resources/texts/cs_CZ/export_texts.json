@@ -36,6 +36,8 @@
     "paymentTypeText": "Platba:",
     "CASH": "Hotovost",
     "TRANSFER": "Převod",
+    "IN": "výkup",
+    "OUT": "vývoz",
     "createdAtText": "Čas:",
     "currencySuffix": "Kč",
     "categoryText": "Kategorie",

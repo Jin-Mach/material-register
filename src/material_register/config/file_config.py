@@ -379,6 +379,8 @@ EXPORT_KEYS = [
     ("TransactionsSheet", "paymentTypeText"),
     ("TransactionsSheet", "CASH"),
     ("TransactionsSheet", "TRANSFER"),
+    ("TransactionsSheet", "IN"),
+    ("TransactionsSheet", "OUT"),
     ("TransactionsSheet", "createdAtText"),
     ("TransactionsSheet", "currencySuffix"),
     ("TransactionsSheet", "categoryText"),

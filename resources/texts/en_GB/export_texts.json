@@ -36,6 +36,8 @@
     "paymentTypeText": "Payment:",
     "CASH": "Cash",
     "TRANSFER": "Bank Transfer",
+    "IN": "Buyback",
+    "OUT": "Sale",
     "createdAtText": "Time:",
     "currencySuffix": "£",
     "categoryText": "Category",

@@ -11,7 +11,7 @@ from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportTransaction,
 )
 from material_register.ui.helpers.formating_utils import (
-    format_date_range_to_locale,
+    format_date_to_locale,
     format_time_to_locale,
 )
 
@@ -41,6 +41,7 @@ class TransactionsDaySheetIn:
             TransactionsDaySheetIn.LAST_COLUMN,
             export_settings,
             export_texts,
+            day_data,
         )
         cash_cell, transfer_cell, total_cell, row = (
             TransactionsDaySheetIn._create_financial_section(
@@ -93,6 +94,7 @@ class TransactionsDaySheetIn:
         last_column: int,
         export_settings: dict[str, Path | str | float | bool],
         export_texts: dict[str, str],
+        day_data: TransactionsExportDay,
     ) -> int:
         start_row = row
         middle_column = 4
@@ -116,8 +118,8 @@ class TransactionsDaySheetIn:
         TransactionsDaySheetIn._cell_font(
             cell, TransactionsDaySheetIn.DEFAULT_FONT_SIZE, bold=True
         )
-        period_value = TransactionsDaySheetIn._get_period_range(
-            export_settings.get("from_date", None), export_settings.get("to_date", None)
+        period_value = format_date_to_locale(
+            f"{day_data.transaction_date} 00:00:00"
         )
         cell = sheet.cell(row=row, column=2, value=period_value)
         sheet.merge_cells(
@@ -642,9 +644,3 @@ class TransactionsDaySheetIn:
                     length = len(str(cell.value))
                     max_length = max(max_length, length)
             sheet.column_dimensions[column_letter].width = max_length + 3
-
-    @staticmethod
-    def _get_period_range(from_date: str | None, to_date: str | None) -> str:
-        if from_date is None or to_date is None:
-            return TransactionsDaySheetIn.ERROR_TEXT
-        return format_date_range_to_locale(from_date, to_date)

@@ -10,7 +10,7 @@ from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportTransaction,
 )
 from material_register.ui.helpers.formating_utils import (
-    format_date_range_to_locale,
+    format_date_to_locale,
     format_time_to_locale,
 )
 
@@ -40,6 +40,7 @@ class TransactionsDaySheetOut:
             TransactionsDaySheetOut.LAST_COLUMN,
             export_settings,
             export_texts,
+            day_data
         )
         row = TransactionsDaySheetOut._create_count_section(
             sheet,
@@ -97,6 +98,7 @@ class TransactionsDaySheetOut:
         last_column: int,
         export_settings: dict[str, Path | str | float | bool],
         export_texts: dict[str, str],
+        day_data: TransactionsExportDay,
     ) -> int:
         start_row = row
         middle_column = 4
@@ -136,9 +138,8 @@ class TransactionsDaySheetOut:
             TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
             bold=True,
         )
-        period_value = TransactionsDaySheetOut._get_period_range(
-            export_settings.get("from_date", None),
-            export_settings.get("to_date", None),
+        period_value = format_date_to_locale(
+            f"{day_data.transaction_date} 00:00:00"
         )
         cell = sheet.cell(row=row, column=2, value=period_value)
         sheet.merge_cells(
@@ -331,7 +332,6 @@ class TransactionsDaySheetOut:
                 category_row
             ].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
             category_row += 1
-
         if category_row <= notes_end_row:
             sheet.merge_cells(
                 start_row=category_row,
@@ -339,7 +339,6 @@ class TransactionsDaySheetOut:
                 end_row=notes_end_row,
                 end_column=last_column,
             )
-
         last_section_row = max(
             notes_end_row,
             category_row - 1,
@@ -460,7 +459,6 @@ class TransactionsDaySheetOut:
                 horizontal="left",
             )
             TransactionsDaySheetOut._cell_font(cell)
-
             sheet.row_dimensions[
                 customer_row
             ].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
@@ -724,15 +722,3 @@ class TransactionsDaySheetOut:
                     length = len(str(cell.value))
                     max_length = max(max_length, length)
             sheet.column_dimensions[column_letter].width = max_length + 3
-
-    @staticmethod
-    def _get_period_range(
-        from_date: str | None,
-        to_date: str | None,
-    ) -> str:
-        if from_date is None or to_date is None:
-            return TransactionsDaySheetOut.ERROR_TEXT
-        return format_date_range_to_locale(
-            from_date,
-            to_date,
-        )

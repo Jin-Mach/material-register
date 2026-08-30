@@ -6,11 +6,13 @@ from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.export_queries.transactions_export_queries import (
     TransactionsExportQueries,
 )
+from material_register.domain.export_dataclass.transactions_dataclass import TransactionsExportDay
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.export.excel.transactions_export.transactions_workbook import (
     TransactionsWorkbook,
 )
+from material_register.utils.date_filters import parse_date
 from material_register.utils.system import is_disk_writable
 
 
@@ -27,13 +29,14 @@ class TransactionsExportWorker(QObject):
     ) -> None:
         super().__init__()
         self.export_settings = export_settings
+        self.export_path = self.export_settings["export_path"]
         self.export_texts = export_texts
+        self.transactions_texts = self.export_texts.get("TransactionsSheet", {})
         self.db_connection = None
 
     @Slot()
     def run(self) -> None:
         try:
-            export_path = self.export_settings["export_path"]
             from_date = self.export_settings["from_date"]
             to_date = self.export_settings["to_date"]
             customer_id = self.export_settings["customer_id"]
@@ -58,14 +61,74 @@ class TransactionsExportWorker(QObject):
                 self.no_export_data.emit("NO_DATA")
                 return
             self.export_started.emit()
-            workbook = TransactionsWorkbook.create_workbook(
-                self.export_settings, self.export_texts, in_data, out_data
-            )
-            if not is_disk_writable(export_path.parent):
-                self.error.emit(f"Export path {export_path} is not writable")
-                return
-            workbook.save(export_path)
+            split_by_month = self.export_settings.get("split_by_month", True)
+            if not split_by_month:
+                ok, export_path = self._create_non_split_exports(in_data, out_data)
+                if not ok:
+                    self.error.emit(f"Export path {export_path} is not writable")
+                    return
+            else:
+                ok, export_path = self._create_split_exports(in_data, out_data)
+                if not ok:
+                    self.error.emit(f"Export path {export_path} is not writable")
+                    return
             self.finished.emit()
         except Exception as e:
             ErrorHandler.handle_error(e, "export", "error")
             self.error.emit(f"Export failed: {e}")
+
+    def _create_non_split_exports(self, in_data: list[TransactionsExportDay], out_data: list[TransactionsExportDay]) -> tuple[bool, Path]:
+        export_path = self.export_path
+        for transfer_type, data in ((TRANSFER_IN, in_data), (TRANSFER_OUT, out_data)):
+            if not data:
+                continue
+            transfer_in, transfer_out = self.export_settings.get("transfer_type", (TRANSFER_IN, None))
+            if transfer_type == TRANSFER_IN and transfer_in is None or transfer_type == TRANSFER_OUT and transfer_out is None:
+                continue
+            workbook = TransactionsWorkbook.create_workbook(
+                self.export_settings,
+                self.transactions_texts,
+                data,
+                transfer_type,
+            )
+            transfer_text = self.transactions_texts.get(transfer_type, transfer_type)
+            export_path = self.export_path.with_name(f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}")
+            if not is_disk_writable(export_path.parent):
+                return False, export_path
+            workbook.save(export_path)
+        return True, export_path
+
+    def _create_split_exports(self, in_data: list[TransactionsExportDay], out_data: list[TransactionsExportDay]) -> tuple[bool, Path]:
+        export_path = self.export_path
+        for transfer_type, data in ((TRANSFER_IN, in_data), (TRANSFER_OUT, out_data)):
+            if not data:
+                continue
+            transfer_in, transfer_out = self.export_settings.get("transfer_type", (TRANSFER_IN, None))
+            if transfer_type == TRANSFER_IN and transfer_in is None or transfer_type == TRANSFER_OUT and transfer_out is None:
+                continue
+            data_months_map = TransactionsExportWorker._split_data_by_month(data)
+            for month, transactions in data_months_map.items():
+                workbook = TransactionsWorkbook.create_workbook(
+                    self.export_settings,
+                    self.transactions_texts,
+                    transactions,
+                    transfer_type,
+                )
+                transfer_text = f"{self.transactions_texts.get(transfer_type, transfer_type)}_{month:02d}"
+                export_path = self.export_path.with_name(f"{self.export_path.stem}_{transfer_text}{self.export_path.suffix}")
+                if not is_disk_writable(export_path.parent):
+                    return False, export_path
+                workbook.save(export_path)
+        return True, export_path
+
+    @staticmethod
+    def _split_data_by_month(data: list[TransactionsExportDay]) -> dict:
+        months_map = {}
+        for transaction_day in data:
+            transaction_date = transaction_day.transaction_date
+            transaction_month = parse_date(transaction_date).month
+            if not transaction_month in months_map:
+                months_map[transaction_month] = [transaction_day]
+            else:
+                months_map[transaction_month].append(transaction_day)
+        return months_map
