@@ -97,7 +97,9 @@ class TransactionsController:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
             model = self.items_dialog.get_current_model()
-            if not TransactionsController._check_transaction_data(dialog_data, model):
+            if not TransactionsController._check_transaction_data(
+                dialog_data, model, transfer_type
+            ):
                 MessageBoxes.show_error(
                     self.transactions_widget, "INVALID_DATA", "WARNING"
                 )
@@ -156,7 +158,7 @@ class TransactionsController:
             self.active_commodity_unit = None
             dialog_data = self.items_dialog.return_transaction_data()
             if not TransactionsController._check_transaction_data(
-                dialog_data, item_model
+                dialog_data, item_model, transaction_type
             ):
                 MessageBoxes.show_error(
                     self.transactions_widget, "INVALID_DATA", "WARNING"
@@ -397,8 +399,9 @@ class TransactionsController:
     def _check_transaction_data(
         dialog_data: dict[str, str | int | None],
         model: TransactionItemsModelIn | TransactionItemsModelOut,
+        transfer_type: str,
     ) -> bool:
-        if not TransactionsController._is_dialog_data_valid(dialog_data):
+        if not TransactionsController._is_dialog_data_valid(dialog_data, transfer_type):
             return False
         if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
             return False
@@ -435,13 +438,17 @@ class TransactionsController:
             )
 
     @staticmethod
-    def _is_dialog_data_valid(dialog_data: dict[str, str | int | None]) -> bool:
+    def _is_dialog_data_valid(
+            dialog_data: dict[str, str | int | None],
+            transfer_type: str,
+    ) -> bool:
         for key, value in dialog_data.items():
             if key == "notes":
                 continue
-            if key == "paymentType":
-                if value is not None and value not in PAYMENT_VALUES:
-                    return False
+            if key == "payment_type":
+                if transfer_type != TRANSFER_OUT:
+                    if value is not None and value not in PAYMENT_VALUES:
+                        return False
                 continue
             if value is None or value == "":
                 return False
