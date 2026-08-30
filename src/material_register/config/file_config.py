@@ -368,10 +368,10 @@ EXPORT_KEYS = [
     ("SummarySheet", "summaryPriceText"),
     ("SummarySheet", "exportText"),
     ("SummarySheet", "pageText"),
-    ("TransactionsSheet", "sheetName"),
     ("TransactionsSheet", "titleText"),
     ("TransactionsSheet", "rangeText"),
     ("TransactionsSheet", "branchText"),
+    ("TransactionsSheet", "notesText"),
     ("TransactionsSheet", "financialText"),
     ("TransactionsSheet", "customerNameText"),
     ("TransactionsSheet", "documentNumberText"),
@@ -387,6 +387,4 @@ EXPORT_KEYS = [
     ("TransactionsSheet", "quantityText"),
     ("TransactionsSheet", "totalPriceText"),
     ("TransactionsSheet", "summaryPriceText"),
-    ("TransactionsSheet", "buybackText"),
-    ("TransactionsSheet", "exportText"),
 ]

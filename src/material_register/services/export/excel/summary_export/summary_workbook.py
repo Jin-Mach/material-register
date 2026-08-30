@@ -12,7 +12,7 @@ from material_register.services.export.excel.summary_export.summary_sheet import
 
 
 class SummaryWorkbook:
-    ERROR_TEXT = "N/A"
+    ERROR_TEXT = ["N/A"]
 
     @staticmethod
     def create_workbook(

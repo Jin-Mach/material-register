@@ -25,10 +25,10 @@
     "pageText": "Strana"
   },
   "TransactionsSheet": {
-    "sheetName": "Přehled",
     "titleText": "Přehled transakcí",
     "rangeText": "Období:",
     "branchText": "Pobočka:",
+    "notesText": "Poznámky",
     "financialText": "Finance",
     "customerNameText": "Zákazník:",
     "documentNumberText": "Doklad:",
@@ -43,8 +43,6 @@
     "pricePerUnitText": "Cena",
     "quantityText": "Množství",
     "totalPriceText": "Celková cena",
-    "summaryPriceText": "Celkem",
-    "buybackText": "Výkup",
-    "exportText": "Výdej"
+    "summaryPriceText": "Celkem"
   }
 }

@@ -25,10 +25,10 @@
     "pageText": "Page"
   },
   "TransactionsSheet": {
-    "sheetName": "Overview",
     "titleText": "Transaction Overview",
     "rangeText": "Period:",
     "branchText": "Branch:",
+    "notesText": "Notes",
     "financialText": "Financial summary",
     "customerNameText": "Customer:",
     "documentNumberText": "Document:",
@@ -43,8 +43,6 @@
     "pricePerUnitText": "Price",
     "quantityText": "Quantity",
     "totalPriceText": "Total price",
-    "summaryPriceText": "Total",
-    "buybackText": "Buyback",
-    "exportText": "Dispatch"
+    "summaryPriceText": "Total"
   }
 }

@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 
-DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+DATE_FORMAT_FULL = "%Y-%m-%d %H:%M:%S"
+DATE_FORMAT = "%Y-%m-%d"
 
 
 def _now() -> datetime:
@@ -21,7 +22,7 @@ def get_filter_range(key: str) -> tuple[str, str] | None:
     else:
         return None
     end = now
-    return start.strftime(DATE_FORMAT), end.strftime(DATE_FORMAT)
+    return start.strftime(DATE_FORMAT_FULL), end.strftime(DATE_FORMAT_FULL)
 
 
 def parse_date(string_date: str) -> datetime:
