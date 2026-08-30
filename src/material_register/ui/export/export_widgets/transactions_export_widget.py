@@ -372,7 +372,7 @@ class TransactionsExportWidget(QWidget):
             self.file_name_line_edit.setText(
                 f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}"
             )
-        self.today_radio_button.setChecked(True)
+        self.week_radio_button.setChecked(True)
         self.customer_combobox.setEditable(True)
         self.in_radio_button.setChecked(True)
 
