@@ -1,1 +1,1 @@
-PROJECT_NAME = "material-transactions"
+PROJECT_NAME = "material-register"

@@ -4,7 +4,11 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
 
-from material_register.config.ui_constants import EXPORT_TYPE_TRANSACTIONS, TRANSFER_IN, TRANSFER_OUT
+from material_register.config.ui_constants import (
+    EXPORT_TYPE_TRANSACTIONS,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.core.app_context import AppContext
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.providers.texts_provider import TextsProvider

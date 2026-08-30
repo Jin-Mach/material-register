@@ -53,7 +53,7 @@ class PathsProvider:
             for parent in current.parents:
                 if parent.name == PROJECT_NAME:
                     return parent
-            return current.parents[3]
+            return None
         except Exception as e:
             ErrorHandler.handle_error(e, "app", "error")
             return None

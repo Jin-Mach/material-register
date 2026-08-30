@@ -1,3 +1,5 @@
+import uuid
+
 from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.config.db_constants import DATABASE_NAME
@@ -36,6 +38,7 @@ class DbInit:
         str,
         QSqlDatabase | None,
     ]:
+        connection_name = f"{connection_name}.{uuid.uuid4().hex}"
         thread_connection = create_connection(
             PathsProvider.database, cls.DATABASE_NAME, connection_name
         )
