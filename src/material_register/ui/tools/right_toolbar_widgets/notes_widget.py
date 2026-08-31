@@ -112,7 +112,7 @@ class NotesWidget(QWidget):
     def _setup_text_edits(self) -> None:
         edits = [self.permanent_notes_edit, self.local_notes_edit]
         for edit in edits:
-            edit.setContextMenuPolicy(Qt.ContextMenvuPolicy.NoContextMenu)
+            edit.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
             edit.setAcceptRichText(False)
             edit.setAcceptDrops(False)
             edit.setUndoRedoEnabled(False)
