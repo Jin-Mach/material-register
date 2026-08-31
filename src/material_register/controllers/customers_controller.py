@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex, Qt
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QWidget
 
 from material_register.core.app_context import AppContext
 from material_register.db.utils.customers_filter_helper import CustomersFilterHelper
@@ -39,7 +39,9 @@ class CustomersController:
             CustomersController._normalize_customer(customer)
             if not self.customers_model.add_customer(customer):
                 CustomersController._handle_db_error(
-                    self.customers_model, f"{self.__class__.__name__}.add_customers"
+                    self.customers_model,
+                    f"{self.__class__.__name__}.add_customers",
+                    self.customers_widget,
                 )
                 return
             CustomersController._refresh_cache()
@@ -69,7 +71,9 @@ class CustomersController:
             CustomersController._normalize_customer(customer)
             if not self.customers_model.update_customer(customer_id, customer):
                 CustomersController._handle_db_error(
-                    self.customers_model, f"{self.__class__.__name__}.update_customers"
+                    self.customers_model,
+                    f"{self.__class__.__name__}.update_customers",
+                    self.customers_widget,
                 )
                 return
             CustomersController._refresh_cache()
@@ -93,6 +97,7 @@ class CustomersController:
                 CustomersController._handle_db_error(
                     self.customers_model,
                     f"{self.__class__.__name__}.change_customer_active",
+                    self.customers_widget,
                 )
                 return
             CustomersController._refresh_cache()
@@ -141,13 +146,12 @@ class CustomersController:
         return customer_id
 
     @staticmethod
-    def _handle_db_error(model: "CustomersModel", method: str) -> None:
+    def _handle_db_error(model: "CustomersModel", method: str, parent: QWidget) -> None:
         error = model.lastError().text()
         if not error:
             error = f"Unknown database error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", "db", "critical")
-        dialog = ErrorDialog()
-        dialog.show_dialog("DATABASE_ERROR", False)
+        ErrorDialog(parent).show_dialog("DATABASE_ERROR", False)
 
     @staticmethod
     def _handle_customer_name(customer: Customer) -> str:

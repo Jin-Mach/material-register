@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QWidget
 
 from material_register.config.ui_constants import (
     PAYMENT_VALUES,
@@ -109,7 +109,9 @@ class TransactionsController:
             )
             if not ok:
                 TransactionsController._handle_db_error(
-                    error, f"{self.__class__.__name__}.create_transaction"
+                    error,
+                    f"{self.__class__.__name__}.create_transaction",
+                    self.transactions_widget,
                 )
                 return
             self._refresh_models_data()
@@ -145,6 +147,7 @@ class TransactionsController:
                 TransactionsController._handle_db_error(
                     "Transaction has no items during update",
                     f"{self.__class__.__name__}.update_transaction",
+                    self.transactions_widget,
                 )
                 return
             self.active_commodity_unit = items_data[0].commodity_suffix
@@ -173,7 +176,9 @@ class TransactionsController:
             )
             if not ok:
                 TransactionsController._handle_db_error(
-                    error, f"{self.__class__.__name__}.update_transaction"
+                    error,
+                    f"{self.__class__.__name__}.update_transaction",
+                    self.transactions_widget,
                 )
                 return
             if not changed:
@@ -204,7 +209,9 @@ class TransactionsController:
             )
             if not ok:
                 TransactionsController._handle_db_error(
-                    error, f"{self.__class__.__name__}.delete_transaction"
+                    error,
+                    f"{self.__class__.__name__}.delete_transaction",
+                    self.transactions_widget,
                 )
                 return
             model.removeRow(model_index.row())
@@ -458,12 +465,11 @@ class TransactionsController:
         return True
 
     @staticmethod
-    def _handle_db_error(error: str, method: str) -> None:
+    def _handle_db_error(error: str, method: str, parent: QWidget) -> None:
         if not error:
             error = f"Unknown database error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", "db", "critical")
-        dialog = ErrorDialog()
-        dialog.show_dialog("DATABASE_ERROR", False)
+        ErrorDialog(parent).show_dialog("DATABASE_ERROR", False)
 
     @staticmethod
     def _notification_handler(

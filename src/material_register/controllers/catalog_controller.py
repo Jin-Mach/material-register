@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QWidget
 
 from material_register.core.app_context import AppContext
 from material_register.db.queries.category_queries import CategoryQueries
@@ -40,7 +40,9 @@ class CatalogController:
             )
             if not ok:
                 CatalogController._handle_db_error(
-                    error, f"{self.__class__.__name__}.add_category"
+                    error,
+                    f"{self.__class__.__name__}.add_category",
+                    self.catalog_widget,
                 )
                 return
             category_data.id = category_id
@@ -75,7 +77,9 @@ class CatalogController:
             )
             if not ok:
                 CatalogController._handle_db_error(
-                    error, f"{self.__class__.__name__}.add_commodity"
+                    error,
+                    f"{self.__class__.__name__}.add_commodity",
+                    self.catalog_widget,
                 )
                 return
             parent_item, item = self.catalog_widget.tree_widget.create_commodity_item(
@@ -113,7 +117,9 @@ class CatalogController:
             )
             if not ok:
                 CatalogController._handle_db_error(
-                    error, f"{self.__class__.__name__}.update_category"
+                    error,
+                    f"{self.__class__.__name__}.update_category",
+                    self.catalog_widget,
                 )
                 return
             CatalogController._refresh_cache()
@@ -156,7 +162,9 @@ class CatalogController:
             )
             if not ok:
                 CatalogController._handle_db_error(
-                    error, f"{self.__class__.__name__}.update_commodity"
+                    error,
+                    f"{self.__class__.__name__}.update_commodity",
+                    self.catalog_widget,
                 )
                 return
             CatalogController._refresh_cache()
@@ -205,11 +213,11 @@ class CatalogController:
         )
 
     @staticmethod
-    def _handle_db_error(error: str, method: str) -> None:
+    def _handle_db_error(error: str, method: str, parent: QWidget) -> None:
         if not error:
             error = f"Unknown database error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", "db", "critical")
-        ErrorDialog().show_dialog("DATABASE_ERROR", False)
+        ErrorDialog(parent).show_dialog("DATABASE_ERROR", False)
 
     @staticmethod
     def _notification_handler(

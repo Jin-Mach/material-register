@@ -65,11 +65,10 @@ class MainWindow(QMainWindow):
         self.settings_dialog = SettingsDialog(self)
         self.settings_dialog.exec()
 
-    @staticmethod
-    def _handle_startup_errors() -> None:
+    def _handle_startup_errors(self) -> None:
         error = ErrorHandler.ui_texts_error
         if error != "":
-            ErrorDialog().show_dialog(error, False)
+            ErrorDialog(self).show_dialog(error, False)
             ErrorHandler.ui_texts_error = ""
 
     def showEvent(self, event: QShowEvent) -> None:
@@ -80,7 +79,7 @@ class MainWindow(QMainWindow):
             frame = self.frameGeometry()
             frame.moveCenter(geometry.center())
             self.move(frame.topLeft())
-        MainWindow._handle_startup_errors()
+        self._handle_startup_errors()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         super().closeEvent(event)

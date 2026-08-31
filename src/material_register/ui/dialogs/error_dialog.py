@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QDialogButtonBox,
     QLabel,
     QVBoxLayout,
+    QWidget,
 )
 
 from material_register.ui.helpers.window_positioning import centre_dialog
@@ -15,17 +16,25 @@ from material_register.ui.setup.ui_texts import UiTexts
 # noinspection PyTypeChecker
 class ErrorDialog(QDialog):
     DEFAULT_ERROR_TEXTS = {
-        "APP_INIT_FAILED": "Application failed to start.",
-        "RESOURCES_MISSING": "Required application resources are missing.",
-        "CONNECTION_ERROR": "No internet connection available.",
-        "PERMISSION_ERROR": "Application has no permission to write to disk.",
-        "DOWNLOAD_FAILED": "Failed to download required application files.",
-        "TEXTS_LOAD_FAILED": "Failed to load application text resources.",
+        "APP_INIT_FAILED": "The application could not be started.",
+        "RESOURCES_MISSING": "Required application files are missing.",
+        "DOWNLOAD_FAILED": "Failed to download required files.",
+        "TEXTS_LOAD_FAILED": "Failed to load application texts.",
+        "ICONS_LOAD_FAILED": "Failed to load application icons",
+        "CONFIG_LOAD_FAILED": "Failed to load application settings.",
+        "SETTINGS_FAILED": "An error occurred while configuring the application.",
+        "DATABASE_FAILED": "Failed to connect to or load the database.",
+        "DATABASE_ERROR": "An error occurred while working with the database.",
+        "EXPORT_ERROR": "Failed to complete the export.",
+        "PATH_ERROR": "Error while setting the file path.",
+        "CRITICAL_FAILURE": "A critical error occurred.",
         "UNKNOWN_ERROR": "An unexpected error occurred.",
+        "CONNECTION_ERROR": "Unable to establish an internet connection.",
+        "PERMISSION_ERROR": "The application does not have permission to write to disk.",
     }
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, parent: QWidget | None) -> None:
+        super().__init__(parent)
         self.setLayout(self._create_ui())
         self._setup_texts()
         self._create_connection()

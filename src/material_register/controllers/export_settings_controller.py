@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtWidgets import QWidget
+
 from material_register.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
     EXPORT_TYPE_TRANSACTIONS,
@@ -33,6 +35,7 @@ class ExportSettingsController:
             self._handle_settings_error(
                 "Update settings failed",
                 f"{self.__class__.__name__}.update_summary_settings",
+                self.settings_dialog,
             )
             return
         for key, value in new_data.items():
@@ -42,6 +45,7 @@ class ExportSettingsController:
             self._handle_settings_error(
                 "Update settings failed",
                 f"{self.__class__.__name__}.update_summary_settings",
+                self.settings_dialog,
             )
             return
         if not self._reload_settings(export_type):
@@ -62,12 +66,14 @@ class ExportSettingsController:
             self._handle_settings_error(
                 "Restore settings failed",
                 f"{self.__class__.__name__}.restore_summary_settings",
+                self.settings_dialog,
             )
             return
         if not SettingsProvider.save_settings():
             self._handle_settings_error(
                 "Restore settings failed",
                 f"{self.__class__.__name__}.restore_summary_settings",
+                self.settings_dialog,
             )
             return
         export_settings.apply_settings()
@@ -90,9 +96,8 @@ class ExportSettingsController:
         return False
 
     @staticmethod
-    def _handle_settings_error(error: str, method: str) -> None:
+    def _handle_settings_error(error: str, method: str, parent: QWidget) -> None:
         if not error:
             error = f"Settings failed: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", "settings", "warning")
-        dialog = ErrorDialog()
-        dialog.show_dialog("SETTINGS_FAILED", False)
+        ErrorDialog(parent).show_dialog("SETTINGS_FAILED", False)

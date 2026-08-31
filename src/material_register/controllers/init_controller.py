@@ -53,7 +53,7 @@ class InitController(QObject):
 
     def _finish_error(self, error: str) -> None:
         self.splash_screen.close()
-        dialog = ErrorDialog()
+        dialog = ErrorDialog(None)
         dialog.show_dialog(error, False)
         sys.exit(1)
 

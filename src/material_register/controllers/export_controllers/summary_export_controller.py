@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
+from PySide6.QtWidgets import QWidget
 
 from material_register.config.ui_constants import EXPORT_TYPE_SUMMARY
 from material_register.core.app_context import AppContext
@@ -49,6 +50,7 @@ class SummaryExportController(QObject):
             SummaryExportController._handle_export_error(
                 "Export texts not loaded",
                 f"{self.__class__.__name__}.start_export",
+                self.summary_export_widget,
                 "TEXTS_LOAD_FAILED",
             )
             return
@@ -57,6 +59,7 @@ class SummaryExportController(QObject):
             SummaryExportController._handle_export_error(
                 "Export path is None",
                 f"{self.__class__.__name__}.start_export",
+                self.summary_export_widget,
                 "PATH_ERROR",
             )
             return
@@ -131,7 +134,9 @@ class SummaryExportController(QObject):
         self.progress_dialog.close()
         if error is not None:
             SummaryExportController._handle_export_error(
-                error, f"{self.__class__.__name__}._export_error"
+                error,
+                f"{self.__class__.__name__}._export_error",
+                self.summary_export_widget,
             )
             self._reset_variables()
             return
@@ -240,13 +245,12 @@ class SummaryExportController(QObject):
 
     @staticmethod
     def _handle_export_error(
-        error: str, method: str, error_key: str = "EXPORT_ERROR"
+        error: str, method: str, parent: QWidget, error_key: str = "EXPORT_ERROR"
     ) -> None:
         if not error:
             error = f"Unknown export error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", "export", "critical")
-        dialog = ErrorDialog()
-        dialog.show_dialog(error_key, False)
+        ErrorDialog(parent).show_dialog(error_key, False)
 
     @staticmethod
     def _notification_handler(
