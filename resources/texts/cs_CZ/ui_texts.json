@@ -1,4 +1,7 @@
 {
+  "Application": {
+    "titleText": "Evidence materiálu"
+  },
   "MainWindow": {
     "titleText": "Evidence materiálu"
   },

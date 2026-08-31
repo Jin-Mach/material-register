@@ -1,4 +1,7 @@
 {
+  "Application": {
+    "titleText": "Material Register"
+  },
   "MainWindow": {
     "titleText": "Material Register"
   },

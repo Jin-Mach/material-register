@@ -1,4 +1,5 @@
 DEFAULT_TEXTS = {
+    "Application": {"titleText": "Material Register"},
     "MainWindow": {"titleText": "Material Register"},
     "SidePanel": {
         "transactionsButtonText": "Transactions",

@@ -23,6 +23,7 @@ REQUIRED_JSON_FILES = [
 
 REQUIRED_IMAGES = [
     Path("system") / "SplashScreen.jpg",
+    Path("system") / "applicationIcon.png",
     Path("ui_icons") / "activeIcon.png",
     Path("ui_icons") / "inactiveIcon.png",
 ]
@@ -32,6 +33,7 @@ REQUIRED_STYLES_FILES = [
 ]
 
 UI_KEYS = [
+    ("Application", "titleText"),
     ("MainWindow", "titleText"),
     ("SidePanel", "transactionsButtonText"),
     ("SidePanel", "transactionsButtonTooltipText"),

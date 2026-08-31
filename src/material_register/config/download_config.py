@@ -19,6 +19,7 @@ FILES_MAP = {
 
 ICONS_MAP = {
     "images/system/SplashScreen.jpg": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/system/SplashScreen.jpg",
+    "images/system/applicationIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/system/applicationIcon.png",
     "images/ui_icons/activeIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/activeIcon.png",
     "images/ui_icons/inactiveIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/inactiveIcon.png",
 }
