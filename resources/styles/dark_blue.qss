@@ -528,3 +528,33 @@ QLabel#priceCountLabel,
 QLabel#priceCountValue {
     background-color: transparent;
 }
+
+QPushButton#notesButton,
+QPushButton#permanentCopyButton,
+QPushButton#permanentDeleteButton,
+QPushButton#localCopyButton,
+QPushButton#localDeleteButton {
+    min-width: 0;
+    padding: 0;
+    background-color: transparent;
+    border: 1px solid #3e3e42;
+    border-radius: 3px;
+}
+
+QPushButton#notesButton:hover,
+QPushButton#permanentCopyButton:hover,
+QPushButton#permanentDeleteButton:hover,
+QPushButton#localCopyButton:hover,
+QPushButton#localDeleteButton:hover {
+    background-color: #3e3e42;
+    border-color: #505055;
+}
+
+QPushButton#notesButton:pressed,
+QPushButton#permanentCopyButton:pressed,
+QPushButton#permanentDeleteButton:pressed,
+QPushButton#localCopyButton:pressed,
+QPushButton#localDeleteButton:pressed {
+    background-color: #3e3e42;
+    border-color: #007acc;
+}

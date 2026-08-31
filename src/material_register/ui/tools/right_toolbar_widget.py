@@ -10,6 +10,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.ui_icons import UiIcons
+from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widgets.notes_widget import NotesWidget
 
 if TYPE_CHECKING:
@@ -17,7 +20,7 @@ if TYPE_CHECKING:
 
 
 class RightToolbarWidget(QWidget):
-    WIDTH = 40
+    WIDTH = 50
     TOOL_WIDTH = 300
     BUTTON_SIZE = 30
 
@@ -38,6 +41,7 @@ class RightToolbarWidget(QWidget):
         buttons_layout = QVBoxLayout()
         buttons_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.notes_button = QPushButton()
+        self.notes_button.setObjectName("notesButton")
         self.notes_button.setFixedSize(QSize(self.BUTTON_SIZE, self.BUTTON_SIZE))
         buttons_layout.addWidget(self.notes_button)
         buttons_layout.addStretch()
@@ -48,7 +52,29 @@ class RightToolbarWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self.tools_container.setVisible(False)
+        self._setup_texts()
+        self._setup_icons()
         self._setup_container()
+
+    def _setup_texts(self) -> None:
+        widgets = [self.notes_button]
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
+    def _setup_icons(self) -> None:
+        widgets = [self.notes_button]
+        if not UiIcons.set_icons("tools", widgets):
+            ErrorHandler.handle_error(
+                f"Icons load failed: {self.__class__.__name__}", "ui", "warning"
+            )
+            ErrorHandler.ui_texts_error = "ICONS_LOAD_FAILED"
+            return
 
     def _setup_container(self) -> None:
         for widget in [self.notes_widget]:
@@ -67,5 +93,5 @@ class RightToolbarWidget(QWidget):
         self.tools_container.setCurrentIndex(index)
         widget = self.tools_container.currentWidget()
         if hasattr(widget, "activate_widget"):
-            widget.setup_ui()
+            widget.activate_widget()
         self.tools_container.setVisible(True)

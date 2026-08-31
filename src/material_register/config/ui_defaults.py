@@ -298,4 +298,15 @@ DEFAULT_TEXTS = {
         "saveButtonText": "Save",
         "saveButtonTooltipText": "Saves current export settings",
     },
+    "RightToolbarWidget": {"notesButtonTooltipText": "Notes"},
+    "NotesWidget": {
+        "permanentGroupBoxText": "Permanent Notes",
+        "permanentNotesEditPlaceholderText": "Enter notes to save",
+        "permanentCopyButtonTooltipText": "Copy to clipboard",
+        "permanentDeleteButtonTooltipText": "Delete notes",
+        "localGroupBoxText": "Local Notes",
+        "localNotesEditPlaceholderText": "Enter local notes",
+        "localCopyButtonTooltipText": "Copy to clipboard",
+        "localDeleteButtonTooltipText": "Delete notes",
+    },
 }

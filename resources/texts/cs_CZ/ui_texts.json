@@ -313,5 +313,18 @@
     "restoreButtonTooltipText": "Nastaví výchozí hodnoty pro export",
     "saveButtonText": "Uložit",
     "saveButtonTooltipText": "Uloží aktuální nastavení exportu"
+  },
+  "RightToolbarWidget": {
+    "notesButtonTooltipText": "Poznámky"
+  },
+  "NotesWidget": {
+    "permanentGroupBoxText": "Trvalé poznámky",
+    "permanentNotesEditPlaceholderText": "Zadej poznámky pro uložení",
+    "permanentCopyButtonTooltipText": "Kopírovat do schránky",
+    "permanentDeleteButtonTooltipText": "Smazat poznámky",
+    "localGroupBoxText": "Dočasné poznámky",
+    "localNotesEditPlaceholderText": "Zadej dočasné poznámky",
+    "localCopyButtonTooltipText": "Kopírovat do schránky",
+    "localDeleteButtonTooltipText": "Smazat poznámky"
   }
 }

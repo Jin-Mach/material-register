@@ -3,6 +3,7 @@
   "RESOURCES_MISSING": "Chybí potřebné soubory aplikace.",
   "DOWNLOAD_FAILED": "Stažení potřebných souborů selhalo.",
   "TEXTS_LOAD_FAILED": "Nepodařilo se načíst texty aplikace.",
+  "ICONS_LOAD_FAILED": "Nepodařilo se načíst ikony aplikace",
   "CONFIG_LOAD_FAILED": "Nepodařilo se načíst nastavení aplikace",
   "SETTINGS_FAILED": "Došlo k chybě při nastavení aplikace",
   "DATABASE_FAILED": "Nepodařilo se připojit k databázi nebo ji načíst.",

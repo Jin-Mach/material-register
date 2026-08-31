@@ -22,6 +22,9 @@ ICONS_MAP = {
     "images/system/applicationIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/system/applicationIcon.png",
     "images/ui_icons/activeIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/activeIcon.png",
     "images/ui_icons/inactiveIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/inactiveIcon.png",
+    "images/ui_icons/copyIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/copyIcon.png",
+    "images/ui_icons/deleteIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/deleteIcon.png",
+    "images/tools_icons/notesButtonIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/tools_icons/notesButtonIcon.png",
 }
 
 FILES_SUFFIXES = [".toml", ".json", ".qss"]

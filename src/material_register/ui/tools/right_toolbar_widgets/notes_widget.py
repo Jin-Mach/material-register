@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QSize
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
     QGroupBox,
@@ -10,11 +11,17 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.ui_icons import UiIcons
+from material_register.ui.setup.ui_texts import UiTexts
+
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
 
 
 class NotesWidget(QWidget):
+    ICON_SIZE = 24
+
     def __init__(self, right_toolbar_widget: "RightToolbarWidget") -> None:
         super().__init__(right_toolbar_widget)
         self.setLayout(self._create_ui())
@@ -31,18 +38,21 @@ class NotesWidget(QWidget):
         return main_layout
 
     def _setup_ui(self) -> None:
-        self.permanent_notes_edit.setFocus()
+        self._setup_texts()
+        self._setup_icons()
         self._update_button_states()
+        self.permanent_notes_edit.setFocus()
 
     def _create_permanent_notes(self) -> QGroupBox:
-        permanent_group_box = QGroupBox("Permanent")
+        permanent_group_box = QGroupBox()
+        permanent_group_box.setObjectName("permanentGroupBox")
         permanent_layout = QVBoxLayout()
         self.permanent_notes_edit = QTextEdit()
         self.permanent_notes_edit.setObjectName("permanentNotesEdit")
         buttons_layout = QHBoxLayout()
-        self.permanent_copy_button = QPushButton("Copy")
+        self.permanent_copy_button = QPushButton()
         self.permanent_copy_button.setObjectName("permanentCopyButton")
-        self.permanent_delete_button = QPushButton("Delete")
+        self.permanent_delete_button = QPushButton()
         self.permanent_delete_button.setObjectName("permanentDeleteButton")
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.permanent_copy_button)
@@ -53,14 +63,15 @@ class NotesWidget(QWidget):
         return permanent_group_box
 
     def _create_local_notes(self) -> QGroupBox:
-        local_group_box = QGroupBox("Local")
+        local_group_box = QGroupBox()
+        local_group_box.setObjectName("localGroupBox")
         local_layout = QVBoxLayout()
         self.local_notes_edit = QTextEdit()
         self.local_notes_edit.setObjectName("localNotesEdit")
         buttons_layout = QHBoxLayout()
-        self.local_copy_button = QPushButton("Copy")
+        self.local_copy_button = QPushButton()
         self.local_copy_button.setObjectName("localCopyButton")
-        self.local_delete_button = QPushButton("Delete")
+        self.local_delete_button = QPushButton()
         self.local_delete_button.setObjectName("localDeleteButton")
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.local_copy_button)
@@ -69,6 +80,27 @@ class NotesWidget(QWidget):
         local_layout.addLayout(buttons_layout)
         local_group_box.setLayout(local_layout)
         return local_group_box
+
+    def _setup_icons(self) -> None:
+        self.permanent_copy_button.setIcon(UiIcons.COPY_ICON)
+        self.permanent_copy_button.setIconSize(QSize(self.ICON_SIZE, self.ICON_SIZE))
+        self.permanent_delete_button.setIcon(UiIcons.DELETE_ICON)
+        self.permanent_delete_button.setIconSize(QSize(self.ICON_SIZE, self.ICON_SIZE))
+        self.local_copy_button.setIcon(UiIcons.COPY_ICON)
+        self.local_copy_button.setIconSize(QSize(self.ICON_SIZE, self.ICON_SIZE))
+        self.local_delete_button.setIcon(UiIcons.DELETE_ICON)
+        self.local_delete_button.setIconSize(QSize(self.ICON_SIZE, self.ICON_SIZE))
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
 
     def _create_connection(self) -> None:
         self.permanent_notes_edit.textChanged.connect(self._update_button_states)

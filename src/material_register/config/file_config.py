@@ -26,6 +26,9 @@ REQUIRED_IMAGES = [
     Path("system") / "applicationIcon.png",
     Path("ui_icons") / "activeIcon.png",
     Path("ui_icons") / "inactiveIcon.png",
+    Path("ui_icons") / "copyIcon.png",
+    Path("ui_icons") / "deleteIcon.png",
+    Path("tools_icons") / "notesButtonIcon.png",
 ]
 
 REQUIRED_STYLES_FILES = [
@@ -275,6 +278,15 @@ UI_KEYS = [
     ("BaseExportWidget", "restoreButtonTooltipText"),
     ("BaseExportWidget", "saveButtonText"),
     ("BaseExportWidget", "saveButtonTooltipText"),
+    ("RightToolbarWidget", "notesButtonTooltipText"),
+    ("NotesWidget", "permanentGroupBoxText"),
+    ("NotesWidget", "permanentNotesEditPlaceholderText"),
+    ("NotesWidget", "permanentCopyButtonTooltipText"),
+    ("NotesWidget", "permanentDeleteButtonTooltipText"),
+    ("NotesWidget", "localGroupBoxText"),
+    ("NotesWidget", "localNotesEditPlaceholderText"),
+    ("NotesWidget", "localCopyButtonTooltipText"),
+    ("NotesWidget", "localDeleteButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [
@@ -301,6 +313,7 @@ ERROR_KEYS = [
     "RESOURCES_MISSING",
     "DOWNLOAD_FAILED",
     "TEXTS_LOAD_FAILED",
+    "ICONS_LOAD_FAILED",
     "CONFIG_LOAD_FAILED",
     "SETTINGS_FAILED",
     "DATABASE_FAILED",
