@@ -26,6 +26,7 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
         self.side_panel = SidePanel(self)
         self.stacked_widget = StackedWidget(self)
         self.right_toolbar_widget = RightToolbarWidget(self)

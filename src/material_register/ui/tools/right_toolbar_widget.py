@@ -30,6 +30,7 @@ class RightToolbarWidget(QWidget):
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
         self.tools_container = QStackedWidget()
         self.notes_widget = NotesWidget(self)
         buttons_container = QWidget()
@@ -51,6 +52,7 @@ class RightToolbarWidget(QWidget):
 
     def _setup_container(self) -> None:
         for widget in [self.notes_widget]:
+            widget.setFixedWidth(self.TOOL_WIDTH)
             self.tools_container.addWidget(widget)
 
     def _create_connection(self) -> None:
