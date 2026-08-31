@@ -65,15 +65,9 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         return super().headerData(section, orientation, role)
 
     def rowCount(self, parent=None) -> int:
-        if parent is None:
-            parent = QModelIndex()
-        if not self.transaction_data:
-            return 0
         return len(self.transaction_data)
 
     def columnCount(self, parent=None) -> int:
-        if parent is None:
-            parent = QModelIndex()
         return len(LOAD_MODEL_IN_COLUMNS)
 
     def removeRows(self, row: int, count: int = 1, parent=None) -> bool:

@@ -442,7 +442,6 @@ class TransactionsDaySheetIn:
                     export_texts,
                     item,
                     items_start_column,
-                    items_end_column,
                 )
                 if item.unit_count is not None and item.price_per_unit is not None:
                     item_total_cells.append(
@@ -549,7 +548,6 @@ class TransactionsDaySheetIn:
         export_texts: dict[str, str],
         item: TransactionExportItem,
         start_column: int,
-        end_column: int,
     ) -> int:
         currency_suffix = export_texts.get(
             "currencySuffix", TransactionsDaySheetIn.ERROR_TEXT

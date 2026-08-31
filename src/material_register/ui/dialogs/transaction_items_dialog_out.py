@@ -186,7 +186,6 @@ class TransactionItemsDialogOut(QDialog):
         }
 
     def get_current_model(self):
-        """Return the current items model held by the items widget."""
         return self.transactions_items_widget.current_model
 
     def setup_total_value(self, model):

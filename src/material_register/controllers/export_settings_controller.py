@@ -1,7 +1,5 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QWidget
-
 from material_register.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
     EXPORT_TYPE_TRANSACTIONS,
@@ -13,6 +11,9 @@ from material_register.ui.dialogs.message_boxes import MessageBoxes
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.settings_dialog import SettingsDialog
+    from material_register.ui.settings.settings_widgets.base_export_widget import (
+        BaseExportWidget,
+    )
 
 
 class ExportSettingsController:
@@ -22,7 +23,9 @@ class ExportSettingsController:
         self.transactions_export_widget = settings_dialog.main_window.stacked_widget.export_widget.transactions_export_widget
         self.settings = SettingsProvider.SETTINGS.get("export", {})
 
-    def update_summary_settings(self, export_type: str, export_widget: QWidget) -> None:
+    def update_summary_settings(
+        self, export_type: str, export_widget: "BaseExportWidget"
+    ) -> None:
         export_settings = export_widget
         user_settings = self.settings.get(export_type, {}).get("user", {})
         new_data = export_settings.get_export_settings_data()
@@ -46,7 +49,7 @@ class ExportSettingsController:
         self.settings_dialog.set_info_text("SETTINGS_SAVED")
 
     def restore_summary_settings(
-        self, export_type: str, export_widget: QWidget
+        self, export_type: str, export_widget: "BaseExportWidget"
     ) -> None:
         export_settings = export_widget
         question = MessageBoxes.show_question(

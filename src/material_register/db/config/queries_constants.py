@@ -33,7 +33,7 @@ TRANSACTIONS_QUERY_IN = """
                     AND trans.created_at < date('now', '+1 day')
                 
                 GROUP BY trans.id
-                ORDER BY trans.id ASC
+                ORDER BY trans.created_at DESC, trans.id DESC;
             """
 
 TRANSACTIONS_QUERY_OUT = """
@@ -74,7 +74,7 @@ TRANSACTIONS_QUERY_OUT = """
                     AND trans.created_at < date('now', '+1 day')
                 
                 GROUP BY trans.id
-                ORDER BY trans.id ASC
+                ORDER BY trans.created_at DESC, trans.id DESC;
             """
 
 TRANSACTIONS_BASIC_FILTER_QUERY = """
@@ -124,7 +124,7 @@ TRANSACTIONS_BASIC_FILTER_QUERY = """
                     AND trans.created_at BETWEEN ? AND ?
 
                 GROUP BY trans.id
-                ORDER BY trans.id ASC;
+                ORDER BY trans.created_at DESC, trans.id DESC;
             """
 
 SELECTED_TRANSACTION_DATA = """
@@ -175,5 +175,5 @@ INVENTORY_QUERY = """
             JOIN commodities ON commodities.id = inventory.commodity_id 
             JOIN categories ON commodities.category_id = categories.id
 
-            ORDER BY categories.name ASC
+            ORDER BY categories.name ASC, commodities.name ASC;
 """

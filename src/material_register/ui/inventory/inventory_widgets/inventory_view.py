@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHeaderView, QTableView
 
 from material_register.config.ui_constants import INVENTORY_HORIZONTAL_PADDING
@@ -51,7 +52,7 @@ class InventoryView(QTableView):
         self.resizeColumnsToContents()
         self.setColumnWidth(
             active_column,
-            self.columnWidth(active_column) + (INVENTORY_HORIZONTAL_PADDING),
+            self.columnWidth(active_column) + INVENTORY_HORIZONTAL_PADDING,
         )
 
     def _setup_behavior(self) -> None:
@@ -61,5 +62,8 @@ class InventoryView(QTableView):
         self.setSelectionMode(QTableView.SelectionMode.SingleSelection)
         self.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.setSortingEnabled(True)
+        self.sortByColumn(
+            INVENTORY_COLUMNS_MAP["category_name"], Qt.SortOrder.AscendingOrder
+        )
         self.setCornerButtonEnabled(False)
         self.setAlternatingRowColors(True)
