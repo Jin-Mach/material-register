@@ -6,6 +6,7 @@ from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.settings_dialog import SettingsDialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
 from material_register.ui.widgets.side_panel import SidePanel
 from material_register.ui.widgets.stacked_widget import StackedWidget
 from material_register.ui.widgets.status_bar import StatusBar
@@ -27,8 +28,10 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         self.side_panel = SidePanel(self)
         self.stacked_widget = StackedWidget(self)
+        self.right_toolbar_widget = RightToolbarWidget(self)
         main_layout.addWidget(self.side_panel)
         main_layout.addWidget(self.stacked_widget)
+        main_layout.addWidget(self.right_toolbar_widget)
         central_widget.setLayout(main_layout)
         return central_widget
 
