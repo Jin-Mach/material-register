@@ -5,7 +5,7 @@ from PySide6.QtCore import QLockFile, QStandardPaths
 from material_register.config.project_constants import (
     LOCK_FILE_NAME,
     ORGANIZATION_NAME,
-    PROJECT_NAME,
+    APPLICATION_NAME,
 )
 
 
@@ -17,7 +17,7 @@ class LockProvider:
             )
         )
         / ORGANIZATION_NAME
-        / PROJECT_NAME
+        / APPLICATION_NAME
         / "lock"
     )
     _lock_path.mkdir(parents=True, exist_ok=True)
