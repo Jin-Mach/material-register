@@ -97,5 +97,4 @@ After installing the dependencies, you can start the application with the follow
 - Questions or feedback? Reach out via GitHub: [Jin-Mach](https://github.com/Jin-Mach).
 
 ## Links
-Icons
-- [Application icon](https://icons8.com/icon/YSAPS0YV2Z9j/recycling)
+- [Application icons](https://icons8.com)

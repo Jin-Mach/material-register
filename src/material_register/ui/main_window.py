@@ -5,6 +5,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.settings_dialog import SettingsDialog
+from material_register.ui.helpers.text_file_handler import TextFileHandler
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
 from material_register.ui.widgets.side_panel import SidePanel
@@ -16,9 +17,9 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setMinimumSize(900, 600)
-        self.setCentralWidget(self._create_ui())
         self.status_bar = StatusBar(self)
         self.setStatusBar(self.status_bar)
+        self.setCentralWidget(self._create_ui())
         self._setup_ui()
         self._create_connection()
 
@@ -83,4 +84,9 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         super().closeEvent(event)
+        if not TextFileHandler.save_document(
+            "toolbar_notes.txt",
+            self.right_toolbar_widget.notes_widget.get_permanent_notes(),
+        ):
+            pass
         WindowStateManager.save_geometry(self, self.__class__.__name__)

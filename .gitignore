@@ -210,6 +210,7 @@ __marimo__/
 /database
 /config
 /logs
+/documents
 
 # MacOS files/folders
 .DS_Store

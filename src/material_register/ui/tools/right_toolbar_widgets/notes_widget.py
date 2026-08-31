@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QSize
-from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QGuiApplication, Qt, QTextCursor
 from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
@@ -12,18 +12,23 @@ from PySide6.QtWidgets import (
 )
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.text_file_handler import TextFileHandler
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
+    from material_register.ui.widgets.status_bar import StatusBar
 
 
 class NotesWidget(QWidget):
     ICON_SIZE = 24
 
-    def __init__(self, right_toolbar_widget: "RightToolbarWidget") -> None:
+    def __init__(
+        self, status_bar: "StatusBar", right_toolbar_widget: "RightToolbarWidget"
+    ) -> None:
         super().__init__(right_toolbar_widget)
+        self.status_bar = status_bar
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -40,8 +45,10 @@ class NotesWidget(QWidget):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_icons()
+        self._load_texts()
+        self._setup_text_edits()
         self._update_button_states()
-        self.permanent_notes_edit.setFocus()
+        self._set_cursor_position()
 
     def _create_permanent_notes(self) -> QGroupBox:
         permanent_group_box = QGroupBox()
@@ -102,6 +109,20 @@ class NotesWidget(QWidget):
         if UiTexts.set_default_texts(self, widgets):
             return
 
+    def _setup_text_edits(self) -> None:
+        edits = [self.permanent_notes_edit, self.local_notes_edit]
+        for edit in edits:
+            edit.setContextMenuPolicy(Qt.ContextMenvuPolicy.NoContextMenu)
+            edit.setAcceptRichText(False)
+            edit.setAcceptDrops(False)
+            edit.setUndoRedoEnabled(False)
+
+    def _load_texts(self) -> None:
+        ok, notes = TextFileHandler.load_document("toolbar_notes.txt")
+        if not ok:
+            self.status_bar.show_message("LOAD_NOTES_FAILED")
+        self.permanent_notes_edit.setPlainText(notes)
+
     def _create_connection(self) -> None:
         self.permanent_notes_edit.textChanged.connect(self._update_button_states)
         self.local_notes_edit.textChanged.connect(self._update_button_states)
@@ -118,9 +139,18 @@ class NotesWidget(QWidget):
             lambda: NotesWidget._delete_notes(self.local_notes_edit)
         )
 
-    def activate_widget(self) -> None:
+    def _set_cursor_position(self) -> None:
+        cursor = self.permanent_notes_edit.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.End)
+        self.permanent_notes_edit.setTextCursor(cursor)
         self.permanent_notes_edit.setFocus()
+
+    def activate_widget(self) -> None:
         self._update_button_states()
+        self._set_cursor_position()
+
+    def get_permanent_notes(self) -> str:
+        return self.permanent_notes_edit.toPlainText().strip()
 
     def _update_button_states(self) -> None:
         self.permanent_copy_button.setEnabled(

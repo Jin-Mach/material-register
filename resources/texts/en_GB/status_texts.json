@@ -1,4 +1,5 @@
 {
+  "LOAD_NOTES_FAILED": "Failed to load notes",
   "SETTINGS_SAVED": "Settings saved",
   "SETTINGS_RESTORED": "Settings restored",
   "SETTINGS_FAILED": "Failed to save settings",

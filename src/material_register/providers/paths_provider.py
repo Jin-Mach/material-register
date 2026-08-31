@@ -13,10 +13,13 @@ class PathsProvider:
     config = None
     database = None
     logs = None
+    documents = None
 
     @classmethod
     def paths_init(cls, log_structure: dict[str, tuple[str, str]]) -> None:
-        if all([cls.root, cls.resources, cls.config, cls.database, cls.logs]):
+        if all(
+            [cls.root, cls.resources, cls.config, cls.database, cls.logs, cls.documents]
+        ):
             return
         cls.root = cls.get_base_path()
         if cls.root is None:
@@ -32,14 +35,17 @@ class PathsProvider:
             cls.config = app_data_dir / "config"
             cls.database = app_data_dir / "database"
             cls.logs = app_data_dir / "logs"
+            cls.documents = app_data_dir / "documents"
 
         else:
             cls.config = cls.root / "config"
             cls.database = cls.root / "database"
             cls.logs = cls.root / "logs"
+            cls.documents = cls.root / "documents"
         cls.config.mkdir(parents=True, exist_ok=True)
         cls.database.mkdir(parents=True, exist_ok=True)
         cls.logs.mkdir(parents=True, exist_ok=True)
+        cls.documents.mkdir(parents=True, exist_ok=True)
         for folder, _ in log_structure.values():
             (cls.logs / folder).mkdir(parents=True, exist_ok=True)
 

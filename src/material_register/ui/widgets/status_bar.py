@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QLabel, QStatusBar
 
 from material_register.providers.texts_provider import TextsProvider
@@ -23,9 +24,13 @@ class StatusBar(QStatusBar):
     def _setup_texts(self) -> None:
         if not self.status_texts:
             return
-        self.permanent_label.setText(self.status_texts.get("READY", "Ready"))
+        self.permanent_text = self.status_texts.get("READY", "Ready")
+        self.permanent_label.setText(self.permanent_text)
 
     def show_message(self, key: str, timeout: int = 3000) -> None:
         if not self.status_texts:
             return
-        self.showMessage(self.status_texts.get(key, ""), timeout)
+        self.permanent_label.setText(self.status_texts.get(key, ""))
+        QTimer.singleShot(
+            timeout, lambda: self.permanent_label.setText(self.permanent_text)
+        )
