@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
@@ -17,6 +18,8 @@ class NotesWidget(QWidget):
     def __init__(self, right_toolbar_widget: "RightToolbarWidget") -> None:
         super().__init__(right_toolbar_widget)
         self.setLayout(self._create_ui())
+        self._setup_ui()
+        self._create_connection()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -26,6 +29,10 @@ class NotesWidget(QWidget):
         main_layout.addWidget(permanent_notes)
         main_layout.addWidget(local_notes)
         return main_layout
+
+    def _setup_ui(self) -> None:
+        self.permanent_notes_edit.setFocus()
+        self._update_button_states()
 
     def _create_permanent_notes(self) -> QGroupBox:
         permanent_group_box = QGroupBox("Permanent")
@@ -62,3 +69,41 @@ class NotesWidget(QWidget):
         local_layout.addLayout(buttons_layout)
         local_group_box.setLayout(local_layout)
         return local_group_box
+
+    def _create_connection(self) -> None:
+        self.permanent_notes_edit.textChanged.connect(self._update_button_states)
+        self.local_notes_edit.textChanged.connect(self._update_button_states)
+        self.permanent_copy_button.clicked.connect(
+            lambda: NotesWidget._copy_notes_to_clipboard(self.permanent_notes_edit)
+        )
+        self.permanent_delete_button.clicked.connect(
+            lambda: NotesWidget._delete_notes(self.permanent_notes_edit)
+        )
+        self.local_copy_button.clicked.connect(
+            lambda: NotesWidget._copy_notes_to_clipboard(self.local_notes_edit)
+        )
+        self.local_delete_button.clicked.connect(
+            lambda: NotesWidget._delete_notes(self.local_notes_edit)
+        )
+
+    def activate_widget(self) -> None:
+        self.permanent_notes_edit.setFocus()
+        self._update_button_states()
+
+    def _update_button_states(self) -> None:
+        self.permanent_copy_button.setEnabled(
+            self.permanent_notes_edit.toPlainText() != ""
+        )
+        self.permanent_delete_button.setEnabled(
+            self.permanent_notes_edit.toPlainText() != ""
+        )
+        self.local_copy_button.setEnabled(self.local_notes_edit.toPlainText() != "")
+        self.local_delete_button.setEnabled(self.local_notes_edit.toPlainText() != "")
+
+    @staticmethod
+    def _copy_notes_to_clipboard(text_edit: QTextEdit) -> None:
+        QGuiApplication.clipboard().setText(text_edit.toPlainText().strip())
+
+    @staticmethod
+    def _delete_notes(text_edit: QTextEdit) -> None:
+        text_edit.clear()

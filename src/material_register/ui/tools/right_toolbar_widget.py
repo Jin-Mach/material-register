@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtGui import Qt
 from PySide6.QtCore import QSize
+from PySide6.QtGui import Qt
 from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QPushButton,
     QHBoxLayout,
+    QPushButton,
     QStackedWidget,
+    QVBoxLayout,
+    QWidget,
 )
 
 from material_register.ui.tools.right_toolbar_widgets.notes_widget import NotesWidget
@@ -65,4 +65,7 @@ class RightToolbarWidget(QWidget):
             self.tools_container.setVisible(False)
             return
         self.tools_container.setCurrentIndex(index)
+        widget = self.tools_container.currentWidget()
+        if hasattr(widget, "activate_widget"):
+            widget.setup_ui()
         self.tools_container.setVisible(True)
