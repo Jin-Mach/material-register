@@ -75,7 +75,6 @@ class SidePanel(QWidget):
             self.export_button,
             self.customers_button,
             self.catalog_button,
-            self.settings_button,
         ]
         for widget in widgets:
             widget.setCheckable(True)
