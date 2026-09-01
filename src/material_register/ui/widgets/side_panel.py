@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QButtonGroup, QPushButton, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -14,7 +14,7 @@ class SidePanel(QWidget):
         super().__init__(main_window)
         self.main_window = main_window
         self.setLayout(self._create_ui())
-        self._setup_texts()
+        self._setup_ui()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -30,6 +30,14 @@ class SidePanel(QWidget):
         self.catalog_button.setObjectName("catalogButton")
         self.settings_button = QPushButton()
         self.settings_button.setObjectName("settingsButton")
+        self.button_group = QButtonGroup(self)
+        self.button_group.setExclusive(True)
+        self.button_group.addButton(self.transactions_button)
+        self.button_group.addButton(self.inventory_button)
+        self.button_group.addButton(self.export_button)
+        self.button_group.addButton(self.customers_button)
+        self.button_group.addButton(self.catalog_button)
+        self.button_group.addButton(self.settings_button)
         main_layout.addWidget(self.transactions_button)
         main_layout.addWidget(self.inventory_button)
         main_layout.addWidget(self.export_button)
@@ -38,6 +46,10 @@ class SidePanel(QWidget):
         main_layout.addStretch()
         main_layout.addWidget(self.settings_button)
         return main_layout
+
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_buttons()
 
     def _setup_texts(self) -> None:
         widgets = [
@@ -55,3 +67,15 @@ class SidePanel(QWidget):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _setup_buttons(self) -> None:
+        widgets = [
+            self.transactions_button,
+            self.inventory_button,
+            self.export_button,
+            self.customers_button,
+            self.catalog_button,
+            self.settings_button,
+        ]
+        for widget in widgets:
+            widget.setCheckable(True)

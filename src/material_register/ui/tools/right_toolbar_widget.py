@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QSize
-from PySide6.QtGui import Qt
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QPushButton,
@@ -44,6 +43,7 @@ class RightToolbarWidget(QWidget):
         self.notes_button = QPushButton()
         self.notes_button.setObjectName("notesButton")
         self.notes_button.setFixedSize(QSize(self.BUTTON_SIZE, self.BUTTON_SIZE))
+        self.notes_button.setCheckable(True)
         buttons_layout.addWidget(self.notes_button)
         buttons_layout.addStretch()
         buttons_container.setLayout(buttons_layout)
@@ -90,9 +90,11 @@ class RightToolbarWidget(QWidget):
     def _set_container_widget(self, index: int) -> None:
         if self.tools_container.isVisible():
             self.tools_container.setVisible(False)
+            self.notes_button.setChecked(False)
             return
         self.tools_container.setCurrentIndex(index)
         widget = self.tools_container.currentWidget()
         if hasattr(widget, "activate_widget"):
             widget.activate_widget()
         self.tools_container.setVisible(True)
+        self.notes_button.setChecked(True)

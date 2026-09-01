@@ -144,6 +144,7 @@ class CreateTransactionDialog(QDialog):
 
     def _setup_completer(self, completer_model: "CustomersCompleterModel") -> None:
         self.completer = QCompleter()
+        self.completer.popup().setObjectName("customerCompleterPopup")
         self.completer.setModel(completer_model)
         self.completer.setCompletionRole(Qt.ItemDataRole.UserRole + 10)
         self.completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
