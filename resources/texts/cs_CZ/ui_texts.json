@@ -315,7 +315,8 @@
     "saveButtonTooltipText": "Uloží aktuální nastavení exportu"
   },
   "RightToolbarWidget": {
-    "notesButtonTooltipText": "Poznámky"
+    "notesButtonTooltipText": "Poznámky",
+    "cashBalanceButtonTooltipText": "Výčetka"
   },
   "NotesWidget": {
     "permanentGroupBoxText": "Trvalé poznámky",

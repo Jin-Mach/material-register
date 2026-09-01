@@ -25,6 +25,7 @@ ICONS_MAP = {
     "images/ui_icons/copyIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/copyIcon.png",
     "images/ui_icons/deleteIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/deleteIcon.png",
     "images/tools_icons/notesButtonIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/tools_icons/notesButtonIcon.png",
+    "images/tools_icons/cashBalanceButtonIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/tools_icons/cashBalanceButtonIcon.png",
 }
 
 FILES_SUFFIXES = [".toml", ".json", ".qss"]

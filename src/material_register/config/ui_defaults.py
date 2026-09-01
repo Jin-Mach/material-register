@@ -298,7 +298,10 @@ DEFAULT_TEXTS = {
         "saveButtonText": "Save",
         "saveButtonTooltipText": "Saves current export settings",
     },
-    "RightToolbarWidget": {"notesButtonTooltipText": "Notes"},
+    "RightToolbarWidget": {
+        "notesButtonTooltipText": "Notes",
+        "cashBalanceButtonTooltipText": "Cash Count",
+    },
     "NotesWidget": {
         "permanentGroupBoxText": "Permanent Notes",
         "permanentNotesEditPlaceholderText": "Enter notes to save",

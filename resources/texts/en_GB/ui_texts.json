@@ -330,7 +330,8 @@
     "saveButtonTooltipText": "Saves current export settings"
   },
   "RightToolbarWidget": {
-    "notesButtonTooltipText": "Notes"
+    "notesButtonTooltipText": "Notes",
+    "cashBalanceButtonTooltipText": "Cash Count"
   },
   "NotesWidget": {
     "permanentGroupBoxText": "Permanent Notes",

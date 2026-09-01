@@ -12,6 +12,9 @@ from PySide6.QtWidgets import (
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.tools.right_toolbar_widgets.cash_balance_widget import (
+    CashBalanceWidget,
+)
 from material_register.ui.tools.right_toolbar_widgets.notes_widget import NotesWidget
 
 if TYPE_CHECKING:
@@ -36,6 +39,7 @@ class RightToolbarWidget(QWidget):
         main_layout.setSpacing(0)
         self.tools_container = QStackedWidget()
         self.notes_widget = NotesWidget(self.main_window.status_bar, self)
+        self.cash_balance_widget = CashBalanceWidget(self)
         buttons_container = QWidget()
         buttons_container.setFixedWidth(self.WIDTH)
         buttons_layout = QVBoxLayout()
@@ -44,7 +48,12 @@ class RightToolbarWidget(QWidget):
         self.notes_button.setObjectName("notesButton")
         self.notes_button.setFixedSize(QSize(self.BUTTON_SIZE, self.BUTTON_SIZE))
         self.notes_button.setCheckable(True)
+        self.cash_balance_button = QPushButton()
+        self.cash_balance_button.setObjectName("cashBalanceButton")
+        self.cash_balance_button.setFixedSize(self.BUTTON_SIZE, self.BUTTON_SIZE)
+        self.cash_balance_button.setCheckable(True)
         buttons_layout.addWidget(self.notes_button)
+        buttons_layout.addWidget(self.cash_balance_button)
         buttons_layout.addStretch()
         buttons_container.setLayout(buttons_layout)
         main_layout.addWidget(self.tools_container)
@@ -58,7 +67,7 @@ class RightToolbarWidget(QWidget):
         self._setup_container()
 
     def _setup_texts(self) -> None:
-        widgets = [self.notes_button]
+        widgets = [self.notes_button, self.cash_balance_button]
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
@@ -69,7 +78,8 @@ class RightToolbarWidget(QWidget):
             return
 
     def _setup_icons(self) -> None:
-        widgets = [self.notes_button]
+        # icons color: #FFE066
+        widgets = [self.notes_button, self.cash_balance_button]
         if not UiIcons.set_icons("tools", widgets):
             ErrorHandler.handle_error(
                 f"Icons load failed: {self.__class__.__name__}", "ui", "warning"
@@ -78,23 +88,35 @@ class RightToolbarWidget(QWidget):
             return
 
     def _setup_container(self) -> None:
-        for widget in [self.notes_widget]:
+        for widget in [self.notes_widget, self.cash_balance_widget]:
             widget.setFixedWidth(self.TOOL_WIDTH)
             self.tools_container.addWidget(widget)
 
     def _create_connection(self) -> None:
-        buttons_map = {self.notes_button: 0}
+        buttons_map = {
+            self.notes_button: 0,
+            self.cash_balance_button: 1,
+        }
         for button, index in buttons_map.items():
             button.clicked.connect(lambda _, i=index: self._set_container_widget(i))
 
     def _set_container_widget(self, index: int) -> None:
+        buttons_map = {
+            0: self.notes_button,
+            1: self.cash_balance_button,
+        }
+        button = buttons_map[index]
         if self.tools_container.isVisible():
-            self.tools_container.setVisible(False)
-            self.notes_button.setChecked(False)
-            return
-        self.tools_container.setCurrentIndex(index)
+            if self.tools_container.currentIndex() == index:
+                self.tools_container.setVisible(False)
+                button.setChecked(False)
+                return
+            self.tools_container.setCurrentIndex(index)
+        else:
+            self.tools_container.setCurrentIndex(index)
+            self.tools_container.setVisible(True)
+        for current_button in buttons_map.values():
+            current_button.setChecked(current_button is button)
         widget = self.tools_container.currentWidget()
         if hasattr(widget, "activate_widget"):
             widget.activate_widget()
-        self.tools_container.setVisible(True)
-        self.notes_button.setChecked(True)

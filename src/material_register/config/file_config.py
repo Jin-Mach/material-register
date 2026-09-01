@@ -29,6 +29,7 @@ REQUIRED_IMAGES = [
     Path("ui_icons") / "copyIcon.png",
     Path("ui_icons") / "deleteIcon.png",
     Path("tools_icons") / "notesButtonIcon.png",
+    Path("tools_icons") / "cashBalanceButtonIcon.png",
 ]
 
 REQUIRED_STYLES_FILES = [
@@ -279,6 +280,7 @@ UI_KEYS = [
     ("BaseExportWidget", "saveButtonText"),
     ("BaseExportWidget", "saveButtonTooltipText"),
     ("RightToolbarWidget", "notesButtonTooltipText"),
+    ("RightToolbarWidget", "cashBalanceButtonTooltipText"),
     ("NotesWidget", "permanentGroupBoxText"),
     ("NotesWidget", "permanentNotesEditPlaceholderText"),
     ("NotesWidget", "permanentCopyButtonTooltipText"),
