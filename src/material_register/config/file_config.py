@@ -289,6 +289,19 @@ UI_KEYS = [
     ("NotesWidget", "localNotesEditPlaceholderText"),
     ("NotesWidget", "localCopyButtonTooltipText"),
     ("NotesWidget", "localDeleteButtonTooltipText"),
+    ("CashBalanceWidget", "cashTabText"),
+    ("CashBalanceWidget", "openingBalanceLabelText"),
+    ("CashBalanceWidget", "transactionCashLabelText"),
+    ("CashBalanceWidget", "incomeLabelText"),
+    ("CashBalanceWidget", "expenseLabelText"),
+    ("CashBalanceWidget", "balanceCountLabelText"),
+    ("CashBalanceWidget", "valuesTabText"),
+    ("CashBalanceWidget", "valueItems"),
+    ("CashBalanceWidget", "othersLabelText"),
+    ("CashBalanceWidget", "cashTotalLabelText"),
+    ("CashBalanceWidget", "totalLabelText"),
+    ("CashBalanceWidget", "currencySuffix"),
+    ("CashBalanceWidget", "quantitySuffix"),
 ]
 
 HEADERS_KEYS = [

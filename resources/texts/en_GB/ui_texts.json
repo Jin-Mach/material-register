@@ -342,5 +342,20 @@
     "localNotesEditPlaceholderText": "Enter local notes",
     "localCopyButtonTooltipText": "Copy to clipboard",
     "localDeleteButtonTooltipText": "Delete notes"
+  },
+  "CashBalanceWidget": {
+    "cashTabText": "Income and expenses",
+    "openingBalanceLabelText": "Opening balance:",
+    "transactionCashLabelText": "Transactions:",
+    "incomeLabelText": "Additional income:",
+    "expenseLabelText": "Expenses:",
+    "balanceCountLabelText": "Total:",
+    "valuesTabText": "Cash",
+    "valueItems": ["100", "50", "20", "10", "5", "2", "1"],
+    "othersLabelText": "Other:",
+    "cashTotalLabelText": "Total:",
+    "totalLabelText": "Difference:",
+    "currencySuffix": " £",
+    "quantitySuffix": " pcs"
   }
 }

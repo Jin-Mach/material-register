@@ -327,5 +327,20 @@
     "localNotesEditPlaceholderText": "Zadej dočasné poznámky",
     "localCopyButtonTooltipText": "Kopírovat do schránky",
     "localDeleteButtonTooltipText": "Smazat poznámky"
+  },
+  "CashBalanceWidget": {
+    "cashTabText": "Příjmy a výdaje",
+    "openingBalanceLabelText": "Počáteční stav:",
+    "transactionCashLabelText": "Transakce:",
+    "incomeLabelText": "Dodatečný příjem:",
+    "expenseLabelText": "Náklady:",
+    "balanceCountLabelText": "Celkem:",
+    "valuesTabText": "Hotovost",
+    "valueItems": ["5000", "2000", "1000", "500", "200", "100", "50", "20", "10", "5", "2", "1"],
+    "othersLabelText": "Ostatní:",
+    "cashTotalLabelText": "Celkem:",
+    "totalLabelText": "Rozdíl:",
+    "currencySuffix": " Kč",
+    "quantitySuffix": " ks"
   }
 }

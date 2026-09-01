@@ -521,12 +521,6 @@ QLabel#priceCountLabel {
     font-weight: bold;
 }
 
-QGroupBox#exportOptionsGroupBox QRadioButton,
-QGroupBox#otherSettingsGroupBox QCheckBox {
-    background-color: #232528;
-    color: #d4d4d4;
-}
-
 QLabel#unitLabel,
 QLabel#unitValue,
 QLabel#defaultPriceLabel,
@@ -536,8 +530,21 @@ QLabel#notesLabel,
 QLabel#countLabel,
 QLabel#itemsCountLabel,
 QLabel#priceCountLabel,
-QLabel#priceCountValue {
+QLabel#priceCountValue,
+QLabel#othersLabel {
     background-color: transparent;
+}
+
+QLabel#totalLabel,
+QLabel#totalLabelValue {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+QGroupBox#exportOptionsGroupBox QRadioButton,
+QGroupBox#otherSettingsGroupBox QCheckBox {
+    background-color: #232528;
+    color: #d4d4d4;
 }
 
 QPushButton#notesButton,

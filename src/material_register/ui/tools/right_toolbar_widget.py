@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 class RightToolbarWidget(QWidget):
     WIDTH = 50
-    TOOL_WIDTH = 300
+    TOOL_WIDTH = 350
     BUTTON_SIZE = 30
 
     def __init__(self, main_window: "MainWindow") -> None:
