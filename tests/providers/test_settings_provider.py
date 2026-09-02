@@ -39,6 +39,30 @@ def test_save_settings(tmp_path: Path) -> None:
     )
 
 
+def test_restore_settings(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    config_path = tmp_path / "config"
+    data = """
+    [export.summary.default]
+    branchNameLineEdit = "Default branch"
+    pathLineEdit = "/default/path"
+
+    [export.summary.user]
+    branchNameLineEdit = "User branch"
+    pathLineEdit = "/user/path"
+    """
+    _create_settings_file(
+        resources_path / "config" / "settings.toml",
+        data,
+    )
+    SettingsProvider.provider_init(resources_path, config_path)
+    result = SettingsProvider.restore_settings("export", "summary")
+    assert result is True
+    settings = SettingsProvider.SETTINGS["export"]["summary"]["user"]
+    assert settings["branchNameLineEdit"] == "Default branch"
+    assert settings["pathLineEdit"] == "/default/path"
+
+
 def test_load_settings_valid(tmp_path: Path) -> None:
     resources_path = tmp_path / "resources"
     data = """
@@ -156,3 +180,160 @@ def test_update_settings_updates_keys(tmp_path: Path) -> None:
     assert settings["user"]["pathLineEdit"] == "/user/path"
     assert settings["user"]["newSetting"] is True
     assert "removedSetting" not in settings["user"]
+
+
+def test_update_settings_sections(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    config_path = tmp_path / "config"
+    data = """
+    [export.summary.default]
+    branchNameLineEdit = "Default branch"
+    pathLineEdit = "/default/path"
+    newSetting = true
+
+    [export.summary.user]
+    branchNameLineEdit = "User branch"
+    pathLineEdit = "/user/path"
+    removedSetting = true
+    """
+    _create_settings_file(
+        resources_path / "config" / "settings.toml",
+        data,
+    )
+    SettingsProvider.provider_init(resources_path, config_path)
+    SettingsProvider.update_settings_sections(
+        "export",
+        "summary",
+        ["branchNameLineEdit", "pathLineEdit", "newSetting"],
+    )
+    settings = SettingsProvider.SETTINGS["export"]["summary"]
+    assert settings["default"]["branchNameLineEdit"] == "Default branch"
+    assert settings["default"]["pathLineEdit"] == "/default/path"
+    assert settings["default"]["newSetting"] is True
+    assert settings["user"]["branchNameLineEdit"] == "User branch"
+    assert settings["user"]["pathLineEdit"] == "/user/path"
+    assert settings["user"]["newSetting"] == 0
+    assert "removedSetting" not in settings["user"]
+
+
+def test_update_settings_cash_balance_values(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    config_path = tmp_path / "config"
+    default_data = """
+    [tools.cash_balance_values.default]
+    [tools.cash_balance_values.user]
+    """
+    user_data = """
+    [tools.cash_balance_values.default]
+    5000 = 0
+    2000 = 0
+    [tools.cash_balance_values.user]
+    5000 = 10
+    2000 = 5
+    """
+    _create_settings_file(
+        resources_path / "config" / "settings.toml",
+        default_data,
+    )
+    _create_settings_file(
+        config_path / "settings.toml",
+        user_data,
+    )
+    SettingsProvider.provider_init(resources_path, config_path)
+    result = SettingsProvider.update_settings()
+    assert result is True
+    cash = SettingsProvider.SETTINGS["tools"]["cash_balance_values"]
+    assert cash["user"]["5000"] == 10
+    assert cash["user"]["2000"] == 5
+
+
+def test_restore_settings_missing_user(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    config_path = tmp_path / "config"
+    data = """
+    [export.summary.default]
+    branchNameLineEdit = "Default branch"
+    """
+    _create_settings_file(
+        resources_path / "config" / "settings.toml",
+        data,
+    )
+    SettingsProvider.provider_init(resources_path, config_path)
+    result = SettingsProvider.restore_settings("export", "summary")
+    assert result is False
+
+
+def test_restore_settings_missing_default(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    config_path = tmp_path / "config"
+    data = """
+    [export.summary.user]
+    branchNameLineEdit = "User branch"
+    """
+    _create_settings_file(
+        resources_path / "config" / "settings.toml",
+        data,
+    )
+    SettingsProvider.provider_init(resources_path, config_path)
+    result = SettingsProvider.restore_settings("export", "summary")
+    assert result is False
+
+
+def test_restore_settings_missing_user_key(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    config_path = tmp_path / "config"
+    data = """
+    [export.summary.default]
+    branchNameLineEdit = "Default branch"
+    pathLineEdit = "/default/path"
+
+    [export.summary.user]
+    branchNameLineEdit = "User branch"
+    """
+    _create_settings_file(
+        resources_path / "config" / "settings.toml",
+        data,
+    )
+    SettingsProvider.provider_init(resources_path, config_path)
+    result = SettingsProvider.restore_settings("export", "summary")
+    assert result is True
+    settings = SettingsProvider.SETTINGS["export"]["summary"]["user"]
+    assert settings["branchNameLineEdit"] == "Default branch"
+    assert "pathLineEdit" not in settings
+
+
+def test_load_settings_invalid(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    settings_path = resources_path / "config" / "settings.toml"
+    _create_settings_file(
+        settings_path,
+        "[invalid",
+    )
+    SettingsProvider.provider_init(resources_path, tmp_path / "config")
+    assert SettingsProvider.SETTINGS == {}
+
+
+def test_update_settings_sections_default_value(tmp_path: Path) -> None:
+    resources_path = tmp_path / "resources"
+    config_path = tmp_path / "config"
+    data = """
+    [export.summary.default]
+    branchNameLineEdit = "Default branch"
+
+    [export.summary.user]
+    branchNameLineEdit = "User branch"
+    """
+    _create_settings_file(
+        resources_path / "config" / "settings.toml",
+        data,
+    )
+    SettingsProvider.provider_init(resources_path, config_path)
+    SettingsProvider.update_settings_sections(
+        "export",
+        "summary",
+        ["branchNameLineEdit", "newSetting"],
+        default_value=5,
+    )
+    settings = SettingsProvider.SETTINGS["export"]["summary"]
+    assert settings["default"]["newSetting"] == 5
+    assert settings["user"]["newSetting"] == 5

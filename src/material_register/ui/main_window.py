@@ -1,6 +1,10 @@
 from PySide6.QtGui import QCloseEvent, QShowEvent
 from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QWidget
 
+from material_register.controllers.tools_controllers.cash_balance_controller import (
+    CashBalanceController,
+)
+from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -71,6 +75,10 @@ class MainWindow(QMainWindow):
             ErrorHandler.ui_texts_error = ""
 
     def _before_close(self) -> None:
+        CashBalanceController.save_balance_values(
+            self.right_toolbar_widget.cash_balance_widget.get_values_map()
+        )
+        SettingsProvider.save_settings()
         self.right_toolbar_widget.notes_widget.notes_controller.save_notes()
 
     def showEvent(self, event: QShowEvent) -> None:

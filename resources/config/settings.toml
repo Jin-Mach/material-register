@@ -37,3 +37,7 @@ noActionRadioButton = true
 openFolderRadioButton = false
 openFileRadioButton = false
 useLastOptionsCheckbox = false
+
+[tools.cash_balance_values.default]
+
+[tools.cash_balance_values.user]

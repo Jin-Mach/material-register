@@ -64,7 +64,12 @@ class CashBalanceWidget(QWidget):
         self._setup_specific_texts()
         self._setup_spinboxes()
         self._create_connections()
+        values = self.values_items + [self.others_label.objectName()]
+        self.cash_balance_controller.update_cash_balance_values(values)
         self.cash_balance_controller.load_balance_value()
+        cash_map = self.values_spinboxes.copy()
+        cash_map[self.others_label.objectName()] = self.others_spinbox
+        self.cash_balance_controller.load_cash_values(cash_map)
         self._update_totals()
 
     def _create_balance_widget(self) -> QWidget:
@@ -237,3 +242,12 @@ class CashBalanceWidget(QWidget):
         expense: float,
     ) -> float:
         return round(opening_balance - transaction_cash + income - expense, 1)
+
+    def get_values_map(self) -> dict[str, int | float]:
+        values_map = {}
+        values = self.values_spinboxes.copy()
+        values[self.others_label.objectName()] = self.others_spinbox
+        for key, spinbox in values.items():
+            value = spinbox.value()
+            values_map[key] = value
+        return values_map

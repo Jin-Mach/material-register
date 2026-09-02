@@ -60,16 +60,40 @@ class SettingsProvider:
             ErrorHandler.handle_error(e, "settings", "error")
             return False
 
+    @staticmethod
+    def update_settings_sections(
+        section: str, sub_section: str, values_items: list[str], default_value: int = 0
+    ) -> None:
+        default = {}
+        for value in values_items:
+            default[value] = default_value
+        settings = SettingsProvider.SETTINGS.setdefault(section, {})
+        cash_balance_values = settings.setdefault(sub_section, {})
+        default_settings = cash_balance_values.setdefault("default", {})
+        user_settings = cash_balance_values.setdefault("user", {})
+        for current_settings in (default_settings, user_settings):
+            current_keys = list(current_settings)
+            for key in current_keys:
+                if key not in default:
+                    del current_settings[key]
+            for key, value in default.items():
+                key = str(key)
+                if key not in current_settings:
+                    current_settings[key] = value
+
     @classmethod
     def _update_settings_keys(
         cls, default: dict[str, Any], user: dict[str, Any]
     ) -> None:
+        ignored_keys = ["cash_balance_values"]
         for key in list(user):
-            if key not in default:
+            if key not in default and key not in ignored_keys:
                 del user[key]
         for key, default_value in default.items():
             if key not in user:
                 user[key] = default_value
+                continue
+            if key in ignored_keys:
                 continue
             user_value = user[key]
             if isinstance(default_value, dict) and isinstance(user_value, dict):

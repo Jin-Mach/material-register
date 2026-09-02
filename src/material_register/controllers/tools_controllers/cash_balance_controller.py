@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtWidgets import QDoubleSpinBox, QSpinBox
+
 from material_register.providers.settings_provider import SettingsProvider
 
 if TYPE_CHECKING:
@@ -21,8 +23,26 @@ class CashBalanceController:
         )
         self.cash_balance_widget.opening_balance_spinbox.setValue(balance)
 
-    def initialize_cash_settings(self) -> None:
-        default = {}
-        for value in self.cash_balance_widget.values_items:
-            default[value] = 0
-        user = SettingsProvider.SETTINGS.get("tools", {}).get("user", {})
+    @staticmethod
+    def load_cash_values(cash_map: dict[str, QSpinBox | QDoubleSpinBox]) -> None:
+        cash = (
+            SettingsProvider.SETTINGS.get("tools", {})
+            .get("cash_balance_values", {})
+            .get("user", {})
+        )
+        if cash:
+            for key, spinbox in cash_map.items():
+                spinbox.setValue(cash.get(key, 0))
+
+    @staticmethod
+    def update_cash_balance_values(values: list[str]) -> None:
+        SettingsProvider.update_settings_sections(
+            "tools", "cash_balance_values", values
+        )
+
+    @staticmethod
+    def save_balance_values(values: dict[str, int | float]) -> None:
+        for key, value in values.items():
+            SettingsProvider.SETTINGS["tools"]["cash_balance_values"]["user"][key] = (
+                value
+            )
