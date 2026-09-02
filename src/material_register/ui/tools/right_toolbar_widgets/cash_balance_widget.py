@@ -14,8 +14,9 @@ from PySide6.QtWidgets import (
 from material_register.config.ui_constants import (
     CASH_BALANCE_MAX_VALUE,
     CASH_BALANCE_MIN_VALUE,
-    CASH_BALANCE_RESULT_MIN_VALUE,
+    CASH_BALANCE_NEGATIVE_MIN_VALUE,
 )
+from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import WARNING_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
@@ -60,6 +61,7 @@ class CashBalanceWidget(QWidget):
         self._setup_specific_texts()
         self._setup_spinboxes()
         self._create_connections()
+        self.load_balance_value()
         self._update_totals()
 
     def _create_balance_widget(self) -> QWidget:
@@ -175,7 +177,7 @@ class CashBalanceWidget(QWidget):
         total = round(cash_total - balance, 1)
         self.balance_count_spinbox.setValue(balance)
         self.cash_total_spinbox.setValue(cash_total)
-        if total < 0:
+        if total != 0:
             self.total_label_value.setStyleSheet(WARNING_STYLE)
         else:
             self.total_label_value.setStyleSheet("")
@@ -203,7 +205,8 @@ class CashBalanceWidget(QWidget):
             spinbox.setSingleStep(1)
             spinbox.setMinimum(CASH_BALANCE_MIN_VALUE)
             spinbox.setMaximum(CASH_BALANCE_MAX_VALUE)
-        self.balance_count_spinbox.setMinimum(CASH_BALANCE_RESULT_MIN_VALUE)
+        self.opening_balance_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
+        self.balance_count_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
         for spinbox in self.findChildren(QSpinBox):
             spinbox.setGroupSeparatorShown(True)
         for spinbox in self.findChildren(QDoubleSpinBox):
@@ -213,6 +216,17 @@ class CashBalanceWidget(QWidget):
         for spinbox in self.values_spinboxes.values():
             spinbox.setSuffix(self.quantity_suffix)
 
+    def load_balance_value(self) -> None:
+        balance = SettingsProvider.SETTINGS.get("export", {}).get("summary", {}).get("user", {}).get("openingBalanceSpinbox", 0.0)
+        self.opening_balance_spinbox.setValue(balance)
+
+    def _calculate_cash_total(self) -> float:
+        cash_total = sum(
+            float(value) * spinbox.value()
+            for value, spinbox in self.values_spinboxes.items()
+        )
+        return round(cash_total + self.others_spinbox.value(), 1)
+
     @staticmethod
     def _calculate_balance(
         opening_balance: float,
@@ -221,10 +235,3 @@ class CashBalanceWidget(QWidget):
         expense: float,
     ) -> float:
         return round(opening_balance - transaction_cash + income - expense, 1)
-
-    def _calculate_cash_total(self) -> float:
-        cash_total = sum(
-            float(value) * spinbox.value()
-            for value, spinbox in self.values_spinboxes.items()
-        )
-        return round(cash_total + self.others_spinbox.value(), 1)
