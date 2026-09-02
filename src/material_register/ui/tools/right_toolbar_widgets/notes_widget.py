@@ -11,7 +11,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.controllers.tools_controllers.notes_controller import NotesController
+from material_register.controllers.tools_controllers.notes_controller import (
+    NotesController,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts

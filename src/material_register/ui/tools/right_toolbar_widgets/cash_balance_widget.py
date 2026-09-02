@@ -16,10 +16,12 @@ from material_register.config.ui_constants import (
     CASH_BALANCE_MIN_VALUE,
     CASH_BALANCE_NEGATIVE_MIN_VALUE,
 )
+from material_register.controllers.tools_controllers.cash_balance_controller import (
+    CashBalanceController,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import WARNING_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.controllers.tools_controllers.cash_balance_controller import CashBalanceController
 
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
@@ -182,7 +184,8 @@ class CashBalanceWidget(QWidget):
             self.total_label_value.setStyleSheet(WARNING_STYLE)
         else:
             self.total_label_value.setStyleSheet("")
-        self.total_label_value.setText(f"{total} {self.currency_suffix}")
+        total_text = f"{total:.1f}".replace(".", self.decimal)
+        self.total_label_value.setText(f"{total_text} {self.currency_suffix}")
 
     def _setup_spinboxes(self) -> None:
         disabled_spinboxes = [
@@ -216,6 +219,8 @@ class CashBalanceWidget(QWidget):
             spinbox.setSuffix(self.currency_suffix)
         for spinbox in self.values_spinboxes.values():
             spinbox.setSuffix(self.quantity_suffix)
+        locale = self.opening_balance_spinbox.locale()
+        self.decimal = locale.decimalPoint()
 
     def _calculate_cash_total(self) -> float:
         cash_total = sum(

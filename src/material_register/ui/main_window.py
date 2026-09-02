@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
             ErrorDialog(self).show_dialog(error, False)
             ErrorHandler.ui_texts_error = ""
 
-    def _before_close(self) ->None:
+    def _before_close(self) -> None:
         self.right_toolbar_widget.notes_widget.notes_controller.save_notes()
 
     def showEvent(self, event: QShowEvent) -> None:
