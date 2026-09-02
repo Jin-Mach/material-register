@@ -221,10 +221,8 @@ class CatalogController:
 
     @staticmethod
     def _notification_handler(
-        notification_texts: dict[str, str], key: str, default: str
+            notification_texts: dict[str, str], key: str, default: str
     ) -> None:
-        if notification_texts is None:
-            return
         notification = NotificationDialog(
             AppContext.MAIN_WINDOW, notification_texts.get(key, default)
         )

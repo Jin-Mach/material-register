@@ -109,7 +109,7 @@ class SummaryExportController(QObject):
             self._last_settings_saved()
         if self.export_settings.get("saveLastOpeningBalanceCheckbox", False):
             SummaryExportController._new_balance_saved(last_value)
-            AppContext.MAIN_WINDOW.right_toolbar_widget.cash_balance_widget.load_balance_value()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.cash_balance_widget.cash_balance_controller.load_balance_value()
         self._clean_thread()
         QTimer.singleShot(1000, self._finish_export)
 

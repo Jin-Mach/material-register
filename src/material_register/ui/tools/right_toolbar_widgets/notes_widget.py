@@ -11,8 +11,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.controllers.tools_controllers.notes_controller import NotesController
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.helpers.text_file_handler import TextFileHandler
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -29,6 +29,7 @@ class NotesWidget(QWidget):
     ) -> None:
         super().__init__(right_toolbar_widget)
         self.status_bar = status_bar
+        self.notes_controller = NotesController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -45,7 +46,7 @@ class NotesWidget(QWidget):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_icons()
-        self._load_texts()
+        self.notes_controller.load_notes()
         self._setup_text_edits()
         self._update_button_states()
         self._set_cursor_position()
@@ -116,12 +117,6 @@ class NotesWidget(QWidget):
             edit.setAcceptRichText(False)
             edit.setAcceptDrops(False)
             edit.setUndoRedoEnabled(False)
-
-    def _load_texts(self) -> None:
-        ok, notes = TextFileHandler.load_document("toolbar_notes.txt")
-        if not ok:
-            self.status_bar.show_message("LOAD_NOTES_FAILED")
-        self.permanent_notes_edit.setPlainText(notes)
 
     def _create_connection(self) -> None:
         self.permanent_notes_edit.textChanged.connect(self._update_button_states)

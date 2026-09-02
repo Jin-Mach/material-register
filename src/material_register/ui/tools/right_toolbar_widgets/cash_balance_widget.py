@@ -16,10 +16,10 @@ from material_register.config.ui_constants import (
     CASH_BALANCE_MIN_VALUE,
     CASH_BALANCE_NEGATIVE_MIN_VALUE,
 )
-from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import WARNING_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.controllers.tools_controllers.cash_balance_controller import CashBalanceController
 
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
@@ -28,6 +28,7 @@ if TYPE_CHECKING:
 class CashBalanceWidget(QWidget):
     def __init__(self, right_tool_bar_widget: "RightToolbarWidget") -> None:
         super().__init__(right_tool_bar_widget)
+        self.cash_balance_controller = CashBalanceController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()
 
@@ -61,7 +62,7 @@ class CashBalanceWidget(QWidget):
         self._setup_specific_texts()
         self._setup_spinboxes()
         self._create_connections()
-        self.load_balance_value()
+        self.cash_balance_controller.load_balance_value()
         self._update_totals()
 
     def _create_balance_widget(self) -> QWidget:
@@ -215,10 +216,6 @@ class CashBalanceWidget(QWidget):
             spinbox.setSuffix(self.currency_suffix)
         for spinbox in self.values_spinboxes.values():
             spinbox.setSuffix(self.quantity_suffix)
-
-    def load_balance_value(self) -> None:
-        balance = SettingsProvider.SETTINGS.get("export", {}).get("summary", {}).get("user", {}).get("openingBalanceSpinbox", 0.0)
-        self.opening_balance_spinbox.setValue(balance)
 
     def _calculate_cash_total(self) -> float:
         cash_total = sum(

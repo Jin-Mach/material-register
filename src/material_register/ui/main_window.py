@@ -5,7 +5,6 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.settings_dialog import SettingsDialog
-from material_register.ui.helpers.text_file_handler import TextFileHandler
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
 from material_register.ui.widgets.side_panel import SidePanel
@@ -71,6 +70,9 @@ class MainWindow(QMainWindow):
             ErrorDialog(self).show_dialog(error, False)
             ErrorHandler.ui_texts_error = ""
 
+    def _before_close(self) ->None:
+        self.right_toolbar_widget.notes_widget.notes_controller.save_notes()
+
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
@@ -83,9 +85,5 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         super().closeEvent(event)
-        if not TextFileHandler.save_document(
-            "toolbar_notes.txt",
-            self.right_toolbar_widget.notes_widget.get_permanent_notes(),
-        ):
-            pass
+        self._before_close()
         WindowStateManager.save_geometry(self, self.__class__.__name__)
