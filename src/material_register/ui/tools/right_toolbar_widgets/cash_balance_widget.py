@@ -165,21 +165,16 @@ class CashBalanceWidget(QWidget):
             spinbox.valueChanged.connect(self._update_totals)
 
     def _update_totals(self) -> None:
-        balance = (
-            self.opening_balance_spinbox.value()
-            - self.transaction_cash_spinbox.value()
-            + self.income_spinbox.value()
-            - self.expense_spinbox.value()
+        balance = CashBalanceWidget._calculate_balance(
+            self.opening_balance_spinbox.value(),
+            self.transaction_cash_spinbox.value(),
+            self.income_spinbox.value(),
+            self.expense_spinbox.value(),
         )
-        balance = round(balance, 1)
-        self.balance_count_spinbox.setValue(balance)
-        cash_total = 0
-        for value, spinbox in self.values_spinboxes.items():
-            cash_total += float(value) * spinbox.value()
-        cash_total += self.others_spinbox.value()
-        cash_total = round(cash_total, 1)
-        self.cash_total_spinbox.setValue(cash_total)
+        cash_total = self._calculate_cash_total()
         total = round(cash_total - balance, 1)
+        self.balance_count_spinbox.setValue(balance)
+        self.cash_total_spinbox.setValue(cash_total)
         if total < 0:
             self.total_label_value.setStyleSheet(WARNING_STYLE)
         else:
@@ -217,3 +212,19 @@ class CashBalanceWidget(QWidget):
             spinbox.setSuffix(self.currency_suffix)
         for spinbox in self.values_spinboxes.values():
             spinbox.setSuffix(self.quantity_suffix)
+
+    @staticmethod
+    def _calculate_balance(
+        opening_balance: float,
+        transaction_cash: float,
+        income: float,
+        expense: float,
+    ) -> float:
+        return round(opening_balance - transaction_cash + income - expense, 1)
+
+    def _calculate_cash_total(self) -> float:
+        cash_total = sum(
+            float(value) * spinbox.value()
+            for value, spinbox in self.values_spinboxes.items()
+        )
+        return round(cash_total + self.others_spinbox.value(), 1)
