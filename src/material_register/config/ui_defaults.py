@@ -305,6 +305,7 @@ DEFAULT_TEXTS = {
     "NotesWidget": {
         "permanentGroupBoxText": "Permanent Notes",
         "permanentNotesEditPlaceholderText": "Enter notes to save",
+        "searchEditPlaceholderText": "Search",
         "permanentCopyButtonTooltipText": "Copy to clipboard",
         "permanentDeleteButtonTooltipText": "Delete notes",
         "localGroupBoxText": "Local Notes",

@@ -283,6 +283,7 @@ UI_KEYS = [
     ("RightToolbarWidget", "cashBalanceButtonTooltipText"),
     ("NotesWidget", "permanentGroupBoxText"),
     ("NotesWidget", "permanentNotesEditPlaceholderText"),
+    ("NotesWidget", "searchEditPlaceholderText"),
     ("NotesWidget", "permanentCopyButtonTooltipText"),
     ("NotesWidget", "permanentDeleteButtonTooltipText"),
     ("NotesWidget", "localGroupBoxText"),

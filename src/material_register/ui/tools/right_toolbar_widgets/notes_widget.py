@@ -1,10 +1,12 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QSize
-from PySide6.QtGui import QGuiApplication, Qt, QTextCursor
+from PySide6.QtGui import QGuiApplication, QPalette, Qt, QTextCursor
 from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
+    QLabel,
+    QLineEdit,
     QPushButton,
     QTextEdit,
     QVBoxLayout,
@@ -60,10 +62,16 @@ class NotesWidget(QWidget):
         self.permanent_notes_edit = QTextEdit()
         self.permanent_notes_edit.setObjectName("permanentNotesEdit")
         buttons_layout = QHBoxLayout()
+        self.search_edit = QLineEdit()
+        self.search_edit.setObjectName(m)
+        self.search_count_label = QLabel()
+        self.search_count_label.setObjectName("searchCountLabel")
         self.permanent_copy_button = QPushButton()
         self.permanent_copy_button.setObjectName("permanentCopyButton")
         self.permanent_delete_button = QPushButton()
         self.permanent_delete_button.setObjectName("permanentDeleteButton")
+        buttons_layout.addWidget(self.search_edit)
+        buttons_layout.addWidget(self.search_count_label)
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.permanent_copy_button)
         buttons_layout.addWidget(self.permanent_delete_button)
@@ -123,6 +131,7 @@ class NotesWidget(QWidget):
     def _create_connection(self) -> None:
         self.permanent_notes_edit.textChanged.connect(self._update_button_states)
         self.local_notes_edit.textChanged.connect(self._update_button_states)
+        self.search_edit.textChanged.connect(self.search_in_notes)
         self.permanent_copy_button.clicked.connect(
             lambda: NotesWidget._copy_notes_to_clipboard(self.permanent_notes_edit)
         )
@@ -136,6 +145,16 @@ class NotesWidget(QWidget):
             lambda: NotesWidget._delete_notes(self.local_notes_edit)
         )
 
+    def search_in_notes(self) -> None:
+        text = self.search_edit.text()
+        selections = self._get_selections(text)
+        self.permanent_notes_edit.setExtraSelections(selections)
+        search_count = len(selections)
+        if search_count > 0:
+            self.search_count_label.setText(f"{search_count}x")
+        else:
+            self.search_count_label.setText("")
+
     def _set_cursor_position(self) -> None:
         cursor = self.permanent_notes_edit.textCursor()
         cursor.movePosition(QTextCursor.MoveOperation.End)
@@ -145,6 +164,22 @@ class NotesWidget(QWidget):
     def activate_widget(self) -> None:
         self._update_button_states()
         self._set_cursor_position()
+
+    def _get_selections(self, text: str) -> list[QTextEdit.ExtraSelection]:
+        selections = []
+        document = self.permanent_notes_edit.document()
+        cursor = document.find(text)
+        palette = self.permanent_notes_edit.palette()
+        while not cursor.isNull():
+            selection = QTextEdit.ExtraSelection()
+            selection.cursor = cursor
+            selection.format.setBackground(palette.color(QPalette.ColorRole.Highlight))
+            selection.format.setForeground(
+                palette.color(QPalette.ColorRole.HighlightedText)
+            )
+            selections.append(selection)
+            cursor = document.find(text, cursor)
+        return selections
 
     def get_permanent_notes(self) -> str:
         return self.permanent_notes_edit.toPlainText().strip()

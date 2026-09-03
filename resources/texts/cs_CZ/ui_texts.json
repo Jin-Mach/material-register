@@ -321,6 +321,7 @@
   "NotesWidget": {
     "permanentGroupBoxText": "Trvalé poznámky",
     "permanentNotesEditPlaceholderText": "Zadej poznámky pro uložení",
+    "searchEditPlaceholderText": "Vyhledat",
     "permanentCopyButtonTooltipText": "Kopírovat do schránky",
     "permanentDeleteButtonTooltipText": "Smazat poznámky",
     "localGroupBoxText": "Dočasné poznámky",
