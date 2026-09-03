@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QStackedWidget,
     QVBoxLayout,
-    QWidget,
+    QWidget, QScrollArea
 )
 
 from material_register.services.error_handler import ErrorHandler
@@ -23,7 +23,6 @@ if TYPE_CHECKING:
 
 class RightToolbarWidget(QWidget):
     WIDTH = 35
-    TOOL_WIDTH = 400
     BUTTON_SIZE = 28
 
     def __init__(self, main_window: "MainWindow") -> None:
@@ -40,9 +39,9 @@ class RightToolbarWidget(QWidget):
         self.tools_container = QStackedWidget()
         self.notes_widget = NotesWidget(self.main_window.status_bar, self)
         self.cash_balance_widget = CashBalanceWidget(self)
-        buttons_container = QWidget()
-        buttons_container.setObjectName("buttonsContainer")
-        buttons_container.setFixedWidth(self.WIDTH)
+        self.buttons_container = QWidget()
+        self.buttons_container.setObjectName("buttonsContainer")
+        self.buttons_container.setFixedWidth(self.WIDTH)
         buttons_layout = QVBoxLayout()
         buttons_layout.setContentsMargins(0, 5, 0, 5)
         buttons_layout.setSpacing(5)
@@ -58,9 +57,7 @@ class RightToolbarWidget(QWidget):
         buttons_layout.addWidget(self.notes_button)
         buttons_layout.addWidget(self.cash_balance_button)
         buttons_layout.addStretch()
-        buttons_container.setLayout(buttons_layout)
-        main_layout.addWidget(self.tools_container)
-        main_layout.addWidget(buttons_container)
+        self.buttons_container.setLayout(buttons_layout)
         return main_layout
 
     def _setup_ui(self) -> None:
@@ -92,8 +89,11 @@ class RightToolbarWidget(QWidget):
 
     def _setup_container(self) -> None:
         for widget in [self.notes_widget, self.cash_balance_widget]:
-            widget.setFixedWidth(self.TOOL_WIDTH)
-            self.tools_container.addWidget(widget)
+            scroll_area = QScrollArea()
+            scroll_area.setWidgetResizable(True)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+            scroll_area.setWidget(widget)
+            self.tools_container.addWidget(scroll_area)
 
     def _create_connection(self) -> None:
         buttons_map = {
@@ -111,12 +111,17 @@ class RightToolbarWidget(QWidget):
         button = buttons_map[index]
         if self.tools_container.isVisible():
             if self.tools_container.currentIndex() == index:
+                self.main_window.tools_width = self.main_window.splitter.sizes()[1]
                 self.tools_container.setVisible(False)
                 button.setChecked(False)
                 return
             self.tools_container.setCurrentIndex(index)
         else:
             self.tools_container.setCurrentIndex(index)
+            self.main_window.splitter.setSizes([
+                self.main_window.splitter.width() - self.main_window.tools_width,
+                self.main_window.tools_width,
+            ])
             self.tools_container.setVisible(True)
         for current_button in buttons_map.values():
             current_button.setChecked(current_button is button)

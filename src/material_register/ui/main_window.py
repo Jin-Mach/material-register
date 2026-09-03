@@ -1,5 +1,6 @@
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent, QShowEvent
-from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QWidget
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QWidget, QSplitter
 
 from material_register.controllers.tools_controllers.cash_balance_controller import (
     CashBalanceController,
@@ -32,18 +33,25 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(5)
         self.side_panel = SidePanel(self)
+        self.splitter = QSplitter(Qt.Orientation.Horizontal)
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.stacked_widget = StackedWidget(self)
         self.right_toolbar_widget = RightToolbarWidget(self)
         self.scroll_area.setWidget(self.stacked_widget)
+        self.splitter.addWidget(self.scroll_area)
+        self.splitter.addWidget(self.right_toolbar_widget.tools_container)
         main_layout.addWidget(self.side_panel)
-        main_layout.addWidget(self.scroll_area, 1)
-        main_layout.addWidget(self.right_toolbar_widget)
+        main_layout.addWidget(self.splitter, 1)
+        main_layout.addWidget(self.right_toolbar_widget.buttons_container)
         central_widget.setLayout(main_layout)
         return central_widget
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_splitter()
+
+    def _setup_texts(self) -> None:
         if UiTexts.set_ui_texts(self, []):
             return
         ErrorHandler.handle_error(
@@ -52,6 +60,16 @@ class MainWindow(QMainWindow):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, []):
             return
+
+    def _setup_splitter(self) -> None:
+        self.tools_width = SettingsProvider.SETTINGS.get("tools", {}).get("right_toolbar_panel", {}).get("user", {}).get("splitterWidth", 400)
+
+    def _save_splitter(self) -> None:
+        if self.right_toolbar_widget.tools_container.isVisible():
+            self.tools_width = self.splitter.sizes()[1]
+        SettingsProvider.SETTINGS["tools"]["right_toolbar_panel"]["user"]["splitterWidth"] = (
+            self.tools_width
+        )
 
     def _create_connection(self) -> None:
         buttons_map = {
@@ -81,6 +99,7 @@ class MainWindow(QMainWindow):
         CashBalanceController.save_balance_values(
             self.right_toolbar_widget.cash_balance_widget.get_values_map()
         )
+        self._save_splitter()
         SettingsProvider.save_settings()
         self.right_toolbar_widget.notes_widget.notes_controller.save_notes()
 

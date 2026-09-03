@@ -41,3 +41,9 @@ useLastOptionsCheckbox = false
 [tools.cash_balance_values.default]
 
 [tools.cash_balance_values.user]
+
+[tools.right_toolbar_panel.default]
+splitterWidth = 400
+
+[tools.right_toolbar_panel.user]
+splitterWidth = 400
