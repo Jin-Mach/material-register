@@ -53,6 +53,7 @@ UI_KEYS = [
     ("SidePanel", "settingsButtonTooltipText"),
     ("TransactionsWidget", "modelInSuffix"),
     ("TransactionsWidget", "itemsCountLabelText"),
+    ("TransactionsWidget", "pricePrefix"),
     ("TransactionsWidget", "priceSuffix"),
     ("TransactionsView", "updateTransactionActionText"),
     ("TransactionsView", "deleteTransactionActionText"),

@@ -18,6 +18,7 @@ DEFAULT_TEXTS = {
     "TransactionsWidget": {
         "modelInSuffix": "£",
         "itemsCountLabelText": "Displayed:",
+        "pricePrefix": "Purchase for period",
         "priceSuffix": "£",
     },
     "TransactionsView": {

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget, QGroupBox
+from PySide6.QtWidgets import QGroupBox, QStackedWidget, QVBoxLayout, QWidget
 
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity

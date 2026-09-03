@@ -46,6 +46,7 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget = TransactionsTabWidget(self)
         count_group_box = QGroupBox()
         count_layout = QHBoxLayout()
+        count_layout.setSpacing(0)
         self.items_count_label = QLabel()
         self.items_count_label.setObjectName("itemsCountLabel")
         self.price_count_label = QLabel()
@@ -82,6 +83,7 @@ class TransactionsWidget(QWidget):
             return
         self.model_in_suffix = ui_texts.get("modelInSuffix", "")
         self.items_count_text = ui_texts.get("itemsCountLabelText", "Count:")
+        self.price_prefix = ui_texts.get("pricePrefix", "")
         self.price_sufix = ui_texts.get("priceSuffix", "")
 
     def _setup_style(self) -> None:
@@ -173,7 +175,7 @@ class TransactionsWidget(QWidget):
         filter_text = (
             self.transactions_actions_widget.base_filter_combobox.currentText()
         )
-        self.price_count_label.setText(f"{filter_text}:")
+        self.price_count_label.setText(f"{self.price_prefix} ({filter_text.lower()}):")
         self.price_count_value.setText(
             f"{format_number_to_locale(total_price)} {self.price_sufix}"
         )

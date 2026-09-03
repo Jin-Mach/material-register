@@ -368,16 +368,12 @@ class TransactionsController:
         TransactionsController._update_cash_balance_value()
 
     def update_total_price(self) -> None:
-        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
-        if current_tab == 0:
-            key = self.transactions_widget.transactions_actions_widget.get_filter_key()
-            from_date, to_date = get_filter_range(key)
-            total = TransactionsQueries.get_total_price(
-                self.db_connection, from_date, to_date
-            )
-            self.transactions_widget.set_price_text(total)
-        self.transactions_widget.price_count_label.setVisible(current_tab == 0)
-        self.transactions_widget.price_count_value.setVisible(current_tab == 0)
+        key = self.transactions_widget.transactions_actions_widget.get_filter_key()
+        from_date, to_date = get_filter_range(key)
+        total = TransactionsQueries.get_total_price(
+            self.db_connection, from_date, to_date
+        )
+        self.transactions_widget.set_price_text(total)
 
     def _update_counts(self) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
