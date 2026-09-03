@@ -189,12 +189,6 @@ QPushButton:disabled {
     border-color: #3b3e42;
 }
 
-QRadioButton,
-QCheckBox {
-    spacing: 6px;
-    color: #d4d4d4;
-}
-
 QRadioButton::indicator,
 QCheckBox::indicator {
     width: 16px;
@@ -227,8 +221,8 @@ QCheckBox::indicator:disabled {
 
 QRadioButton::indicator:checked:disabled,
 QCheckBox::indicator:checked:disabled {
-    background-color: #3b3e42;
-    border-color: #4a4d52;
+    background-color: #4b8cc9;
+    border-color: #4b8cc9;
 }
 
 QTableView,
@@ -337,6 +331,13 @@ QGroupBox > QWidget {
 QGroupBox QLabel {
     background-color: #232528;
     color: #d4d4d4;
+}
+
+QRadioButton,
+QCheckBox {
+    background-color: #232528;
+    color: #d4d4d4;
+    spacing: 6px;
 }
 
 QFrame#customerFrame,
@@ -531,7 +532,15 @@ QLabel#countLabel,
 QLabel#itemsCountLabel,
 QLabel#priceCountLabel,
 QLabel#priceCountValue,
-QLabel#othersLabel {
+QLabel#othersLabel,
+QLabel#customerNameLabel,
+QLabel#customerName,
+QLabel#documentNumberLabel,
+QLabel#documentNumber,
+QLabel#addressLabel,
+QLabel#address,
+QCheckBox#activeValue,
+QCheckBox#activeCheckbox {
     background-color: transparent;
 }
 
@@ -539,12 +548,6 @@ QLabel#totalLabel,
 QLabel#totalLabelValue {
     font-size: 20px;
     font-weight: bold;
-}
-
-QGroupBox#exportOptionsGroupBox QRadioButton,
-QGroupBox#otherSettingsGroupBox QCheckBox {
-    background-color: #232528;
-    color: #d4d4d4;
 }
 
 QPushButton#notesButton,

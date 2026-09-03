@@ -90,6 +90,7 @@ class CommodityDialog(QDialog):
         self.active_label = QLabel()
         self.active_label.setObjectName("activeLabel")
         self.active_checkbox = QCheckBox()
+        self.active_checkbox.setObjectName("activeCheckbox")
         self.active_checkbox.setChecked(True)
         self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
