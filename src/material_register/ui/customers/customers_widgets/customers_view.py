@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QPoint, Qt
+from PySide6.QtCore import QAbstractItemModel, QModelIndex, QPoint, Qt
 from PySide6.QtWidgets import QHeaderView, QTableView
 
 from material_register.config.ui_constants import CUSTOMERS_HORIZONTAL_PADDING
@@ -24,8 +24,10 @@ class CustomersView(QTableView):
         self.setObjectName("customersView")
         self.customers_widget = customers_widget
 
-    def setModel(self, model: CustomersModel) -> None:
+    def setModel(self, model: QAbstractItemModel | None) -> None:
         super().setModel(model)
+        if not isinstance(model, CustomersModel):
+            return
         model.rowsInserted.connect(self._refresh_headers)
         model.rowsRemoved.connect(self._refresh_headers)
         model.dataChanged.connect(self._refresh_headers)
@@ -39,6 +41,7 @@ class CustomersView(QTableView):
         self._setup_columns(model)
         self._setup_headers(model)
         self._setup_behavior()
+        self._create_connection()
 
     def _setup_texts(self) -> None:
         self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
@@ -73,6 +76,9 @@ class CustomersView(QTableView):
             else:
                 header.setSectionResizeMode(col, QHeaderView.ResizeMode.Fixed)
         self._update_headers(model)
+
+    def _create_connection(self) -> None:
+        self.doubleClicked.connect(self._update_customer)
 
     def _refresh_headers(self, *args: object) -> None:
         model = self.model()
@@ -115,3 +121,7 @@ class CustomersView(QTableView):
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         menu.set_ui_texts(self.menu_texts)
         menu.exec(self.mapToGlobal(position))
+
+    def _update_customer(self, index: QModelIndex) -> None:
+        self.customer_index = index
+        self.customers_widget.customers_controller.update_customer(self.customer_index)

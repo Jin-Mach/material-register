@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QSizePolicy, QTabWidget
 
 from material_register.services.error_handler import ErrorHandler
@@ -18,6 +19,8 @@ class TransactionsTabWidget(QTabWidget):
         self.transactions_widget = transactions_widget
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._setup_ui()
+        self._create_connection()
+        self.transaction_index = None
 
     def _setup_ui(self) -> None:
         self._setup_texts()
@@ -43,3 +46,13 @@ class TransactionsTabWidget(QTabWidget):
         )
         self.addTab(self.transaction_in_view, self.in_tab_title)
         self.addTab(self.transactions_out_view, self.out_tab_title)
+
+    def _create_connection(self) -> None:
+        self.transaction_in_view.doubleClicked.connect(self._update_transaction)
+        self.transactions_out_view.doubleClicked.connect(self._update_transaction)
+
+    def _update_transaction(self, index: QModelIndex) -> None:
+        self.transaction_index = index
+        self.transactions_widget.transactions_controller.update_transaction(
+            self.transaction_index
+        )
