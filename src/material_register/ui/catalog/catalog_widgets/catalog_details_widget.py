@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget, QGroupBox
 
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
@@ -28,12 +28,20 @@ class CatalogDetailsWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(5)
+        group_box = QGroupBox()
+        group_layout = QVBoxLayout()
+        group_layout.setContentsMargins(0, 0, 0, 0)
+        group_layout.setSpacing(5)
         self.stacked_widget = QStackedWidget()
         self.catalog_default_widget = CatalogDefaultWidget(self)
         self.category_with_commodities_widget = CategoryWithCommoditiesWidget(
             self, self.catalog_controller
         )
-        main_layout.addWidget(self.stacked_widget)
+        group_layout.addWidget(self.stacked_widget)
+        group_box.setLayout(group_layout)
+        main_layout.addWidget(group_box)
         return main_layout
 
     def _setup_init(self) -> None:

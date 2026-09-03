@@ -615,6 +615,12 @@ QLabel#priceCountLabel {
     font-weight: bold;
 }
 
+QLabel#titleLabel,
+QLabel#subtitleLabel {
+    background-color: #2b2d30;
+    color: #d4d4d4;
+}
+
 QLabel#branchNameLabel,
 QLabel#pathLabel,
 QLabel#fileNameLabel {
