@@ -63,7 +63,7 @@ class NotesWidget(QWidget):
         self.permanent_notes_edit.setObjectName("permanentNotesEdit")
         buttons_layout = QHBoxLayout()
         self.search_edit = QLineEdit()
-        self.search_edit.setObjectName(m)
+        self.search_edit.setObjectName("searchEdit")
         self.search_count_label = QLabel()
         self.search_count_label.setObjectName("searchCountLabel")
         self.permanent_copy_button = QPushButton()
