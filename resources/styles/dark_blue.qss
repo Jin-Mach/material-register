@@ -507,8 +507,6 @@ QPushButton#exportButton {
     min-width: 100px;
 }
 
-QPushButton#notesButton,
-QPushButton#cashBalanceButton,
 QPushButton#permanentCopyButton,
 QPushButton#permanentDeleteButton,
 QPushButton#localCopyButton,
@@ -517,6 +515,15 @@ QPushButton#localDeleteButton {
     padding: 0;
     background-color: transparent;
     border: 1px solid #45484d;
+    border-radius: 3px;
+}
+
+QPushButton#notesButton,
+QPushButton#cashBalanceButton {
+    min-width: 0;
+    padding: 0;
+    background-color: transparent;
+    border: none;
     border-radius: 3px;
 }
 

@@ -22,9 +22,9 @@ if TYPE_CHECKING:
 
 
 class RightToolbarWidget(QWidget):
-    WIDTH = 50
+    WIDTH = 35
     TOOL_WIDTH = 400
-    BUTTON_SIZE = 30
+    BUTTON_SIZE = 28
 
     def __init__(self, main_window: "MainWindow") -> None:
         super().__init__(main_window)
@@ -44,6 +44,8 @@ class RightToolbarWidget(QWidget):
         buttons_container.setObjectName("buttonsContainer")
         buttons_container.setFixedWidth(self.WIDTH)
         buttons_layout = QVBoxLayout()
+        buttons_layout.setContentsMargins(0, 5, 0, 5)
+        buttons_layout.setSpacing(5)
         buttons_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.notes_button = QPushButton()
         self.notes_button.setObjectName("notesButton")
@@ -81,7 +83,7 @@ class RightToolbarWidget(QWidget):
     def _setup_icons(self) -> None:
         # icons color: #FFE066
         widgets = [self.notes_button, self.cash_balance_button]
-        if not UiIcons.set_icons("tools", widgets):
+        if not UiIcons.set_icons("tools", widgets, icon_size=24):
             ErrorHandler.handle_error(
                 f"Icons load failed: {self.__class__.__name__}", "ui", "warning"
             )
