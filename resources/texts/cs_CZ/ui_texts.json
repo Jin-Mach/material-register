@@ -70,7 +70,9 @@
   },
   "SettingsSidePanel": {
     "exportButtonText": "Export",
-    "exportButtonTooltipText": "Zobrazí nastavení exportu"
+    "exportButtonTooltipText": "Zobrazí nastavení exportu",
+    "toolsButtonText": "Nástroje",
+    "toolsButtonTooltipText": "Zobrazí nastavení nástrojů"
   },
     "SummaryExportWidget": {
     "branchGroupBoxText": "Pobočka",
@@ -320,7 +322,7 @@
   },
   "RightToolbarWidget": {
     "notesButtonTooltipText": "Poznámky",
-    "cashBalanceButtonTooltipText": "Výčetka"
+    "cashBalanceButtonTooltipText": "Pokladna"
   },
   "NotesWidget": {
     "permanentGroupBoxText": "Trvalé poznámky",

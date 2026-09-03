@@ -340,6 +340,11 @@ QGroupBox QLabel {
     color: #d4d4d4;
 }
 
+QLabel#infoLabel {
+    background-color: #232528;
+    color: #d4d4d4;
+}
+
 QFrame#customerFrame,
 QFrame#notesFrame {
     background-color: #232528;

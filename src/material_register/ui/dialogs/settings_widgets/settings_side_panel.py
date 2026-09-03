@@ -24,7 +24,10 @@ class SettingsSidePanel(QWidget):
         group_layout = QVBoxLayout()
         self.export_button = QPushButton()
         self.export_button.setObjectName("exportButton")
+        self.tools_button = QPushButton()
+        self.tools_button.setObjectName("toolsButton")
         group_layout.addWidget(self.export_button)
+        group_layout.addWidget(self.tools_button)
         group_layout.addStretch()
         group_box.setLayout(group_layout)
         main_layout.addWidget(group_box)
@@ -33,6 +36,7 @@ class SettingsSidePanel(QWidget):
     def _setup_texts(self) -> None:
         widgets = [
             self.export_button,
+            self.tools_button,
         ]
         if UiTexts.set_ui_texts(self, widgets):
             return

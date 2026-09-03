@@ -58,6 +58,8 @@ DEFAULT_TEXTS = {
     "SettingsSidePanel": {
         "exportButtonText": "Export",
         "exportButtonTooltipText": "Displays export settings",
+        "toolsButtonText": "Tools",
+        "toolsButtonTooltipText": "Displays tool settings",
     },
     "SummaryExportWidget": {
         "branchGroupBoxText": "Branch",
@@ -304,7 +306,7 @@ DEFAULT_TEXTS = {
     },
     "RightToolbarWidget": {
         "notesButtonTooltipText": "Notes",
-        "cashBalanceButtonTooltipText": "Cash Count",
+        "cashBalanceButtonTooltipText": "Cash Register",
     },
     "NotesWidget": {
         "permanentGroupBoxText": "Permanent Notes",

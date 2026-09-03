@@ -70,6 +70,8 @@ UI_KEYS = [
     ("SettingsDialog", "closeButtonTooltipText"),
     ("SettingsSidePanel", "exportButtonText"),
     ("SettingsSidePanel", "exportButtonTooltipText"),
+    ("SettingsSidePanel", "toolsButtonText"),
+    ("SettingsSidePanel", "toolsButtonTooltipText"),
     ("CustomersActionsWidget", "addCustomerButtonText"),
     ("CustomersActionsWidget", "addCustomerButtonTooltipText"),
     ("CustomersActionsWidget", "searchLineEditPlaceholderText"),

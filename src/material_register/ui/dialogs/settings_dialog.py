@@ -2,7 +2,14 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QCloseEvent, QShowEvent
-from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import (
+    QDialog,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+)
 
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
@@ -41,18 +48,21 @@ class SettingsDialog(QDialog):
         stacked_layout.setContentsMargins(0, 0, 0, 0)
         stacked_layout.setSpacing(0)
         self.settings_stacked_widget = SettingsStackedWidget(self)
+        group_box = QGroupBox()
         buttons_layout = QHBoxLayout()
         buttons_layout.setContentsMargins(10, 10, 10, 10)
         buttons_layout.setSpacing(0)
         self.info_label = QLabel()
+        self.info_label.setObjectName("infoLabel")
         self.close_button = QPushButton()
         self.close_button.setObjectName("closeButton")
         self.close_button.setDefault(True)
         buttons_layout.addWidget(self.info_label)
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.close_button)
+        group_box.setLayout(buttons_layout)
         stacked_layout.addWidget(self.settings_stacked_widget)
-        stacked_layout.addLayout(buttons_layout)
+        stacked_layout.addWidget(group_box)
         widgets_layout.addWidget(self.settings_side_panel)
         widgets_layout.addLayout(stacked_layout)
         main_layout.addLayout(widgets_layout)
@@ -69,7 +79,10 @@ class SettingsDialog(QDialog):
             return
 
     def _create_connection(self):
-        buttons_map = {self.settings_side_panel.export_button: 0}
+        buttons_map = {
+            self.settings_side_panel.export_button: 0,
+            self.settings_side_panel.tools_button: 1,
+        }
         for button, index in buttons_map.items():
             button.clicked.connect(
                 lambda _, i=index: self.settings_stacked_widget.setCurrentIndex(i)
