@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QGroupBox, QPushButton, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -17,10 +17,17 @@ class SettingsSidePanel(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
+        group_box = QGroupBox()
+        group_box.setObjectName("settingsSidePanelGroupBox")
+        group_layout = QVBoxLayout()
         self.export_button = QPushButton()
         self.export_button.setObjectName("exportButton")
-        main_layout.addWidget(self.export_button)
-        main_layout.addStretch()
+        group_layout.addWidget(self.export_button)
+        group_layout.addStretch()
+        group_box.setLayout(group_layout)
+        main_layout.addWidget(group_box)
         return main_layout
 
     def _setup_texts(self) -> None:

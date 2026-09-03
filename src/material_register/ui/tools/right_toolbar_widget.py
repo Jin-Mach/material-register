@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 class RightToolbarWidget(QWidget):
     WIDTH = 50
-    TOOL_WIDTH = 350
+    TOOL_WIDTH = 400
     BUTTON_SIZE = 30
 
     def __init__(self, main_window: "MainWindow") -> None:
@@ -41,6 +41,7 @@ class RightToolbarWidget(QWidget):
         self.notes_widget = NotesWidget(self.main_window.status_bar, self)
         self.cash_balance_widget = CashBalanceWidget(self)
         buttons_container = QWidget()
+        buttons_container.setObjectName("buttonsContainer")
         buttons_container.setFixedWidth(self.WIDTH)
         buttons_layout = QVBoxLayout()
         buttons_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)

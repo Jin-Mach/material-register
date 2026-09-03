@@ -43,6 +43,7 @@ class CustomerDialog(QDialog):
         customer_data: "Customer" = None,
     ) -> None:
         super().__init__(customers_widget)
+        self.setObjectName("customerDialog")
         self.setMinimumWidth(400)
         self.mode = mode
         self.customer_data = customer_data

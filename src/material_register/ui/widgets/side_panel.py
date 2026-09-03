@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QButtonGroup, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QButtonGroup, QGroupBox, QPushButton, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -18,6 +18,12 @@ class SidePanel(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
+        group_box = QGroupBox()
+        group_box.setObjectName("sidePanelGroupBox")
+        group_box_layout = QVBoxLayout()
+        group_box_layout.setSpacing(5)
         self.transactions_button = QPushButton()
         self.transactions_button.setObjectName("transactionsButton")
         self.inventory_button = QPushButton()
@@ -38,13 +44,15 @@ class SidePanel(QWidget):
         self.button_group.addButton(self.customers_button)
         self.button_group.addButton(self.catalog_button)
         self.button_group.addButton(self.settings_button)
-        main_layout.addWidget(self.transactions_button)
-        main_layout.addWidget(self.inventory_button)
-        main_layout.addWidget(self.export_button)
-        main_layout.addWidget(self.customers_button)
-        main_layout.addWidget(self.catalog_button)
-        main_layout.addStretch()
-        main_layout.addWidget(self.settings_button)
+        group_box_layout.addWidget(self.transactions_button)
+        group_box_layout.addWidget(self.inventory_button)
+        group_box_layout.addWidget(self.export_button)
+        group_box_layout.addWidget(self.customers_button)
+        group_box_layout.addWidget(self.catalog_button)
+        group_box_layout.addStretch()
+        group_box_layout.addWidget(self.settings_button)
+        group_box.setLayout(group_box_layout)
+        main_layout.addWidget(group_box)
         return main_layout
 
     def _setup_ui(self) -> None:

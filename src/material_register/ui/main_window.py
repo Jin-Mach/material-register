@@ -1,5 +1,5 @@
 from PySide6.QtGui import QCloseEvent, QShowEvent
-from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QWidget, QScrollArea
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QWidget
 
 from material_register.controllers.tools_controllers.cash_balance_controller import (
     CashBalanceController,
@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
+        main_layout.setSpacing(5)
         self.side_panel = SidePanel(self)
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)

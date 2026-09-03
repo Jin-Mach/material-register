@@ -4,7 +4,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDoubleSpinBox,
     QFormLayout,
+    QGroupBox,
     QLabel,
+    QScrollArea,
     QSpinBox,
     QTabWidget,
     QVBoxLayout,
@@ -36,9 +38,11 @@ class CashBalanceWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
+        group_box = QGroupBox()
+        group_layout = QVBoxLayout()
         total_layout = QVBoxLayout()
-        total_layout.setContentsMargins(0, 5, 0, 0)
-        total_layout.setSpacing(5)
         self.total_label = QLabel()
         self.total_label.setObjectName("totalLabel")
         self.total_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -54,8 +58,10 @@ class CashBalanceWidget(QWidget):
         self.values_tab.setObjectName("valuesTab")
         self.tab_widget.addTab(self.cash_tab, "")
         self.tab_widget.addTab(self.values_tab, "")
-        main_layout.addLayout(total_layout)
-        main_layout.addWidget(self.tab_widget)
+        group_layout.addLayout(total_layout)
+        group_layout.addWidget(self.tab_widget)
+        group_box.setLayout(group_layout)
+        main_layout.addWidget(group_box)
         return main_layout
 
     def _setup_ui(self) -> None:
@@ -105,6 +111,9 @@ class CashBalanceWidget(QWidget):
         self, values_items: list[str], others_label_text: str
     ) -> None:
         self.values_spinboxes = {}
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        values_widget = QWidget()
         values_layout = QVBoxLayout()
         cash_layout = QFormLayout()
         for item in values_items:
@@ -128,7 +137,11 @@ class CashBalanceWidget(QWidget):
         cash_layout.addRow(self.cash_total_label, self.cash_total_spinbox)
         values_layout.addLayout(cash_layout)
         values_layout.addStretch()
-        self.values_tab.setLayout(values_layout)
+        values_widget.setLayout(values_layout)
+        scroll_area.setWidget(values_widget)
+        values_tab_layout = QVBoxLayout()
+        values_tab_layout.addWidget(scroll_area)
+        self.values_tab.setLayout(values_tab_layout)
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)

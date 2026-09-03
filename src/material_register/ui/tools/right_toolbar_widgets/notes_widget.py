@@ -40,7 +40,8 @@ class NotesWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(0, 5, 0, 5)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(5)
         permanent_notes = self._create_permanent_notes()
         local_notes = self._create_local_notes()
         main_layout.addWidget(permanent_notes)

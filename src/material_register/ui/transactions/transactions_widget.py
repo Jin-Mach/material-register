@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QFont, QShowEvent
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.controllers.transactions_controller import TransactionsController
@@ -41,8 +41,10 @@ class TransactionsWidget(QWidget):
 
     def create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(0)
         self.transactions_actions_widget = TransactionsActionsWidget(self)
         self.transactions_tab_widget = TransactionsTabWidget(self)
+        count_group_box = QGroupBox()
         count_layout = QHBoxLayout()
         self.items_count_label = QLabel()
         self.items_count_label.setObjectName("itemsCountLabel")
@@ -54,9 +56,10 @@ class TransactionsWidget(QWidget):
         count_layout.addStretch()
         count_layout.addWidget(self.price_count_label)
         count_layout.addWidget(self.price_count_value)
+        count_group_box.setLayout(count_layout)
         main_layout.addWidget(self.transactions_actions_widget)
         main_layout.addWidget(self.transactions_tab_widget)
-        main_layout.addLayout(count_layout)
+        main_layout.addWidget(count_group_box)
         return main_layout
 
     def _setup_ui(self) -> None:

@@ -189,6 +189,13 @@ QPushButton:disabled {
     border-color: #3b3e42;
 }
 
+QRadioButton,
+QCheckBox {
+    background-color: #232528;
+    color: #d4d4d4;
+    spacing: 6px;
+}
+
 QRadioButton::indicator,
 QCheckBox::indicator {
     width: 16px;
@@ -333,18 +340,68 @@ QGroupBox QLabel {
     color: #d4d4d4;
 }
 
-QRadioButton,
-QCheckBox {
-    background-color: #232528;
-    color: #d4d4d4;
-    spacing: 6px;
-}
-
 QFrame#customerFrame,
 QFrame#notesFrame {
     background-color: #232528;
     border: 1px solid #45484d;
     border-radius: 4px;
+}
+
+QProgressBar {
+    background-color: #232528;
+    border: 1px solid #45484d;
+    border-radius: 4px;
+    color: #d4d4d4;
+    text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: #4b8cc9;
+    border-radius: 3px;
+}
+
+QDialog,
+QMessageBox {
+    background-color: #2b2d30;
+    border: none;
+    border-radius: 6px;
+}
+
+QDialog QLabel,
+QMessageBox QLabel {
+    background-color: #2b2d30;
+    color: #d4d4d4;
+}
+
+QDialog#notificationDialog {
+    background-color: #2b2d30;
+    border: 1px solid #4b8cc9;
+    border-radius: 6px;
+}
+
+QDialog#progressDialog {
+    background-color: #2b2d30;
+    border: 1px solid #4b8cc9;
+    border-radius: 6px;
+}
+
+QDialog#notificationDialog QLabel {
+    background-color: #2b2d30;
+    color: #d4d4d4;
+    border: none;
+}
+
+QDialog#progressDialog QProgressBar {
+    background-color: #232528;
+    border: 1px solid #45484d;
+    border-radius: 4px;
+    color: #d4d4d4;
+    text-align: center;
+}
+
+QDialog#progressDialog QProgressBar::chunk {
+    background-color: #4b8cc9;
+    border-radius: 3px;
 }
 
 QStatusBar {
@@ -431,70 +488,6 @@ QScrollBar::sub-line:horizontal {
     width: 0;
 }
 
-QProgressBar {
-    background: #232528;
-    border: 1px solid #45484d;
-    border-radius: 4px;
-    color: #d4d4d4;
-    text-align: center;
-}
-
-QProgressBar::chunk {
-    background-color: #4b8cc9;
-    border-radius: 3px;
-}
-
-QDialog,
-QMessageBox {
-    background: #2b2d30;
-    border: none;
-    border-radius: 6px;
-}
-
-QDialog QLabel,
-QMessageBox QLabel {
-    background-color: #2b2d30;
-    color: #d4d4d4;
-}
-
-QDialog#notificationDialog {
-    background-color: #2b2d30;
-    border: 1px solid #4b8cc9;
-    border-radius: 6px;
-}
-
-QDialog#progressDialog {
-    background-color: #2b2d30;
-    border: 1px solid #4b8cc9;
-    border-radius: 6px;
-}
-
-QDialog#notificationDialog QLabel {
-    background-color: #2b2d30;
-    color: #d4d4d4;
-    border: none;
-}
-
-QDialog#progressDialog QProgressBar {
-    background: #232528;
-    border: 1px solid #45484d;
-    border-radius: 4px;
-    color: #d4d4d4;
-    text-align: center;
-}
-
-QDialog#progressDialog QProgressBar::chunk {
-    background-color: #4b8cc9;
-    border-radius: 3px;
-}
-
-QTableView#customersView,
-QTableView#inventoryView {
-    background-color: #232528;
-    border: 1px solid #45484d;
-    border-radius: 4px;
-}
-
 QPushButton#transactionsButton,
 QPushButton#inventoryButton,
 QPushButton#exportButton,
@@ -512,42 +505,6 @@ QPushButton#inTransactionButton,
 QPushButton#outTransactionButton,
 QPushButton#exportButton {
     min-width: 100px;
-}
-
-QLabel#countLabel,
-QLabel#itemsCountLabel,
-QLabel#priceCountLabel {
-    background-color: #2b2d30;
-    color: #d4d4d4;
-    font-weight: bold;
-}
-
-QLabel#unitLabel,
-QLabel#unitValue,
-QLabel#defaultPriceLabel,
-QLabel#defaultPriceValue,
-QLabel#activeLabel,
-QLabel#notesLabel,
-QLabel#countLabel,
-QLabel#itemsCountLabel,
-QLabel#priceCountLabel,
-QLabel#priceCountValue,
-QLabel#othersLabel,
-QLabel#customerNameLabel,
-QLabel#customerName,
-QLabel#documentNumberLabel,
-QLabel#documentNumber,
-QLabel#addressLabel,
-QLabel#address,
-QCheckBox#activeValue,
-QCheckBox#activeCheckbox {
-    background-color: transparent;
-}
-
-QLabel#totalLabel,
-QLabel#totalLabelValue {
-    font-size: 20px;
-    font-weight: bold;
 }
 
 QPushButton#notesButton,
@@ -628,7 +585,82 @@ QPushButton#settingsButton:checked:hover {
     border-color: #5a9bd5;
 }
 
+QWidget#buttonsContainer {
+    background-color: #232528;
+}
+
+QGroupBox#sidePanelGroupBox {
+    background-color: #232528;
+    border: none;
+    margin-top: 0px;
+    padding: 0px;
+}
+
+QGroupBox#settingsSidePanelGroupBox {
+    background-color: #232528;
+    border: none;
+    margin-top: 0px;
+}
+
+QWidget#cashTab QLabel,
+QWidget#valuesTab QLabel {
+    background-color: #2b2d30;
+}
+
+QLabel#countLabel,
+QLabel#itemsCountLabel,
+QLabel#priceCountLabel {
+    background-color: #2b2d30;
+    color: #d4d4d4;
+    font-weight: bold;
+}
+
+QLabel#branchNameLabel,
+QLabel#pathLabel,
+QLabel#fileNameLabel {
+    background-color: #232528;
+    color: #d4d4d4;
+}
+
+QLabel#totalLabel,
+QLabel#totalLabelValue {
+    background-color: #232528;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+QLabel#unitLabel,
+QLabel#unitValue,
+QLabel#defaultPriceLabel,
+QLabel#defaultPriceValue,
+QLabel#activeLabel,
+QLabel#notesLabel,
+QLabel#countLabel,
+QLabel#itemsCountLabel,
+QLabel#priceCountLabel,
+QLabel#priceCountValue,
+QLabel#othersLabel,
+QLabel#customerNameLabel,
+QLabel#customerName,
+QLabel#documentNumberLabel,
+QLabel#documentNumber,
+QLabel#addressLabel,
+QLabel#address,
+QCheckBox#activeValue,
+QCheckBox#activeCheckbox {
+    background-color: transparent;
+}
+
+QLabel#othersLabel,
+QLabel#cashTotalLabel {
+    background-color: #232528;
+}
+
 QAbstractItemView#customerCompleterPopup::item:hover {
     background-color: #4a4d52;
     color: #ffffff;
+}
+
+QDialog#customerDialog QCheckBox {
+    background-color: #2b2d30;
 }
