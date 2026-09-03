@@ -64,13 +64,7 @@ class CashBalanceWidget(QWidget):
         self._setup_specific_texts()
         self._setup_spinboxes()
         self._create_connections()
-        values = self.values_items + [self.others_label.objectName()]
-        self.cash_balance_controller.update_cash_balance_values(values)
-        self.cash_balance_controller.load_balance_value()
-        cash_map = self.values_spinboxes.copy()
-        cash_map[self.others_label.objectName()] = self.others_spinbox
-        self.cash_balance_controller.load_cash_values(cash_map)
-        self._update_totals()
+        self._setup_values()
 
     def _create_balance_widget(self) -> QWidget:
         balance_widget = QWidget()
@@ -163,6 +157,18 @@ class CashBalanceWidget(QWidget):
         self.total_label_value.setText(f"0 {self.currency_suffix}")
         self.cash_total_label.setText(self.cash_total_label_text)
 
+    def _setup_values(self) -> None:
+        values = self.values_items + [self.others_label.objectName()]
+        self.cash_balance_controller.update_cash_balance_values(values)
+        self.cash_balance_controller.load_balance_value()
+        cash_map = self.values_spinboxes.copy()
+        cash_map[self.others_label.objectName()] = self.others_spinbox
+        self.cash_balance_controller.load_cash_values(cash_map)
+        self.cash_balance_controller.load_transactions_value(
+            self.transaction_cash_spinbox
+        )
+        self.update_totals()
+
     def _create_connections(self) -> None:
         spinboxes = [
             self.opening_balance_spinbox,
@@ -172,9 +178,9 @@ class CashBalanceWidget(QWidget):
         ]
         spinboxes += list(self.values_spinboxes.values())
         for spinbox in spinboxes:
-            spinbox.valueChanged.connect(self._update_totals)
+            spinbox.valueChanged.connect(self.update_totals)
 
-    def _update_totals(self) -> None:
+    def update_totals(self) -> None:
         balance = CashBalanceWidget._calculate_balance(
             self.opening_balance_spinbox.value(),
             self.transaction_cash_spinbox.value(),

@@ -8,6 +8,9 @@ from material_register.config.ui_constants import (
     TRANSFER_IN,
     TRANSFER_OUT,
 )
+from material_register.controllers.tools_controllers.cash_balance_controller import (
+    CashBalanceController,
+)
 from material_register.core.app_context import AppContext
 from material_register.db.models.transaction_items_model_in import (
     TransactionItemsModelIn,
@@ -218,6 +221,7 @@ class TransactionsController:
             self.inventory_model.load_inventory_data()
             self._update_counts()
             self.update_total_price()
+            self._update_cash_balance_value()
             TransactionsController._notification_handler(
                 self.notification_text, "DELETE_TRANSACTION", "Transaction deleted"
             )
@@ -361,6 +365,7 @@ class TransactionsController:
             model.set_basic_filter(filtered_data)
         self._update_counts()
         self.update_total_price()
+        TransactionsController._update_cash_balance_value()
 
     def update_total_price(self) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
@@ -443,6 +448,15 @@ class TransactionsController:
                     "pricePerUnit": item.price_per_unit,
                 }
             )
+
+    @staticmethod
+    def _update_cash_balance_value() -> None:
+        cash_balance_widget = (
+            AppContext.MAIN_WINDOW.right_toolbar_widget.cash_balance_widget
+        )
+        transactions_spinbox = cash_balance_widget.transaction_cash_spinbox
+        CashBalanceController.load_transactions_value(transactions_spinbox)
+        cash_balance_widget.update_totals()
 
     @staticmethod
     def _is_dialog_data_valid(
