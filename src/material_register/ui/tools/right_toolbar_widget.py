@@ -4,9 +4,10 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QPushButton,
+    QScrollArea,
     QStackedWidget,
     QVBoxLayout,
-    QWidget, QScrollArea
+    QWidget,
 )
 
 from material_register.services.error_handler import ErrorHandler
@@ -91,7 +92,9 @@ class RightToolbarWidget(QWidget):
         for widget in [self.notes_widget, self.cash_balance_widget]:
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
-            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+            scroll_area.setHorizontalScrollBarPolicy(
+                Qt.ScrollBarPolicy.ScrollBarAsNeeded
+            )
             scroll_area.setWidget(widget)
             self.tools_container.addWidget(scroll_area)
 
@@ -118,10 +121,12 @@ class RightToolbarWidget(QWidget):
             self.tools_container.setCurrentIndex(index)
         else:
             self.tools_container.setCurrentIndex(index)
-            self.main_window.splitter.setSizes([
-                self.main_window.splitter.width() - self.main_window.tools_width,
-                self.main_window.tools_width,
-            ])
+            self.main_window.splitter.setSizes(
+                [
+                    self.main_window.splitter.width() - self.main_window.tools_width,
+                    self.main_window.tools_width,
+                ]
+            )
             self.tools_container.setVisible(True)
         for current_button in buttons_map.values():
             current_button.setChecked(current_button is button)

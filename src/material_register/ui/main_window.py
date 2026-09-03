@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent, QShowEvent
-from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QWidget, QSplitter
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QSplitter, QWidget
 
 from material_register.controllers.tools_controllers.cash_balance_controller import (
     CashBalanceController,
@@ -62,14 +62,19 @@ class MainWindow(QMainWindow):
             return
 
     def _setup_splitter(self) -> None:
-        self.tools_width = SettingsProvider.SETTINGS.get("tools", {}).get("right_toolbar_panel", {}).get("user", {}).get("splitterWidth", 400)
+        self.tools_width = (
+            SettingsProvider.SETTINGS.get("tools", {})
+            .get("right_toolbar_panel", {})
+            .get("user", {})
+            .get("splitterWidth", 400)
+        )
 
     def _save_splitter(self) -> None:
         if self.right_toolbar_widget.tools_container.isVisible():
             self.tools_width = self.splitter.sizes()[1]
-        SettingsProvider.SETTINGS["tools"]["right_toolbar_panel"]["user"]["splitterWidth"] = (
-            self.tools_width
-        )
+        SettingsProvider.SETTINGS["tools"]["right_toolbar_panel"]["user"][
+            "splitterWidth"
+        ] = self.tools_width
 
     def _create_connection(self) -> None:
         buttons_map = {
