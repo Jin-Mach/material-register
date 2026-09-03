@@ -34,8 +34,8 @@ class SplashScreen(QWidget):
         if image_path.exists():
             pixmap = QPixmap(str(image_path))
             pixmap = pixmap.scaled(
-                800,
                 600,
+                400,
                 Qt.AspectRatioMode.KeepAspectRatio,
                 Qt.TransformationMode.SmoothTransformation,
             )

@@ -44,11 +44,13 @@ class CategoryCommodityDialog(QDialog):
         commodities: list[Commodity],
         transaction_items_dialog: "TransactionItemsDialogIn",
         transfer_type: str,
+        update: bool = False,
     ) -> None:
         super().__init__(transaction_items_dialog)
         self.categories = categories
         self.commodities = commodities
         self.transfer_type = transfer_type
+        self.update = update
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -77,6 +79,7 @@ class CategoryCommodityDialog(QDialog):
         self.add_button.setObjectName("addButton")
         self.cancel_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         self.cancel_button.setObjectName("cancelButton")
+        self.cancel_button.setDefault(True)
         form_layout.addRow(self.category_label, self.category_combo_box)
         form_layout.addRow(self.commodity_label, self.commodity_combo_box)
         form_layout.addRow(self.unit_label, self.unit_spinbox)
@@ -133,7 +136,12 @@ class CategoryCommodityDialog(QDialog):
             self.add_button,
             self.cancel_button,
         ]
+        if self.update:
+            self.add_button.setObjectName("updateButton")
         if UiTexts.set_ui_texts(self, widgets):
+            if self.update:
+                ui_texts = UiTexts.UI_TEXTS.get("CategoryCommodityDialog", {})
+                self.setWindowTitle(ui_texts.get("updateTitleText", ""))
             return
         ErrorHandler.handle_error(
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"

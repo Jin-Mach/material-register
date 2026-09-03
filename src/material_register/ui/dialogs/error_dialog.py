@@ -54,6 +54,7 @@ class ErrorDialog(QDialog):
             QDialogButtonBox.StandardButton.Cancel
         )
         self.close_dialog_button.setObjectName("closeDialogButton")
+        self.close_dialog_button.setDefault(True)
         self.close_app_button = button_box.button(QDialogButtonBox.StandardButton.Close)
         self.close_app_button.setObjectName("closeAppButton")
         main_layout.addWidget(self.error_text_label)

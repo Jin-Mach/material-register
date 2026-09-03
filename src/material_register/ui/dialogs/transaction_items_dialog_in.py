@@ -60,6 +60,7 @@ class TransactionItemsDialogIn(QDialog):
             QDialogButtonBox.StandardButton.Cancel
         )
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
+        self.cancel_transaction_button.setDefault(True)
         main_layout.addWidget(self.transaction_info_widget)
         main_layout.addWidget(self.transactions_items_widget, 3)
         main_layout.addWidget(button_box)

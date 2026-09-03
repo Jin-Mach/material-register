@@ -33,6 +33,7 @@ class MessageBoxDialog(QDialog):
         )
         self.ok_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.cancel_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
+        self.cancel_button.setDefault(True)
         texts_layout.addWidget(self.text_label)
         texts_layout.addWidget(self.informative_label)
         icon_texts_layout.addWidget(self.icon_label)

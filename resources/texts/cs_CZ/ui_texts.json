@@ -278,6 +278,7 @@
   },
   "CategoryCommodityDialog": {
     "titleText": "Nová položka",
+    "updateTitleText": "Upravit položku",
     "categoryLabelText": "Kategorie:",
     "categoryComboBoxPlaceholderText": "Vyber kategorii...",
     "commodityLabelText": "Položka:",
@@ -286,6 +287,8 @@
     "priceLabelText": "Jednotková cena (Kč):",
     "addButtonText": "Přidat položku",
     "addButtonTooltipText": "Přidá položku do transakce",
+    "updateButtonText": "Upravit položku",
+    "updateButtonTooltipText": "Upraví položku v transakci",
     "cancelButtonText": "Zrušit",
     "cancelButtonTooltipText": "Zavře dialog"
   },

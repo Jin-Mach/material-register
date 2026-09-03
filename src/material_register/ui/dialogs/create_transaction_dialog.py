@@ -82,6 +82,7 @@ class CreateTransactionDialog(QDialog):
             QDialogButtonBox.StandardButton.Cancel
         )
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
+        self.cancel_transaction_button.setDefault(True)
         type_form_layout.addRow(self.payment_type_label, self.payment_type_combobox)
         customer_form_layout.addRow(self.customer_name_label, self.customer_name_input)
         customer_form_layout.addRow(

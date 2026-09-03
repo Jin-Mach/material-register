@@ -279,7 +279,7 @@ class TransactionsController:
         self, item_data: dict[str, str | int | float], transfer_type: str
     ) -> dict[str, str | int | float] | None:
         dialog = CategoryCommodityDialog(
-            DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type
+            DbCache.categories, DbCache.commodities, self.items_dialog, transfer_type, update=True
         )
         dialog.setup_update(item_data)
         if dialog.exec() != QDialog.DialogCode.Accepted:

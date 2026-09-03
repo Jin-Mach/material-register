@@ -262,6 +262,7 @@ DEFAULT_TEXTS = {
     },
     "CategoryCommodityDialog": {
         "titleText": "New item",
+        "updateTitleText": "Edit Item",
         "categoryLabelText": "Category:",
         "categoryComboBoxPlaceholderText": "Select category...",
         "commodityLabelText": "Item:",
@@ -270,6 +271,8 @@ DEFAULT_TEXTS = {
         "priceLabelText": "Unit price (CZK):",
         "addButtonText": "Add item",
         "addButtonTooltipText": "Adds item to transaction",
+        "updateButtonText": "Edit Item",
+        "updateButtonTooltipText": "Edits the item in the transaction",
         "cancelButtonText": "Cancel",
         "cancelButtonTooltipText": "Closes dialog",
     },

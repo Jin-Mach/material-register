@@ -97,6 +97,7 @@ class CustomerDialog(QDialog):
         self.save_button.setObjectName("saveButton")
         self.close_button = button_box.button(QDialogButtonBox.StandardButton.Close)
         self.close_button.setObjectName("closeButton")
+        self.close_button.setDefault(True)
         subject_layout.addStretch()
         subject_layout.addWidget(self.subject_type)
         subject_layout.addStretch()

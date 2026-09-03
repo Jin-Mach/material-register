@@ -27,11 +27,13 @@ class CatalogTreeWidget(QTreeWidget):
                 category_item = QTreeWidgetItem([category.name])
                 category_item.setData(0, Qt.ItemDataRole.UserRole, category)
                 self.addTopLevelItem(category_item)
+                category_item.setToolTip(0, category.name)
                 for commodity in commodities:
                     if category.id == commodity.category_id:
                         item = QTreeWidgetItem(category_item)
                         item.setText(0, commodity.name)
                         item.setData(0, Qt.ItemDataRole.UserRole, commodity)
+                        item.setToolTip(0, commodity.name)
         except Exception as e:
             ErrorHandler.handle_error(e, "ui", "warning")
         finally:

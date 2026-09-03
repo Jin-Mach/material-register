@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QPropertyAnimation, Qt, QTimer
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QDialog, QLabel, QVBoxLayout
 
 from material_register.ui.helpers.window_positioning import get_notification_position
@@ -22,6 +23,9 @@ class NotificationDialog(QDialog):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         self.notification_label = QLabel()
+        font = QFont()
+        font.setBold(True)
+        self.notification_label.setFont(font)
         main_layout.addWidget(self.notification_label)
         return main_layout
 

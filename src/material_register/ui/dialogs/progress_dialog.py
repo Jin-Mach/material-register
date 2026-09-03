@@ -20,11 +20,12 @@ class ProgressDialog(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(10)
         self.progress_label = QLabel()
         self.progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progress_bar = QProgressBar()
-        self.progress_bar.setFixedHeight(20)
+        self.progress_bar.setFixedHeight(10)
         self.progress_bar.setRange(0, 0)
         main_layout.addWidget(self.progress_label)
         main_layout.addWidget(self.progress_bar)
