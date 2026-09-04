@@ -38,6 +38,18 @@ openFolderRadioButton = false
 openFileRadioButton = false
 useLastOptionsCheckbox = false
 
+[tools.settings.default]
+containerSizeCheckbox = true
+balanceCashCheckbox = true
+valuesCashCheckbox = true
+othersCashCheckbox = false
+
+[tools.settings.user]
+containerSizeCheckbox = true
+balanceCashCheckbox = true
+valuesCashCheckbox = true
+othersCashCheckbox = false
+
 [tools.cash_balance_values.default]
 
 [tools.cash_balance_values.user]

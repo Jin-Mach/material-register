@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 
 class BaseExportWidget(QWidget):
     WIDTH = 400
-    SPACING = 20
+    SPACING = 10
 
     def __init__(
         self,
@@ -65,6 +65,7 @@ class BaseExportWidget(QWidget):
         group_layout.addWidget(path_name_group)
         group_layout.addWidget(export_options_group)
         group_layout.addWidget(other_settings_group)
+        group_layout.addStretch()
         actions_group = self._create_actions_group()
         group_widget.setLayout(group_layout)
         scroll_area.setWidget(group_widget)
@@ -164,10 +165,13 @@ class BaseExportWidget(QWidget):
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
         main_layout.setSpacing(self.SPACING)
+        self.settings_info_label = QLabel()
+        self.settings_info_label.setObjectName("settingsInfoLabel")
         self.restore_button = QPushButton()
         self.restore_button.setObjectName("restoreButton")
         self.save_button = QPushButton()
         self.save_button.setObjectName("saveButton")
+        main_layout.addWidget(self.settings_info_label)
         main_layout.addStretch()
         main_layout.addWidget(self.restore_button)
         main_layout.addWidget(self.save_button)

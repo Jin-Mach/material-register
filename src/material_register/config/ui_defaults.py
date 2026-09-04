@@ -304,6 +304,19 @@ DEFAULT_TEXTS = {
         "saveButtonText": "Save",
         "saveButtonTooltipText": "Saves current export settings",
     },
+    "SettingsToolsWidget": {
+        "toolsGroupBoxText": "Tools",
+        "containerSizeCheckboxText": "Remember the last width of the tools panel",
+        "cashBalanceGroupBoxText": "Cash Register",
+        "balanceCashCheckboxText": "Use the last saved balance",
+        "valuesCashCheckboxText": "Remember saved banknotes",
+        "othersCashCheckboxText": "Remember the saved value „Other“",
+        "settingsInfoLabelText": "Changes take effect after restarting the application.",
+        "restoreButtonText": "Restore Defaults",
+        "restoreButtonTooltipText": "Restores the default values for the tools",
+        "saveButtonText": "Save",
+        "saveButtonTooltipText": "Saves the current tool settings"
+    },
     "RightToolbarWidget": {
         "notesButtonTooltipText": "Notes",
         "cashBalanceButtonTooltipText": "Cash Register",

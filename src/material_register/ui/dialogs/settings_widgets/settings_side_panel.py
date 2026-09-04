@@ -22,6 +22,7 @@ class SettingsSidePanel(QWidget):
         group_box = QGroupBox()
         group_box.setObjectName("settingsSidePanelGroupBox")
         group_layout = QVBoxLayout()
+        group_layout.setSpacing(5)
         self.export_button = QPushButton()
         self.export_button.setObjectName("exportButton")
         self.tools_button = QPushButton()

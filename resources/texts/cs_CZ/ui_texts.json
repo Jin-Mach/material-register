@@ -315,10 +315,24 @@
     "otherSettingsGroupBoxText": "Ostatní",
     "useLastOptionsCheckboxText": "Pamatovat si poslední nastavení",
     "saveLastOpeningBalanceCheckboxText": "Pamatovat si poslední zůstatek",
+    "settingsInfoLabelText": "Změny nastavení se projeví ihned.",
     "restoreButtonText": "Obnovit výchozí",
     "restoreButtonTooltipText": "Nastaví výchozí hodnoty pro export",
     "saveButtonText": "Uložit",
     "saveButtonTooltipText": "Uloží aktuální nastavení exportu"
+  },
+  "SettingsToolsWidget": {
+    "toolsGroupBoxText": "Nástroje",
+    "containerSizeCheckboxText": "Pamatovat si poslední šířku panelu nástrojů",
+    "cashBalanceGroupBoxText": "Pokladna",
+    "balanceCashCheckboxText": "Používat poslední uložený zůstatek",
+    "valuesCashCheckboxText": "Pamatovat si uložené bankovky",
+    "othersCashCheckboxText": "Pamatovat si uloženou hodnotu „Ostatní“",
+    "settingsInfoLabelText": "Změny nastavení se projeví při příštím spuštění aplikace.",
+    "restoreButtonText": "Obnovit výchozí",
+    "restoreButtonTooltipText": "Nastaví výchozí hodnoty pro nástroje",
+    "saveButtonText": "Uložit",
+    "saveButtonTooltipText": "Uloží aktuální nastavení nastrojů"
   },
   "RightToolbarWidget": {
     "notesButtonTooltipText": "Poznámky",
