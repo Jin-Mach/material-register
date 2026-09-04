@@ -337,3 +337,13 @@ def test_update_settings_sections_default_value(tmp_path: Path) -> None:
     settings = SettingsProvider.SETTINGS["export"]["summary"]
     assert settings["default"]["newSetting"] == 5
     assert settings["user"]["newSetting"] == 5
+
+
+def test_update_settings_sections_creates_missing_structure() -> None:
+    SettingsProvider.SETTINGS = {}
+    SettingsProvider.update_settings_sections(
+        "tools", "cash_balance_values", ["5000", "2000"]
+    )
+    settings = SettingsProvider.SETTINGS["tools"]["cash_balance_values"]
+    assert settings["default"] == {"5000": 0, "2000": 0}
+    assert settings["user"] == {"5000": 0, "2000": 0}
