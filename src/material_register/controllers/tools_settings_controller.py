@@ -73,24 +73,22 @@ class ToolsSettingsController:
 
     @staticmethod
     def save_tools(
-        splitter: QSplitter, right_toolbar_widget: "RightToolbarWidget"
+        splitter_size: int, right_toolbar_widget: "RightToolbarWidget"
     ) -> None:
-        ToolsSettingsController._save_splitter(splitter)
+        ToolsSettingsController._save_splitter(splitter_size)
         ToolsSettingsController._save_cash_tools(right_toolbar_widget)
         right_toolbar_widget.notes_widget.notes_controller.save_notes()
 
     @staticmethod
-    def _save_splitter(splitter: QSplitter) -> None:
+    def _save_splitter(splitter_size: int) -> None:
         tools_settings = ToolsSettingsController._get_tools_user_settings()
         splitter_settings = (
             SettingsProvider.SETTINGS.get("tools", {})
             .get("right_toolbar_panel", {})
             .get("user", {})
         )
-        if tools_settings.get("containerSizeCheckbox", True) and splitter.isVisible():
-            splitter_settings["splitterWidth"] = splitter.sizes()[1]
-        else:
-            splitter_settings["splitterWidth"] = 400
+        if tools_settings.get("containerSizeCheckbox", True):
+            splitter_settings["splitterWidth"] = splitter_size
 
     @staticmethod
     def _save_cash_tools(right_toolbar_widget: "RightToolbarWidget") -> None:

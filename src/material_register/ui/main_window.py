@@ -82,6 +82,7 @@ class MainWindow(QMainWindow):
                 lambda _, i=index: self.stacked_widget.setCurrentIndex(i)
             )
         self.side_panel.settings_button.clicked.connect(self._show_settings_dialog)
+        self.splitter.splitterMoved.connect(self._update_splitter_size)
 
     def _show_settings_dialog(self) -> None:
         self.settings_dialog = SettingsDialog(self)
@@ -93,8 +94,11 @@ class MainWindow(QMainWindow):
             ErrorDialog(self).show_dialog(error, False)
             ErrorHandler.ui_texts_error = ""
 
+    def _update_splitter_size(self) -> None:
+        self.tools_width = self.splitter.sizes()[1]
+
     def _before_close(self) -> None:
-        ToolsSettingsController.save_tools(self.splitter, self.right_toolbar_widget)
+        ToolsSettingsController.save_tools(self.tools_width, self.right_toolbar_widget)
         SettingsProvider.save_settings()
 
     def showEvent(self, event: QShowEvent) -> None:
