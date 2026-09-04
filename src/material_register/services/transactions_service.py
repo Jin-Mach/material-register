@@ -70,7 +70,8 @@ class TransactionsService:
     def update_transaction(
         db_connection: QSqlDatabase,
         transaction_id: int,
-        dialog_data: dict[str, str | int],
+        new_dialog_data: dict[str, str | int],
+        old_dialog_data: dict[str, str | int],
         new_items_data: list[TransactionItem],
         old_items_data: list[TransactionItem],
     ) -> tuple[bool, str, bool]:
@@ -79,18 +80,20 @@ class TransactionsService:
             new_stock_dict = TransactionsService._get_stock_dict(new_items_data)
             old_stock_dict = TransactionsService._get_stock_dict(old_items_data)
             final_stock_dict = TransactionsService._get_final_stock_dict(
-                old_stock_dict, new_stock_dict, dialog_data["transaction_type"]
+                old_stock_dict, new_stock_dict, new_dialog_data["transaction_type"]
             )
+            data_changed = old_dialog_data != new_dialog_data
             items_changed = old_items_data != new_items_data
-            if not final_stock_dict and not items_changed:
+            if not final_stock_dict and not items_changed and not data_changed:
+                db_connection.rollback()
                 return True, "", False
             ok, error = TransactionsQueries.update_transaction(
                 db_connection,
                 transaction_id,
-                dialog_data["transaction_type"],
-                dialog_data["customer_id"],
-                dialog_data["payment_type"],
-                dialog_data["notes"],
+                new_dialog_data["transaction_type"],
+                new_dialog_data["customer_id"],
+                new_dialog_data["payment_type"],
+                new_dialog_data["notes"],
             )
             if not ok:
                 db_connection.rollback()

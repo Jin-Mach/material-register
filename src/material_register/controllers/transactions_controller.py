@@ -138,6 +138,7 @@ class TransactionsController:
             self.db_connection, transaction_id
         )
         create_data = TransactionsController._transaction_to_dict(transaction)
+        old_dialog_data = create_data.copy()
         if transaction_type == TRANSFER_IN:
             self.items_dialog = TransactionItemsDialogIn(
                 self, create_data, self.transactions_widget, transaction_type
@@ -162,9 +163,9 @@ class TransactionsController:
         self.items_dialog.setup_total_value(item_model)
         if self.items_dialog.exec() == QDialog.DialogCode.Accepted:
             self.active_commodity_unit = None
-            dialog_data = self.items_dialog.return_transaction_data()
+            new_dialog_data = self.items_dialog.return_transaction_data()
             if not TransactionsController._check_transaction_data(
-                dialog_data, item_model, transaction_type
+                new_dialog_data, item_model, transaction_type
             ):
                 MessageBoxes.show_error(
                     self.transactions_widget, "INVALID_DATA", "WARNING"
@@ -173,7 +174,8 @@ class TransactionsController:
             ok, error, changed = TransactionsService.update_transaction(
                 self.db_connection,
                 transaction_id,
-                dialog_data,
+                new_dialog_data,
+                old_dialog_data,
                 item_model.get_data(),
                 old_items_data,
             )
