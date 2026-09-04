@@ -315,7 +315,7 @@ DEFAULT_TEXTS = {
         "restoreButtonText": "Restore Defaults",
         "restoreButtonTooltipText": "Restores the default values for the tools",
         "saveButtonText": "Save",
-        "saveButtonTooltipText": "Saves the current tool settings"
+        "saveButtonTooltipText": "Saves the current tool settings",
     },
     "RightToolbarWidget": {
         "notesButtonTooltipText": "Notes",

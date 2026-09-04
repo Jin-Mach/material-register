@@ -18,12 +18,15 @@ class CashBalanceController:
         self.cash_balance_widget = cash_balance_widget
 
     def load_balance_value(self) -> None:
-        balance = (
-            SettingsProvider.SETTINGS.get("export", {})
-            .get("summary", {})
-            .get("user", {})
-            .get("openingBalanceSpinbox", 0.0)
-        )
+        balance = 0.0
+        if CashBalanceController._get_user_setting("balanceCashCheckbox", default=True):
+            print("balanceCashCheckbox true")
+            balance = (
+                SettingsProvider.SETTINGS.get("export", {})
+                .get("summary", {})
+                .get("user", {})
+                .get("openingBalanceSpinbox", 0.0)
+            )
         self.cash_balance_widget.opening_balance_spinbox.setValue(balance)
 
     @staticmethod
@@ -52,8 +55,26 @@ class CashBalanceController:
         )
 
     @staticmethod
-    def save_balance_values(values: dict[str, int | float]) -> None:
+    def save_balance_values(
+        values: dict[str, int | float],
+        values_save: bool = True,
+        others_save: bool = False,
+    ) -> None:
         for key, value in values.items():
+            if key == "othersLabel":
+                if not others_save:
+                    value = 0.0
+            elif not values_save:
+                value = 0
             SettingsProvider.SETTINGS["tools"]["cash_balance_values"]["user"][key] = (
                 value
             )
+
+    @staticmethod
+    def _get_user_setting(key: str, default: bool = False) -> bool:
+        return (
+            SettingsProvider.SETTINGS.get("tools", {})
+            .get("settings", {})
+            .get("user", {})
+            .get(key, default)
+        )

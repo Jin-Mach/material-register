@@ -2,8 +2,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent, QShowEvent
 from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QSplitter, QWidget
 
-from material_register.controllers.tools_controllers.cash_balance_controller import (
-    CashBalanceController,
+from material_register.controllers.tools_settings_controller import (
+    ToolsSettingsController,
 )
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
@@ -69,13 +69,6 @@ class MainWindow(QMainWindow):
             .get("splitterWidth", 400)
         )
 
-    def _save_splitter(self) -> None:
-        if self.right_toolbar_widget.tools_container.isVisible():
-            self.tools_width = self.splitter.sizes()[1]
-        SettingsProvider.SETTINGS["tools"]["right_toolbar_panel"]["user"][
-            "splitterWidth"
-        ] = self.tools_width
-
     def _create_connection(self) -> None:
         buttons_map = {
             self.side_panel.transactions_button: 0,
@@ -101,12 +94,8 @@ class MainWindow(QMainWindow):
             ErrorHandler.ui_texts_error = ""
 
     def _before_close(self) -> None:
-        CashBalanceController.save_balance_values(
-            self.right_toolbar_widget.cash_balance_widget.get_values_map()
-        )
-        self._save_splitter()
+        ToolsSettingsController.save_tools(self.splitter, self.right_toolbar_widget)
         SettingsProvider.save_settings()
-        self.right_toolbar_widget.notes_widget.notes_controller.save_notes()
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
