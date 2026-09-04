@@ -197,7 +197,7 @@
     "notesLabelText": "Poznámky",
     "notesCountLabelText": "Počet znaků:",
     "saveButtonText": "Uložit",
-    "saveButtonTooltipText": "Uloží komoditu",
+    "saveButtonTooltipText": "Uloží položku",
     "closeButtonText": "Zavřít",
     "closeButtonTooltipText": "Zavře dialog"
   },
@@ -232,6 +232,7 @@
   },
   "CreateTransactionDialog": {
     "titleText": "Nová transakce",
+    "updateTitleText": "Upravit transakci",
     "paymentTypeLabelText": "Platba:",
     "paymentTypeComboboxItems": ["Hotovost", "Převod na účet"],
     "customerNameLabelText": "Zákazník:",
@@ -239,6 +240,8 @@
     "customerAddressLabelText": "Adresa:",
     "continueTransactionButtonText": "Založit transakci",
     "continueTransactionButtonTooltipText": "Založí novou transakci pro vybraného zákazníka",
+    "updateTransactionButtonText": "Upravit transakci",
+    "updateTransactionButtonTooltipText": "Upraví transakci s novými údaji.",
     "cancelTransactionButtonText": "Zrušit",
     "cancelTransactionButtonTooltipText": "Zavře dialog"
   },

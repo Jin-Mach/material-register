@@ -223,6 +223,8 @@ DEFAULT_TEXTS = {
         "customerAddressLabelText": "Address:",
         "continueTransactionButtonText": "Create transaction",
         "continueTransactionButtonTooltipText": "Creates a new transaction for selected customer",
+        "updateTransactionButtonText": "Update transaction",
+        "updateTransactionButtonTooltipText": "Update the transaction with the new details.",
         "cancelTransactionButtonText": "Cancel",
         "cancelTransactionButtonTooltipText": "Closes dialog",
     },

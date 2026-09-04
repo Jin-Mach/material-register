@@ -111,7 +111,7 @@ class TransactionItemsDialogOut(QDialog):
 
     def _update_create_data(self) -> None:
         new_data = self.transactions_controller.create_transaction_data(
-            self.transfer_type
+            self.transfer_type, update_transaction=True
         )
         if new_data is None:
             return

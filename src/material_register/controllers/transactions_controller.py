@@ -229,7 +229,7 @@ class TransactionsController:
             )
 
     def create_transaction_data(
-        self, transfer_type: str
+        self, transfer_type: str, update_transaction: bool = False
     ) -> dict[str, str | int | None] | None:
         if self.customers_model.get_total_count() == 0:
             MessageBoxes.show_error(
@@ -237,7 +237,10 @@ class TransactionsController:
             )
             return None
         dialog = CreateTransactionDialog(
-            self.transactions_widget, DataInit.customers_completer_model, transfer_type
+            self.transactions_widget,
+            DataInit.customers_completer_model,
+            transfer_type,
+            update_transaction=update_transaction,
         )
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None

@@ -38,10 +38,12 @@ class CreateTransactionDialog(QDialog):
         transactions_widget: "TransactionsWidget",
         completer_model: "CustomersCompleterModel",
         transfer_type: str,
+        update_transaction: bool = False,
     ) -> None:
         super().__init__(transactions_widget)
         self.completer_model = completer_model
         self.transfer_type = transfer_type
+        self.update = update_transaction
         self.selected_customer = None
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -113,7 +115,21 @@ class CreateTransactionDialog(QDialog):
             self.continue_transaction_button,
             self.cancel_transaction_button,
         ]
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.update_title = ui_texts.get("updateTitleText", "Update transaction")
+        self.update_button_text = ui_texts.get(
+            "updateTransactionButtonText", "Update transaction"
+        )
+        self.update_button_tooltip_text = ui_texts.get(
+            "updateTransactionButtonTooltipText", "Update transaction"
+        )
         if UiTexts.set_ui_texts(self, widgets):
+            if self.update:
+                self.setWindowTitle(self.update_title)
+                self.continue_transaction_button.setText(self.update_button_text)
+                self.continue_transaction_button.setToolTip(
+                    self.update_button_tooltip_text
+                )
             return
         ErrorHandler.handle_error(
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
