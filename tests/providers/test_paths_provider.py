@@ -1,0 +1,16 @@
+def test_paths_init_creates_structure(tmp_path):
+    base = tmp_path
+    (base / "resources").mkdir()
+    (base / "config").mkdir()
+    (base / "database").mkdir()
+    (base / "logs").mkdir()
+    (base / "documents").mkdir()
+    (base / "logs" / "folder_a").mkdir()
+    (base / "logs" / "folder_b").mkdir()
+    assert (base / "resources").exists()
+    assert (base / "config").exists()
+    assert (base / "database").exists()
+    assert (base / "logs").exists()
+    assert (base / "documents").exists()
+    assert (base / "logs" / "folder_a").exists()
+    assert (base / "logs" / "folder_b").exists()
