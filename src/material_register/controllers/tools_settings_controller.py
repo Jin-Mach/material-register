@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QSplitter, QWidget
 
+from material_register.controllers.tools_controllers.cash_balance_controller import CashBalanceController
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -79,10 +80,11 @@ class ToolsSettingsController:
     @staticmethod
     def _save_splitter(splitter: QSplitter) -> None:
         tools_settings = ToolsSettingsController._get_tools_user_settings()
+        splitter_settings = SettingsProvider.SETTINGS.get("tools", {}).get("right_toolbar_panel", {}).get("user", {})
         if tools_settings.get("containerSizeCheckbox", True) and splitter.isVisible():
-            tools_settings["splitterWidth"] = splitter.sizes()[1]
+            splitter_settings["splitterWidth"] = splitter.sizes()[1]
         else:
-            tools_settings["splitterWidth"] = 400
+            splitter_settings["splitterWidth"] = 400
 
     @staticmethod
     def _save_cash_tools(right_toolbar_widget: "RightToolbarWidget") -> None:

@@ -20,7 +20,6 @@ class CashBalanceController:
     def load_balance_value(self) -> None:
         balance = 0.0
         if CashBalanceController._get_user_setting("balanceCashCheckbox", default=True):
-            print("balanceCashCheckbox true")
             balance = (
                 SettingsProvider.SETTINGS.get("export", {})
                 .get("summary", {})
