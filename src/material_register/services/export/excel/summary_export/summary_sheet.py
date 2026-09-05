@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from openpyxl.cell import Cell
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
@@ -29,7 +28,7 @@ class SummarySheet:
     DEFAULT_FONT_SIZE = 10
     TITLE_ROW_HEIGHT = 20
     DEFAULT_ROW_HEIGHT = 15
-    NOTES_ROWS = 4
+    NOTES_ROWS = 5
     ERROR_TEXT = "[N/A]"
 
     @staticmethod
@@ -41,25 +40,29 @@ class SummarySheet:
         out_data: list[SummaryExportItemOut],
     ) -> tuple[Worksheet, float]:
         summary_in_data = SummaryReport.get_summary_data_in(data_in)
+        cash_value, transfer_value = SummaryReport.get_payment_totals(data_in)
         summary_out_data = SummaryReport.get_summary_data_out(out_data)
         row = SummarySheet.START_ROW
         row = SummarySheet._create_header(
             sheet, row, SummarySheet.LAST_COLUMN, export_settings, export_texts
         )
-        row, buyback_cell, total_value = SummarySheet._create_financial_section(
-            sheet, row, SummarySheet.LAST_COLUMN, export_settings, export_texts
+        row, total_value = SummarySheet._create_financial_section(
+            sheet,
+            row,
+            SummarySheet.LAST_COLUMN,
+            export_settings,
+            export_texts,
+            cash_value,
+            transfer_value,
         )
         freeze_row = row
         data_section_row = row
-        in_section_row, buyback_value = SummarySheet._create_data_in_section(
+        in_section_row = SummarySheet._create_data_in_section(
             sheet,
             data_section_row,
             SummarySheet.LAST_COLUMN,
             export_texts,
             summary_in_data,
-        )
-        total_value = SummarySheet._update_buyback_value(
-            buyback_cell, buyback_value, total_value
         )
         out_section_row = SummarySheet._create_data_out_section(
             sheet,
@@ -176,7 +179,9 @@ class SummarySheet:
         last_column: int,
         export_settings: dict[str, Path | str | float | bool],
         export_texts: dict[str, str],
-    ) -> tuple[int, Cell, float]:
+        cash_value: float,
+        transfer_value: float,
+    ) -> tuple[int, float]:
         start_row = row
         middle_column = last_column // 2
         financial_label_column = middle_column + 1
@@ -273,11 +278,10 @@ class SummarySheet:
         SummarySheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
         row += 1
-        buyback_row = row
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("buybackText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("cashText", SummarySheet.ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -287,7 +291,7 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="left")
         SummarySheet._cell_font(cell, bold=True)
-        cell = sheet.cell(row=row, column=financial_value_column, value=0.0)
+        cell = sheet.cell(row=row, column=financial_value_column, value=-cash_value)
         cell.number_format = cell_format
         sheet.merge_cells(
             start_row=row,
@@ -355,6 +359,35 @@ class SummarySheet:
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        row += 1
+        cell = sheet.cell(
+            row=row,
+            column=financial_label_column,
+            value=export_texts.get("transferText", SummarySheet.ERROR_TEXT),
+        )
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_label_column,
+            end_row=row,
+            end_column=financial_label_column + 1,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="left")
+        SummarySheet._cell_font(cell, bold=True)
+        cell = sheet.cell(
+            row=row,
+            column=financial_value_column,
+            value=-transfer_value,
+        )
+        cell.number_format = cell_format
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_value_column,
+            end_row=row,
+            end_column=last_column,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="right")
+        SummarySheet._cell_font(cell, bold=True)
+        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
         SummarySheet._set_borders(
             sheet,
             start_row=start_row,
@@ -364,9 +397,9 @@ class SummarySheet:
         )
         SummarySheet._set_borders(
             sheet,
-            start_row=row,
+            start_row=row - 1,
             start_column=financial_value_column,
-            end_row=row,
+            end_row=row - 1,
             end_column=last_column,
             style="medium",
         )
@@ -375,12 +408,8 @@ class SummarySheet:
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
         sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
-        total = round(opening_balance + income + expense, 1)
-        return (
-            row + 1,
-            sheet.cell(row=buyback_row, column=financial_value_column),
-            total,
-        )
+        total = round(opening_balance + income - cash_value + expense, 1)
+        return row + 1, total
 
     @staticmethod
     def _create_data_in_section(
@@ -389,7 +418,7 @@ class SummarySheet:
         last_column: int,
         export_texts: dict[str, str],
         in_data: dict[str, list[SummaryItemDataIn]],
-    ) -> tuple[int, float]:
+    ) -> int:
         start_row = row
         first_column = 1
         middle_column = last_column // 2
@@ -397,7 +426,6 @@ class SummarySheet:
         money_cell_format = (
             f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         )
-        buyback = 0
         cell = sheet.cell(
             row=row,
             column=first_column,
@@ -455,10 +483,9 @@ class SummarySheet:
             SummarySheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
             row += 1
-            row, category_buyback = SummarySheet._create_category_in_section(
+            row = SummarySheet._create_category_in_section(
                 sheet, row, last_column, export_texts, category_data, money_cell_format
             )
-            buyback += category_buyback
         SummarySheet._set_borders(
             sheet,
             start_row=start_row,
@@ -466,7 +493,7 @@ class SummarySheet:
             end_row=row - 1,
             end_column=last_column // 2,
         )
-        return row, buyback
+        return row
 
     @staticmethod
     def _create_data_out_section(
@@ -554,7 +581,7 @@ class SummarySheet:
         export_texts: dict[str, str],
         in_data: list[SummaryItemDataIn],
         money_cell_format: str,
-    ) -> tuple[int, float]:
+    ) -> int:
         first_column = 1
         middle_column = last_column // 2
         commodity_column = first_column
@@ -562,7 +589,6 @@ class SummarySheet:
         quantity_column = first_column + 2
         total_column = first_column + 3
         summary_label_column = middle_column - 1
-        buyback = 0.0
         for item in in_data:
             quantity_cell_format = (
                 f'#,##0.0 "{item.commodity_unit}";[Red]#,##0.0 "{item.commodity_unit}"'
@@ -588,7 +614,6 @@ class SummarySheet:
             SummarySheet._cell_font(cell, bold=True)
             sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
             row += 1
-            buyback += item.total_price
         summary_value_column = middle_column
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=middle_column - 2
@@ -600,12 +625,19 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        cell = sheet.cell(row=row, column=summary_value_column, value=buyback)
+        summary_value = 0.0
+        for item in in_data:
+            summary_value += item.total_price or 0.0
+        cell = sheet.cell(
+            row=row,
+            column=summary_value_column,
+            value=summary_value,
+        )
         cell.number_format = money_cell_format
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
         sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
-        return row + 1, buyback
+        return row + 1
 
     @staticmethod
     def _create_category_out_section(
@@ -712,13 +744,6 @@ class SummarySheet:
                     length = len(str(cell.value))
                     max_length = max(max_length, length)
             sheet.column_dimensions[column_letter].width = max_length + 3
-
-    @staticmethod
-    def _update_buyback_value(
-        buyback_cell: Cell, buyback_value: float, total_value: float
-    ) -> float:
-        buyback_cell.value = buyback_value * -1
-        return total_value + buyback_cell.value
 
     @staticmethod
     def _get_period_range(from_date: str | None, to_date: str | None) -> str:

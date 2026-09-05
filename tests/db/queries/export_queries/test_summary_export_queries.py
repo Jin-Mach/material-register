@@ -61,7 +61,7 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
     """)
     query.exec("""
         INSERT INTO transactions VALUES 
-        (2, 'IN', '2026-07-25 09:00:00', 'CASH', NULL)
+        (2, 'IN', '2026-07-25 09:00:00', 'TRANSFER', NULL)
     """)
     query.exec("""
         INSERT INTO transaction_items VALUES
@@ -76,13 +76,21 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
     )
     assert ok == True
     assert error == ""
-    assert len(results) == 1
+    assert len(results) == 2
     assert results[0].category_name == "Fe"
+    assert results[0].payment_type == "CASH"
     assert results[0].commodity_name == "Fe 12345"
     assert results[0].commodity_unit == "kg"
     assert results[0].price_per_unit == 3.5
-    assert results[0].total_quantity == 150
-    assert results[0].total_price == 525
+    assert results[0].total_quantity == 100
+    assert results[0].total_price == 350
+    assert results[1].category_name == "Fe"
+    assert results[1].payment_type == "TRANSFER"
+    assert results[1].commodity_name == "Fe 12345"
+    assert results[1].commodity_unit == "kg"
+    assert results[1].price_per_unit == 3.5
+    assert results[1].total_quantity == 50
+    assert results[1].total_price == 175
 
 
 def test_load_export_data_out(connection: QSqlDatabase, schema) -> None:

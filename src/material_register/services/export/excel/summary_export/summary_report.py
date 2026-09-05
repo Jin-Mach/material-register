@@ -15,6 +15,7 @@ class SummaryReport:
         for in_item in in_data:
             if in_item.category_name not in report_data:
                 summary_item_in = SummaryItemDataIn(
+                    payment_type=in_item.payment_type,
                     commodity_name=in_item.commodity_name,
                     commodity_unit=in_item.commodity_unit,
                     price_per_unit=in_item.price_per_unit,
@@ -36,6 +37,7 @@ class SummaryReport:
                         break
                 if not found:
                     summary_item_in = SummaryItemDataIn(
+                        payment_type=in_item.payment_type,
                         commodity_name=in_item.commodity_name,
                         commodity_unit=in_item.commodity_unit,
                         price_per_unit=in_item.price_per_unit,
@@ -60,3 +62,16 @@ class SummaryReport:
                 report_data[out_item.category_name] = []
             report_data[out_item.category_name].append(summary_item_out)
         return report_data
+
+    @staticmethod
+    def get_payment_totals(
+        in_data: list[SummaryExportItemIn],
+    ) -> tuple[float, float]:
+        cash = 0.0
+        transfer = 0.0
+        for item in in_data:
+            if item.payment_type == "CASH":
+                cash += item.total_price or 0.0
+            elif item.payment_type == "TRANSFER":
+                transfer += item.total_price or 0.0
+        return cash, transfer

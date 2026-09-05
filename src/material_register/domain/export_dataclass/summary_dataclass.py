@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class SummaryExportItemIn:
     category_name: str | None = None
+    payment_type: str | None = None
     commodity_name: str | None = None
     commodity_unit: str | None = None
     price_per_unit: float | None = None
@@ -21,6 +22,7 @@ class SummaryExportItemOut:
 
 @dataclass
 class SummaryItemDataIn:
+    payment_type: str | None = None
     commodity_name: str | None = None
     commodity_unit: str | None = None
     price_per_unit: float | None = None

@@ -28,11 +28,12 @@ class SummaryExportQueries:
             results.append(
                 SummaryExportItemIn(
                     category_name=query.value(0),
-                    commodity_name=query.value(1),
-                    commodity_unit=query.value(2),
-                    price_per_unit=query.value(3),
-                    total_quantity=query.value(4),
-                    total_price=query.value(5),
+                    payment_type=query.value(1),
+                    commodity_name=query.value(2),
+                    commodity_unit=query.value(3),
+                    price_per_unit=query.value(4),
+                    total_quantity=query.value(5),
+                    total_price=query.value(6),
                 )
             )
         return True, "", results

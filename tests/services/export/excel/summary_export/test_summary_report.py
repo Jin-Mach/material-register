@@ -168,3 +168,23 @@ def test_get_summary_data_out(
 def test_get_summary_data_out_empty() -> None:
     result = SummaryReport.get_summary_data_out([])
     assert result == {}
+
+
+def test_get_payment_totals() -> None:
+    export_data_in = [
+        SummaryExportItemIn(
+            payment_type="CASH",
+            total_price=100.0,
+        ),
+        SummaryExportItemIn(
+            payment_type="TRANSFER",
+            total_price=200.0,
+        ),
+        SummaryExportItemIn(
+            payment_type="CASH",
+            total_price=50.0,
+        ),
+    ]
+    cash, transfer = SummaryReport.get_payment_totals(export_data_in)
+    assert cash == 150.0
+    assert transfer == 200.0

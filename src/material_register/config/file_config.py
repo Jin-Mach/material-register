@@ -425,6 +425,8 @@ EXPORT_KEYS = [
     ("SummarySheet", "financialText"),
     ("SummarySheet", "openingBalanceText"),
     ("SummarySheet", "buybackText"),
+    ("SummarySheet", "cashText"),
+    ("SummarySheet", "transferText"),
     ("SummarySheet", "incomeText"),
     ("SummarySheet", "expenseText"),
     ("SummarySheet", "balanceText"),

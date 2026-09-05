@@ -11,8 +11,10 @@
     "notesText": "Poznámky",
     "financialText": "Finance",
     "openingBalanceText": "Počáteční zůstatek:",
-    "incomeText": "Příjem:",
-    "buybackText": "Výkup:",
+    "incomeText": "Dodatečný příjem:",
+    "buybackText": "Výkup",
+    "cashText": "Výkup (hotovost):",
+    "transferText": "Výkup (převod na účet)",
     "expenseText": "Náklady:",
     "balanceText": "Zůstatek:",
     "currencySuffix": "Kč",
@@ -21,7 +23,7 @@
     "quantityText": "Množství",
     "totalPriceText": "Celková cena",
     "summaryPriceText": "Celkem",
-    "exportText": "Výdej",
+    "exportText": "Vývoz",
     "pageText": "Strana"
   },
   "TransactionsSheet": {

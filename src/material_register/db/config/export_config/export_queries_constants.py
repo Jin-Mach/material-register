@@ -2,11 +2,13 @@ SUMMARY_QUERY_IN = """
             SELECT
                 category.name AS category,
                 
+                trans.payment_type,
+                
                 commodity.name AS commodity,
                 commodity.unit AS commodity_unit,
                 
                 items.price_per_unit,
-                
+                                
                 ROUND(SUM(items.unit_count), 1) AS total_quantity,
                 ROUND(SUM(items.unit_count * items.price_per_unit), 1) AS total_price
             
@@ -23,17 +25,18 @@ SUMMARY_QUERY_IN = """
             
             WHERE
                 trans.type = 'IN'
-                AND trans.payment_type = 'CASH'
                 AND trans.created_at >= ?
                 AND trans.created_at <= ?
             
             GROUP BY
                 category.name,
+                payment_type,
                 commodity.name,
                 items.price_per_unit
             
             ORDER BY
                 category.name,
+                payment_type,
                 commodity.name,
                 items.price_per_unit
 """
