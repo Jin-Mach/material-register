@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QCheckBox,
     QFormLayout,
@@ -30,6 +30,7 @@ class CommodityCardWidget(QTabWidget):
         super().__init__(commodities_grid_widget)
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.detail_widget = self._create_ui()
+        self._setup_ui()
         self.addTab(self.detail_widget, "")
 
     def _create_ui(self) -> QWidget:
@@ -52,8 +53,8 @@ class CommodityCardWidget(QTabWidget):
         notes_layout = QFormLayout()
         self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
-        self.notes_value = QTextEdit()
-        self.notes_value.setReadOnly(True)
+        self.notes_edit = QTextEdit()
+        self.notes_edit.setReadOnly(True)
         button_layout = QHBoxLayout()
         self.update_commodity_button = QPushButton()
         self.update_commodity_button.setObjectName("updateCommodityButton")
@@ -61,7 +62,7 @@ class CommodityCardWidget(QTabWidget):
         values_layout.addRow(self.default_price_label, self.default_price_value)
         values_layout.addRow(self.active_label, self.active_value)
         notes_layout.addRow(self.notes_label)
-        notes_layout.addRow(self.notes_value)
+        notes_layout.addRow(self.notes_edit)
         button_layout.addStretch()
         button_layout.addWidget(self.update_commodity_button)
         detail_layout.addLayout(values_layout)
@@ -69,6 +70,9 @@ class CommodityCardWidget(QTabWidget):
         detail_layout.addLayout(button_layout)
         detail_widget.setLayout(detail_layout)
         return detail_widget
+
+    def _setup_ui(self) -> None:
+        self._setup_text_edit()
 
     def setup_texts(self, ui_texts: dict[str, str]) -> None:
         widgets = [
@@ -87,6 +91,12 @@ class CommodityCardWidget(QTabWidget):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
+    def _setup_text_edit(self) -> None:
+        self.notes_edit.setContextMenuPolicy(Qt.CustomContextMenu.NoContextMenu)
+        self.notes_edit.setAcceptRichText(False)
+        self.notes_edit.setAcceptDrops(False)
+        self.notes_edit.setUndoRedoEnabled(False)
+
     def set_commodity_details(self, commodity: Commodity) -> None:
         self.setTabText(0, commodity.name)
         self.setTabToolTip(0, commodity.name)
@@ -95,7 +105,7 @@ class CommodityCardWidget(QTabWidget):
             format_number_to_locale(commodity.default_price)
         )
         self.active_value.setChecked(bool(commodity.active))
-        self.notes_value.setPlainText(commodity.notes)
+        self.notes_edit.setPlainText(commodity.notes)
 
     def create_connection(self, commodity: Commodity, on_update_clicked) -> None:
         self.update_commodity_button.clicked.connect(

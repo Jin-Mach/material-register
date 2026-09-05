@@ -77,7 +77,7 @@ class TransactionInfoWidget(QWidget):
         notes_frame = QFrame()
         notes_frame.setObjectName("notesFrame")
         notes_layout = QVBoxLayout()
-        self.notes = QTextEdit()
+        self.notes_edit = QTextEdit()
         count_layout = QHBoxLayout()
         self.notes_count_label = QLabel()
         self.notes_count_label.setObjectName("notesCountLabel")
@@ -91,7 +91,7 @@ class TransactionInfoWidget(QWidget):
         customer_frame.setLayout(customer_layout)
         count_layout.addWidget(self.notes_count_label)
         count_layout.addStretch()
-        notes_layout.addWidget(self.notes)
+        notes_layout.addWidget(self.notes_edit)
         notes_layout.addLayout(count_layout)
         notes_frame.setLayout(notes_layout)
         customer_notes_layout.addWidget(customer_frame)
@@ -102,6 +102,7 @@ class TransactionInfoWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_text_edit()
         self._setup_style()
         self._update_notes_count()
 
@@ -126,17 +127,23 @@ class TransactionInfoWidget(QWidget):
         if UiTexts.set_default_texts(self, widgets):
             return
 
+    def _setup_text_edit(self) -> None:
+        self.notes_edit.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self.notes_edit.setAcceptRichText(False)
+        self.notes_edit.setAcceptDrops(False)
+        self.notes_edit.setUndoRedoEnabled(False)
+
     def _setup_style(self) -> None:
         font = QFont()
         font.setBold(True)
         self.payment_info.setFont(font)
 
     def _create_connection(self) -> None:
-        self.notes.textChanged.connect(self._update_notes_count)
+        self.notes_edit.textChanged.connect(self._update_notes_count)
 
     def _update_notes_count(self) -> None:
         check_notes_length(
-            self.notes,
+            self.notes_edit,
             self.notes_count_label,
             self.notes_count_text,
             TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
@@ -159,7 +166,7 @@ class TransactionInfoWidget(QWidget):
         self.customer_name.setText(customer)
         self.document_number.setText(document_number)
         self.address.setText(address)
-        self.notes.setPlainText(notes)
+        self.notes_edit.setPlainText(notes)
 
     def get_notes(self) -> str:
-        return self.notes.toPlainText().strip()
+        return self.notes_edit.toPlainText().strip()

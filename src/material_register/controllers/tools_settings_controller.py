@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QSplitter, QWidget
+from PySide6.QtWidgets import QWidget
 
 from material_register.controllers.tools_controllers.cash_balance_controller import (
     CashBalanceController,

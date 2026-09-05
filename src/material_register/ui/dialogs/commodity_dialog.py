@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QRegularExpression
+from PySide6.QtCore import QRegularExpression, Qt
 from PySide6.QtGui import QFont, QRegularExpressionValidator, QShowEvent
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -94,7 +94,7 @@ class CommodityDialog(QDialog):
         self.active_checkbox.setChecked(True)
         self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
-        self.notes_input = QTextEdit()
+        self.notes_edit = QTextEdit()
         notes_count_layout = QHBoxLayout()
         self.notes_count_label = QLabel()
         self.notes_count_label.setObjectName("notesCountLabel")
@@ -115,7 +115,7 @@ class CommodityDialog(QDialog):
         form_layout.addRow(self.default_price_label, self.price_input)
         form_layout.addRow(self.active_label, self.active_checkbox)
         form_layout.addRow(self.notes_label)
-        form_layout.addRow(self.notes_input)
+        form_layout.addRow(self.notes_edit)
         main_layout.addLayout(form_layout)
         main_layout.addLayout(notes_count_layout)
         main_layout.addWidget(button_box)
@@ -123,6 +123,7 @@ class CommodityDialog(QDialog):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_text_edit()
         self._setup_mode()
         self._set_validators()
         self._setup_style()
@@ -159,9 +160,15 @@ class CommodityDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
+    def _setup_text_edit(self) -> None:
+        self.notes_edit.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self.notes_edit.setAcceptRichText(False)
+        self.notes_edit.setAcceptDrops(False)
+        self.notes_edit.setUndoRedoEnabled(False)
+
     def _create_connection(self) -> None:
         self.name_input.textChanged.connect(self._on_form_changed)
-        self.notes_input.textChanged.connect(self._update_notes_count)
+        self.notes_edit.textChanged.connect(self._update_notes_count)
         self.save_button.clicked.connect(self.accept)
         self.close_button.clicked.connect(self.reject)
 
@@ -183,7 +190,7 @@ class CommodityDialog(QDialog):
     def _set_add_mode(self) -> None:
         self.name_input.clear()
         self.unit_input.setCurrentIndex(0)
-        self.notes_input.clear()
+        self.notes_edit.clear()
         self.active_checkbox.setChecked(True)
         self._update_notes_count()
 
@@ -191,7 +198,7 @@ class CommodityDialog(QDialog):
         self.name_input.setText(commodity.name or "")
         self.unit_input.setCurrentText(commodity.unit or "kg")
         self.price_input.setValue(float(commodity.default_price or 0.0))
-        self.notes_input.setPlainText(commodity.notes or "")
+        self.notes_edit.setPlainText(commodity.notes or "")
         self.active_checkbox.setChecked(bool(commodity.active))
         self.category_value.setText(str(self.category_name))
         self._update_notes_count()
@@ -199,7 +206,7 @@ class CommodityDialog(QDialog):
 
     def _update_notes_count(self) -> None:
         check_notes_length(
-            self.notes_input,
+            self.notes_edit,
             self.notes_count_label,
             self.notes_text,
             COMMODITY_DIALOG_NOTES_LENGTH,
@@ -251,7 +258,7 @@ class CommodityDialog(QDialog):
             category_id=self.category_id,
             unit=self.unit_input.currentText(),
             default_price=normalize_value(self.price_input.value()),
-            notes=self.notes_input.toPlainText().strip(),
+            notes=self.notes_edit.toPlainText().strip(),
             active=int(self.active_checkbox.isChecked()),
         )
 

@@ -77,6 +77,7 @@ class CategoryDialog(QDialog):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_text_edit()
         self._setup_mode()
         self._set_validators()
         self._set_required_style(self.category_name_input)
@@ -101,6 +102,12 @@ class CategoryDialog(QDialog):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _setup_text_edit(self) -> None:
+        self.notes_input.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self.notes_input.setAcceptRichText(False)
+        self.notes_input.setAcceptDrops(False)
+        self.notes_input.setUndoRedoEnabled(False)
 
     def _create_connection(self) -> None:
         self.category_name_input.textChanged.connect(self._on_form_changed)

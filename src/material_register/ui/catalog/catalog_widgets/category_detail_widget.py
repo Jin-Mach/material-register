@@ -30,7 +30,7 @@ class CategoryDetailWidget(QWidget):
         super().__init__(category_with_commodities_widget)
         self.category_with_commodities_widget = category_with_commodities_widget
         self.setLayout(self._create_ui())
-        self._setup_texts()
+        self._setup_ui()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -45,15 +45,14 @@ class CategoryDetailWidget(QWidget):
         notes_layout = QFormLayout()
         self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
-        self.notes_value = QTextEdit()
-        self.notes_value.setReadOnly(True)
+        self.notes_edit = QTextEdit()
         button_layout = QHBoxLayout()
         self.update_category_button = QPushButton()
         self.update_category_button.setObjectName("updateCategoryButton")
         self.add_commodity_button = QPushButton()
         self.add_commodity_button.setObjectName("addCommodityButton")
         notes_layout.addRow(self.notes_label)
-        notes_layout.addRow(self.notes_value)
+        notes_layout.addRow(self.notes_edit)
         button_layout.addStretch()
         button_layout.addWidget(self.update_category_button)
         button_layout.addWidget(self.add_commodity_button)
@@ -63,6 +62,10 @@ class CategoryDetailWidget(QWidget):
         self.category_group_box.setLayout(box_layout)
         main_layout.addWidget(self.category_group_box)
         return main_layout
+
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_text_edit()
 
     def _setup_texts(self) -> None:
         widgets = [
@@ -80,6 +83,13 @@ class CategoryDetailWidget(QWidget):
         if UiTexts.set_default_texts(self, widgets):
             return
 
+    def _setup_text_edit(self) -> None:
+        self.notes_edit.setReadOnly(True)
+        self.notes_edit.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        self.notes_edit.setAcceptRichText(False)
+        self.notes_edit.setAcceptDrops(False)
+        self.notes_edit.setUndoRedoEnabled(False)
+
     def set_category_texts(self, category: Category) -> None:
         self.name_label.setText(category.name)
-        self.notes_value.setText(category.notes or "")
+        self.notes_edit.setText(category.notes or "")

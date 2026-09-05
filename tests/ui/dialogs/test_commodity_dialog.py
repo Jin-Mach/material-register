@@ -47,7 +47,7 @@ def test_commodity_valid(dialog):
     dialog.name_input.setText("Steel")
     dialog.unit_input.setCurrentText("kg")
     dialog.price_input.setValue(10.5)
-    dialog.notes_input.setText("notes")
+    dialog.notes_edit.setText("notes")
     assert dialog._is_input_valid() is True
     data = dialog.get_commodity_data()
     assert data is not None
