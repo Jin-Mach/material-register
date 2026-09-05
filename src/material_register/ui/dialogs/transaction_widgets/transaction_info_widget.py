@@ -4,14 +4,13 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QFormLayout,
-    QFrame,
     QHBoxLayout,
     QLabel,
     QPushButton,
     QSizePolicy,
     QTextEdit,
     QVBoxLayout,
-    QWidget,
+    QWidget, QGroupBox,
 )
 
 from material_register.config.ui_constants import (
@@ -20,6 +19,7 @@ from material_register.config.ui_constants import (
 )
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
+from material_register.ui.helpers.styles import WARNING_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -46,14 +46,16 @@ class TransactionInfoWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(5)
         self.payment_info = QLabel()
         self.payment_info.setObjectName("paymentInfo")
         self.payment_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         customer_notes_layout = QHBoxLayout()
-        customer_frame = QFrame()
-        customer_frame.setObjectName("customerFrame")
-        customer_frame.setMinimumWidth(300)
+        self.customer_group_box = QGroupBox()
+        self.customer_group_box.setObjectName("customerGroupBox")
+        self.customer_group_box.setMinimumWidth(300)
         customer_layout = QVBoxLayout()
+        customer_layout.setSpacing(5)
         customer_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         customer_form_layout = QFormLayout()
         customer_form_layout.setFormAlignment(
@@ -69,13 +71,15 @@ class TransactionInfoWidget(QWidget):
         self.document_number.setObjectName("documentNumber")
         self.address_label = QLabel()
         self.address_label.setObjectName("addressLabel")
+        self.address_label.setWordWrap(True)
         self.address = QLabel()
         self.address.setObjectName("address")
         button_layout = QHBoxLayout()
         self.update_transaction_info_button = QPushButton()
         self.update_transaction_info_button.setObjectName("updateTransactionInfoButton")
-        notes_frame = QFrame()
-        notes_frame.setObjectName("notesFrame")
+        self.notes_group_box = QGroupBox()
+        self.notes_group_box.setObjectName("notesGroupBox")
+        self.notes_group_box.setMinimumWidth(200)
         notes_layout = QVBoxLayout()
         self.notes_edit = QTextEdit()
         count_layout = QHBoxLayout()
@@ -88,14 +92,14 @@ class TransactionInfoWidget(QWidget):
         button_layout.addWidget(self.update_transaction_info_button)
         customer_layout.addLayout(customer_form_layout)
         customer_layout.addLayout(button_layout)
-        customer_frame.setLayout(customer_layout)
+        self.customer_group_box.setLayout(customer_layout)
         count_layout.addWidget(self.notes_count_label)
         count_layout.addStretch()
         notes_layout.addWidget(self.notes_edit)
         notes_layout.addLayout(count_layout)
-        notes_frame.setLayout(notes_layout)
-        customer_notes_layout.addWidget(customer_frame)
-        customer_notes_layout.addWidget(notes_frame, 3)
+        self.notes_group_box.setLayout(notes_layout)
+        customer_notes_layout.addWidget(self.customer_group_box)
+        customer_notes_layout.addWidget(self.notes_group_box, 3)
         main_layout.addWidget(self.payment_info)
         main_layout.addLayout(customer_notes_layout)
         return main_layout
@@ -108,9 +112,11 @@ class TransactionInfoWidget(QWidget):
 
     def _setup_texts(self) -> None:
         widgets = [
+            self.customer_group_box,
             self.customer_name_label,
             self.document_number_label,
             self.address_label,
+            self.notes_group_box,
             self.notes_count_label,
             self.update_transaction_info_button,
         ]
@@ -137,6 +143,7 @@ class TransactionInfoWidget(QWidget):
         font = QFont()
         font.setBold(True)
         self.payment_info.setFont(font)
+        self.payment_info.setStyleSheet(WARNING_STYLE)
 
     def _create_connection(self) -> None:
         self.notes_edit.textChanged.connect(self._update_notes_count)

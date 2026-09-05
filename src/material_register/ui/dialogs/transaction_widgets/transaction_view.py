@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 class TransactionView(QTableView):
     def __init__(self, transaction_items_widget: "TransactionsItemsWidget"):
         super().__init__(transaction_items_widget)
+        self.setMinimumHeight(200)
 
     def setup_ui(self) -> None:
         model = self.model()
@@ -53,6 +54,7 @@ class TransactionView(QTableView):
                 self.setColumnHidden(index, True)
 
     def _setup_behavior(self) -> None:
+        self.verticalHeader().hide()
         header = self.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)

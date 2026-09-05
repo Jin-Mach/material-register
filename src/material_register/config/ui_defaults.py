@@ -247,12 +247,14 @@ DEFAULT_TEXTS = {
         "TRANSFER": "Bank transfer",
     },
     "TransactionInfoWidget": {
-        "customerNameLabelText": "Customer:",
+        "customerGroupBoxText": "Customer",
+        "customerNameLabelText": "Name:",
         "documentNumberLabelText": "Document:",
         "addressLabelText": "Address:",
         "updateTransactionInfoButtonText": "Edit",
         "updateTransactionInfoButtonTooltipText": "Opens dialog to re-enter customer",
-        "notesCountLabelText": "Character count:",
+        "notesGroupBoxText": "Notes",
+        "notesCountLabelText": "Character count:"
     },
     "TransactionsItemsWidget": {
         "addItemButtonText": "Add item",
@@ -261,6 +263,7 @@ DEFAULT_TEXTS = {
         "updateItemButtonTooltipText": "Opens item edit dialog",
         "deleteButtonText": "Delete item",
         "deleteButtonTooltipText": "Deletes selected item from list",
+        "totalCountLabelText": "Items count:",
         "totalPriceLabelText": "Total:",
         "priceSuffix": "£",
     },

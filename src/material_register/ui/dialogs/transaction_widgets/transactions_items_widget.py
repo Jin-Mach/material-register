@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QSizePolicy,
     QVBoxLayout,
-    QWidget,
+    QWidget, QGroupBox,
 )
 
 from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
@@ -50,26 +50,39 @@ class TransactionsItemsWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(5)
         self.transactions_items_view = TransactionView(self)
         self.transactions_items_view.setObjectName("transactionsItemsView")
-        buttons_price_layout = QHBoxLayout()
+        group_box = QGroupBox()
+        info_layout = QHBoxLayout()
+        self.total_count_label = QLabel()
+        self.total_count_label.setObjectName("totalCountLabel")
+        self.total_count_value_label = QLabel()
+        self.total_count_value_label.setObjectName("totalCountValueLabel")
+        self.total_price_label = QLabel()
+        self.total_price_label.setObjectName("totalPriceLabel")
+        self.total_price_value_label = QLabel()
+        buttons_layout = QHBoxLayout()
+        buttons_layout.setSpacing(5)
         self.add_item_button = QPushButton()
         self.add_item_button.setObjectName("addItemButton")
         self.update_item_button = QPushButton()
         self.update_item_button.setObjectName("updateItemButton")
         self.delete_item_button = QPushButton()
         self.delete_item_button.setObjectName("deleteButton")
-        self.total_price_label = QLabel()
-        self.total_price_label.setObjectName("totalPriceLabel")
-        self.total_value_label = QLabel()
-        buttons_price_layout.addWidget(self.add_item_button)
-        buttons_price_layout.addWidget(self.update_item_button)
-        buttons_price_layout.addWidget(self.delete_item_button)
-        buttons_price_layout.addStretch()
-        buttons_price_layout.addWidget(self.total_price_label)
-        buttons_price_layout.addWidget(self.total_value_label)
+        info_layout.addWidget(self.total_count_label)
+        info_layout.addWidget(self.total_count_value_label)
+        info_layout.addStretch()
+        info_layout.addWidget(self.total_price_label)
+        info_layout.addWidget(self.total_price_value_label)
+        buttons_layout.addWidget(self.add_item_button)
+        buttons_layout.addWidget(self.update_item_button)
+        buttons_layout.addWidget(self.delete_item_button)
+        buttons_layout.addStretch()
+        group_box.setLayout(info_layout)
         main_layout.addWidget(self.transactions_items_view)
-        main_layout.addLayout(buttons_price_layout)
+        main_layout.addWidget(group_box)
+        main_layout.addLayout(buttons_layout)
         return main_layout
 
     def _setup_ui(self) -> None:
@@ -87,6 +100,7 @@ class TransactionsItemsWidget(QWidget):
             self.add_item_button,
             self.update_item_button,
             self.delete_item_button,
+            self.total_count_label,
             self.total_price_label,
         ]
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
@@ -102,8 +116,8 @@ class TransactionsItemsWidget(QWidget):
     def _setup_style(self) -> None:
         font = QFont()
         font.setBold(True)
-        self.total_value_label.setStyleSheet(PRICE_STYLE)
-        self.total_value_label.setFont(font)
+        self.total_price_value_label.setStyleSheet(PRICE_STYLE)
+        self.total_price_value_label.setFont(font)
 
     def _setup_model(self, transfer_type: str) -> None:
         if transfer_type == TRANSFER_IN:
@@ -151,7 +165,7 @@ class TransactionsItemsWidget(QWidget):
     def update_item(
         self, index: QModelIndex, item_data: dict[str, str | int | float]
     ) -> None:
-        if item_data is None:
+        if not item_data:
             MessageBoxes.show_error(self, "ITEMS_DATA_FAILED", "WARNING")
             return
         row = index.row()
@@ -165,4 +179,5 @@ class TransactionsItemsWidget(QWidget):
     def setup_total_value(
         self, current_model: TransactionItemsModelIn | TransactionItemsModelOut
     ) -> None:
-        self.total_value_label.setText(current_model.return_total())
+        self.total_count_value_label.setText(str(current_model.rowCount()))
+        self.total_price_value_label.setText(current_model.return_total())

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QWidget, QScrollArea
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
@@ -45,12 +45,22 @@ class TransactionItemsDialogIn(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        self.transaction_info_widget = TransactionInfoWidget(self, self.transfer_type)
+        main_layout.setSpacing(5)
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_widget = QWidget()
+        scroll_layout = QVBoxLayout()
+        scroll_layout.setContentsMargins(0, 0, 0, 0)
+        scroll_layout.setSpacing(5)
+        self.transaction_info_widget = TransactionInfoWidget(
+            self, self.transfer_type
+        )
         self.transactions_items_widget = TransactionsItemsWidget(
             self, self.transfer_type
         )
         button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
         )
         self.save_transaction_button = button_box.button(
             QDialogButtonBox.StandardButton.Ok
@@ -61,8 +71,11 @@ class TransactionItemsDialogIn(QDialog):
         )
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
         self.cancel_transaction_button.setDefault(True)
-        main_layout.addWidget(self.transaction_info_widget)
-        main_layout.addWidget(self.transactions_items_widget, 3)
+        scroll_layout.addWidget(self.transaction_info_widget)
+        scroll_layout.addWidget(self.transactions_items_widget, 3)
+        scroll_widget.setLayout(scroll_layout)
+        scroll_area.setWidget(scroll_widget)
+        main_layout.addWidget(scroll_area)
         main_layout.addWidget(button_box)
         return main_layout
 

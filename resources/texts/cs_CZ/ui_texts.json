@@ -264,11 +264,13 @@
     "TRANSFER": "Převod na účet"
   },
   "TransactionInfoWidget": {
-    "customerNameLabelText": "Zákazník:",
+    "customerGroupBoxText": "Zákazník",
+    "customerNameLabelText": "Jméno:",
     "documentNumberLabelText": "Doklad:",
     "addressLabelText": "Adresa:",
     "updateTransactionInfoButtonText": "Upravit",
     "updateTransactionInfoButtonTooltipText": "Otevře dialog pro znovu zadání zákazníka",
+    "notesGroupBoxText": "Poznámky",
     "notesCountLabelText": "Počet znaků:"
   },
   "TransactionsItemsWidget": {
@@ -278,6 +280,7 @@
     "updateItemButtonTooltipText": "Otevře dialog úpravy označené položky",
     "deleteButtonText": "Smazat položku",
     "deleteButtonTooltipText": "Smaže označenou položku ze seznamu",
+    "totalCountLabelText": "Počet položek:",
     "totalPriceLabelText": "Celkem:",
     "priceSuffix": "Kč"
   },
