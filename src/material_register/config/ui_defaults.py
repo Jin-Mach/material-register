@@ -194,6 +194,8 @@ DEFAULT_TEXTS = {
     "CatalogWidget": {
         "addCategoryButtonText": "Add category",
         "addCategoryButtonTooltipText": "Creates a new category",
+        "updateCommoditiesPriceText": "Update Prices",
+        "updateCommoditiesPriceTooltipText": "Update prices for multiple items at once",
         "catalogTitleLabelText": "Item catalog",
     },
     "CatalogDefaultWidget": {
@@ -219,6 +221,16 @@ DEFAULT_TEXTS = {
         "notesLabelText": "Notes",
         "updateCommodityButtonText": "Edit item",
         "updateCommodityButtonTooltipText": "Edits selected item",
+    },
+    "UpdateCommoditiesPriceDialog": {
+        "titleText": "Update Items",
+        "commodityNameLabelText": "Item",
+        "defaultPriceLabelText": "Current Price",
+        "newPriceLabelText": "New Price",
+        "saveButtonText": "Save",
+        "saveButtonTooltipText": "Save New Prices",
+        "cancelButtonText": "Cancel",
+        "cancelButtonTooltipText": "Close Dialog",
     },
     "CreateTransactionDialog": {
         "titleText": "New transaction",

@@ -16,6 +16,9 @@ from material_register.ui.dialogs.commodity_dialog import CommodityDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
+from material_register.ui.dialogs.UpdateCommoditiesPriceDialog import (
+    UpdateCommoditiesPriceDialog,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -178,6 +181,12 @@ class CatalogController:
             CatalogController._notification_handler(
                 self.notification_texts, "UPDATE_COMMODITY", "Item updated"
             )
+
+    def update_commodities_price(self) -> None:
+        dialog = UpdateCommoditiesPriceDialog(self.catalog_widget)
+        dialog.setup_commodities(DbCache.commodities)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            print("commodities_values:", dialog.commodities_map)
 
     def reload_catalog_tree(self) -> None:
         self.catalog_widget.tree_widget.reload_tree(

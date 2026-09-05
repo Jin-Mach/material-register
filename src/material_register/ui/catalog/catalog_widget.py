@@ -31,6 +31,8 @@ class CatalogWidget(QWidget):
         top_layout = QHBoxLayout()
         self.add_category_button = QPushButton()
         self.add_category_button.setObjectName("addCategoryButton")
+        self.update_commodities_price = QPushButton()
+        self.update_commodities_price.setObjectName("updateCommoditiesPrice")
         self.catalog_title_label = QLabel()
         self.catalog_title_label.setObjectName("catalogTitleLabel")
         self.catalog_title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -41,6 +43,7 @@ class CatalogWidget(QWidget):
         self.tree_widget = CatalogTreeWidget(self)
         self.details_widget = CatalogDetailsWidget(self, self.catalog_controller)
         top_layout.addWidget(self.add_category_button)
+        top_layout.addWidget(self.update_commodities_price)
         top_layout.addStretch()
         top_layout.addWidget(self.catalog_title_label)
         top_layout.addStretch()
@@ -57,6 +60,7 @@ class CatalogWidget(QWidget):
     def _setup_texts(self) -> None:
         widgets = [
             self.add_category_button,
+            self.update_commodities_price,
             self.catalog_title_label,
             self.details_widget,
         ]
@@ -72,6 +76,9 @@ class CatalogWidget(QWidget):
     def _create_connection(self) -> None:
         self.tree_widget.itemSelectionChanged.connect(self._on_selection_changed)
         self.add_category_button.clicked.connect(self.catalog_controller.add_category)
+        self.update_commodities_price.clicked.connect(
+            self.catalog_controller.update_commodities_price
+        )
         self.details_widget.category_with_commodities_widget.category_detail_widget.update_category_button.clicked.connect(
             self.catalog_controller.update_category
         )

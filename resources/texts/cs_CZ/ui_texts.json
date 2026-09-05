@@ -210,6 +210,8 @@
   "CatalogWidget": {
     "addCategoryButtonText": "Přidat kategorii",
     "addCategoryButtonTooltipText": "Vytvoří novou kategorii",
+    "updateCommoditiesPriceText": "Aktualizovat ceny",
+    "updateCommoditiesPriceTooltipText": "Aktualizovat ceny více položek najednou",
     "catalogTitleLabelText": "Katalog položek"
   },
   "CatalogDefaultWidget": {
@@ -235,6 +237,16 @@
     "notesLabelText": "Poznámky",
     "updateCommodityButtonText": "Upravit položku",
     "updateCommodityButtonTooltipText": "Upraví vybranou položku"
+  },
+  "UpdateCommoditiesPriceDialog": {
+    "titleText": "Aktualizovat položky",
+    "commodityNameLabelText": "Položka",
+    "defaultPriceLabelText": "Aktuální cena",
+    "newPriceLabelText": "Nová cena",
+    "saveButtonText": "Uložit",
+    "saveButtonTooltipText": "Uložit nové ceny",
+    "cancelButtonText": "Zrušit",
+    "cancelButtonTooltipText": "Zavře dialog"
   },
   "CreateTransactionDialog": {
     "titleText": "Nová transakce",
