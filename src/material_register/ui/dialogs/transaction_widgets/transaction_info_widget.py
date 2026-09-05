@@ -4,13 +4,14 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QFormLayout,
+    QGroupBox,
     QHBoxLayout,
     QLabel,
     QPushButton,
     QSizePolicy,
     QTextEdit,
     QVBoxLayout,
-    QWidget, QGroupBox,
+    QWidget,
 )
 
 from material_register.config.ui_constants import (

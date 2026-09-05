@@ -254,7 +254,7 @@ DEFAULT_TEXTS = {
         "updateTransactionInfoButtonText": "Edit",
         "updateTransactionInfoButtonTooltipText": "Opens dialog to re-enter customer",
         "notesGroupBoxText": "Notes",
-        "notesCountLabelText": "Character count:"
+        "notesCountLabelText": "Character count:",
     },
     "TransactionsItemsWidget": {
         "addItemButtonText": "Add item",

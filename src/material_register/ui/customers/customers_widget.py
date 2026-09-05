@@ -23,8 +23,8 @@ if TYPE_CHECKING:
 class CustomersWidget(QWidget):
     def __init__(self, stacked_widget: "StackedWidget"):
         super().__init__(stacked_widget)
-        self.customers_controller = CustomersController(self)
         self.stacked_widget = stacked_widget
+        self.customers_controller = CustomersController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._init_counts()

@@ -2,7 +2,13 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QWidget, QScrollArea
+from PySide6.QtWidgets import (
+    QDialog,
+    QDialogButtonBox,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
@@ -52,15 +58,12 @@ class TransactionItemsDialogIn(QDialog):
         scroll_layout = QVBoxLayout()
         scroll_layout.setContentsMargins(0, 0, 0, 0)
         scroll_layout.setSpacing(5)
-        self.transaction_info_widget = TransactionInfoWidget(
-            self, self.transfer_type
-        )
+        self.transaction_info_widget = TransactionInfoWidget(self, self.transfer_type)
         self.transactions_items_widget = TransactionsItemsWidget(
             self, self.transfer_type
         )
         button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok
-            | QDialogButtonBox.StandardButton.Cancel
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
         self.save_transaction_button = button_box.button(
             QDialogButtonBox.StandardButton.Ok

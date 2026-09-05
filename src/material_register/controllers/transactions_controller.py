@@ -117,7 +117,7 @@ class TransactionsController:
                     self.transactions_widget,
                 )
                 return
-            self._refresh_models_data()
+            self.refresh_models_data()
             self.inventory_model.load_inventory_data()
             self.items_dialog = None
             TransactionsController._notification_handler(
@@ -189,7 +189,7 @@ class TransactionsController:
             if not changed:
                 self.items_dialog = None
                 return
-            self._refresh_models_data()
+            self.refresh_models_data()
             self.inventory_model.load_inventory_data()
             TransactionsController._notification_handler(
                 self.notification_text, "UPDATE_TRANSACTION", "Transaction updated"
@@ -361,7 +361,7 @@ class TransactionsController:
         self._update_counts()
         self.update_total_price()
 
-    def _refresh_models_data(self) -> None:
+    def refresh_models_data(self) -> None:
         tab_context = self._get_tab_context()
         if tab_context is None:
             return

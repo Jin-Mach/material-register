@@ -3,12 +3,13 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
+    QGroupBox,
     QHBoxLayout,
     QLabel,
     QPushButton,
     QSizePolicy,
     QVBoxLayout,
-    QWidget, QGroupBox,
+    QWidget,
 )
 
 from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT

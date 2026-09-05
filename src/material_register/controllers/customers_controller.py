@@ -25,6 +25,9 @@ class CustomersController:
     def __init__(self, customers_widget: "CustomersWidget") -> None:
         self.customers_model = DataInit.customers_model
         self.customers_widget = customers_widget
+        self.transactions_widget = (
+            self.customers_widget.stacked_widget.transactions_widget
+        )
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get(
             "CUSTOMERS", None
         )
@@ -76,6 +79,7 @@ class CustomersController:
                     self.customers_widget,
                 )
                 return
+            self._refresh_transactions_data()
             CustomersController._refresh_cache()
             CustomersController._notification_handler(
                 self.notification_texts, "UPDATE_CUSTOMER", "Record updated"
@@ -120,6 +124,10 @@ class CustomersController:
         filtered = self.customers_model.rowCount()
         total = self.customers_model.get_total_count()
         self.customers_widget.set_count_text(filtered, total)
+
+    def _refresh_transactions_data(self) -> None:
+        transaction_controller = self.transactions_widget.transactions_controller
+        transaction_controller.refresh_models_data()
 
     @staticmethod
     def _refresh_cache() -> None:
