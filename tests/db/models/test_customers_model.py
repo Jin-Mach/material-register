@@ -83,3 +83,28 @@ def test_deactivate_customer() -> None:
     deactivate = model.set_active(row_id, active=False)
     assert deactivate
     assert model.record(row).value("active") == 0
+
+
+def test_document_exists_and_ignored_id() -> None:
+    db = _create_test_db()
+    model = CustomersModel(db)
+    query = QSqlQuery(db)
+    query.exec("INSERT INTO customers (id, document_number) VALUES (1, 'DOC123')")
+    query.exec("INSERT INTO customers (id, document_number) VALUES (2, 'DOC456')")
+    assert model.document_exists("DOC123") is True
+    assert model.document_exists("DOC123", ignored_id=1) is False
+
+
+def test_document_not_exists() -> None:
+    db = _create_test_db()
+    model = CustomersModel(db)
+    assert model.document_exists("NO_SUCH_DOC") is False
+
+
+def test_get_total_count() -> None:
+    db = _create_test_db()
+    model = CustomersModel(db)
+    query = QSqlQuery(db)
+    query.exec("INSERT INTO customers (id) VALUES (1)")
+    query.exec("INSERT INTO customers (id) VALUES (2)")
+    assert model.get_total_count() == 2
