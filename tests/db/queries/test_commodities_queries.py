@@ -119,6 +119,24 @@ def test_get_commodities(connection, schema) -> None:
     ]
 
 
+def test_update_commodity_price(connection, schema) -> None:
+    CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "note", 1)
+    query = QSqlQuery(connection)
+    query.exec("SELECT id FROM commodities WHERE name='A'")
+    query.next()
+    commodity_id = query.value(0)
+    ok, error = CommoditiesQueries.update_commodity_price(
+        connection, commodity_id, 20.0
+    )
+    assert ok is True
+    assert error == ""
+    query.prepare("SELECT default_price FROM commodities WHERE id=?")
+    query.addBindValue(commodity_id)
+    query.exec()
+    assert query.next()
+    assert query.value(0) == 20.0
+
+
 def test_commodity_exists(connection, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "note", 1)
     assert CommoditiesQueries.commodity_exists(connection, "A") is True

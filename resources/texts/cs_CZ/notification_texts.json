@@ -8,7 +8,8 @@
     "ADD_CATEGORY": "Kategorie přidána",
     "UPDATE_CATEGORY": "Kategorie upravena",
     "ADD_COMMODITY": "Položka přidána",
-    "UPDATE_COMMODITY": "Položka upravena"
+    "UPDATE_COMMODITY": "Položka upravena",
+    "UPDATE_PRICE": "Ceny upraveny"
   },
   "TRANSACTIONS": {
     "ADD_TRANSACTION": "Transakce přidána",

@@ -8,7 +8,8 @@
     "ADD_CATEGORY": "Category added",
     "UPDATE_CATEGORY": "Category updated",
     "ADD_COMMODITY": "Item added",
-    "UPDATE_COMMODITY": "Item updated"
+    "UPDATE_COMMODITY": "Item updated",
+    "UPDATE_PRICE": "Prices updated"
   },
   "TRANSACTIONS": {
     "ADD_TRANSACTION": "Transaction added",

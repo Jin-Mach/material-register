@@ -16,7 +16,7 @@ from material_register.ui.dialogs.commodity_dialog import CommodityDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
-from material_register.ui.dialogs.UpdateCommoditiesPriceDialog import (
+from material_register.ui.dialogs.update_coomodities_price_dialog import (
     UpdateCommoditiesPriceDialog,
 )
 
@@ -186,7 +186,25 @@ class CatalogController:
         dialog = UpdateCommoditiesPriceDialog(self.catalog_widget)
         dialog.setup_commodities(DbCache.commodities)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            print("commodities_values:", dialog.commodities_map)
+            for commodity_id, spinbox in dialog.commodities_map.items():
+                default_value = spinbox.property("default_price")
+                new_value = spinbox.value()
+                if default_value != new_value:
+                    ok, error = CommoditiesQueries.update_commodity_price(
+                        self.db_connection, commodity_id, new_value
+                    )
+                    if not ok:
+                        CatalogController._handle_db_error(
+                            error,
+                            f"{self.__class__.__name__}.update_commodities_price",
+                            self.catalog_widget,
+                        )
+                        return
+        CatalogController._refresh_cache()
+        self.setup_details_widget()
+        CatalogController._notification_handler(
+            self.notification_texts, "UPDATE_PRICE", "Prices updated"
+        )
 
     def reload_catalog_tree(self) -> None:
         self.catalog_widget.tree_widget.reload_tree(

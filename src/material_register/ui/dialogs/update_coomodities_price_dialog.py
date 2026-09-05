@@ -114,6 +114,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
             value_spinbox.setMinimum(COMMODITY_DIALOG_MIN_VALUE)
             value_spinbox.setMaximum(COMMODITY_DIALOG_MAX_PRICE_VALUE)
             value_spinbox.setDecimals(1)
+            value_spinbox.setSingleStep(0.1)
             value_spinbox.setGroupSeparatorShown(True)
             value_spinbox.valueChanged.connect(self._update_button_state)
             self.commodities_layout.addWidget(name_label, row, 0)

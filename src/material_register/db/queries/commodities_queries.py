@@ -106,6 +106,20 @@ class CommoditiesQueries:
         return results
 
     @staticmethod
+    def update_commodity_price(
+        connection: QSqlDatabase, commodity_id: int, default_price: float
+    ) -> tuple[bool, str]:
+        query = QSqlQuery(connection)
+        query.prepare("""UPDATE commodities SET default_price=? WHERE id=?""")
+        query.addBindValue(default_price)
+        query.addBindValue(commodity_id)
+        error = ""
+        ok = query.exec()
+        if not ok:
+            error = query.lastError().text()
+        return ok, error
+
+    @staticmethod
     def commodity_exists(
         connection: QSqlDatabase, name: str, ignored_id: int | None = None
     ) -> bool:
