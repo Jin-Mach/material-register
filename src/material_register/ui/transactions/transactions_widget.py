@@ -85,6 +85,14 @@ class TransactionsWidget(QWidget):
         self.items_count_text = ui_texts.get("itemsCountLabelText", "Count:")
         self.price_prefix = ui_texts.get("pricePrefix", "")
         self.price_sufix = ui_texts.get("priceSuffix", "")
+        self.tooltip_texts = {
+            "customer_text": ui_texts.get("tooltipCustomerText", "Customer:"),
+            "address_text": ui_texts.get("tooltipAddressText", "Address:"),
+            "payment_text": ui_texts.get("tooltipPaymentText", "Payment:"),
+            "CASH": ui_texts.get("CASH", "Cash"),
+            "TRANSFER": ui_texts.get("TRANSFER", "Transfer"),
+            "notes_text": ui_texts.get("tooltipNotesText", "Notes:"),
+        }
 
     def _setup_style(self) -> None:
         font = QFont()
@@ -125,6 +133,7 @@ class TransactionsWidget(QWidget):
         )
         self.transactions_tab_widget.transaction_in_view.setup_texts()
         self.transactions_load_model_in.set_suffix(self.model_in_suffix)
+        self.transactions_load_model_in.set_tooltip_texts(self.tooltip_texts)
         self.transactions_load_model_in.load_transactions_data()
         self.transactions_tab_widget.transaction_in_view.customContextMenuRequested.connect(
             self.transactions_tab_widget.transaction_in_view.open_context_menu
@@ -139,6 +148,7 @@ class TransactionsWidget(QWidget):
             self.transactions_proxy_filter_out
         )
         self.transactions_tab_widget.transactions_out_view.setup_texts()
+        self.transactions_load_model_out.set_tooltip_texts(self.tooltip_texts)
         self.transactions_load_model_out.load_transactions_data()
         self.transactions_tab_widget.transactions_out_view.customContextMenuRequested.connect(
             self.transactions_tab_widget.transactions_out_view.open_context_menu

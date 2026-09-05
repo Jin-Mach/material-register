@@ -23,7 +23,13 @@
     "modelInSuffix": "Kč",
     "itemsCountLabelText": "Zobrazeno:",
     "pricePrefix": "Výkup za období",
-    "priceSuffix": "Kč"
+    "priceSuffix": "Kč",
+    "tooltipCustomerText": "Zákazník:",
+    "tooltipAddressText": "Adresa:",
+    "tooltipPaymentText": "Platba:",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod na účet",
+    "tooltipNotesText": "Poznámky:"
   },
   "TransactionsView": {
     "updateTransactionActionText": "Upravit transakci",

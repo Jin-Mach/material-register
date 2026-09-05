@@ -20,6 +20,12 @@ DEFAULT_TEXTS = {
         "itemsCountLabelText": "Displayed:",
         "pricePrefix": "Purchase for period",
         "priceSuffix": "£",
+        "tooltipCustomerText": "Customer:",
+        "tooltipAddressText": "Address:",
+        "tooltipPaymentText": "Payment:",
+        "CASH": "Cash",
+        "TRANSFER": "Bank transfer",
+        "tooltipNotesText": "Notes:",
     },
     "TransactionsView": {
         "updateTransactionActionText": "Edit transaction",

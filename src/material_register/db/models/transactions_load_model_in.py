@@ -1,3 +1,4 @@
+import textwrap
 from typing import Any
 
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
@@ -18,6 +19,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
     def __init__(self, db_connection: QSqlDatabase) -> None:
         super().__init__()
         self.db_connection = db_connection
+        self.tooltip_texts = {}
         self.suffix = ""
         self.transaction_data = []
         self.headers = {}
@@ -38,6 +40,14 @@ class TransactionsLoadModelIn(QAbstractTableModel):
             if column == "total":
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
+        if role == Qt.ItemDataRole.ToolTipRole:
+            if self.tooltip_texts:
+                tooltip = TransactionsLoadModelIn._setup_tooltip(
+                    transaction, self.tooltip_texts
+                )
+                if tooltip:
+                    return tooltip
+            return None
         if role == Qt.ItemDataRole.UserRole:
             if column == "transaction_created_at":
                 return format_datetime_to_locale(transaction.transaction_created_at)
@@ -94,3 +104,32 @@ class TransactionsLoadModelIn(QAbstractTableModel):
 
     def set_suffix(self, suffix: str) -> None:
         self.suffix = suffix
+
+    def set_tooltip_texts(self, tooltip_texts: dict[str, str]) -> None:
+        self.tooltip_texts = tooltip_texts
+
+    @staticmethod
+    def _setup_tooltip(transaction: Transaction, tooltip_texts: dict[str, str]) -> str:
+        error_text = "N/A"
+        customer_text = tooltip_texts.get("customer_text", "Customer:")
+        customer_name = transaction.customer_name or error_text
+        address_text = tooltip_texts.get("address_text", "Address:")
+        customer_address = transaction.customer_address or error_text
+        payment_text = tooltip_texts.get("payment_text", "Payment:")
+        payment_type = tooltip_texts.get(transaction.payment_type, error_text)
+        notes_text = tooltip_texts.get("notes_text", "Notes:")
+        notes = transaction.transaction_notes or error_text
+        tooltip = (
+            f"{customer_text} {customer_name}\n"
+            f"{address_text} {customer_address}\n"
+            f"{payment_text} {payment_type}"
+        )
+        if notes != error_text:
+            wrapped_notes = textwrap.fill(
+                notes,
+                width=50,
+                initial_indent="    ",
+                subsequent_indent="    ",
+            )
+            tooltip += f"\n{notes_text}\n{wrapped_notes}"
+        return tooltip
