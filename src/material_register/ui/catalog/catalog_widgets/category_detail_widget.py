@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import setup_text_edit
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import (
@@ -84,11 +85,7 @@ class CategoryDetailWidget(QWidget):
             return
 
     def _setup_text_edit(self) -> None:
-        self.notes_edit.setReadOnly(True)
-        self.notes_edit.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        self.notes_edit.setAcceptRichText(False)
-        self.notes_edit.setAcceptDrops(False)
-        self.notes_edit.setUndoRedoEnabled(False)
+        setup_text_edit(self.notes_edit, read_only=True)
 
     def set_category_texts(self, category: Category) -> None:
         self.name_label.setText(category.name)

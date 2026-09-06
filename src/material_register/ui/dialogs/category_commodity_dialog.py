@@ -24,7 +24,7 @@ from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.message_boxes import MessageBoxes
-from material_register.ui.helpers.spinbox_setup import set_suffix_mode
+from material_register.ui.setup.ui_widgets import set_suffix_mode, disable_context_menu
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
@@ -91,6 +91,7 @@ class CategoryCommodityDialog(QDialog):
     def _setup_ui(self) -> None:
         self._setup_widgets()
         self._setup_spinboxes()
+        self._setup_context_menu()
         self._setup_texts()
         self._setup_categories_items()
         self._on_value_changed()
@@ -110,6 +111,9 @@ class CategoryCommodityDialog(QDialog):
     def _setup_spinboxes(self) -> None:
         self._setup_unit_spinbox()
         self._setup_price_spinbox()
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
 
     def _setup_unit_spinbox(self) -> None:
         self.unit_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)

@@ -11,6 +11,7 @@ from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.settings_dialog import SettingsDialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_context_menu
 from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
 from material_register.ui.widgets.side_panel import SidePanel
 from material_register.ui.widgets.stacked_widget import StackedWidget
@@ -51,6 +52,7 @@ class MainWindow(QMainWindow):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_splitter()
+        disable_context_menu(self.findChildren(QWidget), ignored_widgets=("transactionsView", "customersView"))
 
     def _setup_texts(self) -> None:
         if UiTexts.set_ui_texts(self, []):

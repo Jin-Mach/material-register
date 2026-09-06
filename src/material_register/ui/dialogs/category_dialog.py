@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QTextEdit,
-    QVBoxLayout,
+    QVBoxLayout, QWidget,
 )
 
 from material_register.config.ui_constants import (
@@ -23,6 +23,7 @@ from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import setup_text_edit, disable_context_menu
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -78,6 +79,7 @@ class CategoryDialog(QDialog):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_text_edit()
+        self._setup_context_menu()
         self._setup_mode()
         self._set_validators()
         self._set_required_style(self.category_name_input)
@@ -104,10 +106,10 @@ class CategoryDialog(QDialog):
         UiTexts.set_default_texts(self, widgets)
 
     def _setup_text_edit(self) -> None:
-        self.notes_input.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        self.notes_input.setAcceptRichText(False)
-        self.notes_input.setAcceptDrops(False)
-        self.notes_input.setUndoRedoEnabled(False)
+        setup_text_edit(self.notes_input)
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
 
     def _create_connection(self) -> None:
         self.category_name_input.textChanged.connect(self._on_form_changed)

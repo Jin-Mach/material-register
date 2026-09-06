@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.window_state_manager import WindowStateManager
@@ -15,6 +15,7 @@ from material_register.ui.dialogs.transaction_widgets.transactions_items_widget 
 )
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_context_menu
 
 if TYPE_CHECKING:
     from material_register.controllers.transactions_controller import (
@@ -69,6 +70,7 @@ class TransactionItemsDialogOut(QDialog):
     def _setup_ui(self) -> None:
         self.save_transaction_button.setEnabled(False)
         self._setup_texts()
+        self._setup_context_menu()
 
     def _setup_texts(self) -> None:
         widgets = [self.save_transaction_button, self.cancel_transaction_button]
@@ -89,6 +91,9 @@ class TransactionItemsDialogOut(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
 
     def set_create_data(self, create_data: dict[str, str | int]) -> None:
         self._setup_create_data(create_data)

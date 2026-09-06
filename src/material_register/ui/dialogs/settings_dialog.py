@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QVBoxLayout,
+    QVBoxLayout, QWidget,
 )
 
 from material_register.providers.texts_provider import TextsProvider
@@ -21,6 +21,7 @@ from material_register.ui.dialogs.settings_widgets.settings_stacked_widget impor
     SettingsStackedWidget,
 )
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_context_menu
 
 if TYPE_CHECKING:
     from material_register.ui.main_window import MainWindow
@@ -69,6 +70,10 @@ class SettingsDialog(QDialog):
         return main_layout
 
     def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_context_menu()
+
+    def _setup_texts(self) -> None:
         if UiTexts.set_ui_texts(self, [self.close_button]):
             return
         ErrorHandler.handle_error(
@@ -77,6 +82,9 @@ class SettingsDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, []):
             return
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
 
     def _create_connection(self):
         buttons_map = {

@@ -19,6 +19,7 @@ from material_register.controllers.tools_controllers.notes_controller import (
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import setup_text_edit
 
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
@@ -124,10 +125,7 @@ class NotesWidget(QWidget):
     def _setup_text_edits(self) -> None:
         edits = [self.permanent_notes_edit, self.local_notes_edit]
         for edit in edits:
-            edit.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-            edit.setAcceptRichText(False)
-            edit.setAcceptDrops(False)
-            edit.setUndoRedoEnabled(False)
+            setup_text_edit(edit)
 
     def _create_connection(self) -> None:
         self.permanent_notes_edit.textChanged.connect(self._update_button_states)

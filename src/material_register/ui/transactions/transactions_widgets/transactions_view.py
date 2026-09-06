@@ -27,6 +27,7 @@ class TransactionsView(QTableView):
         transactions_controller: "TransactionsController",
     ) -> None:
         super().__init__(stacked_widget)
+        self.setObjectName("transactionsView")
         self.transactions_controller = transactions_controller
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._setup_ui()

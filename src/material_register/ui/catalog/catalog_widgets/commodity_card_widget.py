@@ -18,6 +18,7 @@ from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.formating_utils import format_number_to_locale
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import setup_text_edit
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widgets.commodities_grid_widget import (
@@ -92,10 +93,7 @@ class CommodityCardWidget(QTabWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
     def _setup_text_edit(self) -> None:
-        self.notes_edit.setContextMenuPolicy(Qt.CustomContextMenu.NoContextMenu)
-        self.notes_edit.setAcceptRichText(False)
-        self.notes_edit.setAcceptDrops(False)
-        self.notes_edit.setUndoRedoEnabled(False)
+        setup_text_edit(self.notes_edit)
 
     def set_commodity_details(self, commodity: Commodity) -> None:
         self.setTabText(0, commodity.name)

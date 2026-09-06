@@ -22,6 +22,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.styles import WARNING_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import setup_text_edit
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.transaction_items_dialog_in import (
@@ -135,10 +136,7 @@ class TransactionInfoWidget(QWidget):
             return
 
     def _setup_text_edit(self) -> None:
-        self.notes_edit.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        self.notes_edit.setAcceptRichText(False)
-        self.notes_edit.setAcceptDrops(False)
-        self.notes_edit.setUndoRedoEnabled(False)
+        setup_text_edit(self.notes_edit)
 
     def _setup_style(self) -> None:
         font = QFont()

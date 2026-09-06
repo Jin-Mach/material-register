@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QSizePolicy,
-    QVBoxLayout,
+    QVBoxLayout, QWidget,
 )
 
 from material_register.config.ui_constants import (
@@ -23,6 +23,7 @@ from material_register.config.ui_constants import (
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_context_menu
 
 if TYPE_CHECKING:
     from material_register.db.models.customers_completer_model import (
@@ -101,6 +102,7 @@ class CreateTransactionDialog(QDialog):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_context_menu()
         self._set_validators()
         self._set_required_style()
         self._update_continue_button_state()
@@ -136,6 +138,9 @@ class CreateTransactionDialog(QDialog):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
 
     def _set_validators(self) -> None:
         customer_validator = QRegularExpressionValidator(

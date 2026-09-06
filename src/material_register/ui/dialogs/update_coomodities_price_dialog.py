@@ -20,6 +20,7 @@ from material_register.config.ui_constants import (
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_context_menu
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -73,6 +74,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_context_menu()
         self._setup_labels()
 
     def _setup_texts(self) -> None:
@@ -84,6 +86,9 @@ class UpdateCommoditiesPriceDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, self.findChildren(QWidget)):
             return
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
 
     def _setup_labels(self) -> None:
         for label in [
@@ -117,6 +122,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
             value_spinbox.setSingleStep(0.1)
             value_spinbox.setGroupSeparatorShown(True)
             value_spinbox.valueChanged.connect(self._update_button_state)
+            disable_context_menu([value_spinbox])
             self.commodities_layout.addWidget(name_label, row, 0)
             self.commodities_layout.addWidget(price_label, row, 1)
             self.commodities_layout.addWidget(value_spinbox, row, 2)
