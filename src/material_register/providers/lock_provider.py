@@ -3,9 +3,9 @@ from pathlib import Path
 from PySide6.QtCore import QLockFile, QStandardPaths
 
 from material_register.config.project_constants import (
-    APPLICATION_NAME,
     LOCK_FILE_NAME,
     ORGANIZATION_NAME,
+    APPLICATION_NAME,
 )
 
 

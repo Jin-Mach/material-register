@@ -30,6 +30,7 @@ REQUIRED_IMAGES = [
     Path("ui_icons") / "deleteIcon.png",
     Path("tools_icons") / "notesButtonIcon.png",
     Path("tools_icons") / "cashBalanceButtonIcon.png",
+    Path("tools_icons") / "databaseButtonIcon.png",
 ]
 
 REQUIRED_STYLES_FILES = [
