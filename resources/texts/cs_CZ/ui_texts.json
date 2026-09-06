@@ -387,5 +387,11 @@
     "totalLabelText": "Rozdíl:",
     "currencySuffix": " Kč",
     "quantitySuffix": " ks"
+  },
+  "DatabaseBackupWidget": {
+    "infoGroupBoxText": "Info",
+    "databaseNameLabelText": "Název:",
+    "databaseSizeLabelText": "Velikost:",
+    "databaseLastModifiedLabelText": "Poslední změna:"
   }
 }

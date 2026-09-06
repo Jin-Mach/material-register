@@ -16,6 +16,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widgets.cash_balance_widget import (
     CashBalanceWidget,
 )
+from material_register.ui.tools.right_toolbar_widgets.database_backup_widget import DatabaseBackupWidget
 from material_register.ui.tools.right_toolbar_widgets.notes_widget import NotesWidget
 
 if TYPE_CHECKING:
@@ -40,6 +41,7 @@ class RightToolbarWidget(QWidget):
         self.tools_container = QStackedWidget()
         self.notes_widget = NotesWidget(self.main_window.status_bar, self)
         self.cash_balance_widget = CashBalanceWidget(self)
+        self.database_widget = DatabaseBackupWidget(self)
         self.buttons_container = QWidget()
         self.buttons_container.setObjectName("buttonsContainer")
         self.buttons_container.setFixedWidth(self.WIDTH)
@@ -55,8 +57,13 @@ class RightToolbarWidget(QWidget):
         self.cash_balance_button.setObjectName("cashBalanceButton")
         self.cash_balance_button.setFixedSize(self.BUTTON_SIZE, self.BUTTON_SIZE)
         self.cash_balance_button.setCheckable(True)
+        self.database_button = QPushButton("db")
+        self.database_button.setObjectName("databaseButton")
+        self.database_button.setFixedSize(QSize(self.BUTTON_SIZE, self.BUTTON_SIZE))
+        self.database_button.setCheckable(True)
         buttons_layout.addWidget(self.notes_button)
         buttons_layout.addWidget(self.cash_balance_button)
+        buttons_layout.addWidget(self.database_button)
         buttons_layout.addStretch()
         self.buttons_container.setLayout(buttons_layout)
         return main_layout
@@ -68,7 +75,7 @@ class RightToolbarWidget(QWidget):
         self._setup_container()
 
     def _setup_texts(self) -> None:
-        widgets = [self.notes_button, self.cash_balance_button]
+        widgets = [self.notes_button, self.cash_balance_button, self.database_button]
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
@@ -80,7 +87,7 @@ class RightToolbarWidget(QWidget):
 
     def _setup_icons(self) -> None:
         # icons color: #FFE066
-        widgets = [self.notes_button, self.cash_balance_button]
+        widgets = [self.notes_button, self.cash_balance_button, self.database_button]
         if not UiIcons.set_icons("tools", widgets, icon_size=24):
             ErrorHandler.handle_error(
                 f"Icons load failed: {self.__class__.__name__}", "ui", "warning"
@@ -89,7 +96,7 @@ class RightToolbarWidget(QWidget):
             return
 
     def _setup_container(self) -> None:
-        for widget in [self.notes_widget, self.cash_balance_widget]:
+        for widget in [self.notes_widget, self.cash_balance_widget, self.database_widget]:
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
             scroll_area.setHorizontalScrollBarPolicy(
@@ -102,6 +109,7 @@ class RightToolbarWidget(QWidget):
         buttons_map = {
             self.notes_button: 0,
             self.cash_balance_button: 1,
+            self.database_button: 2,
         }
         for button, index in buttons_map.items():
             button.clicked.connect(lambda _, i=index: self._set_container_widget(i))
@@ -110,6 +118,7 @@ class RightToolbarWidget(QWidget):
         buttons_map = {
             0: self.notes_button,
             1: self.cash_balance_button,
+            2: self.database_button,
         }
         button = buttons_map[index]
         if self.tools_container.isVisible():
