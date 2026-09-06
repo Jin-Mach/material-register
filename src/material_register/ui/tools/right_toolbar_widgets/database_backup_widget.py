@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFormLayout,
     QGroupBox,
@@ -48,22 +49,29 @@ class DatabaseBackupWidget(QWidget):
         info_group_box = QGroupBox()
         info_group_box.setObjectName("infoGroupBox")
         info_layout = QFormLayout()
+        info_layout.setFieldGrowthPolicy(
+            QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow
+        )
         self.database_name_label = QLabel()
         self.database_name_label.setObjectName("databaseNameLabel")
         self.database_name_value = QLabel()
         self.database_name_value.setObjectName("databaseNameValue")
+        self.database_name_value.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.database_size_label = QLabel()
         self.database_size_label.setObjectName("databaseSizeLabel")
         self.database_size_value = QLabel()
         self.database_size_value.setObjectName("databaseSizeValue")
+        self.database_size_value.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.database_last_modified_label = QLabel()
         self.database_last_modified_label.setObjectName("databaseLastModifiedLabel")
         self.database_last_modified_value = QLabel()
         self.database_last_modified_value.setObjectName("databaseLastModifiedValue")
+        self.database_last_modified_value.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.database_last_backup_label = QLabel()
         self.database_last_backup_label.setObjectName("databaseLastBackupLabel")
         self.database_last_backup_value = QLabel()
         self.database_last_backup_value.setObjectName("databaseLastBackupValue")
+        self.database_last_backup_value.setAlignment(Qt.AlignmentFlag.AlignRight)
         info_layout.addRow(self.database_name_label, self.database_name_value)
         info_layout.addRow(self.database_size_label, self.database_size_value)
         info_layout.addRow(
