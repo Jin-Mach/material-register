@@ -82,7 +82,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
             f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
+        if UiTexts.set_default_texts(self, self.findChildren(QWidget)):
             return
 
     def _setup_labels(self) -> None:

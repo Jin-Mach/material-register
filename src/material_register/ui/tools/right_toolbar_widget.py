@@ -16,7 +16,9 @@ from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widgets.cash_balance_widget import (
     CashBalanceWidget,
 )
-from material_register.ui.tools.right_toolbar_widgets.database_backup_widget import DatabaseBackupWidget
+from material_register.ui.tools.right_toolbar_widgets.database_backup_widget import (
+    DatabaseBackupWidget,
+)
 from material_register.ui.tools.right_toolbar_widgets.notes_widget import NotesWidget
 
 if TYPE_CHECKING:
@@ -96,7 +98,11 @@ class RightToolbarWidget(QWidget):
             return
 
     def _setup_container(self) -> None:
-        for widget in [self.notes_widget, self.cash_balance_widget, self.database_widget]:
+        for widget in [
+            self.notes_widget,
+            self.cash_balance_widget,
+            self.database_widget,
+        ]:
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
             scroll_area.setHorizontalScrollBarPolicy(

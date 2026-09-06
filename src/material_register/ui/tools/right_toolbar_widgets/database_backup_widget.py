@@ -1,8 +1,17 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QGroupBox, QFormLayout, QLabel
+from PySide6.QtWidgets import (
+    QFormLayout,
+    QGroupBox,
+    QLabel,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+)
 
-from material_register.controllers.tools_controllers.database_backup_controller import DatabaseBackupController
+from material_register.controllers.tools_controllers.database_backup_controller import (
+    DatabaseBackupController,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -25,8 +34,6 @@ class DatabaseBackupWidget(QWidget):
         scroll_widget = QWidget()
         scroll_layout = QVBoxLayout()
         self.info_group = self._create_info_group()
-
-
 
         scroll_layout.addWidget(self.info_group)
 
@@ -57,7 +64,9 @@ class DatabaseBackupWidget(QWidget):
         self.database_last_modified_value.setObjectName("databaseLastModifiedValue")
         info_layout.addRow(self.database_name_label, self.database_name_value)
         info_layout.addRow(self.database_size_label, self.database_size_value)
-        info_layout.addRow(self.database_last_modified_label, self.database_last_modified_value)
+        info_layout.addRow(
+            self.database_last_modified_label, self.database_last_modified_value
+        )
         info_group_box.setLayout(info_layout)
         return info_group_box
 
@@ -73,7 +82,9 @@ class DatabaseBackupWidget(QWidget):
             return
 
     def _setup_info_group(self) -> None:
-        name, size, modified = self.database_backup_controller.setup_database_info_group()
+        name, size, modified = (
+            self.database_backup_controller.setup_database_info_group()
+        )
         self.database_name_value.setText(name)
         self.database_size_value.setText(str(size))
         self.database_last_modified_value.setText(str(modified))
