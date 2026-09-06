@@ -71,6 +71,7 @@ def test_find_missing_backup_in_december(tmp_path):
     )
     assert result == (2026, 11)
 
+
 def test_find_missing_backup_when_current_year_directory_is_missing(tmp_path):
     backup_path = tmp_path / "backup"
     previous_year_path = backup_path / "2025"

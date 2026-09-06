@@ -26,6 +26,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self._create_ui())
         self._setup_ui()
         self._create_connection()
+        self._after_init()
 
     def _create_ui(self) -> QWidget:
         central_widget = QWidget()
@@ -96,6 +97,9 @@ class MainWindow(QMainWindow):
 
     def _update_splitter_size(self) -> None:
         self.tools_width = self.splitter.sizes()[1]
+
+    def _after_init(self) -> None:
+        self.right_toolbar_widget.database_widget.database_backup_controller.start_thread()
 
     def _before_close(self) -> None:
         ToolsSettingsController.save_tools(self.tools_width, self.right_toolbar_widget)

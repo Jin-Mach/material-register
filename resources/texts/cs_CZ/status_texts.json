@@ -1,4 +1,7 @@
 {
+  "START_BACKUP": "Kontroluji zálohy...",
+  "BACKUP_FAILED": "Nepodařilo se zálohovat databázi",
+  "BACKUP_CREATED": "Záloha databáze aktualizována",
   "LOAD_NOTES_FAILED": "Nepodařilo se načíst poznámky",
   "SETTINGS_SAVED": "Nastavení uloženo",
   "SETTINGS_RESTORED": "Nastavení obnoveno",

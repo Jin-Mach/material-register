@@ -343,6 +343,10 @@ UI_KEYS = [
     ("CashBalanceWidget", "totalLabelText"),
     ("CashBalanceWidget", "currencySuffix"),
     ("CashBalanceWidget", "quantitySuffix"),
+    ("DatabaseBackupWidget", "infoGroupBoxText"),
+    ("DatabaseBackupWidget", "databaseNameLabelText"),
+    ("DatabaseBackupWidget", "databaseSizeLabelText"),
+    ("DatabaseBackupWidget", "databaseLastModifiedLabelText"),
 ]
 
 HEADERS_KEYS = [
@@ -419,6 +423,9 @@ NOTIFICATION_KEYS = [
 ]
 
 STATUS_KEYS = [
+    "START_BACKUP",
+    "BACKUP_FAILED",
+    "BACKUP_CREATED",
     "LOAD_NOTES_FAILED",
     "SETTINGS_SAVED",
     "SETTINGS_RESTORED",

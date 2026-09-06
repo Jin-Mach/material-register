@@ -370,4 +370,10 @@ DEFAULT_TEXTS = {
         "currencySuffix": " £",
         "quantitySuffix": " pcs",
     },
+    "DatabaseBackupWidget": {
+        "infoGroupBoxText": "Info",
+        "databaseNameLabelText": "Name:",
+        "databaseSizeLabelText": "Size:",
+        "databaseLastModifiedLabelText": "Last modified:",
+    },
 }
