@@ -321,6 +321,7 @@ UI_KEYS = [
     ("SettingsToolsWidget", "saveButtonTooltipText"),
     ("RightToolbarWidget", "notesButtonTooltipText"),
     ("RightToolbarWidget", "cashBalanceButtonTooltipText"),
+    ("RightToolbarWidget", "databaseButtonTooltipText"),
     ("NotesWidget", "permanentGroupBoxText"),
     ("NotesWidget", "permanentNotesEditPlaceholderText"),
     ("NotesWidget", "searchEditPlaceholderText"),

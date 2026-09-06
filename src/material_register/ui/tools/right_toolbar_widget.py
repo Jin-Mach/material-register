@@ -59,7 +59,7 @@ class RightToolbarWidget(QWidget):
         self.cash_balance_button.setObjectName("cashBalanceButton")
         self.cash_balance_button.setFixedSize(self.BUTTON_SIZE, self.BUTTON_SIZE)
         self.cash_balance_button.setCheckable(True)
-        self.database_button = QPushButton("db")
+        self.database_button = QPushButton()
         self.database_button.setObjectName("databaseButton")
         self.database_button.setFixedSize(QSize(self.BUTTON_SIZE, self.BUTTON_SIZE))
         self.database_button.setCheckable(True)

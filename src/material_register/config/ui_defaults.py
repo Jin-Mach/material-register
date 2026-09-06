@@ -343,6 +343,7 @@ DEFAULT_TEXTS = {
     "RightToolbarWidget": {
         "notesButtonTooltipText": "Notes",
         "cashBalanceButtonTooltipText": "Cash Register",
+        "databaseButtonTooltipText": "Database",
     },
     "NotesWidget": {
         "permanentGroupBoxText": "Permanent Notes",

@@ -528,7 +528,8 @@ QPushButton#localDeleteButton {
 }
 
 QPushButton#notesButton,
-QPushButton#cashBalanceButton {
+QPushButton#cashBalanceButton,
+QPushButton#databaseButton {
     min-width: 0;
     padding: 0;
     background-color: transparent;
@@ -554,6 +555,7 @@ QPushButton#localDeleteButton:pressed {
 
 QPushButton#notesButton:hover,
 QPushButton#cashBalanceButton:hover,
+QPushButton#databaseButton:hover,
 QPushButton#transactionsButton:hover,
 QPushButton#inventoryButton:hover,
 QPushButton#exportButton:hover,
@@ -566,6 +568,7 @@ QPushButton#settingsButton:hover {
 
 QPushButton#notesButton:pressed,
 QPushButton#cashBalanceButton:pressed,
+QPushButton#databaseButton:pressed,
 QPushButton#transactionsButton:pressed,
 QPushButton#inventoryButton:pressed,
 QPushButton#exportButton:pressed,
@@ -578,6 +581,7 @@ QPushButton#settingsButton:pressed {
 
 QPushButton#notesButton:checked,
 QPushButton#cashBalanceButton:checked,
+QPushButton#databaseButton:checked,
 QPushButton#transactionsButton:checked,
 QPushButton#inventoryButton:checked,
 QPushButton#exportButton:checked,
@@ -591,6 +595,7 @@ QPushButton#settingsButton:checked {
 
 QPushButton#notesButton:checked:hover,
 QPushButton#cashBalanceButton:checked:hover,
+QPushButton#databaseButton:checked:hover,
 QPushButton#transactionsButton:checked:hover,
 QPushButton#inventoryButton:checked:hover,
 QPushButton#exportButton:checked:hover,

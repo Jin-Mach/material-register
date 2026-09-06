@@ -360,7 +360,8 @@
   },
   "RightToolbarWidget": {
     "notesButtonTooltipText": "Poznámky",
-    "cashBalanceButtonTooltipText": "Pokladna"
+    "cashBalanceButtonTooltipText": "Pokladna",
+    "databaseButtonTooltipText": "Databáze"
   },
   "NotesWidget": {
     "permanentGroupBoxText": "Trvalé poznámky",

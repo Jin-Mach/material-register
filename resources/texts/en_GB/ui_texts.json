@@ -375,7 +375,8 @@
   },
   "RightToolbarWidget": {
     "notesButtonTooltipText": "Notes",
-    "cashBalanceButtonTooltipText": "Cash Register"
+    "cashBalanceButtonTooltipText": "Cash Register",
+    "databaseButtonTooltipText": "Database"
   },
   "NotesWidget": {
     "permanentGroupBoxText": "Permanent Notes",
