@@ -375,5 +375,6 @@ DEFAULT_TEXTS = {
         "databaseNameLabelText": "Name:",
         "databaseSizeLabelText": "Size:",
         "databaseLastModifiedLabelText": "Last modified:",
+        "databaseLastBackupLabelText": "Last backup:",
     },
 }

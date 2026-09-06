@@ -407,6 +407,7 @@
     "infoGroupBoxText": "Info",
     "databaseNameLabelText": "Name:",
     "databaseSizeLabelText": "Size:",
-    "databaseLastModifiedLabelText": "Last modified:"
+    "databaseLastModifiedLabelText": "Last modified:",
+    "databaseLastBackupLabelText": "Last backup:"
   }
 }

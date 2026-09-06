@@ -52,6 +52,7 @@ class CatalogController:
             CatalogController._refresh_cache()
             self.reload_catalog_tree()
             self.catalog_widget.details_widget.refresh_category_data(category_data)
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             item = self.catalog_widget.tree_widget.find_item_by_id(category_id)
             if item:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
@@ -99,6 +100,7 @@ class CatalogController:
             self.setup_details_widget()
             self.inventory_model.load_inventory_data()
             CatalogController._update_inventory_count()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CatalogController._notification_handler(
                 self.notification_texts, "ADD_COMMODITY", "Commodity added"
             )
@@ -133,6 +135,7 @@ class CatalogController:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
                 item.setExpanded(True)
             self.inventory_model.load_inventory_data()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CatalogController._notification_handler(
                 self.notification_texts, "UPDATE_CATEGORY", "Category updated"
             )
@@ -178,6 +181,7 @@ class CatalogController:
                 self.catalog_widget.tree_widget.setCurrentItem(item)
                 item.setExpanded(True)
             self.inventory_model.load_inventory_data()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CatalogController._notification_handler(
                 self.notification_texts, "UPDATE_COMMODITY", "Item updated"
             )
@@ -202,6 +206,7 @@ class CatalogController:
                         return
             CatalogController._refresh_cache()
             self.setup_details_widget()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CatalogController._notification_handler(
                 self.notification_texts, "UPDATE_PRICE", "Prices updated"
             )

@@ -34,9 +34,7 @@ class DatabaseBackupWidget(QWidget):
         scroll_widget = QWidget()
         scroll_layout = QVBoxLayout()
         self.info_group = self._create_info_group()
-
         scroll_layout.addWidget(self.info_group)
-
         scroll_widget.setLayout(scroll_layout)
         scroll_area.setWidget(scroll_widget)
         main_layout.addWidget(scroll_area)
@@ -44,7 +42,7 @@ class DatabaseBackupWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
-        self._setup_info_group()
+        self.setup_info_group()
 
     def _create_info_group(self) -> QGroupBox:
         info_group_box = QGroupBox()
@@ -62,10 +60,17 @@ class DatabaseBackupWidget(QWidget):
         self.database_last_modified_label.setObjectName("databaseLastModifiedLabel")
         self.database_last_modified_value = QLabel()
         self.database_last_modified_value.setObjectName("databaseLastModifiedValue")
+        self.database_last_backup_label = QLabel()
+        self.database_last_backup_label.setObjectName("databaseLastBackupLabel")
+        self.database_last_backup_value = QLabel()
+        self.database_last_backup_value.setObjectName("databaseLastBackupValue")
         info_layout.addRow(self.database_name_label, self.database_name_value)
         info_layout.addRow(self.database_size_label, self.database_size_value)
         info_layout.addRow(
             self.database_last_modified_label, self.database_last_modified_value
+        )
+        info_layout.addRow(
+            self.database_last_backup_label, self.database_last_backup_value
         )
         info_group_box.setLayout(info_layout)
         return info_group_box
@@ -81,10 +86,11 @@ class DatabaseBackupWidget(QWidget):
         if UiTexts.set_default_texts(self, widgets):
             return
 
-    def _setup_info_group(self) -> None:
-        name, size, modified = (
+    def setup_info_group(self) -> None:
+        name, size, modified, last_backup = (
             self.database_backup_controller.setup_database_info_group()
         )
         self.database_name_value.setText(name)
         self.database_size_value.setText(str(size))
         self.database_last_modified_value.setText(str(modified))
+        self.database_last_backup_value.setText(str(last_backup))

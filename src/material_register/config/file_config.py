@@ -347,6 +347,7 @@ UI_KEYS = [
     ("DatabaseBackupWidget", "databaseNameLabelText"),
     ("DatabaseBackupWidget", "databaseSizeLabelText"),
     ("DatabaseBackupWidget", "databaseLastModifiedLabelText"),
+    ("DatabaseBackupWidget", "databaseLastBackupLabelText"),
 ]
 
 HEADERS_KEYS = [

@@ -49,6 +49,7 @@ class CustomersController:
                 return
             CustomersController._refresh_cache()
             self.update_counts()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CustomersController._notification_handler(
                 self.notification_texts, "ADD_CUSTOMER", "Customer added"
             )
@@ -81,6 +82,7 @@ class CustomersController:
                 return
             self._refresh_transactions_data()
             CustomersController._refresh_cache()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CustomersController._notification_handler(
                 self.notification_texts, "UPDATE_CUSTOMER", "Record updated"
             )
@@ -105,6 +107,7 @@ class CustomersController:
                 )
                 return
             CustomersController._refresh_cache()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CustomersController._notification_handler(
                 self.notification_texts, "CHANGE_ACTIVE", "Status changed"
             )

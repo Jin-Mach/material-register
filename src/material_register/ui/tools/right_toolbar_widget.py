@@ -43,7 +43,7 @@ class RightToolbarWidget(QWidget):
         self.tools_container = QStackedWidget()
         self.notes_widget = NotesWidget(self.main_window.status_bar, self)
         self.cash_balance_widget = CashBalanceWidget(self)
-        self.database_widget = DatabaseBackupWidget(self)
+        self.database_backup_widget = DatabaseBackupWidget(self)
         self.buttons_container = QWidget()
         self.buttons_container.setObjectName("buttonsContainer")
         self.buttons_container.setFixedWidth(self.WIDTH)
@@ -101,7 +101,7 @@ class RightToolbarWidget(QWidget):
         for widget in [
             self.notes_widget,
             self.cash_balance_widget,
-            self.database_widget,
+            self.database_backup_widget,
         ]:
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)

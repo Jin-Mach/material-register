@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
         self.tools_width = self.splitter.sizes()[1]
 
     def _after_init(self) -> None:
-        self.right_toolbar_widget.database_widget.database_backup_controller.start_thread()
+        self.right_toolbar_widget.database_backup_widget.database_backup_controller.start_thread()
 
     def _before_close(self) -> None:
         ToolsSettingsController.save_tools(self.tools_width, self.right_toolbar_widget)

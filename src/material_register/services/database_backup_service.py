@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import UTC, datetime
 from pathlib import Path
 
 from material_register.services.error_handler import ErrorHandler
@@ -57,3 +58,14 @@ class DatabaseBackupService:
         backup_directory = database_path.parent / "backup" / str(year)
         backup_directory.mkdir(parents=True, exist_ok=True)
         return backup_directory
+
+    @staticmethod
+    def get_last_backup_date(backup_path: Path) -> datetime | None:
+        created_at = None
+        for file in backup_path.rglob("*.db"):
+            file_created_at = file.stat().st_mtime
+            if created_at is None or file_created_at > created_at:
+                created_at = file_created_at
+        if created_at is not None:
+            return datetime.fromtimestamp(created_at, UTC)
+        return None

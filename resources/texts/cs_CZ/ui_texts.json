@@ -392,6 +392,7 @@
     "infoGroupBoxText": "Info",
     "databaseNameLabelText": "Název:",
     "databaseSizeLabelText": "Velikost:",
-    "databaseLastModifiedLabelText": "Poslední změna:"
+    "databaseLastModifiedLabelText": "Poslední změna:",
+    "databaseLastBackupLabelText": "Poslední záloha:"
   }
 }

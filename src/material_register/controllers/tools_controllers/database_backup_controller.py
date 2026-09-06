@@ -6,6 +6,7 @@ from PySide6.QtCore import QObject, QThread, QTimer
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.paths_provider import PathsProvider
 from material_register.providers.texts_provider import TextsProvider
+from material_register.services.database_backup_service import DatabaseBackupService
 from material_register.ui.helpers.formating_utils import format_datetime_to_locale
 from material_register.workers.database_backup_worker import DatabaseBackupWorker
 
@@ -26,7 +27,7 @@ class DatabaseBackupController(QObject):
         self.thread = None
         self.worker = None
 
-    def setup_database_info_group(self) -> tuple[str, str, str]:
+    def setup_database_info_group(self) -> tuple[str, str, str, str]:
         database_stat = self.database_path.stat()
         name = self.database_path.name
         size = int(database_stat.st_size)
@@ -39,7 +40,15 @@ class DatabaseBackupController(QObject):
                 "%Y-%m-%d %H:%M:%S"
             )
         )
-        return name, size_text, last_modify
+        last_backup = DatabaseBackupService.get_last_backup_date(
+            self.database_folder / "backup"
+        )
+        last_backup_text = (
+            format_datetime_to_locale(last_backup.strftime("%Y-%m-%d %H:%M:%S"))
+            if last_backup
+            else "?"
+        )
+        return name, size_text, last_modify, last_backup_text
 
     def start_thread(self) -> None:
         self.main_window.status_bar.show_message("START_BACKUP")
@@ -67,6 +76,7 @@ class DatabaseBackupController(QObject):
         self._show_result("READY")
 
     def _show_result(self, key: str) -> None:
+        self.database_backup_widget.setup_info_group()
         self.main_window.status_bar.show_message(key)
 
     def _thread_finished(self) -> None:

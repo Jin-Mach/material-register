@@ -119,6 +119,7 @@ class TransactionsController:
                 return
             self.refresh_models_data()
             self.inventory_model.load_inventory_data()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             self.items_dialog = None
             TransactionsController._notification_handler(
                 self.notification_text, "ADD_TRANSACTION", "Transaction added"
@@ -191,6 +192,7 @@ class TransactionsController:
                 return
             self.refresh_models_data()
             self.inventory_model.load_inventory_data()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             TransactionsController._notification_handler(
                 self.notification_text, "UPDATE_TRANSACTION", "Transaction updated"
             )
@@ -224,6 +226,7 @@ class TransactionsController:
             self._update_counts()
             self.update_total_price()
             self._update_cash_balance_value()
+            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             TransactionsController._notification_handler(
                 self.notification_text, "DELETE_TRANSACTION", "Transaction deleted"
             )
