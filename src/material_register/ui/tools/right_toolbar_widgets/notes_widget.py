@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QSize
-from PySide6.QtGui import QGuiApplication, QPalette, Qt, QTextCursor
+from PySide6.QtGui import QGuiApplication, QPalette, QTextCursor
 from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,

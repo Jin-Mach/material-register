@@ -52,7 +52,10 @@ class MainWindow(QMainWindow):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_splitter()
-        disable_context_menu(self.findChildren(QWidget), ignored_widgets=("transactionsView", "customersView"))
+        disable_context_menu(
+            self.findChildren(QWidget),
+            ignored_widgets=("transactionsView", "customersView"),
+        )
 
     def _setup_texts(self) -> None:
         if UiTexts.set_ui_texts(self, []):

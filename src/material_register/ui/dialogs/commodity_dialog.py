@@ -13,7 +13,8 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QTextEdit,
-    QVBoxLayout, QWidget,
+    QVBoxLayout,
+    QWidget,
 )
 
 from material_register.config.ui_constants import (
@@ -29,7 +30,7 @@ from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE, WARNING_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.ui.setup.ui_widgets import setup_text_edit, disable_context_menu
+from material_register.ui.setup.ui_widgets import disable_context_menu, setup_text_edit
 from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:

@@ -24,10 +24,10 @@ from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.message_boxes import MessageBoxes
-from material_register.ui.setup.ui_widgets import set_suffix_mode, disable_context_menu
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_context_menu, set_suffix_mode
 from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:

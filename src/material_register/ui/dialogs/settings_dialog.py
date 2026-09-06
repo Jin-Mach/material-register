@@ -8,7 +8,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QVBoxLayout, QWidget,
+    QVBoxLayout,
+    QWidget,
 )
 
 from material_register.providers.texts_provider import TextsProvider
