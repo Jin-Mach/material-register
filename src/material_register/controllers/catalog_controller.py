@@ -200,11 +200,11 @@ class CatalogController:
                             self.catalog_widget,
                         )
                         return
-        CatalogController._refresh_cache()
-        self.setup_details_widget()
-        CatalogController._notification_handler(
-            self.notification_texts, "UPDATE_PRICE", "Prices updated"
-        )
+            CatalogController._refresh_cache()
+            self.setup_details_widget()
+            CatalogController._notification_handler(
+                self.notification_texts, "UPDATE_PRICE", "Prices updated"
+            )
 
     def reload_catalog_tree(self) -> None:
         self.catalog_widget.tree_widget.reload_tree(
