@@ -377,5 +377,13 @@ DEFAULT_TEXTS = {
         "databaseSizeLabelText": "Size:",
         "databaseLastModifiedLabelText": "Last modified:",
         "databaseLastBackupLabelText": "Last backup:",
+        "customBackupButtonText": "Custom backup",
+        "customBackupButtonTooltipText": "Creates a database backup in the selected location.",
+        "selectedBackupLabelText": "Selected backup:",
+        "selectedPathLabelText": "Select a backup",
+        "customRestoreButtonText": "Custom restore",
+        "customRestoreButtonTooltipText": "Selects a backup file to restore the database.",
+        "restoreBackupButtonText": "Restore backup",
+        "restoreBackupButtonTooltipText": "Restores the database from the selected backup.",
     },
 }

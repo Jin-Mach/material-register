@@ -394,6 +394,14 @@
     "databaseNameLabelText": "Název:",
     "databaseSizeLabelText": "Velikost:",
     "databaseLastModifiedLabelText": "Poslední změna:",
-    "databaseLastBackupLabelText": "Poslední záloha:"
+    "databaseLastBackupLabelText": "Poslední záloha:",
+    "customBackupButtonText": "Vlastní záloha",
+    "customBackupButtonTooltipText": "Vytvoří zálohu databáze do vybraného umístění.",
+    "selectedBackupLabelText": "Vybraná záloha:",
+    "selectedPathLabelText": "Vyberte zálohu",
+    "customRestoreButtonText": "Vlastní obnova",
+    "customRestoreButtonTooltipText": "Vybere soubor zálohy pro obnovu databáze.",
+    "restoreBackupButtonText": "Obnovit zálohu",
+    "restoreBackupButtonTooltipText": "Obnoví databázi z vybrané zálohy."
   }
 }

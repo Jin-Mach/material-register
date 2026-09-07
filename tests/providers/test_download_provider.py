@@ -35,6 +35,8 @@ def test_save_icon_file(tmp_path, monkeypatch) -> None:
 
 def test_download_files_success(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(requests, "get", _fake_response_text)
-    invalid_files = {tmp_path / "en_GB/ui_texts.json"}
+    path = tmp_path / "texts/en_GB/ui_texts.json"
+    invalid_files = {path}
     result = DownloadProvider.download_files(invalid_files, tmp_path)
     assert result is True
+    assert path.read_text(encoding="utf-8") == '{"ok": true}'

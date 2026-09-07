@@ -4,7 +4,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFormLayout,
     QGroupBox,
+    QHBoxLayout,
     QLabel,
+    QPushButton,
     QScrollArea,
     QVBoxLayout,
     QWidget,
@@ -15,6 +17,9 @@ from material_register.controllers.tools_controllers.database_backup_controller 
 )
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.tools.right_toolbar_widgets.database_backup_widgets.database_backup_tree_widget import (
+    DatabaseBackupTreeWidget,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
@@ -30,12 +35,18 @@ class DatabaseBackupWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(5)
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_widget = QWidget()
         scroll_layout = QVBoxLayout()
+        scroll_layout.setContentsMargins(0, 0, 0, 0)
+        scroll_layout.setSpacing(5)
         self.info_group = self._create_info_group()
+        self.backup_group = self._create_backup_group()
         scroll_layout.addWidget(self.info_group)
+        scroll_layout.addWidget(self.backup_group, 1)
         scroll_widget.setLayout(scroll_layout)
         scroll_area.setWidget(scroll_widget)
         main_layout.addWidget(scroll_area)
@@ -82,6 +93,41 @@ class DatabaseBackupWidget(QWidget):
         )
         info_group_box.setLayout(info_layout)
         return info_group_box
+
+    def _create_backup_group(self) -> QGroupBox:
+        backup_group_box = QGroupBox()
+        backup_group_box.setObjectName("backupGroupBox")
+        backup_layout = QVBoxLayout()
+        buttons_layout = QHBoxLayout()
+        self.custom_backup_button = QPushButton()
+        self.custom_backup_button.setObjectName("customBackupButton")
+        self.backup_tree_widget = DatabaseBackupTreeWidget(self)
+        self.backup_tree_widget.setObjectName("backupTreeWidget")
+        selected_layout = QHBoxLayout()
+        self.selected_backup_label = QLabel()
+        self.selected_backup_label.setObjectName("selectedBackupLabel")
+        self.selected_path_label = QLabel()
+        self.selected_path_label.setObjectName("selectedPathLabel")
+        actions_group_box = QGroupBox()
+        actions_layout = QHBoxLayout()
+        self.custom_restore_button = QPushButton()
+        self.custom_restore_button.setObjectName("customRestoreButton")
+        self.restore_backup_button = QPushButton()
+        self.restore_backup_button.setObjectName("restoreBackupButton")
+        buttons_layout.addStretch()
+        buttons_layout.addWidget(self.custom_backup_button)
+        selected_layout.addWidget(self.selected_backup_label)
+        selected_layout.addWidget(self.selected_path_label, 1)
+        actions_layout.addWidget(self.custom_restore_button)
+        actions_layout.addStretch()
+        actions_layout.addWidget(self.restore_backup_button)
+        actions_group_box.setLayout(actions_layout)
+        backup_layout.addLayout(buttons_layout)
+        backup_layout.addWidget(self.backup_tree_widget, 1)
+        backup_layout.addLayout(selected_layout)
+        backup_layout.addWidget(actions_group_box)
+        backup_group_box.setLayout(backup_layout)
+        return backup_group_box
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)

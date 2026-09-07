@@ -350,6 +350,19 @@ UI_KEYS = [
     ("DatabaseBackupWidget", "databaseSizeLabelText"),
     ("DatabaseBackupWidget", "databaseLastModifiedLabelText"),
     ("DatabaseBackupWidget", "databaseLastBackupLabelText"),
+    ("DatabaseBackupWidget", "infoGroupBoxText"),
+    ("DatabaseBackupWidget", "databaseNameLabelText"),
+    ("DatabaseBackupWidget", "databaseSizeLabelText"),
+    ("DatabaseBackupWidget", "databaseLastModifiedLabelText"),
+    ("DatabaseBackupWidget", "databaseLastBackupLabelText"),
+    ("DatabaseBackupWidget", "customBackupButtonText"),
+    ("DatabaseBackupWidget", "customBackupButtonTooltipText"),
+    ("DatabaseBackupWidget", "selectedBackupLabelText"),
+    ("DatabaseBackupWidget", "selectedPathLabelText"),
+    ("DatabaseBackupWidget", "customRestoreButtonText"),
+    ("DatabaseBackupWidget", "customRestoreButtonTooltipText"),
+    ("DatabaseBackupWidget", "restoreBackupButtonText"),
+    ("DatabaseBackupWidget", "restoreBackupButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [
