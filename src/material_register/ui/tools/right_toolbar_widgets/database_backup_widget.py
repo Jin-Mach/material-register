@@ -1,3 +1,4 @@
+import os
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
@@ -33,6 +34,8 @@ class DatabaseBackupWidget(QWidget):
         self.database_backup_controller = DatabaseBackupController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._create_connection()
+        self.backup_path = None
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -57,6 +60,7 @@ class DatabaseBackupWidget(QWidget):
         self._setup_texts()
         self.setup_info_group()
         self.setup_backup_tree()
+        self._setup_widgets()
 
     def _create_info_group(self) -> QGroupBox:
         info_group_box = QGroupBox()
@@ -140,6 +144,8 @@ class DatabaseBackupWidget(QWidget):
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.selected_path_text = ui_texts.get("selectedPathLabelText", "Select a backup")
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
@@ -148,6 +154,13 @@ class DatabaseBackupWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
             return
+
+    def _setup_widgets(self) -> None:
+        self.restore_backup_button.setDisabled(True)
+
+    def _create_connection(self) -> None:
+        self.backup_tree_widget.itemSelectionChanged.connect(self._update_backup_path)
+        self.backup_tree_widget.itemSelectionChanged.connect(self._update_backup_button_state)
 
     def setup_info_group(self) -> None:
         name, size, modified, last_backup = (
@@ -165,3 +178,16 @@ class DatabaseBackupWidget(QWidget):
         self.no_backup_label.setVisible(not is_backup)
         if is_backup:
             self.backup_tree_widget.load_tree_widget(backup_map)
+
+    def _update_backup_path(self) -> None:
+        backup_path = self.backup_tree_widget.get_selected_data()
+        if backup_path is None:
+            self.backup_path = None
+            self.selected_path_label.setText(self.selected_path_text)
+            return
+        self.backup_path = backup_path
+        displayed_name = f"...{os.sep}{str(self.backup_path.relative_to(self.database_backup_controller.backup_path))}"
+        self.selected_path_label.setText(displayed_name)
+
+    def _update_backup_button_state(self) -> None:
+        self.restore_backup_button.setDisabled(self.backup_path is None)
