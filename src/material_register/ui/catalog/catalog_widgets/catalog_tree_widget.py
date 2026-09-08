@@ -40,9 +40,6 @@ class CatalogTreeWidget(QTreeWidget):
             self.blockSignals(False)
             self.setUpdatesEnabled(True)
 
-    def has_selection(self) -> bool:
-        return self.selectionModel().hasSelection()
-
     def get_selected_data(self) -> tuple[Category | None, Commodity | None]:
         item = self.currentItem()
         if item is None:

@@ -1,3 +1,4 @@
+from pathlib import Path
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
@@ -23,6 +24,7 @@ class DatabaseBackupController(QObject):
         self.main_window = self.database_backup_widget.right_toolbar_widget.main_window
         self.database_folder = PathsProvider.database
         self.database_path = (self.database_folder / DATABASE_NAME).with_suffix(".db")
+        self.backup_path = self.database_folder / "backup"
         self.status_texts = TextsProvider.STATUS_TEXTS
         self.thread = None
         self.worker = None
@@ -49,6 +51,10 @@ class DatabaseBackupController(QObject):
             else "?"
         )
         return name, size_text, last_modify, last_backup_text
+
+    def get_backup_map(self) -> dict[str, list[Path]]:
+        backup_map = DatabaseBackupService.get_backup_tree(self.backup_path)
+        return backup_map
 
     def start_thread(self) -> None:
         self.main_window.status_bar.show_message("START_BACKUP")
@@ -77,6 +83,7 @@ class DatabaseBackupController(QObject):
 
     def _show_result(self, key: str) -> None:
         self.database_backup_widget.setup_info_group()
+        self.database_backup_widget.setup_backup_tree()
         self.main_window.status_bar.show_message(key)
 
     def _thread_finished(self) -> None:

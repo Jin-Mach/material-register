@@ -397,6 +397,7 @@
     "databaseLastBackupLabelText": "Poslední záloha:",
     "customBackupButtonText": "Vlastní záloha",
     "customBackupButtonTooltipText": "Vytvoří zálohu databáze do vybraného umístění.",
+    "noBackupLabelText": "Nejsou k dispozici žádné zálohy",
     "selectedBackupLabelText": "Vybraná záloha:",
     "selectedPathLabelText": "Vyberte zálohu",
     "customRestoreButtonText": "Vlastní obnova",

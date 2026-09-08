@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QFormLayout,
     QGroupBox,
@@ -55,6 +56,7 @@ class DatabaseBackupWidget(QWidget):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self.setup_info_group()
+        self.setup_backup_tree()
 
     def _create_info_group(self) -> QGroupBox:
         info_group_box = QGroupBox()
@@ -101,6 +103,12 @@ class DatabaseBackupWidget(QWidget):
         buttons_layout = QHBoxLayout()
         self.custom_backup_button = QPushButton()
         self.custom_backup_button.setObjectName("customBackupButton")
+        self.no_backup_label = QLabel()
+        self.no_backup_label.setObjectName("noBackupLabel")
+        self.no_backup_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        font = QFont()
+        font.setBold(True)
+        self.no_backup_label.setFont(font)
         self.backup_tree_widget = DatabaseBackupTreeWidget(self)
         self.backup_tree_widget.setObjectName("backupTreeWidget")
         selected_layout = QHBoxLayout()
@@ -123,6 +131,7 @@ class DatabaseBackupWidget(QWidget):
         actions_layout.addWidget(self.restore_backup_button)
         actions_group_box.setLayout(actions_layout)
         backup_layout.addLayout(buttons_layout)
+        backup_layout.addWidget(self.no_backup_label, 1)
         backup_layout.addWidget(self.backup_tree_widget, 1)
         backup_layout.addLayout(selected_layout)
         backup_layout.addWidget(actions_group_box)
@@ -148,3 +157,11 @@ class DatabaseBackupWidget(QWidget):
         self.database_size_value.setText(str(size))
         self.database_last_modified_value.setText(str(modified))
         self.database_last_backup_value.setText(str(last_backup))
+
+    def setup_backup_tree(self) -> None:
+        backup_map = self.database_backup_controller.get_backup_map()
+        is_backup = bool(backup_map)
+        self.backup_tree_widget.setVisible(is_backup)
+        self.no_backup_label.setVisible(not is_backup)
+        if is_backup:
+            self.backup_tree_widget.load_tree_widget(backup_map)

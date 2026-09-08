@@ -379,6 +379,7 @@ DEFAULT_TEXTS = {
         "databaseLastBackupLabelText": "Last backup:",
         "customBackupButtonText": "Custom backup",
         "customBackupButtonTooltipText": "Creates a database backup in the selected location.",
+        "noBackupLabelText": "No backups available",
         "selectedBackupLabelText": "Selected backup:",
         "selectedPathLabelText": "Select a backup",
         "customRestoreButtonText": "Custom restore",

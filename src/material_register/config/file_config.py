@@ -357,6 +357,7 @@ UI_KEYS = [
     ("DatabaseBackupWidget", "databaseLastBackupLabelText"),
     ("DatabaseBackupWidget", "customBackupButtonText"),
     ("DatabaseBackupWidget", "customBackupButtonTooltipText"),
+    ("DatabaseBackupWidget", "noBackupLabelText"),
     ("DatabaseBackupWidget", "selectedBackupLabelText"),
     ("DatabaseBackupWidget", "selectedPathLabelText"),
     ("DatabaseBackupWidget", "customRestoreButtonText"),
