@@ -397,11 +397,14 @@
     "databaseLastBackupLabelText": "Poslední záloha:",
     "customBackupButtonText": "Vlastní záloha",
     "customBackupButtonTooltipText": "Vytvoří zálohu databáze do vybraného umístění.",
+    "folderBackupDialogTitle": "Vybrat složku pro zálohu",
     "noBackupLabelText": "Nejsou k dispozici žádné zálohy",
     "selectedBackupLabelText": "Vybraná záloha:",
     "selectedPathLabelText": "Vyberte zálohu",
     "customRestoreButtonText": "Vlastní obnova",
     "customRestoreButtonTooltipText": "Vybere soubor zálohy pro obnovu databáze.",
+    "fileRestoreDialogTitle": "Vybrat zálohu ze souboru",
+    "fileRestoreDialogFilterText": "Soubory databáze",
     "restoreBackupButtonText": "Obnovit zálohu",
     "restoreBackupButtonTooltipText": "Obnoví databázi z vybrané zálohy."
   }

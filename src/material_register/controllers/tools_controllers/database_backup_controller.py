@@ -1,5 +1,5 @@
-from pathlib import Path
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QObject, QThread, QTimer
@@ -55,6 +55,18 @@ class DatabaseBackupController(QObject):
     def get_backup_map(self) -> dict[str, list[Path]]:
         backup_map = DatabaseBackupService.get_backup_tree(self.backup_path)
         return backup_map
+
+    def custom_database_backup(self) -> None:
+        backup_path = self.database_backup_widget.get_custom_backup_path()
+        if backup_path is None:
+            return
+        print("backup_path", backup_path)
+
+    def restore_database(self) -> None:
+        restore_path = self.database_backup_widget.restore_path
+        if restore_path is None:
+            return
+        print("restore_path", restore_path)
 
     def start_thread(self) -> None:
         self.main_window.status_bar.show_message("START_BACKUP")

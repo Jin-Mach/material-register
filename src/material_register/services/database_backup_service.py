@@ -74,11 +74,9 @@ class DatabaseBackupService:
     def get_backup_tree(backup_path: Path) -> dict[str, list[Path]]:
         backup_tree = {}
         for year in backup_path.iterdir():
-            if not any(year.iterdir()):
-                continue
             tree_name = year.stem
-            backup_paths = []
-            for backup in year.glob("*.db"):
-                backup_paths.append(backup)
+            backup_paths = list(year.glob("*.db"))
+            if not backup_paths:
+                continue
             backup_tree[tree_name] = backup_paths
         return backup_tree
