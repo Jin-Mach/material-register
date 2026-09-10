@@ -3,14 +3,14 @@ import sqlite3
 from material_register.services.database_backup_service import DatabaseBackupService
 
 
-def create_test_database(database_path):
+def create_test_database(database_path) -> None:
     with sqlite3.connect(database_path) as database:
         database.execute("CREATE TABLE test (id INTEGER, name TEXT)")
         database.execute("INSERT INTO test VALUES (1, 'Test')")
         database.commit()
 
 
-def test_create_month_backup(tmp_path):
+def test_create_month_backup(tmp_path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     result = DatabaseBackupService.create_month_backup(
@@ -26,7 +26,7 @@ def test_create_month_backup(tmp_path):
             assert row[1] == "Test"
 
 
-def test_create_month_backup_when_backup_exists(tmp_path):
+def test_create_month_backup_when_backup_exists(tmp_path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     backup_directory = tmp_path / "backup" / "2026"
@@ -39,7 +39,7 @@ def test_create_month_backup_when_backup_exists(tmp_path):
     assert result is False
 
 
-def test_create_year_backup(tmp_path):
+def test_create_year_backup(tmp_path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     result = DatabaseBackupService.create_year_backup(database_path, year=2025)
@@ -53,7 +53,7 @@ def test_create_year_backup(tmp_path):
             assert row[1] == "Test"
 
 
-def test_create_year_backup_removes_month_backups(tmp_path):
+def test_create_year_backup_removes_month_backups(tmp_path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     backup_directory = tmp_path / "backup" / "2025"
@@ -69,7 +69,7 @@ def test_create_year_backup_removes_month_backups(tmp_path):
     assert not (backup_directory / "03.db").exists()
 
 
-def test_create_year_backup_when_backup_exists(tmp_path):
+def test_create_year_backup_when_backup_exists(tmp_path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     backup_directory = tmp_path / "backup" / "2025"
@@ -78,3 +78,17 @@ def test_create_year_backup_when_backup_exists(tmp_path):
     backup_path.touch()
     result = DatabaseBackupService.create_year_backup(database_path, year=2025)
     assert result is False
+
+
+def test_create_custom_backup(tmp_path) -> None:
+    database_path = tmp_path / "database.db"
+    create_test_database(database_path)
+    backup_path = tmp_path / "test_backup.db"
+    result = DatabaseBackupService.create_custom_backup(database_path, backup_path)
+    assert result is True
+    assert backup_path.exists()
+    with sqlite3.connect(backup_path) as database:
+        cursor = database.execute("SELECT id, name FROM test")
+        for row in cursor:
+            assert row[0] == 1
+            assert row[1] == "Test"

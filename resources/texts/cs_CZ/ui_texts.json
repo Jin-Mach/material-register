@@ -407,5 +407,10 @@
     "fileRestoreDialogFilterText": "Soubory databáze",
     "restoreBackupButtonText": "Obnovit zálohu",
     "restoreBackupButtonTooltipText": "Obnoví databázi z vybrané zálohy."
+  },
+  "ProgressDialog": {
+    "loadingDataText": "Načítání dat...",
+    "exportInProgressText": "Probíhá export...",
+    "backupInProgressText": "Probíhá záloha..."
   }
 }

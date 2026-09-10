@@ -18,5 +18,8 @@
   },
   "EXPORT": {
     "EXPORT_COMPLETED": "Export completed"
+  },
+  "BACKUP": {
+    "BACKUP_CREATED": "Backup created"
   }
 }

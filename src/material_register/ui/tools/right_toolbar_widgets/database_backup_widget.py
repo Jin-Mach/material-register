@@ -16,6 +16,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.controllers.tools_controllers.custom_backup_controller import (
+    CustomBackupController,
+)
 from material_register.controllers.tools_controllers.database_backup_controller import (
     DatabaseBackupController,
 )
@@ -34,6 +37,7 @@ class DatabaseBackupWidget(QWidget):
         super().__init__(right_toolbar_widget)
         self.right_toolbar_widget = right_toolbar_widget
         self.database_backup_controller = DatabaseBackupController(self)
+        self.custom_backup_controller = CustomBackupController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -171,7 +175,7 @@ class DatabaseBackupWidget(QWidget):
             self._update_backup_button_state
         )
         self.custom_backup_button.clicked.connect(
-            self.database_backup_controller.custom_database_backup
+            self.custom_backup_controller.start_backup_thread
         )
         self.custom_restore_button.clicked.connect(self.get_custom_restore_path)
         self.restore_backup_button.clicked.connect(
@@ -196,12 +200,15 @@ class DatabaseBackupWidget(QWidget):
             self.backup_tree_widget.load_tree_widget(backup_map)
 
     def get_custom_backup_path(self) -> tuple[Path, str] | None:
-        directory = QFileDialog.getExistingDirectory(
-            self, self.backup_dialog_title, str(Path.home())
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            self.backup_dialog_title,
+            str(Path.home()),
+            f"{self.restore_filter_text} (*.db)",
         )
-        if not directory:
+        if not file_path:
             return None
-        backup_path = Path(directory)
+        backup_path = Path(file_path)
         return backup_path, DatabaseBackupWidget._get_displayed_path(backup_path)
 
     def get_custom_restore_path(self) -> None:

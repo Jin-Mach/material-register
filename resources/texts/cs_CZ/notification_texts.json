@@ -18,5 +18,8 @@
   },
   "EXPORT": {
     "EXPORT_COMPLETED": "Export dokončen"
+  },
+  "BACKUP": {
+    "BACKUP_CREATED": "Záloha vytvořena"
   }
 }

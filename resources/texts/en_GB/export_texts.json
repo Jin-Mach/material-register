@@ -1,8 +1,4 @@
 {
-  "ProgressDialog": {
-    "loadingDataText": "Loading data...",
-    "exportInProgressText": "Export in progress..."
-  },
   "SummarySheet": {
     "sheetName": "Evidence",
     "titleText": "Material Register",

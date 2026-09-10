@@ -6,10 +6,11 @@ from PySide6.QtCore import QObject, QThread, QTimer
 
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.paths_provider import PathsProvider
-from material_register.providers.texts_provider import TextsProvider
 from material_register.services.database_backup_service import DatabaseBackupService
 from material_register.ui.helpers.formating_utils import format_datetime_to_locale
-from material_register.workers.database_backup_worker import DatabaseBackupWorker
+from material_register.workers.tools_workers.database_backup_worker import (
+    DatabaseBackupWorker,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widgets.database_backup_widget import (
@@ -25,7 +26,6 @@ class DatabaseBackupController(QObject):
         self.database_folder = PathsProvider.database
         self.database_path = (self.database_folder / DATABASE_NAME).with_suffix(".db")
         self.backup_path = self.database_folder / "backup"
-        self.status_texts = TextsProvider.STATUS_TEXTS
         self.thread = None
         self.worker = None
 
@@ -53,14 +53,9 @@ class DatabaseBackupController(QObject):
         return name, size_text, last_modify, last_backup_text
 
     def get_backup_map(self) -> dict[str, list[Path]]:
+        self.backup_path.mkdir(parents=True, exist_ok=True)
         backup_map = DatabaseBackupService.get_backup_tree(self.backup_path)
         return backup_map
-
-    def custom_database_backup(self) -> None:
-        backup_path = self.database_backup_widget.get_custom_backup_path()
-        if backup_path is None:
-            return
-        print("backup_path", backup_path)
 
     def restore_database(self) -> None:
         restore_path = self.database_backup_widget.restore_path
@@ -79,8 +74,7 @@ class DatabaseBackupController(QObject):
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._backup_error)
         self.worker.backup_created.connect(self._backup_created)
-        self.worker.finished.connect(self.thread.quit)
-        self.thread.finished.connect(self._thread_finished)
+        self.worker.finished.connect(self._thread_finished)
         self.thread.start()
 
     def _backup_error(self, key: str) -> None:
@@ -99,9 +93,16 @@ class DatabaseBackupController(QObject):
         self.main_window.status_bar.show_message(key)
 
     def _thread_finished(self) -> None:
+        self._clean_thread()
+
+    def _clean_thread(self) -> None:
         self.thread.quit()
         self.thread.wait()
-        self.worker.deleteLater()
+        if self.worker:
+            self.worker.deleteLater()
         self.thread.deleteLater()
-        self.worker = None
+        self._reset_variables()
+
+    def _reset_variables(self) -> None:
         self.thread = None
+        self.worker = None

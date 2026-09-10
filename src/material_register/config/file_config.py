@@ -362,6 +362,8 @@ UI_KEYS = [
     ("DatabaseBackupWidget", "fileRestoreDialogFilterText"),
     ("DatabaseBackupWidget", "restoreBackupButtonText"),
     ("DatabaseBackupWidget", "restoreBackupButtonTooltipText"),
+    ("ProgressDialog", "loadingDataText"),
+    ("ProgressDialog", "exportInProgressText"),
 ]
 
 HEADERS_KEYS = [
@@ -394,6 +396,7 @@ ERROR_KEYS = [
     "DATABASE_FAILED",
     "DATABASE_ERROR",
     "EXPORT_ERROR",
+    "BACKUP_ERROR",
     "PATH_ERROR",
     "CRITICAL_FAILURE",
     "UNKNOWN_ERROR",
@@ -420,6 +423,7 @@ CONFIRM_STRUCTURE = {
     "FOLDER_EXISTS": ["TITLE", "TEXT", "YES", "NO"],
     "OPEN_FILE_FAILED": ["TITLE", "TEXT", "CLOSE"],
     "OPEN_EXPLORER_FAILED": ["TITLE", "TEXT", "CLOSE"],
+    "CUSTOM_BACKUP": ["TITLE", "TEXT", "YES", "NO"],
 }
 
 NOTIFICATION_KEYS = [
@@ -435,6 +439,7 @@ NOTIFICATION_KEYS = [
     ("TRANSACTIONS", "UPDATE_TRANSACTION"),
     ("TRANSACTIONS", "DELETE_TRANSACTION"),
     ("EXPORT", "EXPORT_COMPLETED"),
+    ("BACKUP", "BACKUP_CREATED"),
 ]
 
 STATUS_KEYS = [
@@ -448,8 +453,6 @@ STATUS_KEYS = [
 ]
 
 EXPORT_KEYS = [
-    ("ProgressDialog", "loadingDataText"),
-    ("ProgressDialog", "exportInProgressText"),
     ("SummarySheet", "sheetName"),
     ("SummarySheet", "titleText"),
     ("SummarySheet", "rangeText"),

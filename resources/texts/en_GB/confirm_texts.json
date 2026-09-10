@@ -95,5 +95,11 @@
     "TITLE": "Error",
     "TEXT": "Failed to show the file in the file manager.\nCheck the settings or show it manually.",
     "CLOSE": "Close"
+  },
+  "CUSTOM_BACKUP": {
+    "TITLE": "Custom Backup",
+    "TEXT": "Create a custom backup in the selected location?",
+    "YES": "Create Backup",
+    "NO": "Cancel"
   }
 }

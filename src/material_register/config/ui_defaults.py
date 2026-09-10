@@ -390,4 +390,9 @@ DEFAULT_TEXTS = {
         "restoreBackupButtonText": "Restore backup",
         "restoreBackupButtonTooltipText": "Restores the database from the selected backup.",
     },
+    "ProgressDialog": {
+        "loadingDataText": "Loading data...",
+        "exportInProgressText": "Export in progress...",
+        "backupInProgressText": "Backup in progress...",
+    },
 }

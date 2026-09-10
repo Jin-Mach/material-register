@@ -14,6 +14,7 @@ from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
+from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.file_launchers import (
     open_file_in_default,
     open_file_in_explorer,
@@ -39,6 +40,7 @@ class SummaryExportController(QObject):
         self.thread = None
         self.worker = None
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("EXPORT", None)
+        self.ui_texts = UiTexts.UI_TEXTS
         self.export_texts = TextsProvider.EXPORT_TEXTS
 
     def start_export(self) -> None:
@@ -69,7 +71,7 @@ class SummaryExportController(QObject):
             )
             if not question:
                 return
-        self.progress_dialog = ProgressDialog(self.export_texts, AppContext.MAIN_WINDOW)
+        self.progress_dialog = ProgressDialog(self.ui_texts, AppContext.MAIN_WINDOW)
         self.progress_dialog.set_label_text("loadingDataText")
         self.progress_dialog.show()
         self._start_worker(self.export_settings, self.export_texts)

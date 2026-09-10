@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QDialog, QLabel, QProgressBar, QVBoxLayout, QWidge
 
 class ProgressDialog(QDialog):
     def __init__(
-        self, export_texts: dict[str, dict[str, str]], parent: QWidget
+        self, dialog_texts: dict[str, dict[str, str]], parent: QWidget
     ) -> None:
         super().__init__(parent)
         self.setObjectName("progressDialog")
@@ -15,7 +15,7 @@ class ProgressDialog(QDialog):
             | Qt.WindowType.WindowStaysOnTopHint
         )
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
-        self.progress_texts = export_texts.get(self.__class__.__name__, {})
+        self.dialog_texts = dialog_texts.get(self.__class__.__name__, {})
         self.setLayout(self._create_ui())
 
     def _create_ui(self) -> QVBoxLayout:
@@ -32,8 +32,8 @@ class ProgressDialog(QDialog):
         return main_layout
 
     def set_label_text(self, text_key: str) -> None:
-        if self.progress_texts:
-            self.progress_label.setText(self.progress_texts.get(text_key, "N/A"))
+        if self.dialog_texts:
+            self.progress_label.setText(self.dialog_texts.get(text_key, "N/A"))
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key.Key_Escape:

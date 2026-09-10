@@ -1,6 +1,8 @@
 from datetime import UTC, datetime
 
-from material_register.workers.database_backup_worker import DatabaseBackupWorker
+from material_register.workers.tools_workers.database_backup_worker import (
+    DatabaseBackupWorker,
+)
 
 
 def test_find_missing_backup_when_backup_directory_is_empty(tmp_path):
