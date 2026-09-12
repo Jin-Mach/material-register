@@ -16,7 +16,7 @@ from material_register.ui.dialogs.commodity_dialog import CommodityDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
-from material_register.ui.dialogs.update_coomodities_price_dialog import (
+from material_register.ui.dialogs.update_commodities_price_dialog import (
     UpdateCommoditiesPriceDialog,
 )
 

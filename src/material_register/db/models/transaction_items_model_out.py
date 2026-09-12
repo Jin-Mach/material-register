@@ -8,7 +8,7 @@ from material_register.db.config.model_constants import (
     ITEM_MODEL_OUT_COLUMNS_MAP,
 )
 from material_register.domain.transaction_item_dataclass import TransactionItem
-from material_register.ui.helpers.formating_utils import format_number_to_locale
+from material_register.ui.helpers.formatting_utils import format_number_to_locale
 
 
 class TransactionItemsModelOut(QStandardItemModel):

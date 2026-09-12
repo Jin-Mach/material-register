@@ -11,7 +11,7 @@ from material_register.db.models.transactions_proxy_filter import (
 )
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.helpers.formating_utils import format_number_to_locale
+from material_register.ui.helpers.formatting_utils import format_number_to_locale
 from material_register.ui.helpers.styles import PRICE_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import (

@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.helpers.formating_utils import format_number_to_locale
+from material_register.ui.helpers.formatting_utils import format_number_to_locale
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import setup_text_edit
 

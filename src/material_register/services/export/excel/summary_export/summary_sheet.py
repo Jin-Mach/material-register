@@ -17,7 +17,7 @@ from material_register.services.export.excel.excel_helpers import (
 from material_register.services.export.excel.summary_export.summary_report import (
     SummaryReport,
 )
-from material_register.ui.helpers.formating_utils import format_date_range_to_locale
+from material_register.ui.helpers.formatting_utils import format_date_range_to_locale
 
 
 # noinspection PyDunderSlots
