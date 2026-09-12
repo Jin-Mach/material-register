@@ -1,4 +1,7 @@
 {
+  "STARTUP": {
+    "DATABASE_RESTORED": "Databáze obnovena"
+  },
   "CUSTOMERS": {
     "ADD_CUSTOMER": "Zákazník přidán",
     "UPDATE_CUSTOMER": "Záznam upraven",

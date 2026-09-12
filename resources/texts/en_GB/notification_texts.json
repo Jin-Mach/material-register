@@ -1,4 +1,7 @@
 {
+  "STARTUP": {
+    "DATABASE_RESTORED": "Database restored"
+  },
   "CUSTOMERS": {
     "ADD_CUSTOMER": "Customer added",
     "UPDATE_CUSTOMER": "Record updated",

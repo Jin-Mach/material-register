@@ -7,7 +7,9 @@ from PySide6.QtWidgets import QApplication
 from material_register.core.app_context import AppContext
 from material_register.core.application_setup import ApplicationSetup
 from material_register.providers.style_provider import StyleProvider
+from material_register.providers.texts_provider import TextsProvider
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.main_window import MainWindow
 from material_register.ui.widgets.splash_screen import SplashScreen
 from material_register.workers.init_worker import InitWorker
@@ -50,6 +52,7 @@ class InitController(QObject):
         AppContext.set_main_window(self.main_window)
         StyleProvider.apply_style()
         self.main_window.show()
+        QTimer.singleShot(1000, self._check_startup_notification)
 
     def _finish_error(self, error: str) -> None:
         self.splash_screen.close()
@@ -66,3 +69,14 @@ class InitController(QObject):
         self.worker = None
         if reset_main_window:
             self.main_window = None
+
+    def _check_startup_notification(self) -> None:
+        notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("STARTUP", None)
+        if notification_texts is None or self.main_window is None:
+            return
+        if "--database-restored" in sys.argv:
+            notification = NotificationDialog(
+                self.main_window,
+                notification_texts.get("DATABASE_RESTORED", "Database restored"),
+            )
+            notification.show_notification()

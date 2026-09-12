@@ -5,11 +5,13 @@ from PySide6.QtCore import QObject, QThread, QTimer
 
 from material_register.core.app_context import AppContext
 from material_register.db.config.db_constants import DATABASE_NAME
+from material_register.providers.lock_provider import LockProvider
 from material_register.providers.paths_provider import PathsProvider
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.utils.system import restart_application
 from material_register.workers.tools_workers.database_restore_worker import (
     DatabaseRestoreWorker,
 )
@@ -24,7 +26,7 @@ class DatabaseRestoreController(QObject):
     def __init__(self, database_backup_widget: "DatabaseBackupWidget") -> None:
         super().__init__()
         self.database_backup_widget = database_backup_widget
-        self.database_folder = PathsProvider.database / "fake_folder"
+        self.database_folder = PathsProvider.database
         self.database_path = (self.database_folder / DATABASE_NAME).with_suffix(".db")
         self.ui_texts = UiTexts.UI_TEXTS
         self.thread = None
@@ -72,7 +74,8 @@ class DatabaseRestoreController(QObject):
     def _finish_restore(self, key: str | None = None) -> None:
         self.progress_dialog.close()
         if key is None:
-            print("restart app")
+            LockProvider.unlock_app()
+            restart_application("--database-restored")
             return
         ErrorDialog(self.database_backup_widget).show_dialog(key, False)
         self._reset_variables()
