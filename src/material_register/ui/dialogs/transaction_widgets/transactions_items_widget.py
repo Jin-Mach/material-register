@@ -63,6 +63,7 @@ class TransactionsItemsWidget(QWidget):
         self.total_price_label = QLabel()
         self.total_price_label.setObjectName("totalPriceLabel")
         self.total_price_value_label = QLabel()
+        self.total_price_value_label.setObjectName("totalPriceValueLabel")
         buttons_layout = QHBoxLayout()
         buttons_layout.setSpacing(5)
         self.add_item_button = QPushButton()
