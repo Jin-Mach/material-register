@@ -412,6 +412,7 @@
     "loadingDataText": "Načítání dat...",
     "exportInProgressText": "Probíhá export...",
     "backupInProgressText": "Probíhá záloha...",
-    "restoreInProgressText": "Probíhá obnova dat.\nNevypínejte počítač!"
+    "restoreInProgressText": "Probíhá obnova dat.\nNevypínejte počítač!",
+    "restartApplicationText": "Aplikace se nyní restartuje"
   }
 }

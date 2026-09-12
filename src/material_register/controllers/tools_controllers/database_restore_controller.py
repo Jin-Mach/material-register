@@ -72,13 +72,17 @@ class DatabaseRestoreController(QObject):
         QTimer.singleShot(1000, self._finish_restore)
 
     def _finish_restore(self, key: str | None = None) -> None:
-        self.progress_dialog.close()
         if key is None:
-            LockProvider.unlock_app()
-            restart_application("--database-restored")
+            self.progress_dialog.set_label_text("restartApplicationText")
+            QTimer.singleShot(1000, self._restart_application)
             return
         ErrorDialog(self.database_backup_widget).show_dialog(key, False)
         self._reset_variables()
+
+    def _restart_application(self) -> None:
+        self.progress_dialog.close()
+        LockProvider.unlock_app()
+        restart_application("--database-restored")
 
     def _clean_thread(self) -> None:
         self.thread.quit()

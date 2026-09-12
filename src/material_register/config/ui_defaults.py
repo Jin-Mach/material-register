@@ -395,5 +395,6 @@ DEFAULT_TEXTS = {
         "exportInProgressText": "Export in progress...",
         "backupInProgressText": "Backup in progress...",
         "restoreInProgressText": "Data restoration in progress.\nDo not turn off the computer!",
+        "restartApplicationText": "The application will now restart",
     },
 }

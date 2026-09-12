@@ -365,6 +365,7 @@ UI_KEYS = [
     ("ProgressDialog", "loadingDataText"),
     ("ProgressDialog", "exportInProgressText"),
     ("ProgressDialog", "restoreInProgressText"),
+    ("ProgressDialog", "restartApplicationText"),
 ]
 
 HEADERS_KEYS = [
