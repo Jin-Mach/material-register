@@ -21,9 +21,7 @@ class SetupInit:
         try:
             invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
             if invalid_files:
-                state = DownloadProvider.is_ready_for_download(
-                    PathsProvider.resources
-                )
+                state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
                 if not state["internet"]:
                     return False, "CONNECTION_ERROR"
                 if not state["writable"]:

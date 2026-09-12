@@ -69,3 +69,7 @@ def setup_text_edit(text_edit: QTextEdit, read_only: bool = False) -> None:
     text_edit.setAcceptRichText(False)
     text_edit.setAcceptDrops(False)
     text_edit.setUndoRedoEnabled(False)
+
+
+def disable_spinbox_wheel(spinbox: QSpinBox | QDoubleSpinBox) -> None:
+    spinbox.wheelEvent = lambda event: None

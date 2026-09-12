@@ -36,6 +36,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
 from material_register.utils.date_filters import get_filter_range
 from material_register.utils.normalizer import normalize_value
 
@@ -360,11 +361,7 @@ class SummaryExportWidget(QWidget):
         self.export_button.clicked.connect(self.summary_export_controller.start_export)
 
     def _setup_spinboxes(self) -> None:
-        spinboxes = [
-            self.opening_balance_spinbox,
-            self.income_spinbox,
-            self.expense_spinbox,
-        ]
+        spinboxes = self.findChildren(QDoubleSpinBox)
         for spinbox in spinboxes:
             minimum = SUMMARY_EXPORT_PRICE_MIN_VALUE
             if spinbox == self.opening_balance_spinbox:
@@ -376,6 +373,7 @@ class SummaryExportWidget(QWidget):
             spinbox.setGroupSeparatorShown(True)
             if self.price_suffix:
                 spinbox.setSuffix(f" {self.price_suffix}")
+            disable_spinbox_wheel(spinbox)
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(

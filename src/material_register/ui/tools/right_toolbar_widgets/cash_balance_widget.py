@@ -24,6 +24,7 @@ from material_register.controllers.tools_controllers.cash_balance_controller imp
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.styles import WARNING_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
 
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
@@ -237,8 +238,10 @@ class CashBalanceWidget(QWidget):
         self.balance_count_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
         for spinbox in self.findChildren(QSpinBox):
             spinbox.setGroupSeparatorShown(True)
+            disable_spinbox_wheel(spinbox)
         for spinbox in self.findChildren(QDoubleSpinBox):
             spinbox.setGroupSeparatorShown(True)
+            disable_spinbox_wheel(spinbox)
         for spinbox in decimal_spinboxes:
             spinbox.setSuffix(self.currency_suffix)
         for spinbox in self.values_spinboxes.values():

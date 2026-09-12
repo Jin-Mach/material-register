@@ -27,7 +27,11 @@ from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.ui.setup.ui_widgets import disable_context_menu, set_suffix_mode
+from material_register.ui.setup.ui_widgets import (
+    disable_context_menu,
+    disable_spinbox_wheel,
+    set_suffix_mode,
+)
 from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:
@@ -121,6 +125,7 @@ class CategoryCommodityDialog(QDialog):
         self.unit_spinbox.setDecimals(1)
         self.unit_spinbox.setSingleStep(0.1)
         self.unit_spinbox.setGroupSeparatorShown(True)
+        disable_spinbox_wheel(self.unit_spinbox)
 
     def _setup_price_spinbox(self) -> None:
         self.price_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
@@ -128,6 +133,7 @@ class CategoryCommodityDialog(QDialog):
         self.price_spinbox.setDecimals(1)
         self.price_spinbox.setSingleStep(0.1)
         self.price_spinbox.setGroupSeparatorShown(True)
+        disable_spinbox_wheel(self.price_spinbox)
 
     def _setup_texts(self) -> None:
         widgets = [

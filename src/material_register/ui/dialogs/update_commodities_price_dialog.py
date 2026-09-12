@@ -20,7 +20,10 @@ from material_register.config.ui_constants import (
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.ui.setup.ui_widgets import disable_context_menu
+from material_register.ui.setup.ui_widgets import (
+    disable_context_menu,
+    disable_spinbox_wheel,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -121,6 +124,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
             value_spinbox.setDecimals(1)
             value_spinbox.setSingleStep(0.1)
             value_spinbox.setGroupSeparatorShown(True)
+            disable_spinbox_wheel(value_spinbox)
             value_spinbox.valueChanged.connect(self._update_button_state)
             disable_context_menu([value_spinbox])
             self.commodities_layout.addWidget(name_label, row, 0)
