@@ -9,7 +9,7 @@ from material_register.db.queries.transactions_load_queries import (
     TransactionsLoadQueries,
 )
 from material_register.domain.transaction_dataclass import Transaction
-from material_register.ui.helpers.formatting_utils import (
+from material_register.utils.formatting_utils import (
     format_datetime_to_locale,
     format_number_to_locale,
 )

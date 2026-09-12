@@ -34,6 +34,10 @@ class TransactionsService:
             if transaction_id is None:
                 db_connection.rollback()
                 return False, "Missing transaction id"
+            transfer_type = dialog_data["transaction_type"]
+            if transfer_type not in (TRANSFER_IN, TRANSFER_OUT):
+                db_connection.rollback()
+                return False, "Invalid transfer type"
             for item in items_data:
                 ok, item_error = TransactionItemsQueries.insert_into_transaction_items(
                     db_connection,
@@ -45,10 +49,6 @@ class TransactionsService:
                 if not ok:
                     db_connection.rollback()
                     return False, item_error
-                transfer_type = dialog_data["transaction_type"]
-                if transfer_type not in (TRANSFER_IN, TRANSFER_OUT):
-                    db_connection.rollback()
-                    return False, "Invalid transfer type"
                 amount = TransactionsService._get_amount(transfer_type, item.unit_count)
                 ok, inventory_error = InventoryQueries.update_inventory_item(
                     db_connection, item.commodity_id, amount

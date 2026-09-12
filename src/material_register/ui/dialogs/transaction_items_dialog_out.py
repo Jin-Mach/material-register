@@ -5,7 +5,6 @@ from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_info_widget import (
     TransactionInfoWidget,
@@ -14,6 +13,7 @@ from material_register.ui.dialogs.transaction_widgets.transactions_items_widget 
     TransactionsItemsWidget,
 )
 from material_register.ui.helpers.window_positioning import centre_dialog
+from material_register.ui.helpers.window_state_manager import WindowStateManager
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu
 

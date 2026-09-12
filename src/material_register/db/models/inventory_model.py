@@ -7,8 +7,8 @@ from PySide6.QtSql import QSqlDatabase, QSqlQueryModel
 from material_register.db.config.model_constants import INVENTORY_COLUMNS_MAP
 from material_register.db.config.queries_constants import INVENTORY_QUERY
 from material_register.ui.config.styles_constants import INVENTORY_STOCK_STYLE
-from material_register.ui.helpers.formatting_utils import format_number_to_locale
 from material_register.ui.setup.ui_icons import UiIcons
+from material_register.utils.formatting_utils import format_number_to_locale
 
 
 class InventoryModel(QSqlQueryModel):

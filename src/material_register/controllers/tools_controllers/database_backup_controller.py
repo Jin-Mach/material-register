@@ -7,7 +7,7 @@ from PySide6.QtCore import QObject, QThread, QTimer
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.database_backup_service import DatabaseBackupService
-from material_register.ui.helpers.formatting_utils import format_datetime_to_locale
+from material_register.utils.formatting_utils import format_datetime_to_locale
 from material_register.workers.tools_workers.database_backup_worker import (
     DatabaseBackupWorker,
 )

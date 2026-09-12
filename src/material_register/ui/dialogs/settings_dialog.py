@@ -14,13 +14,13 @@ from PySide6.QtWidgets import (
 
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.settings_widgets.settings_side_panel import (
     SettingsSidePanel,
 )
 from material_register.ui.dialogs.settings_widgets.settings_stacked_widget import (
     SettingsStackedWidget,
 )
+from material_register.ui.helpers.window_state_manager import WindowStateManager
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu
 

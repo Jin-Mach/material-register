@@ -7,9 +7,9 @@ from material_register.controllers.tools_settings_controller import (
 )
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.window_state_manager import WindowStateManager
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.settings_dialog import SettingsDialog
+from material_register.ui.helpers.window_state_manager import WindowStateManager
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu
 from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget

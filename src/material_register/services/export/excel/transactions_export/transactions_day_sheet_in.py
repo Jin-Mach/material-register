@@ -14,7 +14,7 @@ from material_register.services.export.excel.excel_helpers import (
     cell_font,
     set_borders,
 )
-from material_register.ui.helpers.formatting_utils import (
+from material_register.utils.formatting_utils import (
     format_date_to_locale,
     format_time_to_locale,
 )
