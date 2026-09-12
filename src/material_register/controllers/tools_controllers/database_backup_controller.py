@@ -57,12 +57,6 @@ class DatabaseBackupController(QObject):
         backup_map = DatabaseBackupService.get_backup_tree(self.backup_path)
         return backup_map
 
-    def restore_database(self) -> None:
-        restore_path = self.database_backup_widget.restore_path
-        if restore_path is None:
-            return
-        print("restore_path", restore_path)
-
     def start_thread(self) -> None:
         self.main_window.status_bar.show_message("START_BACKUP")
         QTimer.singleShot(3000, self._start_worker)

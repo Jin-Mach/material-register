@@ -62,9 +62,9 @@ class DatabaseBackupService:
             return False
 
     @staticmethod
-    def restore_database(database_path: Path, backup_path: Path) -> bool:
+    def restore_database(database_path: Path, restore_path: Path) -> bool:
         try:
-            with sqlite3.connect(backup_path) as backup:
+            with sqlite3.connect(restore_path) as backup:
                 with sqlite3.connect(database_path) as database:
                     backup.backup(database)
             return True
