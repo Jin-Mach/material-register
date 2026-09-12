@@ -15,10 +15,10 @@ class DatabaseBackupService:
             backup_path = backup_directory / f"backup_{year}.db"
             if backup_path.exists():
                 return False
-            DatabaseBackupService._clear_year_folder(backup_directory)
             with sqlite3.connect(database_path) as database:
                 with sqlite3.connect(backup_path) as backup:
                     database.backup(backup)
+            DatabaseBackupService._clear_year_folder(backup_directory, backup_path)
             return True
         except sqlite3.Error as e:
             ErrorHandler.handle_error(e, "db", "critical")
@@ -76,10 +76,11 @@ class DatabaseBackupService:
             return False
 
     @staticmethod
-    def _clear_year_folder(backup_path: Path) -> None:
-        if any(backup_path.iterdir()):
-            for path in backup_path.iterdir():
-                path.unlink()
+    def _clear_year_folder(backup_directory: Path, backup_path: Path) -> None:
+        if any(backup_directory.iterdir()):
+            for path in backup_directory.iterdir():
+                if path != backup_path:
+                    path.unlink()
 
     @staticmethod
     def _get_backup_directory(database_path: Path, year: int) -> Path:
