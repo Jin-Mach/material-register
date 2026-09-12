@@ -43,6 +43,7 @@ class DatabaseRestoreWorker(QObject):
                 return
         finally:
             connection.close()
+            del connection
             QSqlDatabase.removeDatabase("restore_connection")
         if not DatabaseBackupService.restore_database(
             self.database_path, self.restore_path

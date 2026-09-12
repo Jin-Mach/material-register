@@ -411,6 +411,7 @@
   "ProgressDialog": {
     "loadingDataText": "Načítání dat...",
     "exportInProgressText": "Probíhá export...",
-    "backupInProgressText": "Probíhá záloha..."
+    "backupInProgressText": "Probíhá záloha...",
+    "restoreInProgressText": "Probíhá obnova dat.\nNevypínejte počítač!"
   }
 }

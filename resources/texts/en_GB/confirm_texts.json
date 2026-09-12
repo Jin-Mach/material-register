@@ -101,5 +101,11 @@
     "TEXT": "Create a custom backup in the selected location?",
     "YES": "Create Backup",
     "NO": "Cancel"
+  },
+  "RESTORE_DATABASE": {
+    "TITLE": "Database Restore",
+    "TEXT": "Restore data from the selected backup?\nThis action cannot be undone!",
+    "YES": "Restore",
+    "NO": "Cancel"
   }
 }

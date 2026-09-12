@@ -364,6 +364,7 @@ UI_KEYS = [
     ("DatabaseBackupWidget", "restoreBackupButtonTooltipText"),
     ("ProgressDialog", "loadingDataText"),
     ("ProgressDialog", "exportInProgressText"),
+    ("ProgressDialog", "restoreInProgressText"),
 ]
 
 HEADERS_KEYS = [
@@ -425,6 +426,7 @@ CONFIRM_STRUCTURE = {
     "OPEN_FILE_FAILED": ["TITLE", "TEXT", "CLOSE"],
     "OPEN_EXPLORER_FAILED": ["TITLE", "TEXT", "CLOSE"],
     "CUSTOM_BACKUP": ["TITLE", "TEXT", "YES", "NO"],
+    "RESTORE_DATABASE": ["TITLE", "TEXT", "YES", "NO"],
 }
 
 NOTIFICATION_KEYS = [

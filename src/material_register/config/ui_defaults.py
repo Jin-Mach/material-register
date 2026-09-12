@@ -394,5 +394,6 @@ DEFAULT_TEXTS = {
         "loadingDataText": "Loading data...",
         "exportInProgressText": "Export in progress...",
         "backupInProgressText": "Backup in progress...",
+        "restoreInProgressText": "Data restoration in progress.\nDo not turn off the computer!",
     },
 }

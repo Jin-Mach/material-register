@@ -101,5 +101,11 @@
     "TEXT": "Vytvořit vlastní zálohu ve vybraném umístění?",
     "YES": "Vytvořit zálohu",
     "NO": "Zrušit"
+  },
+  "RESTORE_DATABASE": {
+    "TITLE": "Obnova databáze",
+    "TEXT": "Obnovit data z vybrané zálohy?\nTato akce je nevratná!",
+    "YES": "Obnovit",
+    "NO": "Zrušit"
   }
 }

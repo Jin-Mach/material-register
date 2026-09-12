@@ -22,6 +22,9 @@ from material_register.controllers.tools_controllers.custom_backup_controller im
 from material_register.controllers.tools_controllers.database_backup_controller import (
     DatabaseBackupController,
 )
+from material_register.controllers.tools_controllers.database_restore_controller import (
+    DatabaseRestoreController,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widgets.database_backup_widgets.database_backup_tree_widget import (
@@ -38,6 +41,7 @@ class DatabaseBackupWidget(QWidget):
         self.right_toolbar_widget = right_toolbar_widget
         self.database_backup_controller = DatabaseBackupController(self)
         self.custom_backup_controller = CustomBackupController(self)
+        self.database_restore_controller = DatabaseRestoreController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -179,7 +183,7 @@ class DatabaseBackupWidget(QWidget):
         )
         self.custom_restore_button.clicked.connect(self.get_custom_restore_path)
         self.restore_backup_button.clicked.connect(
-            self.database_backup_controller.restore_database
+            self.database_restore_controller.start_restore_thread
         )
 
     def setup_info_group(self) -> None:
@@ -209,7 +213,7 @@ class DatabaseBackupWidget(QWidget):
         if not file_path:
             return None
         backup_path = Path(file_path)
-        return backup_path, DatabaseBackupWidget._get_displayed_path(backup_path)
+        return backup_path, DatabaseBackupWidget.get_displayed_path(backup_path)
 
     def get_custom_restore_path(self) -> None:
         file_path, _ = QFileDialog.getOpenFileName(
@@ -224,7 +228,7 @@ class DatabaseBackupWidget(QWidget):
             self._update_backup_button_state()
             return
         self.restore_path = Path(file_path)
-        displayed_name = DatabaseBackupWidget._get_displayed_path(self.restore_path)
+        displayed_name = DatabaseBackupWidget.get_displayed_path(self.restore_path)
         self.selected_path_label.setText(displayed_name)
         self._update_backup_button_state()
 
@@ -235,12 +239,12 @@ class DatabaseBackupWidget(QWidget):
             self.selected_path_label.setText(self.selected_path_text)
             return
         self.restore_path = backup_path
-        displayed_name = DatabaseBackupWidget._get_displayed_path(backup_path)
+        displayed_name = DatabaseBackupWidget.get_displayed_path(backup_path)
         self.selected_path_label.setText(displayed_name)
 
     def _update_backup_button_state(self) -> None:
         self.restore_backup_button.setDisabled(self.restore_path is None)
 
     @staticmethod
-    def _get_displayed_path(path: Path) -> str:
+    def get_displayed_path(path: Path) -> str:
         return f"...{os.sep}{Path(*path.parts[-2:])}"
