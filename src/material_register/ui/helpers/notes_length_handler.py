@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QLabel, QTextEdit
 
-from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
+from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 
 
 def check_notes_length(

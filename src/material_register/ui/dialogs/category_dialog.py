@@ -20,8 +20,8 @@ from material_register.config.ui_constants import (
 )
 from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.helpers.notes_length_handler import check_notes_length
-from material_register.ui.helpers.styles import INVALID_INPUT_STYLE
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu, setup_text_edit

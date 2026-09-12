@@ -20,11 +20,11 @@ from material_register.db.models.transaction_items_model_out import (
     TransactionItemsModelOut,
 )
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.styles_constants import PRICE_STYLE
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_view import (
     TransactionView,
 )
-from material_register.ui.helpers.styles import PRICE_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:

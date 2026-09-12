@@ -60,7 +60,7 @@ class CustomersController:
             ErrorHandler.handle_error(
                 f"Invalid customer selection index: {self.__class__.__name__}",
                 "ui",
-                "debug",
+                "warning",
             )
             return
         customer_data = self.customers_model.get_customer_by_id(customer_id)

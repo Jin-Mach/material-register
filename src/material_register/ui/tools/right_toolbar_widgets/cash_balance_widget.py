@@ -22,7 +22,7 @@ from material_register.controllers.tools_controllers.cash_balance_controller imp
     CashBalanceController,
 )
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.helpers.styles import WARNING_STYLE
+from material_register.ui.config.styles_constants import WARNING_STYLE
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
 
