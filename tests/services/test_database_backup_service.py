@@ -92,3 +92,19 @@ def test_create_custom_backup(tmp_path) -> None:
         for row in cursor:
             assert row[0] == 1
             assert row[1] == "Test"
+
+
+def test_restore_database(tmp_path) -> None:
+    database_path = tmp_path / "database.db"
+    backup_path = tmp_path / "backup.db"
+    create_test_database(database_path)
+    DatabaseBackupService.create_custom_backup(database_path, backup_path)
+    with sqlite3.connect(database_path) as database:
+        database.execute("UPDATE test SET name = 'Changed' WHERE id = 1")
+        database.commit()
+    result = DatabaseBackupService.restore_database(database_path, backup_path)
+    assert result is True
+    with sqlite3.connect(database_path) as database:
+        cursor = database.execute("SELECT name FROM test WHERE id = 1")
+        row = cursor.fetchone()
+    assert row[0] == "Test"

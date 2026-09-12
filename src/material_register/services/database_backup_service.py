@@ -62,6 +62,20 @@ class DatabaseBackupService:
             return False
 
     @staticmethod
+    def restore_database(database_path: Path, backup_path: Path) -> bool:
+        try:
+            with sqlite3.connect(backup_path) as backup:
+                with sqlite3.connect(database_path) as database:
+                    backup.backup(database)
+            return True
+        except sqlite3.Error as e:
+            ErrorHandler.handle_error(e, "db", "critical")
+            return False
+        except Exception as e:
+            ErrorHandler.handle_error(e, "db", "critical")
+            return False
+
+    @staticmethod
     def _clear_year_folder(backup_path: Path) -> None:
         if any(backup_path.iterdir()):
             for path in backup_path.iterdir():
