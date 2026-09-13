@@ -28,7 +28,8 @@ class SummaryReport:
                 found = False
                 for item in items:
                     if (
-                        item.commodity_name == in_item.commodity_name
+                        item.payment_type == in_item.payment_type
+                        and item.commodity_name == in_item.commodity_name
                         and item.price_per_unit == in_item.price_per_unit
                     ):
                         item.total_quantity += in_item.total_quantity

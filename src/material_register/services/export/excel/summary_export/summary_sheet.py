@@ -23,7 +23,7 @@ from material_register.utils.formatting_utils import format_date_range_to_locale
 # noinspection PyDunderSlots
 class SummarySheet:
     START_ROW = 1
-    LAST_COLUMN = 8
+    LAST_COLUMN = 10
     TITLE_FONT_SIZE = 12
     DEFAULT_FONT_SIZE = 10
     TITLE_ROW_HEIGHT = 20
@@ -463,20 +463,27 @@ class SummarySheet:
             cell = sheet.cell(
                 row=row,
                 column=first_column + 1,
-                value=export_texts.get("pricePerUnitText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("paymentTypeText", SummarySheet.ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
             cell = sheet.cell(
                 row=row,
                 column=first_column + 2,
-                value=export_texts.get("quantityText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("pricePerUnitText", SummarySheet.ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
             cell = sheet.cell(
                 row=row,
                 column=first_column + 3,
+                value=export_texts.get("quantityText", SummarySheet.ERROR_TEXT),
+            )
+            SummarySheet._cell_alignment(cell)
+            SummarySheet._cell_font(cell, bold=True)
+            cell = sheet.cell(
+                row=row,
+                column=first_column + 4,
                 value=export_texts.get("totalPriceText", SummarySheet.ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
@@ -585,9 +592,10 @@ class SummarySheet:
         first_column = 1
         middle_column = last_column // 2
         commodity_column = first_column
-        price_column = first_column + 1
-        quantity_column = first_column + 2
-        total_column = first_column + 3
+        payment_type_column = first_column + 1
+        price_column = first_column + 2
+        quantity_column = first_column + 3
+        total_column = first_column + 4
         summary_label_column = middle_column - 1
         for item in in_data:
             quantity_cell_format = (
@@ -598,6 +606,10 @@ class SummarySheet:
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
+            payment_text = export_texts.get(item.payment_type, SummarySheet.ERROR_TEXT)
+            cell = sheet.cell(row=row, column=payment_type_column, value=payment_text)
+            SummarySheet._cell_alignment(cell)
+            SummarySheet._cell_font(cell)
             cell = sheet.cell(row=row, column=price_column, value=item.price_per_unit)
             cell.number_format = money_cell_format
             SummarySheet._cell_alignment(cell, horizontal="right")

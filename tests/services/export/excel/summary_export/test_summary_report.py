@@ -16,6 +16,7 @@ def export_data_in() -> list[SummaryExportItemIn]:
     return [
         SummaryExportItemIn(
             category_name="A",
+            payment_type="CASH",
             commodity_name="12345",
             commodity_unit="kg",
             price_per_unit=0.8,
@@ -24,6 +25,7 @@ def export_data_in() -> list[SummaryExportItemIn]:
         ),
         SummaryExportItemIn(
             category_name="A",
+            payment_type="CASH",
             commodity_name="12345",
             commodity_unit="kg",
             price_per_unit=0.8,
@@ -32,6 +34,16 @@ def export_data_in() -> list[SummaryExportItemIn]:
         ),
         SummaryExportItemIn(
             category_name="A",
+            payment_type="TRANSFER",
+            commodity_name="12345",
+            commodity_unit="kg",
+            price_per_unit=0.8,
+            total_quantity=30.0,
+            total_price=24.0,
+        ),
+        SummaryExportItemIn(
+            category_name="A",
+            payment_type="CASH",
             commodity_name="12345",
             commodity_unit="kg",
             price_per_unit=1.8,
@@ -40,6 +52,7 @@ def export_data_in() -> list[SummaryExportItemIn]:
         ),
         SummaryExportItemIn(
             category_name="A",
+            payment_type="TRANSFER",
             commodity_name="67890",
             commodity_unit="kg",
             price_per_unit=7.9,
@@ -48,6 +61,7 @@ def export_data_in() -> list[SummaryExportItemIn]:
         ),
         SummaryExportItemIn(
             category_name="B",
+            payment_type="CASH",
             commodity_name="54321",
             commodity_unit="kg",
             price_per_unit=23.5,
@@ -62,6 +76,7 @@ def result_data_in() -> dict[str, list[SummaryItemDataIn]]:
     return {
         "A": [
             SummaryItemDataIn(
+                payment_type="CASH",
                 commodity_name="12345",
                 commodity_unit="kg",
                 price_per_unit=0.8,
@@ -69,6 +84,15 @@ def result_data_in() -> dict[str, list[SummaryItemDataIn]]:
                 total_price=120.0,
             ),
             SummaryItemDataIn(
+                payment_type="TRANSFER",
+                commodity_name="12345",
+                commodity_unit="kg",
+                price_per_unit=0.8,
+                total_quantity=30.0,
+                total_price=24.0,
+            ),
+            SummaryItemDataIn(
+                payment_type="CASH",
                 commodity_name="12345",
                 commodity_unit="kg",
                 price_per_unit=1.8,
@@ -76,6 +100,7 @@ def result_data_in() -> dict[str, list[SummaryItemDataIn]]:
                 total_price=36.0,
             ),
             SummaryItemDataIn(
+                payment_type="TRANSFER",
                 commodity_name="67890",
                 commodity_unit="kg",
                 price_per_unit=7.9,
@@ -85,6 +110,7 @@ def result_data_in() -> dict[str, list[SummaryItemDataIn]]:
         ],
         "B": [
             SummaryItemDataIn(
+                payment_type="CASH",
                 commodity_name="54321",
                 commodity_unit="kg",
                 price_per_unit=23.5,
