@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHeaderView, QTableView
 
-from material_register.ui.config.ui_constants import INVENTORY_HORIZONTAL_PADDING
 from material_register.db.config.model_constants import (
     INVENTORY_COLUMNS_MAP,
     INVENTORY_VIEW_HIDDEN_COLUMNS,
 )
 from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import INVENTORY_HORIZONTAL_PADDING
 from material_register.ui.setup.headers_texts import HeadersTexts
 
 if TYPE_CHECKING:

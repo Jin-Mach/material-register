@@ -17,18 +17,18 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.domain.commodities_dataclass import Commodity
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.styles_constants import (
+    INVALID_INPUT_STYLE,
+    WARNING_STYLE,
+)
 from material_register.ui.config.ui_constants import (
     ADD_MODE,
     COMMODITY_DIALOG_MAX_PRICE_VALUE,
     COMMODITY_DIALOG_MIN_VALUE,
     COMMODITY_DIALOG_NOTES_LENGTH,
     UPDATE_MODE,
-)
-from material_register.domain.commodities_dataclass import Commodity
-from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.styles_constants import (
-    INVALID_INPUT_STYLE,
-    WARNING_STYLE,
 )
 from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.window_positioning import centre_dialog

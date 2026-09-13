@@ -13,16 +13,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.ui.config.ui_constants import (
-    CASH_BALANCE_MAX_VALUE,
-    CASH_BALANCE_MIN_VALUE,
-    CASH_BALANCE_NEGATIVE_MIN_VALUE,
-)
 from material_register.controllers.tools_controllers.cash_balance_controller import (
     CashBalanceController,
 )
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import WARNING_STYLE
+from material_register.ui.config.ui_constants import (
+    CASH_BALANCE_MAX_VALUE,
+    CASH_BALANCE_MIN_VALUE,
+    CASH_BALANCE_NEGATIVE_MIN_VALUE,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
 

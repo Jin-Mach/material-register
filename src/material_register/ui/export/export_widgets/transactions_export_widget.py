@@ -23,11 +23,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.ui.config.ui_constants import (
-    EXPORT_TYPE_TRANSACTIONS,
-    TRANSFER_IN,
-    TRANSFER_OUT,
-)
 from material_register.controllers.export_controllers.transactions_export_controller import (
     TransactionsExportController,
 )
@@ -37,6 +32,11 @@ from material_register.db.models.customers_completer_model import (
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
+from material_register.ui.config.ui_constants import (
+    EXPORT_TYPE_TRANSACTIONS,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.date_filters import get_filter_range

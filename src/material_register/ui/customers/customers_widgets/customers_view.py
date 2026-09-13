@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QAbstractItemModel, QModelIndex, QPoint, Qt
 from PySide6.QtWidgets import QHeaderView, QTableView
 
-from material_register.ui.config.ui_constants import CUSTOMERS_HORIZONTAL_PADDING
-from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 from material_register.db.config.model_constants import CUSTOMERS_HIDDEN_COLUMNS
 from material_register.db.models.customers_model import CustomersModel
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import CUSTOMERS_HORIZONTAL_PADDING
+from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 from material_register.ui.customers.customers_widgets.customers_context_menu import (
     CustomersContextMenu,
 )

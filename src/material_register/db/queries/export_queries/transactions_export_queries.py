@@ -1,6 +1,5 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.config.export_config.export_queries_constants import (
     TRANSACTIONS_QUERY_IN,
     TRANSACTIONS_QUERY_OUT,
@@ -10,6 +9,7 @@ from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportDay,
     TransactionsExportTransaction,
 )
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 
 
 class TransactionsExportQueries:

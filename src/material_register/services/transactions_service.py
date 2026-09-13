@@ -1,6 +1,5 @@
 from PySide6.QtSql import QSqlDatabase
 
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.inventory_queries import InventoryQueries
 from material_register.db.queries.transaction_items_queries import (
     TransactionItemsQueries,
@@ -8,6 +7,7 @@ from material_register.db.queries.transaction_items_queries import (
 from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.domain.transaction_item_dataclass import TransactionItem
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 
 
 class TransactionsService:

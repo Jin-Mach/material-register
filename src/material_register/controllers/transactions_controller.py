@@ -3,11 +3,6 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QDialog, QWidget
 
-from material_register.ui.config.ui_constants import (
-    PAYMENT_VALUES,
-    TRANSFER_IN,
-    TRANSFER_OUT,
-)
 from material_register.controllers.tools_controllers.cash_balance_controller import (
     CashBalanceController,
 )
@@ -33,6 +28,11 @@ from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.transactions_service import TransactionsService
+from material_register.ui.config.ui_constants import (
+    PAYMENT_VALUES,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.ui.dialogs.category_commodity_dialog import (
     CategoryCommodityDialog,
 )

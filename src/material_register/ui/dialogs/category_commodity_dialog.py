@@ -13,6 +13,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.domain.category_dataclass import Category
+from material_register.domain.commodities_dataclass import Commodity
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.config.ui_constants import (
     CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE,
     CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
@@ -20,10 +24,6 @@ from material_register.ui.config.ui_constants import (
     INTEGER_SUFFIXES,
     TRANSFER_OUT,
 )
-from material_register.domain.category_dataclass import Category
-from material_register.domain.commodities_dataclass import Commodity
-from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts

@@ -14,12 +14,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.styles_constants import WARNING_STYLE
 from material_register.ui.config.ui_constants import (
     TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
     TRANSFER_OUT,
 )
-from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.styles_constants import WARNING_STYLE
 from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import setup_text_edit

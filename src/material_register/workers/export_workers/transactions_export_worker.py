@@ -2,7 +2,6 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal, Slot
 
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.export_queries.transactions_export_queries import (
     TransactionsExportQueries,
 )
@@ -14,6 +13,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.services.export.excel.transactions_export.transactions_workbook import (
     TransactionsWorkbook,
 )
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.utils.date_filters import parse_date
 from material_register.utils.system import is_disk_writable
 

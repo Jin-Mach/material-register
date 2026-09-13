@@ -2,14 +2,14 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QTabWidget, QVBoxLayout, QWidget
 
-from material_register.ui.config.ui_constants import (
-    EXPORT_TYPE_SUMMARY,
-    EXPORT_TYPE_TRANSACTIONS,
-)
 from material_register.controllers.export_settings_controller import (
     ExportSettingsController,
 )
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    EXPORT_TYPE_SUMMARY,
+    EXPORT_TYPE_TRANSACTIONS,
+)
 from material_register.ui.settings.settings_widgets.base_export_widget import (
     BaseExportWidget,
 )

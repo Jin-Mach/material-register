@@ -1,10 +1,10 @@
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.export_queries.transactions_export_queries import (
     TransactionsExportQueries,
 )
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 
 
 @pytest.fixture

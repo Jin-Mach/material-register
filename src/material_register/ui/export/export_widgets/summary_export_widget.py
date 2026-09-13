@@ -23,17 +23,17 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.controllers.export_controllers.summary_export_controller import (
+    SummaryExportController,
+)
+from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
     SUMMARY_BALANCE_PRICE_MIN_VALUE,
     SUMMARY_EXPORT_PRICE_MAX_VALUE,
     SUMMARY_EXPORT_PRICE_MIN_VALUE,
 )
-from material_register.controllers.export_controllers.summary_export_controller import (
-    SummaryExportController,
-)
-from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
