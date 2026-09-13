@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QGroupBox, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QButtonGroup, QGroupBox, QPushButton, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
@@ -12,8 +12,9 @@ if TYPE_CHECKING:
 class SettingsSidePanel(QWidget):
     def __init__(self, settings_dialog: "SettingsDialog") -> None:
         super().__init__(settings_dialog)
+        self.settings_dialog = settings_dialog
         self.setLayout(self._create_ui())
-        self._setup_texts()
+        self._setup_ui()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -27,12 +28,20 @@ class SettingsSidePanel(QWidget):
         self.export_button.setObjectName("exportButton")
         self.tools_button = QPushButton()
         self.tools_button.setObjectName("toolsButton")
+        self.button_group = QButtonGroup(self)
+        self.button_group.setExclusive(True)
+        self.button_group.addButton(self.export_button)
+        self.button_group.addButton(self.tools_button)
         group_layout.addWidget(self.export_button)
         group_layout.addWidget(self.tools_button)
         group_layout.addStretch()
         group_box.setLayout(group_layout)
         main_layout.addWidget(group_box)
         return main_layout
+
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_buttons()
 
     def _setup_texts(self) -> None:
         widgets = [
@@ -46,3 +55,12 @@ class SettingsSidePanel(QWidget):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _setup_buttons(self) -> None:
+        buttons = [
+            self.export_button,
+            self.tools_button,
+        ]
+        for button in buttons:
+            button.setCheckable(True)
+            button.setAutoDefault(False)

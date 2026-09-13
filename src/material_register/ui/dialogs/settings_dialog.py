@@ -58,7 +58,6 @@ class SettingsDialog(QDialog):
         self.info_label.setObjectName("infoLabel")
         self.close_button = QPushButton()
         self.close_button.setObjectName("closeButton")
-        self.close_button.setDefault(True)
         buttons_layout.addWidget(self.info_label)
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.close_button)

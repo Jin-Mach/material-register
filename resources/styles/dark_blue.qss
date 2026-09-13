@@ -502,7 +502,8 @@ QPushButton#inventoryButton,
 QPushButton#exportButton,
 QPushButton#customersButton,
 QPushButton#catalogButton,
-QPushButton#settingsButton {
+QPushButton#settingsButton,
+QPushButton#toolsButton {
     min-width: 90px;
 }
 
@@ -561,7 +562,8 @@ QPushButton#inventoryButton:hover,
 QPushButton#exportButton:hover,
 QPushButton#customersButton:hover,
 QPushButton#catalogButton:hover,
-QPushButton#settingsButton:hover {
+QPushButton#settingsButton:hover,
+QPushButton#toolsButton:hover {
     background-color: #45484d;
     border-color: #4386bd;
 }
@@ -574,7 +576,8 @@ QPushButton#inventoryButton:pressed,
 QPushButton#exportButton:pressed,
 QPushButton#customersButton:pressed,
 QPushButton#catalogButton:pressed,
-QPushButton#settingsButton:pressed {
+QPushButton#settingsButton:pressed,
+QPushButton#toolsButton:pressed {
     background-color: #303236;
     border-color: #4b8cc9;
 }
@@ -587,7 +590,8 @@ QPushButton#inventoryButton:checked,
 QPushButton#exportButton:checked,
 QPushButton#customersButton:checked,
 QPushButton#catalogButton:checked,
-QPushButton#settingsButton:checked {
+QPushButton#settingsButton:checked,
+QPushButton#toolsButton:checked {
     background-color: #3d6f9f;
     border: 1px solid #4b8cc9;
     color: #ffffff;
@@ -601,7 +605,8 @@ QPushButton#inventoryButton:checked:hover,
 QPushButton#exportButton:checked:hover,
 QPushButton#customersButton:checked:hover,
 QPushButton#catalogButton:checked:hover,
-QPushButton#settingsButton:checked:hover {
+QPushButton#settingsButton:checked:hover,
+QPushButton#toolsButton:checked:hover {
     background-color: #4b8cc9;
     border-color: #5a9bd5;
 }
