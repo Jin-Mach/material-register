@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.ui_icons import UiIcons
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -15,6 +16,13 @@ class CatalogTreeWidget(QTreeWidget):
     def __init__(self, catalog_widget: "CatalogWidget") -> None:
         super().__init__(catalog_widget)
         self.setHeaderHidden(True)
+        self._create_connection()
+
+    def _create_connection(self) -> None:
+        self.itemExpanded.connect(
+            lambda item: UiIcons.set_tree_widget_icon(item, expanded=True)
+        )
+        self.itemCollapsed.connect(lambda item: UiIcons.set_tree_widget_icon(item))
 
     def reload_tree(
         self, categories: list[Category], commodities: list[Commodity]
@@ -27,6 +35,7 @@ class CatalogTreeWidget(QTreeWidget):
                 category_item = QTreeWidgetItem([category.name])
                 category_item.setData(0, Qt.ItemDataRole.UserRole, category)
                 self.addTopLevelItem(category_item)
+                UiIcons.set_tree_widget_icon(category_item)
                 category_item.setToolTip(0, category.name)
                 for commodity in commodities:
                     if category.id == commodity.category_id:

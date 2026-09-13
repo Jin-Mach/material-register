@@ -2,7 +2,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QTreeWidgetItem, QWidget
 
 
 class UiIcons:
@@ -12,6 +12,8 @@ class UiIcons:
     INACTIVE_ICON = None
     COPY_ICON = None
     DELETE_ICON = None
+    OPEN_FOLDER_ICON = None
+    CLOSE_FOLDER_ICON = None
 
     @classmethod
     def setup_init(cls, resources_path: Path) -> None:
@@ -25,6 +27,12 @@ class UiIcons:
         )
         cls.COPY_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "copyIcon.png"))
         cls.DELETE_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "deleteIcon.png"))
+        cls.OPEN_FOLDER_ICON = QIcon(
+            str(cls.IMAGES_PATH / "ui_icons" / "openFolderIcon.png")
+        )
+        cls.CLOSE_FOLDER_ICON = QIcon(
+            str(cls.IMAGES_PATH / "ui_icons" / "closeFolderIcon.png")
+        )
 
     @classmethod
     def set_icons(
@@ -46,3 +54,12 @@ class UiIcons:
                     widget.setIcon(QIcon(str(icon)))
                     widget.setIconSize(QSize(icon_size, icon_size))
         return True
+
+    @classmethod
+    def set_tree_widget_icon(
+        cls, item: QTreeWidgetItem, expanded: bool = False
+    ) -> None:
+        if expanded:
+            item.setIcon(0, cls.OPEN_FOLDER_ICON)
+        else:
+            item.setIcon(0, cls.CLOSE_FOLDER_ICON)

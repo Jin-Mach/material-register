@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem
 
+from material_register.ui.setup.ui_icons import UiIcons
+
 if TYPE_CHECKING:
     from material_register.ui.tools.right_toolbar_widgets.database_backup_widget import (
         DatabaseBackupWidget,
@@ -16,12 +18,20 @@ class DatabaseBackupTreeWidget(QTreeWidget):
         self.setHeaderHidden(True)
         self.setSortingEnabled(True)
         self.sortItems(0, Qt.SortOrder.DescendingOrder)
+        self._create_connection()
+
+    def _create_connection(self) -> None:
+        self.itemExpanded.connect(
+            lambda item: UiIcons.set_tree_widget_icon(item, expanded=True)
+        )
+        self.itemCollapsed.connect(lambda item: UiIcons.set_tree_widget_icon(item))
 
     def load_tree_widget(self, backup_map: dict[str, list[Path]]) -> None:
         self.clear()
         for year, backups in backup_map.items():
             year_item = QTreeWidgetItem([year])
             self.addTopLevelItem(year_item)
+            UiIcons.set_tree_widget_icon(year_item)
             for backup in backups:
                 name = DatabaseBackupTreeWidget._get_backup_name(backup)
                 backup_item = QTreeWidgetItem([name])
