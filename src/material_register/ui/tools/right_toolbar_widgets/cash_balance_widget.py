@@ -17,7 +17,7 @@ from material_register.controllers.tools_controllers.cash_balance_controller imp
     CashBalanceController,
 )
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.styles_constants import WARNING_STYLE
+from material_register.ui.config.styles_constants import WARNING_STYLE, SUCCESS_STYLE
 from material_register.ui.config.ui_constants import (
     CASH_BALANCE_MAX_VALUE,
     CASH_BALANCE_MIN_VALUE,
@@ -205,7 +205,9 @@ class CashBalanceWidget(QWidget):
         total = round(cash_total - balance, 1)
         self.balance_count_spinbox.setValue(balance)
         self.cash_total_spinbox.setValue(cash_total)
-        if total != 0:
+        if total > 0:
+            self.total_label_value.setStyleSheet(SUCCESS_STYLE)
+        elif total < 0:
             self.total_label_value.setStyleSheet(WARNING_STYLE)
         else:
             self.total_label_value.setStyleSheet("")
