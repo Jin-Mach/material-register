@@ -482,10 +482,31 @@ class TransactionsDaySheetOut:
                             column=items_start_column + 2,
                         )
                     )
+        customer_last_row = customer_data_start_row + len(customer_lines) - 1
         total_row = max(
             items_row,
-            customer_data_start_row + len(customer_lines) - 1,
+            customer_last_row,
         )
+        if items_row > customer_last_row + 1:
+            cell = sheet.cell(
+                row=customer_last_row + 1,
+                column=customer_start_column,
+            )
+            sheet.merge_cells(
+                start_row=customer_last_row + 1,
+                start_column=customer_start_column,
+                end_row=total_row,
+                end_column=customer_end_column,
+            )
+            TransactionsDaySheetOut._cell_alignment(
+                cell,
+                horizontal="left",
+                vertical="top",
+            )
+            TransactionsDaySheetOut._cell_font(
+                cell,
+                TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+            )
         cell = sheet.cell(
             row=total_row,
             column=items_end_column - 1,

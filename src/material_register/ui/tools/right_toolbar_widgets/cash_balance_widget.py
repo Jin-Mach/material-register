@@ -17,7 +17,7 @@ from material_register.controllers.tools_controllers.cash_balance_controller imp
     CashBalanceController,
 )
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.styles_constants import WARNING_STYLE, SUCCESS_STYLE
+from material_register.ui.config.styles_constants import SUCCESS_STYLE, WARNING_STYLE
 from material_register.ui.config.ui_constants import (
     CASH_BALANCE_MAX_VALUE,
     CASH_BALANCE_MIN_VALUE,

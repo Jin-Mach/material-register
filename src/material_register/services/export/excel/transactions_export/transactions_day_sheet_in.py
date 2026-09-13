@@ -418,7 +418,9 @@ class TransactionsDaySheetIn:
         for index, (label, value) in enumerate(customer_lines):
             customer_row = customer_data_start_row + index
             cell = sheet.cell(
-                row=customer_row, column=customer_start_column, value=f"{label} {value}"
+                row=customer_row,
+                column=customer_start_column,
+                value=f"{label} {value}",
             )
             sheet.merge_cells(
                 start_row=customer_row,
@@ -447,7 +449,31 @@ class TransactionsDaySheetIn:
                     item_total_cells.append(
                         sheet.cell(row=item_row, column=items_end_column)
                     )
-        total_row = max(items_row, customer_data_start_row + len(customer_lines) - 1)
+        customer_last_row = customer_data_start_row + len(customer_lines) - 1
+        total_row = max(
+            items_row,
+            customer_last_row,
+        )
+        if items_row > customer_last_row + 1:
+            cell = sheet.cell(
+                row=customer_last_row + 1,
+                column=customer_start_column,
+            )
+            sheet.merge_cells(
+                start_row=customer_last_row + 1,
+                start_column=customer_start_column,
+                end_row=total_row,
+                end_column=customer_end_column,
+            )
+            TransactionsDaySheetIn._cell_alignment(
+                cell,
+                horizontal="left",
+                vertical="top",
+            )
+            TransactionsDaySheetIn._cell_font(
+                cell,
+                TransactionsDaySheetIn.DEFAULT_FONT_SIZE,
+            )
         cell = sheet.cell(
             row=total_row,
             column=items_end_column - 1,
@@ -460,7 +486,10 @@ class TransactionsDaySheetIn:
         currency_suffix = export_texts.get(
             "currencySuffix", TransactionsDaySheetIn.ERROR_TEXT
         )
-        transaction_total_cell = sheet.cell(row=total_row, column=items_end_column)
+        transaction_total_cell = sheet.cell(
+            row=total_row,
+            column=items_end_column,
+        )
         if item_total_cells:
             transaction_total_cell.value = (
                 f"=SUM({','.join(cell.coordinate for cell in item_total_cells)})"
@@ -471,9 +500,13 @@ class TransactionsDaySheetIn:
             f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         )
         TransactionsDaySheetIn._cell_alignment(
-            transaction_total_cell, horizontal="right"
+            transaction_total_cell,
+            horizontal="right",
         )
-        TransactionsDaySheetIn._cell_font(transaction_total_cell, bold=True)
+        TransactionsDaySheetIn._cell_font(
+            transaction_total_cell,
+            bold=True,
+        )
         TransactionsDaySheetIn._set_borders(
             sheet,
             start_row=total_row,
