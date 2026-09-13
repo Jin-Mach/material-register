@@ -1,9 +1,11 @@
 from PySide6.QtCore import QSettings
 from PySide6.QtWidgets import QWidget
 
+from material_register.config.project_constants import ORGANIZATION_NAME, APPLICATION_NAME
+
 
 class WindowStateManager:
-    _settings = QSettings("Jin-Mach", "material_register")
+    _settings = QSettings(ORGANIZATION_NAME, APPLICATION_NAME)
 
     @classmethod
     def save_geometry(cls, window: QWidget, key: str) -> None:

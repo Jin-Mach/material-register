@@ -23,10 +23,10 @@ class ApplicationSetup:
 
     @classmethod
     def setup_ui(cls) -> None:
-        displayed_name = UiTexts.UI_TEXTS.get("Application", {}).get(
+        application_name = UiTexts.UI_TEXTS.get("Application", {}).get(
             "titleText", "Material Register"
         )
-        if displayed_name:
-            cls.APPLICATION.setApplicationDisplayName(displayed_name)
+        if application_name:
+            cls.APPLICATION.setApplicationName(application_name)
         if UiIcons.APPLICATION_ICON:
             cls.APPLICATION.setWindowIcon(UiIcons.APPLICATION_ICON)
