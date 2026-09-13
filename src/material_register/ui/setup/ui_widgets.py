@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import INTEGER_SUFFIXES
+from material_register.ui.config.ui_constants import INTEGER_SUFFIXES
 
 CONTEXT_MENU_WIDGETS = (
     QComboBox,

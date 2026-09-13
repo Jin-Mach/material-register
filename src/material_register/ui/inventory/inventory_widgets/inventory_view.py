@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHeaderView, QTableView
 
-from material_register.config.ui_constants import INVENTORY_HORIZONTAL_PADDING
+from material_register.ui.config.ui_constants import INVENTORY_HORIZONTAL_PADDING
 from material_register.db.config.model_constants import (
     INVENTORY_COLUMNS_MAP,
     INVENTORY_VIEW_HIDDEN_COLUMNS,

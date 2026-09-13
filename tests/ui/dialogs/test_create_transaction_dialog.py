@@ -2,7 +2,7 @@ import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.domain.customers_dataclass import Customer
 from material_register.ui.dialogs.create_transaction_dialog import (
     CreateTransactionDialog,

@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget
 
-from material_register.config.ui_defaults import DEFAULT_TEXTS
+from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 from material_register.services.error_handler import ErrorHandler
 
 

@@ -1,6 +1,6 @@
 from PySide6.QtSql import QSqlDatabase
 
-from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.queries.inventory_queries import InventoryQueries
 from material_register.db.queries.transaction_items_queries import (
     TransactionItemsQueries,

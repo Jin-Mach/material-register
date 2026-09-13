@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QHeaderView, QSizePolicy, QTableView
 
-from material_register.config.ui_defaults import DEFAULT_TEXTS
+from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.headers_texts import HeadersTexts
 from material_register.ui.setup.ui_texts import UiTexts

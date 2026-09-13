@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import (
+from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
     SUMMARY_BALANCE_PRICE_MIN_VALUE,
     SUMMARY_EXPORT_PRICE_MAX_VALUE,

@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import (
+from material_register.ui.config.ui_constants import (
     TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
     TRANSFER_OUT,
 )

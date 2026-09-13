@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import (
+from material_register.ui.config.ui_constants import (
     ADD_MODE,
     CUSTOMERS_DIALOG_COMPANY_INDEX,
     CUSTOMERS_DIALOG_INDIVIDUAL_INDEX,

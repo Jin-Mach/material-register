@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import (
+from material_register.ui.config.ui_constants import (
     CASH_BALANCE_MAX_VALUE,
     CASH_BALANCE_MIN_VALUE,
     CASH_BALANCE_NEGATIVE_MIN_VALUE,

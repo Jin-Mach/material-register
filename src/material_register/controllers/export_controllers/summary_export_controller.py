@@ -5,7 +5,7 @@ from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
-from material_register.config.ui_constants import EXPORT_TYPE_SUMMARY
+from material_register.ui.config.ui_constants import EXPORT_TYPE_SUMMARY
 from material_register.core.app_context import AppContext
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.providers.texts_provider import TextsProvider

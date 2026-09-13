@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import (
+from material_register.ui.config.ui_constants import (
     ADD_MODE,
     CATEGORY_DIALOG_NOTES_LENGTH,
     UPDATE_MODE,

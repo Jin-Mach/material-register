@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.db.models.transaction_items_model_in import (
     TransactionItemsModelIn,
 )

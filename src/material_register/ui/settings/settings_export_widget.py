@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QTabWidget, QVBoxLayout, QWidget
 
-from material_register.config.ui_constants import (
+from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
     EXPORT_TYPE_TRANSACTIONS,
 )

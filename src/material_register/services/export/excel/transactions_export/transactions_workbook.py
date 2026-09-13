@@ -2,7 +2,7 @@ from pathlib import Path
 
 from openpyxl import Workbook
 
-from material_register.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportDay,
 )

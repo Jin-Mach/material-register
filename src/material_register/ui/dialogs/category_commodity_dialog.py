@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.config.ui_constants import (
+from material_register.ui.config.ui_constants import (
     CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE,
     CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
     CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
