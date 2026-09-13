@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 from PySide6.QtWidgets import QApplication
@@ -18,5 +19,7 @@ class StyleProvider:
         style_path = (cls.STYLE_PATH / style_name).with_suffix(".qss")
         if not style_path.exists():
             return
+        if sys.platform == "win32":
+            cls.APPLICATION_INSTANCE.setStyle("Fusion")
         with style_path.open("r", encoding="utf-8") as style_file:
             cls.APPLICATION_INSTANCE.setStyleSheet(style_file.read())

@@ -696,3 +696,36 @@ QAbstractItemView#customerCompleterPopup::item:hover {
 QDialog#customerDialog QCheckBox {
     background-color: #2b2d30;
 }
+
+QAbstractSpinBox::up-button,
+QAbstractSpinBox::down-button {
+    width: 16px;
+    background-color: #3a3d41;
+    border: none;
+}
+
+QAbstractSpinBox::up-button:hover,
+QAbstractSpinBox::down-button:hover {
+    background-color: #45484d;
+}
+
+QAbstractSpinBox::up-button:pressed,
+QAbstractSpinBox::down-button:pressed {
+    background-color: #303236;
+}
+
+QAbstractSpinBox::up-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #c8c9cc;
+}
+
+QAbstractSpinBox::down-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #c8c9cc;
+}
