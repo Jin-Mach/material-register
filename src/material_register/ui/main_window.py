@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QCloseEvent, QShowEvent
+from PySide6.QtGui import QCloseEvent, QResizeEvent, QShowEvent
 from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QSplitter, QWidget
 
 from material_register.controllers.tools_settings_controller import (
@@ -119,6 +119,10 @@ class MainWindow(QMainWindow):
             frame.moveCenter(geometry.center())
             self.move(frame.topLeft())
         self._handle_startup_errors()
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        super().resizeEvent(event)
+        self.right_toolbar_widget.update_tools_max_width()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         super().closeEvent(event)

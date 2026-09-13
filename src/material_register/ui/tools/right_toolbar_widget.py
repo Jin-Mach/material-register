@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QSize, Qt, QVariantAnimation
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QPushButton,
@@ -57,7 +57,7 @@ class RightToolbarWidget(QWidget):
         self.notes_button.setCheckable(True)
         self.cash_balance_button = QPushButton()
         self.cash_balance_button.setObjectName("cashBalanceButton")
-        self.cash_balance_button.setFixedSize(self.BUTTON_SIZE, self.BUTTON_SIZE)
+        self.cash_balance_button.setFixedSize(QSize(self.BUTTON_SIZE, self.BUTTON_SIZE))
         self.cash_balance_button.setCheckable(True)
         self.database_button = QPushButton()
         self.database_button.setObjectName("databaseButton")
@@ -72,9 +72,11 @@ class RightToolbarWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self.tools_container.setVisible(False)
+        self._setup_animation()
         self._setup_texts()
         self._setup_icons()
         self._setup_container()
+        self.update_tools_max_width()
 
     def _setup_texts(self) -> None:
         widgets = [self.notes_button, self.cash_balance_button, self.database_button]
@@ -110,6 +112,12 @@ class RightToolbarWidget(QWidget):
             scroll_area.setWidget(widget)
             self.tools_container.addWidget(scroll_area)
 
+    def _setup_animation(self) -> None:
+        self.animation = QVariantAnimation(self)
+        self.animation.setDuration(300)
+        self.animation.valueChanged.connect(self._update_animation)
+        self.animation.finished.connect(self._animation_finished)
+
     def _create_connection(self) -> None:
         buttons_map = {
             self.notes_button: 0,
@@ -118,6 +126,21 @@ class RightToolbarWidget(QWidget):
         }
         for button, index in buttons_map.items():
             button.clicked.connect(lambda _, i=index: self._set_container_widget(i))
+
+    def _update_animation(self, value: object) -> None:
+        width = int(value)
+        splitter_width = self.main_window.splitter.width()
+        self.main_window.splitter.setSizes([splitter_width - width, width])
+
+    def _animate_tools(self, start: int, end: int) -> None:
+        self.animation.stop()
+        self.animation.setStartValue(start)
+        self.animation.setEndValue(end)
+        self.animation.start()
+
+    def _animation_finished(self) -> None:
+        if self.main_window.splitter.sizes()[1] == 0:
+            self.tools_container.setVisible(False)
 
     def _set_container_widget(self, index: int) -> None:
         buttons_map = {
@@ -129,21 +152,24 @@ class RightToolbarWidget(QWidget):
         if self.tools_container.isVisible():
             if self.tools_container.currentIndex() == index:
                 self.main_window.tools_width = self.main_window.splitter.sizes()[1]
-                self.tools_container.setVisible(False)
+                self._animate_tools(self.main_window.tools_width, 0)
                 button.setChecked(False)
                 return
             self.tools_container.setCurrentIndex(index)
         else:
             self.tools_container.setCurrentIndex(index)
-            self.main_window.splitter.setSizes(
-                [
-                    self.main_window.splitter.width() - self.main_window.tools_width,
-                    self.main_window.tools_width,
-                ]
-            )
             self.tools_container.setVisible(True)
+            self.update_tools_max_width()
+            self._animate_tools(0, self.main_window.tools_width)
         for current_button in buttons_map.values():
             current_button.setChecked(current_button is button)
         widget = self.tools_container.currentWidget()
         if hasattr(widget, "activate_widget"):
             widget.activate_widget()
+
+    def update_tools_max_width(self) -> None:
+        self.tools_container.setMaximumWidth(self.main_window.splitter.width() // 2)
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self.update_tools_max_width()
