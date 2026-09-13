@@ -36,6 +36,7 @@ class DatabaseBackupTreeWidget(QTreeWidget):
                 name = DatabaseBackupTreeWidget._get_backup_name(backup)
                 backup_item = QTreeWidgetItem([name])
                 backup_item.setData(0, Qt.ItemDataRole.UserRole, backup)
+                backup_item.setIcon(0, UiIcons.DATABASE_ICON)
                 year_item.addChild(backup_item)
 
     def get_selected_data(self) -> Path | None:

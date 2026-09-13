@@ -26,6 +26,8 @@ ICONS_MAP = {
     "images/ui_icons/deleteIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/deleteIcon.png",
     "images/ui_icons/closeFolderIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/closeFolderIcon.png",
     "images/ui_icons/openFolderIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/openFolderIcon.png",
+    "images/ui_icons/databaseIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/databaseIcon.png",
+    "images/ui_icons/itemIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/ui_icons/itemIcon.png",
     "images/tools_icons/notesButtonIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/tools_icons/notesButtonIcon.png",
     "images/tools_icons/cashBalanceButtonIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/tools_icons/cashBalanceButtonIcon.png",
     "images/tools_icons/databaseButtonIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/tools_icons/databaseButtonIcon.png",

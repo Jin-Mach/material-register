@@ -42,6 +42,7 @@ class CatalogTreeWidget(QTreeWidget):
                         item = QTreeWidgetItem(category_item)
                         item.setText(0, commodity.name)
                         item.setData(0, Qt.ItemDataRole.UserRole, commodity)
+                        item.setIcon(0, UiIcons.ITEM_ICON)
                         item.setToolTip(0, commodity.name)
         except Exception as e:
             ErrorHandler.handle_error(e, "ui", "warning")

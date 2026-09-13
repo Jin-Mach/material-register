@@ -88,7 +88,6 @@ class RightToolbarWidget(QWidget):
             return
 
     def _setup_icons(self) -> None:
-        # icons color: #FFE066
         widgets = [self.notes_button, self.cash_balance_button, self.database_button]
         if not UiIcons.set_icons("tools", widgets, icon_size=24):
             ErrorHandler.handle_error(

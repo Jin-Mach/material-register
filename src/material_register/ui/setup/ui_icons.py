@@ -14,7 +14,10 @@ class UiIcons:
     DELETE_ICON = None
     OPEN_FOLDER_ICON = None
     CLOSE_FOLDER_ICON = None
+    DATABASE_ICON = None
+    ITEM_ICON = None
 
+    # icons color: #FFE066
     @classmethod
     def setup_init(cls, resources_path: Path) -> None:
         cls.IMAGES_PATH = resources_path / "images"
@@ -33,6 +36,10 @@ class UiIcons:
         cls.CLOSE_FOLDER_ICON = QIcon(
             str(cls.IMAGES_PATH / "ui_icons" / "closeFolderIcon.png")
         )
+        cls.DATABASE_ICON = QIcon(
+            str(cls.IMAGES_PATH / "ui_icons" / "databaseIcon.png")
+        )
+        cls.ITEM_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "itemIcon.png"))
 
     @classmethod
     def set_icons(

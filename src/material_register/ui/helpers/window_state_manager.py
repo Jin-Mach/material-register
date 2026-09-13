@@ -1,7 +1,10 @@
 from PySide6.QtCore import QSettings
 from PySide6.QtWidgets import QWidget
 
-from material_register.config.project_constants import ORGANIZATION_NAME, APPLICATION_NAME
+from material_register.config.project_constants import (
+    APPLICATION_NAME,
+    ORGANIZATION_NAME,
+)
 
 
 class WindowStateManager:
