@@ -23,7 +23,7 @@ from material_register.utils.file_launchers import (
     open_file_in_default,
     open_file_in_explorer,
 )
-from material_register.workers.export_workers.transactions_export_worker import (
+from material_register.workers.export_workers.excel.transactions_export_worker import (
     TransactionsExportWorker,
 )
 

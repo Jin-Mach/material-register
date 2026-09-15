@@ -1,3 +1,4 @@
+from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen.canvas import Canvas
@@ -23,11 +24,10 @@ class TransactionDocumentIn:
     @staticmethod
     def create_document(
         transaction: Transaction, items_data: list[TransactionItemDetail]
-    ) -> None:
-        print("transaction: ", transaction)
-        print("items_data: ", items_data)
+    ) -> bytes:
+        pdf_buffer = BytesIO()
         document = SimpleDocTemplate(
-            "transaction_document_in.pdf",
+            pdf_buffer,
             pagesize=A4,
             leftMargin=20 * mm,
             topMargin=20 * mm,
@@ -52,6 +52,7 @@ class TransactionDocumentIn:
             onFirstPage=TransactionDocumentIn._create_footer,
             onLaterPages=TransactionDocumentIn._create_footer,
         )
+        return pdf_buffer.getvalue()
 
     @staticmethod
     def _create_header() -> list[Paragraph]:

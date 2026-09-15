@@ -20,7 +20,7 @@ from material_register.utils.file_launchers import (
     open_file_in_explorer,
 )
 from material_register.utils.normalizer import normalize_value
-from material_register.workers.export_workers.summary_export_worker import (
+from material_register.workers.export_workers.excel.summary_export_worker import (
     SummaryExportWorker,
 )
 

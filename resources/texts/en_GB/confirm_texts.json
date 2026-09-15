@@ -107,5 +107,10 @@
     "TEXT": "Restore data from the selected backup?\nThis action cannot be undone!",
     "YES": "Restore",
     "NO": "Cancel"
+  },
+    "PDF_FAILED": {
+    "TITLE": "Error",
+    "TEXT": "An error occurred while working with the PDF file.",
+    "CLOSE": "Close"
   }
 }
