@@ -538,6 +538,18 @@ QPushButton#databaseButton {
     border-radius: 3px;
 }
 
+QPushButton#printButton,
+QPushButton#saveButton,
+QPushButton#zoomInButton,
+QPushButton#zoomResetButton,
+QPushButton#zoomOutButton {
+    min-width: 0;
+    padding: 0;
+    background-color: transparent;
+    border: 1px solid #45484d;
+    border-radius: 3px;
+}
+
 QPushButton#permanentCopyButton:hover,
 QPushButton#permanentDeleteButton:hover,
 QPushButton#localCopyButton:hover,
@@ -556,28 +568,32 @@ QPushButton#localDeleteButton:pressed {
 
 QPushButton#notesButton:hover,
 QPushButton#cashBalanceButton:hover,
-QPushButton#databaseButton:hover,
-QPushButton#transactionsButton:hover,
-QPushButton#inventoryButton:hover,
-QPushButton#exportButton:hover,
-QPushButton#customersButton:hover,
-QPushButton#catalogButton:hover,
-QPushButton#settingsButton:hover,
-QPushButton#toolsButton:hover {
+QPushButton#databaseButton:hover {
+    background-color: #45484d;
+    border-color: #4386bd;
+}
+
+QPushButton#printButton:hover,
+QPushButton#saveButton:hover,
+QPushButton#zoomInButton:hover,
+QPushButton#zoomResetButton:hover,
+QPushButton#zoomOutButton:hover {
     background-color: #45484d;
     border-color: #4386bd;
 }
 
 QPushButton#notesButton:pressed,
 QPushButton#cashBalanceButton:pressed,
-QPushButton#databaseButton:pressed,
-QPushButton#transactionsButton:pressed,
-QPushButton#inventoryButton:pressed,
-QPushButton#exportButton:pressed,
-QPushButton#customersButton:pressed,
-QPushButton#catalogButton:pressed,
-QPushButton#settingsButton:pressed,
-QPushButton#toolsButton:pressed {
+QPushButton#databaseButton:pressed {
+    background-color: #303236;
+    border-color: #4b8cc9;
+}
+
+QPushButton#printButton:pressed,
+QPushButton#saveButton:pressed,
+QPushButton#zoomInButton:pressed,
+QPushButton#zoomResetButton:pressed,
+QPushButton#zoomOutButton:pressed {
     background-color: #303236;
     border-color: #4b8cc9;
 }

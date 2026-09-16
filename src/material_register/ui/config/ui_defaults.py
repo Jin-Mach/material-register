@@ -30,6 +30,7 @@ DEFAULT_TEXTS = {
     "TransactionsView": {
         "updateTransactionActionText": "Edit transaction",
         "deleteTransactionActionText": "Delete transaction",
+        "showTransactionDocumentActionText": "View document"
     },
     "TransactionsActionsWidget": {
         "inTransactionButtonText": "Add purchase",
@@ -397,4 +398,14 @@ DEFAULT_TEXTS = {
         "restoreInProgressText": "Data restoration in progress.\nDo not turn off the computer!",
         "restartApplicationText": "The application will now restart",
     },
+    "DocumentPreviewDialog": {
+        "titleText": "Preview",
+        "printButtonTooltipText": "Print document",
+        "saveButtonTooltipText": "Save document",
+        "zoomInButtonTooltipText": "Zoom in",
+        "zoomResetButtonTooltipText": "Reset zoom",
+        "zoomOutButtonTooltipText": "Zoom out",
+        "closeButtonText": "Close",
+        "closeButtonTooltipText": "Close dialog"
+    }
 }

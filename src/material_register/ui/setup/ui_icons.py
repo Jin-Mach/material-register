@@ -16,6 +16,11 @@ class UiIcons:
     CLOSE_FOLDER_ICON = None
     DATABASE_ICON = None
     ITEM_ICON = None
+    PRINT_ICON = None
+    SAVE_ICON = None
+    ZOOM_IN_ICON = None
+    ZOOM_OUT_ICON = None
+    ZOOM_RESET_ICON = None
 
     # icons color: #FFE066
     @classmethod
@@ -40,6 +45,13 @@ class UiIcons:
             str(cls.IMAGES_PATH / "ui_icons" / "databaseIcon.png")
         )
         cls.ITEM_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "itemIcon.png"))
+        cls.PRINT_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "printIcon.png"))
+        cls.SAVE_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "saveIcon.png"))
+        cls.ZOOM_IN_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "zoomInIcon.png"))
+        cls.ZOOM_OUT_ICON = QIcon(str(cls.IMAGES_PATH / "ui_icons" / "zoomOutIcon.png"))
+        cls.ZOOM_RESET_ICON = QIcon(
+            str(cls.IMAGES_PATH / "ui_icons" / "zoomResetIcon.png")
+        )
 
     @classmethod
     def set_icons(

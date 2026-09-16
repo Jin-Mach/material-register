@@ -33,7 +33,8 @@
   },
   "TransactionsView": {
     "updateTransactionActionText": "Upravit transakci",
-    "deleteTransactionActionText": "Smazat transakci"
+    "deleteTransactionActionText": "Smazat transakci",
+    "showTransactionDocumentActionText": "Zobrazit doklad"
   },
   "TransactionsActionsWidget": {
     "inTransactionButtonText": "Přidat výkup",
@@ -414,5 +415,15 @@
     "backupInProgressText": "Probíhá záloha...",
     "restoreInProgressText": "Probíhá obnova dat.\nNevypínejte počítač!",
     "restartApplicationText": "Aplikace se nyní restartuje"
+  },
+  "DocumentPreviewDialog": {
+    "titleText": "Náhled",
+    "printButtonTooltipText": "Tisk dokumentu",
+    "saveButtonTooltipText": "Uložit dokument",
+    "zoomInButtonTooltipText": "Přiblížit",
+    "zoomResetButtonTooltipText": "Výchozí velikost",
+    "zoomOutButtonTooltipText": "Oddálit",
+    "closeButtonText": "Zavřít",
+    "closeButtonTooltipText": "Zavře dialog"
   }
 }
