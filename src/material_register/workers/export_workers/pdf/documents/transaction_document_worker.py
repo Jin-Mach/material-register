@@ -1,10 +1,16 @@
 from PySide6.QtCore import QObject, Signal, Slot
 
-from material_register.domain.transaction_item_detail_dataclass import TransactionItemDetail
-from material_register.services.export.pdf.documents.transaction_document_in import TransactionDocumentIn
 from material_register.domain.transaction_dataclass import Transaction
+from material_register.domain.transaction_item_detail_dataclass import (
+    TransactionItemDetail,
+)
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.export.pdf.documents.transaction_document_out import TransactionDocumentOut
+from material_register.services.export.pdf.documents.transaction_document_in import (
+    TransactionDocumentIn,
+)
+from material_register.services.export.pdf.documents.transaction_document_out import (
+    TransactionDocumentOut,
+)
 from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 
 
@@ -12,7 +18,12 @@ class TransactionDocumentWorker(QObject):
     finished = Signal(bytes)
     error = Signal(str)
 
-    def __init__(self, transaction: Transaction, items_data: list[TransactionItemDetail], transfer_type: str) -> None:
+    def __init__(
+        self,
+        transaction: Transaction,
+        items_data: list[TransactionItemDetail],
+        transfer_type: str,
+    ) -> None:
         super().__init__()
         self.transaction = transaction
         self.items_data = items_data
@@ -23,9 +34,13 @@ class TransactionDocumentWorker(QObject):
         try:
             pdf_document = None
             if self.transfer_type == TRANSFER_IN:
-                pdf_document = TransactionDocumentIn.create_document(self.transaction, self.items_data)
+                pdf_document = TransactionDocumentIn.create_document(
+                    self.transaction, self.items_data
+                )
             elif self.transfer_type == TRANSFER_OUT:
-                pdf_document = TransactionDocumentOut.create_document(self.transaction, self.items_data)
+                pdf_document = TransactionDocumentOut.create_document(
+                    self.transaction, self.items_data
+                )
             if not pdf_document:
                 self.error.emit("PDF_FAILED")
                 return

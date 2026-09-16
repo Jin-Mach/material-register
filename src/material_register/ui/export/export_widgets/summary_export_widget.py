@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.controllers.export_controllers.summary_export_controller import (
+from material_register.controllers.export_controllers.excel.summary_export_controller import (
     SummaryExportController,
 )
 from material_register.services.error_handler import ErrorHandler

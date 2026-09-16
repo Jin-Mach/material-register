@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.controllers.export_controllers.transactions_export_controller import (
+from material_register.controllers.export_controllers.excel.transactions_export_controller import (
     TransactionsExportController,
 )
 from material_register.db.models.customers_completer_model import (

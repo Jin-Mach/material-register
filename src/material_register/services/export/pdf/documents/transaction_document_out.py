@@ -1,4 +1,5 @@
 from io import BytesIO
+
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen.canvas import Canvas
@@ -15,13 +16,12 @@ from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
 from material_register.services.export.pdf.documents.documents_helper import (
-    paragraph_style,
     create_horizontal_line,
+    paragraph_style,
 )
 
 
 class TransactionDocumentOut:
-
     @staticmethod
     def create_document(
         transaction: Transaction, items_data: list[TransactionItemDetail]
@@ -42,10 +42,16 @@ class TransactionDocumentOut:
         content.append(create_horizontal_line())
         content.extend(TransactionDocumentOut._create_customer_section(transaction))
         content.append(create_horizontal_line())
-        items_table = TransactionDocumentOut._create_items_table(items_data, transaction.suffix)
+        items_table = TransactionDocumentOut._create_items_table(
+            items_data, transaction.suffix
+        )
         content.append(items_table)
         content.append(create_horizontal_line())
-        content.append(TransactionDocumentOut._create_total_count_section(transaction.total, transaction.suffix))
+        content.append(
+            TransactionDocumentOut._create_total_count_section(
+                transaction.total, transaction.suffix
+            )
+        )
         content.append(create_horizontal_line())
         content.append(TransactionDocumentOut._create_signature_section())
         document.build(
@@ -127,8 +133,7 @@ class TransactionDocumentOut:
 
     @staticmethod
     def _create_items_table(
-        items_data: list[TransactionItemDetail],
-        suffix: str
+        items_data: list[TransactionItemDetail], suffix: str
     ) -> Table:
         data = [["Category", "Item", "Count"]]
         for item in items_data:
@@ -142,7 +147,7 @@ class TransactionDocumentOut:
                         item.commodity_name,
                         paragraph_style("Helvetica", 12, "left"),
                     ),
-                    f"{item.unit_count} {suffix}"
+                    f"{item.unit_count} {suffix}",
                 ]
             )
         table = Table(

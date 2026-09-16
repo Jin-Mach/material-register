@@ -1,4 +1,4 @@
-from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import HRFlowable, Paragraph
 
@@ -12,7 +12,7 @@ def paragraph_style(
         "left": TA_LEFT,
         "center": TA_CENTER,
         "right": TA_RIGHT,
-        "justify": TA_JUSTIFY
+        "justify": TA_JUSTIFY,
     }
     return ParagraphStyle(
         name="ParagraphStyle",

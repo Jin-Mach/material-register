@@ -1,4 +1,5 @@
 from io import BytesIO
+
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen.canvas import Canvas
@@ -15,8 +16,8 @@ from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
 from material_register.services.export.pdf.documents.documents_helper import (
-    paragraph_style,
     create_horizontal_line,
+    paragraph_style,
 )
 
 
