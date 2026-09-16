@@ -30,7 +30,7 @@ DEFAULT_TEXTS = {
     "TransactionsView": {
         "updateTransactionActionText": "Edit transaction",
         "deleteTransactionActionText": "Delete transaction",
-        "showTransactionDocumentActionText": "View document"
+        "showTransactionDocumentActionText": "View document",
     },
     "TransactionsActionsWidget": {
         "inTransactionButtonText": "Add purchase",
@@ -406,6 +406,6 @@ DEFAULT_TEXTS = {
         "zoomResetButtonTooltipText": "Reset zoom",
         "zoomOutButtonTooltipText": "Zoom out",
         "closeButtonText": "Close",
-        "closeButtonTooltipText": "Close dialog"
-    }
+        "closeButtonTooltipText": "Close dialog",
+    },
 }
