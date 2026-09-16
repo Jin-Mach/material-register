@@ -4,6 +4,9 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QFont, QShowEvent
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
+from material_register.controllers.export_controllers.pdf.transaction_document_controller import (
+    TransactionDocumentController,
+)
 from material_register.controllers.transactions_controller import TransactionsController
 from material_register.db.models.transactions_proxy_filter import (
     TransactionsProxyFilter,
@@ -32,6 +35,9 @@ class TransactionsWidget(QWidget):
         self.transactions_load_model_in = DataInit.transactions_load_model_in
         self.transactions_load_model_out = DataInit.transactions_load_model_out
         self.transactions_controller = TransactionsController(
+            self, self.transactions_load_model_in, self.transactions_load_model_out
+        )
+        self.transaction_document_controller = TransactionDocumentController(
             self, self.transactions_load_model_in, self.transactions_load_model_out
         )
         self.setLayout(self.create_ui())

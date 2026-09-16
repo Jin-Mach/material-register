@@ -1,33 +1,67 @@
-from PySide6.QtCore import QObject, QThread, QTimer
+from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QModelIndex, QObject, QThread, QTimer
+from PySide6.QtWidgets import QWidget
+
+from material_register.db.queries.transaction_items_queries import (
+    TransactionItemsQueries,
+)
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
+from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.dialogs.document_preview_dialog import DocumentPreviewDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
-from material_register.ui.transactions.transactions_widget import TransactionsWidget
 from material_register.workers.export_workers.pdf.documents.transaction_document_worker import (
     TransactionDocumentWorker,
 )
 
+if TYPE_CHECKING:
+    from material_register.db.models.transactions_load_model_in import (
+        TransactionsLoadModelIn,
+    )
+    from material_register.db.models.transactions_load_model_out import (
+        TransactionsLoadModelOut,
+    )
+    from material_register.ui.transactions.transactions_widget import TransactionsWidget
+
 
 class TransactionDocumentController(QObject):
-    def __init__(self, transactions_widget: TransactionsWidget) -> None:
+    def __init__(
+        self,
+        transactions_widget: "TransactionsWidget",
+        transactions_model_in: "TransactionsLoadModelIn",
+        transactions_model_out: "TransactionsLoadModelOut",
+    ) -> None:
         super().__init__()
         self.transactions_widget = transactions_widget
+        self.db_connection = DbInit.db_connection
+        self.transactions_model_in = transactions_model_in
+        self.transactions_model_out = transactions_model_out
         self.thread = None
         self.worker = None
+        self._models_map = {
+            0: (self.transactions_model_in, TRANSFER_IN),
+            1: (self.transactions_model_out, TRANSFER_OUT),
+        }
 
-    def create_pdf_document(
-        self,
-        transaction: Transaction,
-        items_data: list[TransactionItemDetail],
-        transfer_type: str,
-    ) -> None:
-        print("transaction:", transaction)
-        print("items_data:", items_data)
-        self._start_worker(transaction, items_data, transfer_type)
+    def create_pdf_document(self, proxy_index: QModelIndex) -> None:
+        tab_context = self._get_tab_context()
+        if tab_context is None:
+            return
+        model, transaction_type = tab_context
+        model_index = self.transactions_widget.active_proxy.mapToSource(proxy_index)
+        if not model_index.isValid():
+            return
+        transaction = model.transaction_data[model_index.row()]
+        transaction_id = transaction.transaction_id
+        items_data = TransactionItemsQueries.get_transaction_items(
+            self.db_connection, transaction_id
+        )
+        self._start_worker(transaction, items_data, transaction_type)
 
     def _start_worker(
         self,
@@ -49,7 +83,7 @@ class TransactionDocumentController(QObject):
 
     def _export_ok(self, pdf_document: bytes) -> None:
         self._clean_thread()
-        QTimer.singleShot(1000, lambda: self._finish_export(pdf_document=pdf_document))
+        self._finish_export(pdf_document=pdf_document)
 
     def _clean_thread(self) -> None:
         self.thread.quit()
@@ -72,7 +106,18 @@ class TransactionDocumentController(QObject):
             )
             self._reset_variables()
             return
-        print("document ok:", pdf_document)
+        preview_dialog = DocumentPreviewDialog(self.transactions_widget)
+        preview_dialog.load_pdf_from_bytes(pdf_document)
+        preview_dialog.exec()
+
+    def _get_tab_context(
+        self,
+    ) -> tuple["TransactionsLoadModelIn | TransactionsLoadModelOut", str] | None:
+        current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
+        tab_context = self._models_map.get(current_tab)
+        if tab_context is None:
+            return None
+        return tab_context
 
     @staticmethod
     def _handle_export_error(

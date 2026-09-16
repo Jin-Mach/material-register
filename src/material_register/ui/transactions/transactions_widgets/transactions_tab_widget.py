@@ -39,10 +39,14 @@ class TransactionsTabWidget(QTabWidget):
 
     def _setup_tabs(self) -> None:
         self.transaction_in_view = TransactionsView(
-            self, self.transactions_widget.transactions_controller
+            self,
+            self.transactions_widget.transactions_controller,
+            self.transactions_widget.transaction_document_controller,
         )
         self.transactions_out_view = TransactionsView(
-            self, self.transactions_widget.transactions_controller
+            self,
+            self.transactions_widget.transactions_controller,
+            self.transactions_widget.transaction_document_controller,
         )
         self.addTab(self.transaction_in_view, self.in_tab_title)
         self.addTab(self.transactions_out_view, self.out_tab_title)

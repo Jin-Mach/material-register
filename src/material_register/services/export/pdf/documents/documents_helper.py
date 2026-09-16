@@ -47,19 +47,19 @@ def create_header(
 ) -> list[Paragraph]:
     title = Paragraph(
         title_text,
-        style=title_style(),
+        style=paragraph_style("Helvetica", 15, "center"),
     )
     branch_name = Paragraph(
         f"{branch_name}: {branch_text}",
-        style=branch_style(),
+        style=paragraph_style("Helvetica", 13, "left"),
     )
     branch_address = Paragraph(
         f"{address_text}: {address}",
-        style=branch_style(),
+        style=paragraph_style("Helvetica", 13, "left"),
     )
     branch_document = Paragraph(
         f"{document_text}: {document}",
-        style=branch_style(),
+        style=paragraph_style("Helvetica", 13, "left"),
     )
     return [
         title,

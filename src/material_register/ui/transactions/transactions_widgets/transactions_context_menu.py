@@ -5,6 +5,9 @@ from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenu
 
 if TYPE_CHECKING:
+    from material_register.controllers.export_controllers.pdf.transaction_document_controller import (
+        TransactionDocumentController,
+    )
     from material_register.controllers.transactions_controller import (
         TransactionsController,
     )
@@ -18,9 +21,11 @@ class TransactionsContextMenu(QMenu):
         self,
         transactions_view: "TransactionsView",
         transactions_controller: "TransactionsController",
+        transaction_document_controller: "TransactionDocumentController",
     ) -> None:
         super().__init__(transactions_view)
         self.transactions_controller = transactions_controller
+        self.transaction_document_controller = transaction_document_controller
         self._create_ui()
         self._create_connection()
         self.transaction_index = None
@@ -30,8 +35,14 @@ class TransactionsContextMenu(QMenu):
         self.update_transaction_action.setObjectName("updateTransactionAction")
         self.delete_transaction_action = QAction(self)
         self.delete_transaction_action.setObjectName("deleteTransactionAction")
+        self.show_transaction_document_action = QAction(self)
+        self.show_transaction_document_action.setObjectName(
+            "showTransactionDocumentAction"
+        )
         self.addAction(self.update_transaction_action)
         self.addAction(self.delete_transaction_action)
+        self.addSeparator()
+        self.addAction(self.show_transaction_document_action)
 
     def set_ui_texts(self, ui_texts: dict[str, str]) -> None:
         if ui_texts:
@@ -43,6 +54,7 @@ class TransactionsContextMenu(QMenu):
     def _create_connection(self) -> None:
         self.update_transaction_action.triggered.connect(self._update_transaction)
         self.delete_transaction_action.triggered.connect(self._delete_transaction)
+        self.show_transaction_document_action.triggered.connect(self._show_document)
 
     def set_customer_index(self, index: QModelIndex) -> None:
         self.transaction_index = index
@@ -56,3 +68,8 @@ class TransactionsContextMenu(QMenu):
         if self.transaction_index is None:
             return
         self.transactions_controller.delete_transaction(self.transaction_index)
+
+    def _show_document(self) -> None:
+        if self.transaction_index is None:
+            return
+        self.transaction_document_controller.create_pdf_document(self.transaction_index)

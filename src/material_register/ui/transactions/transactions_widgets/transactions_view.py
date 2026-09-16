@@ -12,6 +12,9 @@ from material_register.ui.transactions.transactions_widgets.transactions_context
 )
 
 if TYPE_CHECKING:
+    from material_register.controllers.export_controllers.pdf.transaction_document_controller import (
+        TransactionDocumentController,
+    )
     from material_register.controllers.transactions_controller import (
         TransactionsController,
     )
@@ -25,10 +28,12 @@ class TransactionsView(QTableView):
         self,
         stacked_widget: "TransactionsTabWidget",
         transactions_controller: "TransactionsController",
+        transaction_document_controller: "TransactionDocumentController",
     ) -> None:
         super().__init__(stacked_widget)
         self.setObjectName("transactionsView")
         self.transactions_controller = transactions_controller
+        self.transaction_document_controller = transaction_document_controller
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._setup_ui()
 
@@ -71,7 +76,9 @@ class TransactionsView(QTableView):
         index = self.indexAt(position)
         if not index.isValid():
             return
-        menu = TransactionsContextMenu(self, self.transactions_controller)
+        menu = TransactionsContextMenu(
+            self, self.transactions_controller, self.transaction_document_controller
+        )
         menu.set_customer_index(index)
         if not self.menu_texts:
             ErrorHandler.handle_error(
