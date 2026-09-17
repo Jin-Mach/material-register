@@ -634,7 +634,17 @@ QLabel#subtitleLabel {
     color: #d4d4d4;
 }
 
+QLabel#companyNameLabel,
 QLabel#branchNameLabel,
+QLabel#branchOperatorLabel,
+QLabel#branchAddressLabel,
+QLabel#phoneNumberLabel,
+QLabel#emailAddressLabel,
+QLabel#companyIdLabel,
+QLabel#taxIdLabel,
+QLabel#establishmentIdLabel,
+QLabel#facilityIdLabel,
+QLabel#openingHoursLabel,
 QLabel#pathLabel,
 QLabel#fileNameLabel {
     background-color: #232528;
