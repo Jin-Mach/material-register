@@ -24,14 +24,18 @@ class SettingsSidePanel(QWidget):
         group_box.setObjectName("settingsSidePanelGroupBox")
         group_layout = QVBoxLayout()
         group_layout.setSpacing(5)
+        self.branch_button = QPushButton()
+        self.branch_button.setObjectName("branchButton")
         self.export_button = QPushButton()
         self.export_button.setObjectName("exportButton")
         self.tools_button = QPushButton()
         self.tools_button.setObjectName("toolsButton")
         self.button_group = QButtonGroup(self)
         self.button_group.setExclusive(True)
+        self.button_group.addButton(self.branch_button)
         self.button_group.addButton(self.export_button)
         self.button_group.addButton(self.tools_button)
+        group_layout.addWidget(self.branch_button)
         group_layout.addWidget(self.export_button)
         group_layout.addWidget(self.tools_button)
         group_layout.addStretch()
@@ -45,6 +49,7 @@ class SettingsSidePanel(QWidget):
 
     def _setup_texts(self) -> None:
         widgets = [
+            self.branch_button,
             self.export_button,
             self.tools_button,
         ]
@@ -58,6 +63,7 @@ class SettingsSidePanel(QWidget):
 
     def _setup_buttons(self) -> None:
         buttons = [
+            self.branch_button,
             self.export_button,
             self.tools_button,
         ]

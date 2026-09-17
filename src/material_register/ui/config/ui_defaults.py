@@ -63,6 +63,8 @@ DEFAULT_TEXTS = {
         "closeButtonTooltipText": "Closes the dialog",
     },
     "SettingsSidePanel": {
+        "branchButtonText": "Branch",
+        "branchButtonTooltipText": "Show branch settings",
         "exportButtonText": "Export",
         "exportButtonTooltipText": "Displays export settings",
         "toolsButtonText": "Tools",

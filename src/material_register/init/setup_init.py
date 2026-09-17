@@ -18,9 +18,11 @@ from material_register.ui.setup.ui_texts import UiTexts
 class SetupInit:
     @classmethod
     def init_setup(cls) -> tuple[bool, str]:
+        DEV_MODE = True
         try:
             invalid_files = FileProvider.check_missing_files(PathsProvider.resources)
-            if invalid_files:
+            print("invalid_files: ", invalid_files)
+            if invalid_files and not DEV_MODE:
                 state = DownloadProvider.is_ready_for_download(PathsProvider.resources)
                 if not state["internet"]:
                     return False, "CONNECTION_ERROR"

@@ -81,6 +81,8 @@ UI_KEYS = [
     ("SettingsDialog", "titleText"),
     ("SettingsDialog", "closeButtonText"),
     ("SettingsDialog", "closeButtonTooltipText"),
+    ("SettingsSidePanel", "branchButtonText"),
+    ("SettingsSidePanel", "branchButtonTooltipText"),
     ("SettingsSidePanel", "exportButtonText"),
     ("SettingsSidePanel", "exportButtonTooltipText"),
     ("SettingsSidePanel", "toolsButtonText"),

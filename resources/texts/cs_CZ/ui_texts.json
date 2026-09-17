@@ -76,6 +76,8 @@
     "closeButtonTooltipText": "Zavře dialog"
   },
   "SettingsSidePanel": {
+    "branchButtonText": "Pobočka",
+    "branchButtonTooltipText": "Zobrazí nastavení pobočky",
     "exportButtonText": "Export",
     "exportButtonTooltipText": "Zobrazí nastavení exportu",
     "toolsButtonText": "Nástroje",
