@@ -418,8 +418,8 @@
   },
   "DocumentPreviewDialog": {
     "titleText": "Náhled",
-    "printButtonTooltipText": "Tisk dokumentu",
-    "saveButtonTooltipText": "Uložit dokument",
+    "printDocumentButtonTooltipText": "Tisk dokumentu",
+    "saveDocumentButtonTooltipText": "Uložit dokument",
     "zoomInButtonTooltipText": "Přiblížit",
     "zoomResetButtonTooltipText": "Výchozí velikost",
     "zoomOutButtonTooltipText": "Oddálit",

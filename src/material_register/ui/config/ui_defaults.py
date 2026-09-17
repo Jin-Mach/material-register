@@ -400,8 +400,8 @@ DEFAULT_TEXTS = {
     },
     "DocumentPreviewDialog": {
         "titleText": "Preview",
-        "printButtonTooltipText": "Print document",
-        "saveButtonTooltipText": "Save document",
+        "printDocumentButtonTooltipText": "Print document",
+        "saveDocumentButtonTooltipText": "Save document",
         "zoomInButtonTooltipText": "Zoom in",
         "zoomResetButtonTooltipText": "Reset zoom",
         "zoomOutButtonTooltipText": "Zoom out",

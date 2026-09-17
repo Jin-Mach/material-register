@@ -27,10 +27,10 @@ class DocumentPreviewDialog(QDialog):
         buttons_layout = QHBoxLayout()
         buttons_layout.setContentsMargins(0, 0, 0, 0)
         buttons_layout.setSpacing(5)
-        self.print_button = QPushButton()
-        self.print_button.setObjectName("printButton")
-        self.save_button = QPushButton()
-        self.save_button.setObjectName("saveButton")
+        self.print_document_button = QPushButton()
+        self.print_document_button.setObjectName("printDocumentButton")
+        self.save_document_button = QPushButton()
+        self.save_document_button.setObjectName("saveDocumentButton")
         self.zoom_in_button = QPushButton()
         self.zoom_in_button.setObjectName("zoomInButton")
         self.zoom_reset_button = QPushButton()
@@ -44,8 +44,8 @@ class DocumentPreviewDialog(QDialog):
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         self.close_button = button_box.button(QDialogButtonBox.StandardButton.Close)
         self.close_button.setObjectName("closeButton")
-        buttons_layout.addWidget(self.print_button)
-        buttons_layout.addWidget(self.save_button)
+        buttons_layout.addWidget(self.print_document_button)
+        buttons_layout.addWidget(self.save_document_button)
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.zoom_in_button)
         buttons_layout.addWidget(self.zoom_reset_button)
@@ -71,14 +71,14 @@ class DocumentPreviewDialog(QDialog):
             return
 
     def _setup_icons(self) -> None:
-        self.print_button.setIcon(UiIcons.PRINT_ICON)
-        self.save_button.setIcon(UiIcons.SAVE_ICON)
+        self.print_document_button.setIcon(UiIcons.PRINT_ICON)
+        self.save_document_button.setIcon(UiIcons.SAVE_ICON)
         self.zoom_in_button.setIcon(UiIcons.ZOOM_IN_ICON)
         self.zoom_reset_button.setIcon(UiIcons.ZOOM_RESET_ICON)
         self.zoom_out_button.setIcon(UiIcons.ZOOM_OUT_ICON)
         buttons = [
-            self.print_button,
-            self.save_button,
+            self.print_document_button,
+            self.save_document_button,
             self.zoom_in_button,
             self.zoom_reset_button,
             self.zoom_out_button,
@@ -88,8 +88,8 @@ class DocumentPreviewDialog(QDialog):
             button.setFixedSize(28, 28)
 
     def _create_connection(self) -> None:
-        self.print_button.clicked.connect(self._print_document)
-        self.save_button.clicked.connect(self._save_document)
+        self.print_document_button.clicked.connect(self._print_document)
+        self.save_document_button.clicked.connect(self._save_document)
         self.close_button.clicked.connect(self.close)
 
     def load_pdf_from_bytes(self, pdf_document: bytes) -> None:

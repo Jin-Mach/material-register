@@ -538,8 +538,8 @@ QPushButton#databaseButton {
     border-radius: 3px;
 }
 
-QPushButton#printButton,
-QPushButton#saveButton,
+QPushButton#printDocumentButton,
+QPushButton#saveDocumentButton,
 QPushButton#zoomInButton,
 QPushButton#zoomResetButton,
 QPushButton#zoomOutButton {
@@ -573,8 +573,8 @@ QPushButton#databaseButton:hover {
     border-color: #4386bd;
 }
 
-QPushButton#printButton:hover,
-QPushButton#saveButton:hover,
+QPushButton#printDocumentButton:hover,
+QPushButton#saveDocumentButton:hover,
 QPushButton#zoomInButton:hover,
 QPushButton#zoomResetButton:hover,
 QPushButton#zoomOutButton:hover {
@@ -589,42 +589,13 @@ QPushButton#databaseButton:pressed {
     border-color: #4b8cc9;
 }
 
-QPushButton#printButton:pressed,
-QPushButton#saveButton:pressed,
+QPushButton#printDocumentButton:pressed,
+QPushButton#saveDocumentButton:pressed,
 QPushButton#zoomInButton:pressed,
 QPushButton#zoomResetButton:pressed,
 QPushButton#zoomOutButton:pressed {
     background-color: #303236;
     border-color: #4b8cc9;
-}
-
-QPushButton#notesButton:checked,
-QPushButton#cashBalanceButton:checked,
-QPushButton#databaseButton:checked,
-QPushButton#transactionsButton:checked,
-QPushButton#inventoryButton:checked,
-QPushButton#exportButton:checked,
-QPushButton#customersButton:checked,
-QPushButton#catalogButton:checked,
-QPushButton#settingsButton:checked,
-QPushButton#toolsButton:checked {
-    background-color: #3d6f9f;
-    border: 1px solid #4b8cc9;
-    color: #ffffff;
-}
-
-QPushButton#notesButton:checked:hover,
-QPushButton#cashBalanceButton:checked:hover,
-QPushButton#databaseButton:checked:hover,
-QPushButton#transactionsButton:checked:hover,
-QPushButton#inventoryButton:checked:hover,
-QPushButton#exportButton:checked:hover,
-QPushButton#customersButton:checked:hover,
-QPushButton#catalogButton:checked:hover,
-QPushButton#settingsButton:checked:hover,
-QPushButton#toolsButton:checked:hover {
-    background-color: #4b8cc9;
-    border-color: #5a9bd5;
 }
 
 QWidget#buttonsContainer {
