@@ -133,6 +133,7 @@ class SettingsBranchWidget(QWidget):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_edits()
+        self._set_validators()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
@@ -148,3 +149,44 @@ class SettingsBranchWidget(QWidget):
         for edit in self.findChildren(QLineEdit):
             edit.setMinimumWidth(self.WIDTH)
             edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+
+    def _set_validators(self) -> None:
+        company_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}")
+        )
+        person_name_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}'\- ]{1,30}")
+        )
+        address_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,:&'()\-\/]{1,50}")
+        )
+        phone_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[0-9+()\- ]{1,20}")
+        )
+        email_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[A-Za-z0-9._%+\-@]{1,50}")
+        )
+        identifier_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .\-\/]{1,30}")
+        )
+        opening_hours_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,:;+\-\/()–]{1,50}")
+        )
+        self.company_name_line_edit.setValidator(company_validator)
+        self.branch_name_line_edit.setValidator(company_validator)
+        self.branch_operator_line_edit.setValidator(person_name_validator)
+        self.branch_address_line_edit.setValidator(address_validator)
+        self.phone_number_line_edit.setValidator(phone_validator)
+        self.email_address_line_edit.setValidator(email_validator)
+        self.opening_hours_line_edit.setValidator(opening_hours_validator)
+        self.company_id_line_edit.setValidator(identifier_validator)
+        self.tax_id_line_edit.setValidator(identifier_validator)
+        self.establishment_id_line_edit.setValidator(identifier_validator)
+        self.facility_id_line_edit.setValidator(identifier_validator)
+
+    def branch_settings_data(self) -> dict[str, str]:
+        return_data = {}
+        for edit in self.findChildren(QLineEdit):
+            key = edit.objectName().removesuffix("LineEdit")
+            return_data[key] = edit.text().strip()
+        return return_data
