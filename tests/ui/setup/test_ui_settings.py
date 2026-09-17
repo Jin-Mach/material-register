@@ -9,13 +9,10 @@ def test_set_ui_settings_line_edit(qtbot):
     line_edit.setObjectName("branchNameLineEdit")
     qtbot.addWidget(widget)
     qtbot.addWidget(line_edit)
-
     UiSettings.setup_init(
         {"export": {"summary": {"user": {"branchNameLineEdit": "Some branch"}}}}
     )
-
     result = UiSettings().apply_settings("export", "summary", [line_edit])
-
     assert result is True
     assert line_edit.text() == "Some branch"
 
@@ -27,13 +24,10 @@ def test_set_ui_settings_spinbox(qtbot):
     spinbox.setRange(0, 10000)
     qtbot.addWidget(widget)
     qtbot.addWidget(spinbox)
-
     UiSettings.setup_init(
         {"export": {"summary": {"user": {"openingBalanceSpinbox": 1000}}}}
     )
-
     result = UiSettings().apply_settings("export", "summary", [spinbox])
-
     assert result is True
     assert spinbox.value() == 1000
 
@@ -44,13 +38,10 @@ def test_set_ui_settings_checkbox(qtbot):
     checkbox.setObjectName("saveLastBalanceCheckbox")
     qtbot.addWidget(widget)
     qtbot.addWidget(checkbox)
-
     UiSettings.setup_init(
         {"export": {"summary": {"user": {"saveLastBalanceCheckbox": True}}}}
     )
-
     result = UiSettings().apply_settings("export", "summary", [checkbox])
-
     assert result is True
     assert checkbox.isChecked() is True
 
@@ -61,13 +52,10 @@ def test_set_ui_settings_radiobutton(qtbot):
     radio.setObjectName("openFolderRadioButton")
     qtbot.addWidget(widget)
     qtbot.addWidget(radio)
-
     UiSettings.setup_init(
         {"export": {"summary": {"user": {"openFolderRadioButton": True}}}}
     )
-
     result = UiSettings().apply_settings("export", "summary", [radio])
-
     assert result is True
     assert radio.isChecked() is True
 
@@ -81,7 +69,6 @@ def test_set_ui_settings_multiple_widgets(qtbot):
     qtbot.addWidget(widget)
     qtbot.addWidget(branch)
     qtbot.addWidget(save_checkbox)
-
     UiSettings.setup_init(
         {
             "export": {
@@ -94,13 +81,11 @@ def test_set_ui_settings_multiple_widgets(qtbot):
             }
         }
     )
-
     result = UiSettings().apply_settings(
         "export",
         "summary",
         [branch, save_checkbox],
     )
-
     assert result is True
     assert branch.text() == "Warehouse"
     assert save_checkbox.isChecked() is False
@@ -112,15 +97,12 @@ def test_set_ui_settings_missing_data(qtbot):
     line_edit.setObjectName("branchNameLineEdit")
     qtbot.addWidget(widget)
     qtbot.addWidget(line_edit)
-
     UiSettings.setup_init({})
-
     result = UiSettings().apply_settings(
         "export",
         "summary",
         [line_edit],
     )
-
     assert result is False
     assert line_edit.text() == ""
 
@@ -131,14 +113,59 @@ def test_set_ui_settings_missing_key(qtbot):
     line_edit.setObjectName("branchNameLineEdit")
     qtbot.addWidget(widget)
     qtbot.addWidget(line_edit)
-
     UiSettings.setup_init({"export": {"summary": {"user": {"otherSetting": "X"}}}})
-
     result = UiSettings().apply_settings(
         "export",
         "summary",
         [line_edit],
     )
-
     assert result is True
     assert line_edit.text() == ""
+
+
+def test_branch_settings():
+    UiSettings.setup_init(
+        {
+            "branch": {
+                "companyName": "Company",
+                "branchName": "Main branch",
+                "branchOperator": "John Doe",
+                "branchAddress": "Main Street 1",
+                "phoneNumber": "+123 456 789",
+                "emailAddress": "test@example.com",
+                "companyId": "12345678",
+                "taxId": "XX12345678",
+                "establishmentId": "123",
+                "facilityId": "456",
+                "openingHours": "Mon-Fri 8:00-16:00",
+            }
+        }
+    )
+    result = UiSettings.branch_settings()
+    assert result.company_name == "Company"
+    assert result.branch_name == "Main branch"
+    assert result.branch_operator == "John Doe"
+    assert result.branch_address == "Main Street 1"
+    assert result.phone_number == "+123 456 789"
+    assert result.email_address == "test@example.com"
+    assert result.company_id == "12345678"
+    assert result.tax_id == "XX12345678"
+    assert result.establishment_id == "123"
+    assert result.facility_id == "456"
+    assert result.opening_hours == "Mon-Fri 8:00-16:00"
+
+
+def test_branch_settings_missing_data():
+    UiSettings.setup_init({})
+    result = UiSettings.branch_settings()
+    assert result.company_name is None
+    assert result.branch_name is None
+    assert result.branch_operator is None
+    assert result.branch_address is None
+    assert result.phone_number is None
+    assert result.email_address is None
+    assert result.company_id is None
+    assert result.tax_id is None
+    assert result.establishment_id is None
+    assert result.facility_id is None
+    assert result.opening_hours is None

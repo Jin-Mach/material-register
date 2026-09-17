@@ -1,3 +1,16 @@
+[branch]
+companyName = ""
+branchName = ""
+branchOperator = ""
+branchAddress = ""
+phoneNumber = ""
+emailAddress = ""
+openingHours = ""
+companyId = ""
+taxId = ""
+establishmentId = ""
+facilityId = ""
+
 [export.summary.default]
 branchNameLineEdit = ""
 pathLineEdit = ""

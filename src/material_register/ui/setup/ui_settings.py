@@ -9,6 +9,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.domain.branch_dataclass import BranchDataclass
+
 
 class UiSettings:
     SETTINGS = {}
@@ -38,3 +40,20 @@ class UiSettings:
                 elif isinstance(widget, (QCheckBox, QRadioButton)):
                     widget.setChecked(settings.get(key, False))
         return True
+
+    @classmethod
+    def branch_settings(cls) -> BranchDataclass:
+        settings = cls.SETTINGS.get("branch", {})
+        return BranchDataclass(
+            company_name=settings.get("companyName"),
+            branch_name=settings.get("branchName"),
+            branch_operator=settings.get("branchOperator"),
+            branch_address=settings.get("branchAddress"),
+            phone_number=settings.get("phoneNumber"),
+            email_address=settings.get("emailAddress"),
+            company_id=settings.get("companyId"),
+            tax_id=settings.get("taxId"),
+            establishment_id=settings.get("establishmentId"),
+            facility_id=settings.get("facilityId"),
+            opening_hours=settings.get("openingHours"),
+        )

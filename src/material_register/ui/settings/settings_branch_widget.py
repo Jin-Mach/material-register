@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -133,6 +134,7 @@ class SettingsBranchWidget(QWidget):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_edits()
+        self._apply_settings()
         self._set_validators()
 
     def _setup_texts(self) -> None:
@@ -144,6 +146,20 @@ class SettingsBranchWidget(QWidget):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _apply_settings(self) -> None:
+        branch_settings = UiSettings.branch_settings()
+        self.company_name_line_edit.setText(branch_settings.company_name or "")
+        self.branch_name_line_edit.setText(branch_settings.branch_name or "")
+        self.branch_operator_line_edit.setText(branch_settings.branch_operator or "")
+        self.branch_address_line_edit.setText(branch_settings.branch_address or "")
+        self.phone_number_line_edit.setText(branch_settings.phone_number or "")
+        self.email_address_line_edit.setText(branch_settings.email_address or "")
+        self.company_id_line_edit.setText(branch_settings.company_id or "")
+        self.tax_id_line_edit.setText(branch_settings.tax_id or "")
+        self.establishment_id_line_edit.setText(branch_settings.establishment_id or "")
+        self.facility_id_line_edit.setText(branch_settings.facility_id or "")
+        self.opening_hours_line_edit.setText(branch_settings.opening_hours or "")
 
     def _setup_edits(self) -> None:
         for edit in self.findChildren(QLineEdit):
