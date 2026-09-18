@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent, QResizeEvent, QShowEvent
 from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QScrollArea, QSplitter, QWidget
 
-from material_register.controllers.tools_settings_controller import (
+from material_register.controllers.settings_controllers.tools_settings_controller import (
     ToolsSettingsController,
 )
 from material_register.providers.settings_provider import SettingsProvider

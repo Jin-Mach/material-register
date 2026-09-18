@@ -123,7 +123,7 @@ def test_set_ui_settings_missing_key(qtbot):
     assert line_edit.text() == ""
 
 
-def test_branch_settings():
+def test_get_branch_settings():
     UiSettings.setup_init(
         {
             "branch": {
@@ -141,7 +141,7 @@ def test_branch_settings():
             }
         }
     )
-    result = UiSettings.branch_settings()
+    result = UiSettings.get_branch_settings()
     assert result.company_name == "Company"
     assert result.branch_name == "Main branch"
     assert result.branch_operator == "John Doe"
@@ -155,9 +155,9 @@ def test_branch_settings():
     assert result.opening_hours == "Mon-Fri 8:00-16:00"
 
 
-def test_branch_settings_missing_data():
+def test_get_branch_settings_missing_data():
     UiSettings.setup_init({})
-    result = UiSettings.branch_settings()
+    result = UiSettings.get_branch_settings()
     assert result.company_name is None
     assert result.branch_name is None
     assert result.branch_operator is None

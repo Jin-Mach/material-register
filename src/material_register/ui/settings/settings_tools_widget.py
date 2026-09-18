@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.controllers.tools_settings_controller import (
+from material_register.controllers.settings_controllers.tools_settings_controller import (
     ToolsSettingsController,
 )
 from material_register.services.error_handler import ErrorHandler

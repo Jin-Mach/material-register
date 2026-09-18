@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.controllers.settings_controllers.branch_settings_controller import BranchSettingsController
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
@@ -30,8 +31,10 @@ class SettingsBranchWidget(QWidget):
     def __init__(self, settings_dialog: "SettingsDialog") -> None:
         super().__init__(settings_dialog)
         self.settings_dialog = settings_dialog
+        self.branch_settings_controller = BranchSettingsController(self.settings_dialog)
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._create_connection()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -150,7 +153,7 @@ class SettingsBranchWidget(QWidget):
         UiTexts.set_default_texts(self, widgets)
 
     def _apply_settings(self) -> None:
-        branch_settings = UiSettings.branch_settings()
+        branch_settings = UiSettings.get_branch_settings()
         self.company_name_line_edit.setText(branch_settings.company_name or "")
         self.branch_name_line_edit.setText(branch_settings.branch_name or "")
         self.branch_operator_line_edit.setText(branch_settings.branch_operator or "")
@@ -167,6 +170,9 @@ class SettingsBranchWidget(QWidget):
         for edit in self.findChildren(QLineEdit):
             edit.setMinimumWidth(self.WIDTH)
             edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+
+    def _create_connection(self) -> None:
+        self.save_button.clicked.connect(lambda: self.branch_settings_controller.update_branch_settings(self))
 
     def _set_validators(self) -> None:
         company_validator = QRegularExpressionValidator(

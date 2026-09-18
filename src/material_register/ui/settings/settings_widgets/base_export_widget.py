@@ -23,7 +23,7 @@ from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.controllers.export_settings_controller import (
+    from material_register.controllers.settings_controllers.export_settings_controller import (
         ExportSettingsController,
     )
     from material_register.ui.settings.settings_export_widget import (

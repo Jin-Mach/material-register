@@ -42,7 +42,7 @@ class UiSettings:
         return True
 
     @classmethod
-    def branch_settings(cls) -> BranchDataclass:
+    def get_branch_settings(cls) -> BranchDataclass:
         settings = cls.SETTINGS.get("branch", {})
         return BranchDataclass(
             company_name=settings.get("companyName"),

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QTabWidget, QVBoxLayout, QWidget
 
-from material_register.controllers.export_settings_controller import (
+from material_register.controllers.settings_controllers.export_settings_controller import (
     ExportSettingsController,
 )
 from material_register.services.error_handler import ErrorHandler
