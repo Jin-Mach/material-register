@@ -334,6 +334,9 @@ class SummaryExportWidget(QWidget):
             )
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return
+        if not self.branch_name_line_edit.text().strip():
+            branch_settings = UiSettings.get_branch_settings()
+            self.branch_name_line_edit.setText(branch_settings.branch_name or "")
         self._set_folder_path()
         if not self.file_name_line_edit.text().strip():
             today = QDate.currentDate()

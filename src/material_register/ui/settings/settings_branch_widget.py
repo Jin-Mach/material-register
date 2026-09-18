@@ -15,7 +15,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.controllers.settings_controllers.branch_settings_controller import BranchSettingsController
+from material_register.controllers.settings_controllers.branch_settings_controller import (
+    BranchSettingsController,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
@@ -172,7 +174,9 @@ class SettingsBranchWidget(QWidget):
             edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
     def _create_connection(self) -> None:
-        self.save_button.clicked.connect(lambda: self.branch_settings_controller.update_branch_settings(self))
+        self.save_button.clicked.connect(
+            lambda: self.branch_settings_controller.update_branch_settings(self)
+        )
 
     def _set_validators(self) -> None:
         company_validator = QRegularExpressionValidator(
