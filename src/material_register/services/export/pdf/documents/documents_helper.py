@@ -38,33 +38,40 @@ def create_horizontal_line(
 
 def create_header(
     title_text: str,
+    company_text: str,
+    company_name: str,
     branch_text: str,
     branch_name: str,
     address_text: str,
     address: str,
-    document_text: str,
-    document: str,
+    company_id_text: str,
+    company_id: str,
 ) -> list[Paragraph]:
     title = Paragraph(
         title_text,
         style=paragraph_style("Helvetica", 15, "center"),
     )
+    company_name = Paragraph(
+        f"{company_text} {company_name}",
+        style=paragraph_style("Helvetica", 13, "left"),
+    )
     branch_name = Paragraph(
-        f"{branch_name}: {branch_text}",
+        f"{branch_text} {branch_name}",
         style=paragraph_style("Helvetica", 13, "left"),
     )
     branch_address = Paragraph(
-        f"{address_text}: {address}",
+        f"{address_text} {address}",
         style=paragraph_style("Helvetica", 13, "left"),
     )
-    branch_document = Paragraph(
-        f"{document_text}: {document}",
+    branch_company_id = Paragraph(
+        f"{company_id_text} {company_id}",
         style=paragraph_style("Helvetica", 13, "left"),
     )
     return [
         title,
         create_horizontal_line(),
+        company_name,
         branch_name,
         branch_address,
-        branch_document,
+        branch_company_id,
     ]

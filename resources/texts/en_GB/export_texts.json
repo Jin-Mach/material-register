@@ -48,5 +48,32 @@
     "totalPriceText": "Total price",
     "summaryPriceText": "Total",
     "countText": "Exported quantities"
+  },
+  "TransactionDocument": {
+    "titleText": "Transaction Document",
+    "companyText": "Company:",
+    "branchText": "Branch:",
+    "addressText": "Address:",
+    "companyIdText": "Company ID:",
+    "customerNameText": "Customer:",
+    "documentNumberText": "Document:",
+    "transactionTypeText": "Type:",
+    "IN": "Purchase",
+    "OUT": "Issue",
+    "paymentTypeText": "Payment:",
+    "CASH": "Cash",
+    "TRANSFER": "Transfer",
+    "createdAtText": "Date:",
+    "currencySuffix": "£",
+    "categoryText": "Category",
+    "commodityText": "Item",
+    "quantityText": "Quantity",
+    "pricePerUnitText": "Price",
+    "totalPriceText": "Total Price",
+    "countText": "Total Quantity",
+    "summaryPriceText": "Total",
+    "createdAtDateTimeText": "Created:",
+    "signatureText": "Signature",
+    "pageText": "Page"
   }
 }

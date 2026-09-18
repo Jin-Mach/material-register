@@ -11,21 +11,34 @@ from reportlab.platypus import (
     TopPadder,
 )
 
+from material_register.domain.branch_dataclass import BranchDataclass
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
 from material_register.services.export.pdf.documents.documents_helper import (
+    create_header,
     create_horizontal_line,
     paragraph_style,
+)
+from material_register.utils.formatting_utils import (
+    format_current_datetime_to_locale,
+    format_datetime_to_locale,
+    format_number_to_locale,
 )
 
 
 class TransactionDocumentOut:
+    ERROR_TEXT = "N/A"
+
     @staticmethod
     def create_document(
-        transaction: Transaction, items_data: list[TransactionItemDetail]
+        transaction: Transaction,
+        items_data: list[TransactionItemDetail],
+        branch_settings: BranchDataclass,
+        export_texts: dict[str, dict[str, str]],
     ) -> bytes:
+        export_texts = export_texts.get("TransactionDocument", {})
         pdf_buffer = BytesIO()
         document = SimpleDocTemplate(
             pdf_buffer,
@@ -36,67 +49,60 @@ class TransactionDocumentOut:
             bottomMargin=20 * mm,
         )
         content = []
-        content.extend(TransactionDocumentOut._create_header())
+        content.extend(
+            create_header(
+                export_texts.get("titleText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("companyText", TransactionDocumentOut.ERROR_TEXT),
+                branch_settings.company_name or "",
+                export_texts.get("branchText", TransactionDocumentOut.ERROR_TEXT),
+                branch_settings.branch_name or "",
+                export_texts.get("addressText", TransactionDocumentOut.ERROR_TEXT),
+                branch_settings.branch_address or "",
+                export_texts.get("companyIdText", TransactionDocumentOut.ERROR_TEXT),
+                branch_settings.company_id or "",
+            )
+        )
         content.append(create_horizontal_line())
-        content.append(TransactionDocumentOut._create_transaction_info(transaction))
+        content.append(
+            TransactionDocumentOut._create_transaction_info(transaction, export_texts)
+        )
         content.append(create_horizontal_line())
-        content.extend(TransactionDocumentOut._create_customer_section(transaction))
+        content.extend(
+            TransactionDocumentOut._create_customer_section(transaction, export_texts)
+        )
         content.append(create_horizontal_line())
         items_table = TransactionDocumentOut._create_items_table(
-            items_data, transaction.suffix
+            items_data, transaction.suffix, export_texts
         )
         content.append(items_table)
         content.append(create_horizontal_line())
         content.append(
             TransactionDocumentOut._create_total_count_section(
-                transaction.total, transaction.suffix
+                transaction.total, transaction.suffix, export_texts
             )
         )
         content.append(create_horizontal_line())
-        content.append(TransactionDocumentOut._create_signature_section())
+        content.append(TransactionDocumentOut._create_signature_section(export_texts))
         document.build(
             content,
-            onFirstPage=TransactionDocumentOut._create_footer,
-            onLaterPages=TransactionDocumentOut._create_footer,
+            onFirstPage=lambda canvas, doc: TransactionDocumentOut._create_footer(
+                canvas, doc, export_texts
+            ),
+            onLaterPages=lambda canvas, doc: TransactionDocumentOut._create_footer(
+                canvas, doc, export_texts
+            ),
         )
         return pdf_buffer.getvalue()
 
     @staticmethod
-    def _create_header() -> list[Paragraph]:
-        title = Paragraph(
-            "Transaction document",
-            style=paragraph_style("Helvetica", 15, "center"),
-        )
-        branch_name = Paragraph(
-            "Branch: Some branch name",
-            style=paragraph_style("Helvetica", 13, "left"),
-        )
-        branch_address = Paragraph(
-            "Address: Some address",
-            style=paragraph_style("Helvetica", 13, "left"),
-        )
-        branch_document = Paragraph(
-            "IČO: 12345",
-            style=paragraph_style("Helvetica", 13, "left"),
-        )
-        return [
-            title,
-            create_horizontal_line(),
-            branch_name,
-            branch_address,
-            branch_document,
-        ]
-
-    @staticmethod
-    def _create_transaction_info(transaction: Transaction) -> Table:
+    def _create_transaction_info(
+        transaction: Transaction,
+        export_texts: dict[str, str],
+    ) -> Table:
         data = [
             [
-                f"Trans type: {transaction.transaction_type}",
-                f"Date: {transaction.transaction_created_at}",
-            ],
-            [
-                "",
-                f"Time: {transaction.transaction_created_at}",
+                f"{export_texts.get('transactionTypeText', TransactionDocumentOut.ERROR_TEXT)} {export_texts.get(transaction.transaction_type, TransactionDocumentOut.ERROR_TEXT)}",
+                f"{export_texts.get('createdAtText', TransactionDocumentOut.ERROR_TEXT)} {format_datetime_to_locale(transaction.transaction_created_at)}",
             ],
         ]
         table = Table(
@@ -116,26 +122,40 @@ class TransactionDocumentOut:
         return table
 
     @staticmethod
-    def _create_customer_section(transaction: Transaction) -> list[Paragraph]:
+    def _create_customer_section(
+        transaction: Transaction,
+        export_texts: dict[str, str],
+    ) -> list[Paragraph]:
         customer_name = Paragraph(
-            f"Customer: {transaction.customer_name}",
+            f"{export_texts.get('customerNameText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{transaction.customer_name}",
             paragraph_style("Helvetica", 13, "left"),
         )
         customer_address = Paragraph(
-            f"Address: {transaction.customer_address}",
+            f"{export_texts.get('addressText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{transaction.customer_address}",
             paragraph_style("Helvetica", 13, "left"),
         )
         customer_document = Paragraph(
-            f"Document: {transaction.customer_document_number}",
+            f"{export_texts.get('documentNumberText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{transaction.customer_document_number}",
             paragraph_style("Helvetica", 13, "left"),
         )
         return [customer_name, customer_address, customer_document]
 
     @staticmethod
     def _create_items_table(
-        items_data: list[TransactionItemDetail], suffix: str
+        items_data: list[TransactionItemDetail],
+        suffix: str,
+        export_texts: dict[str, str],
     ) -> Table:
-        data = [["Category", "Item", "Count"]]
+        data = [
+            [
+                export_texts.get("categoryText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("commodityText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("countText", TransactionDocumentOut.ERROR_TEXT),
+            ]
+        ]
         for item in items_data:
             data.append(
                 [
@@ -147,7 +167,7 @@ class TransactionDocumentOut:
                         item.commodity_name,
                         paragraph_style("Helvetica", 12, "left"),
                     ),
-                    f"{item.unit_count} {suffix}",
+                    f"{format_number_to_locale(item.unit_count)} {suffix}",
                 ]
             )
         table = Table(
@@ -160,31 +180,42 @@ class TransactionDocumentOut:
                 [
                     ("ALIGN", (0, 0), (1, -1), "LEFT"),
                     ("ALIGN", (2, 0), (2, -1), "RIGHT"),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                 ]
             )
         )
         return table
 
     @staticmethod
-    def _create_total_count_section(total_count: float, suffix: str) -> Paragraph:
-        price = Paragraph(
-            f"Total: {total_count:.1f} {suffix}",
+    def _create_total_count_section(
+        total_count: float,
+        suffix: str,
+        export_texts: dict[str, str],
+    ) -> Paragraph:
+        total = Paragraph(
+            f"{export_texts.get('summaryPriceText', TransactionDocumentOut.ERROR_TEXT)}: "
+            f"{format_number_to_locale(total_count)} {suffix}",
             paragraph_style("Helvetica", 14, "right"),
         )
-        return price
+        return total
 
     @staticmethod
-    def _create_signature_section() -> TopPadder:
+    def _create_signature_section(
+        export_texts: dict[str, str],
+    ) -> TopPadder:
         data = [
             [
                 Paragraph(
-                    "On Mars: 1.1.2026",
+                    f"{export_texts.get('createdAtDateTimeText', TransactionDocumentOut.ERROR_TEXT)} {format_current_datetime_to_locale()}",
                     paragraph_style("Helvetica", 12, "left"),
                 ),
                 [
                     create_horizontal_line(),
                     Paragraph(
-                        "Signature",
+                        export_texts.get(
+                            "signatureText", TransactionDocumentOut.ERROR_TEXT
+                        ),
                         paragraph_style("Helvetica", 12, "center"),
                     ),
                 ],
@@ -210,8 +241,16 @@ class TransactionDocumentOut:
         return TopPadder(table)
 
     @staticmethod
-    def _create_footer(canvas: Canvas, document: SimpleDocTemplate) -> None:
+    def _create_footer(
+        canvas: Canvas,
+        document: SimpleDocTemplate,
+        export_texts: dict[str, str],
+    ) -> None:
         canvas.saveState()
         canvas.setFont("Helvetica", 8)
-        canvas.drawString(A4[0] // 2, 10 * mm, f"Page: {document.page}")
+        canvas.drawString(
+            A4[0] // 2,
+            10 * mm,
+            f"{export_texts.get('pageText', TransactionDocumentOut.ERROR_TEXT)} {document.page}",
+        )
         canvas.restoreState()

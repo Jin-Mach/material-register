@@ -48,5 +48,32 @@
     "totalPriceText": "Celková cena",
     "summaryPriceText": "Celkem",
     "countText": "Celkové množství"
+  },
+  "TransactionDocument": {
+    "titleText": "Doklad o transakci",
+    "companyText": "Firma:",
+    "branchText": "Pobočka:",
+    "addressText": "Adresa:",
+    "companyIdText": "IČO:",
+    "customerNameText": "Zákazník:",
+    "documentNumberText": "Doklad:",
+    "transactionTypeText": "Typ:",
+    "IN": "Výkup",
+    "OUT": "Vývoz",
+    "paymentTypeText": "Platba:",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod",
+    "createdAtText": "Datum:",
+    "currencySuffix": "Kč",
+    "categoryText": "Kategorie",
+    "commodityText": "Položka",
+    "quantityText": "Množství",
+    "pricePerUnitText": "Cena",
+    "totalPriceText": "Celková cena",
+    "countText": "Celkové množství",
+    "summaryPriceText": "Celkem",
+    "createdAtDateTimeText": "Vytvořeno:",
+    "signatureText": "Podpis",
+    "pageText": "Strana"
   }
 }

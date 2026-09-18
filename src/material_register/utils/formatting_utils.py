@@ -32,3 +32,10 @@ def format_time_to_locale(iso_datetime: str) -> str:
     date_time.setTimeSpec(Qt.TimeSpec.UTC)
     date_time = date_time.toLocalTime()
     return _locale.toString(date_time.time(), QLocale.FormatType.ShortFormat)
+
+
+def format_current_datetime_to_locale() -> str:
+    return _locale.toString(
+        QDateTime.currentDateTime(),
+        QLocale.FormatType.ShortFormat,
+    )

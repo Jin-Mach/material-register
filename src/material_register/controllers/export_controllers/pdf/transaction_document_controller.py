@@ -6,15 +6,18 @@ from PySide6.QtWidgets import QWidget
 from material_register.db.queries.transaction_items_queries import (
     TransactionItemsQueries,
 )
+from material_register.domain.branch_dataclass import BranchDataclass
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
 from material_register.init.db_init import DbInit
+from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.ui.dialogs.document_preview_dialog import DocumentPreviewDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.setup.ui_settings import UiSettings
 from material_register.workers.export_workers.pdf.documents.transaction_document_worker import (
     TransactionDocumentWorker,
 )
@@ -43,6 +46,8 @@ class TransactionDocumentController(QObject):
         self.transactions_model_out = transactions_model_out
         self.thread = None
         self.worker = None
+        self.export_texts = TextsProvider.EXPORT_TEXTS
+        self.branch_settings = UiSettings.get_branch_settings()
         self._models_map = {
             0: (self.transactions_model_in, TRANSFER_IN),
             1: (self.transactions_model_out, TRANSFER_OUT),
@@ -51,6 +56,14 @@ class TransactionDocumentController(QObject):
     def create_pdf_document(self, proxy_index: QModelIndex) -> None:
         tab_context = self._get_tab_context()
         if tab_context is None:
+            return
+        if not self.export_texts:
+            TransactionDocumentController._handle_export_error(
+                "Export texts not loaded",
+                f"{self.__class__.__name__}.create_pdf_document",
+                self.transactions_widget,
+                "TEXTS_LOAD_FAILED",
+            )
             return
         model, transaction_type = tab_context
         model_index = self.transactions_widget.active_proxy.mapToSource(proxy_index)
@@ -61,16 +74,30 @@ class TransactionDocumentController(QObject):
         items_data = TransactionItemsQueries.get_transaction_items(
             self.db_connection, transaction_id
         )
-        self._start_worker(transaction, items_data, transaction_type)
+        self._start_worker(
+            transaction,
+            items_data,
+            transaction_type,
+            self.branch_settings,
+            self.export_texts,
+        )
 
     def _start_worker(
         self,
         transaction: Transaction,
         items_data: list[TransactionItemDetail],
         transfer_type: str,
+        branch_settings: BranchDataclass,
+        export_texts: dict[str, dict[str, str]],
     ) -> None:
         self.thread = QThread()
-        self.worker = TransactionDocumentWorker(transaction, items_data, transfer_type)
+        self.worker = TransactionDocumentWorker(
+            transaction,
+            items_data,
+            transfer_type,
+            branch_settings,
+            export_texts,
+        )
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._export_error)
