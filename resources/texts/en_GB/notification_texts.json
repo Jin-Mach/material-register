@@ -26,6 +26,7 @@
     "BACKUP_CREATED": "Backup created"
   },
   "DOCUMENTS": {
-    "DOCUMENT_SAVED": "Document saved"
+    "DOCUMENT_SAVED": "Document saved",
+    "DOCUMENT_SENT": "Document sent to print queue"
   }
 }
