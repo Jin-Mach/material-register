@@ -2,6 +2,7 @@ import traceback
 
 from material_register.providers.download_provider import DownloadProvider
 from material_register.providers.file_provider import FileProvider
+from material_register.providers.font_provider import FontProvider
 from material_register.providers.language_provider import LanguageProvider
 from material_register.providers.paths_provider import PathsProvider
 from material_register.providers.settings_provider import SettingsProvider
@@ -57,6 +58,7 @@ class SetupInit:
             ErrorTexts.setup_init(TextsProvider.ERROR_TEXTS)
             MessageBoxes.setup_init(TextsProvider.CONFIRM_TEXTS)
             UiIcons.setup_init(PathsProvider.resources)
+            FontProvider.provider_init(PathsProvider.resources)
             return True, ""
         except Exception as e:
             if getattr(ErrorHandler, "loggers_map", None):

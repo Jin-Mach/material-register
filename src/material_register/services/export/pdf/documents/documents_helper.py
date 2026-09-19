@@ -2,6 +2,12 @@ from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import HRFlowable, Paragraph
 
+from material_register.services.export.config.font_constants import (
+    HEADER_FONT_SIZE,
+    REGULAR_FONT,
+    TITLE_FONT_SIZE,
+)
+
 
 def paragraph_style(
     font_name: str,
@@ -49,23 +55,23 @@ def create_header(
 ) -> list[Paragraph]:
     title = Paragraph(
         title_text,
-        style=paragraph_style("Helvetica", 15, "center"),
+        style=paragraph_style(REGULAR_FONT, TITLE_FONT_SIZE, "center"),
     )
     company_name = Paragraph(
         f"{company_text} {company_name}",
-        style=paragraph_style("Helvetica", 13, "left"),
+        style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
     )
     branch_name = Paragraph(
         f"{branch_text} {branch_name}",
-        style=paragraph_style("Helvetica", 13, "left"),
+        style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
     )
     branch_address = Paragraph(
         f"{address_text} {address}",
-        style=paragraph_style("Helvetica", 13, "left"),
+        style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
     )
     branch_company_id = Paragraph(
         f"{company_id_text} {company_id}",
-        style=paragraph_style("Helvetica", 13, "left"),
+        style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
     )
     return [
         title,

@@ -42,6 +42,11 @@ REQUIRED_STYLES_FILES = [
     Path("styles") / "dark_blue.qss",
 ]
 
+REQUIRED_FONTS_FILES = [
+    Path("fonts") / "DejaVuSans.ttf",
+    Path("fonts") / "DejaVuSans-Bold.ttf",
+]
+
 UI_KEYS = [
     ("Application", "titleText"),
     ("MainWindow", "titleText"),

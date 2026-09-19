@@ -16,6 +16,13 @@ from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
+from material_register.services.export.config.font_constants import (
+    BOLD_FONT,
+    HEADER_FONT_SIZE,
+    REGULAR_FONT,
+    STANDARD_FONT_SIZE,
+    TOTAL_FONT_SIZE,
+)
 from material_register.services.export.pdf.documents.documents_helper import (
     create_header,
     create_horizontal_line,
@@ -101,8 +108,16 @@ class TransactionDocumentOut:
     ) -> Table:
         data = [
             [
-                f"{export_texts.get('transactionTypeText', TransactionDocumentOut.ERROR_TEXT)} {export_texts.get(transaction.transaction_type, TransactionDocumentOut.ERROR_TEXT)}",
-                f"{export_texts.get('createdAtText', TransactionDocumentOut.ERROR_TEXT)} {format_datetime_to_locale(transaction.transaction_created_at)}",
+                Paragraph(
+                    f"{export_texts.get('transactionTypeText', TransactionDocumentOut.ERROR_TEXT)} "
+                    f"{export_texts.get(transaction.transaction_type, TransactionDocumentOut.ERROR_TEXT)}",
+                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                ),
+                Paragraph(
+                    f"{export_texts.get('createdAtText', TransactionDocumentOut.ERROR_TEXT)} "
+                    f"{format_datetime_to_locale(transaction.transaction_created_at)}",
+                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
+                ),
             ],
         ]
         table = Table(
@@ -129,17 +144,17 @@ class TransactionDocumentOut:
         customer_name = Paragraph(
             f"{export_texts.get('customerNameText', TransactionDocumentOut.ERROR_TEXT)} "
             f"{transaction.customer_name}",
-            paragraph_style("Helvetica", 13, "left"),
+            paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
         )
         customer_address = Paragraph(
             f"{export_texts.get('addressText', TransactionDocumentOut.ERROR_TEXT)} "
             f"{transaction.customer_address}",
-            paragraph_style("Helvetica", 13, "left"),
+            paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
         )
         customer_document = Paragraph(
             f"{export_texts.get('documentNumberText', TransactionDocumentOut.ERROR_TEXT)} "
             f"{transaction.customer_document_number}",
-            paragraph_style("Helvetica", 13, "left"),
+            paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
         )
         return [customer_name, customer_address, customer_document]
 
@@ -151,9 +166,20 @@ class TransactionDocumentOut:
     ) -> Table:
         data = [
             [
-                export_texts.get("categoryText", TransactionDocumentOut.ERROR_TEXT),
-                export_texts.get("commodityText", TransactionDocumentOut.ERROR_TEXT),
-                export_texts.get("countText", TransactionDocumentOut.ERROR_TEXT),
+                Paragraph(
+                    export_texts.get("categoryText", TransactionDocumentOut.ERROR_TEXT),
+                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                ),
+                Paragraph(
+                    export_texts.get(
+                        "commodityText", TransactionDocumentOut.ERROR_TEXT
+                    ),
+                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                ),
+                Paragraph(
+                    export_texts.get("countText", TransactionDocumentOut.ERROR_TEXT),
+                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
+                ),
             ]
         ]
         for item in items_data:
@@ -161,13 +187,16 @@ class TransactionDocumentOut:
                 [
                     Paragraph(
                         item.category_name,
-                        paragraph_style("Helvetica", 12, "left"),
+                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
                     ),
                     Paragraph(
                         item.commodity_name,
-                        paragraph_style("Helvetica", 12, "left"),
+                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
                     ),
-                    f"{format_number_to_locale(item.unit_count)} {suffix}",
+                    Paragraph(
+                        f"{format_number_to_locale(item.unit_count)} {suffix}",
+                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
+                    ),
                 ]
             )
         table = Table(
@@ -178,8 +207,8 @@ class TransactionDocumentOut:
         table.setStyle(
             TableStyle(
                 [
-                    ("ALIGN", (0, 0), (1, -1), "LEFT"),
-                    ("ALIGN", (2, 0), (2, -1), "RIGHT"),
+                    ("ALIGN", (0, 0), (0, -1), "LEFT"),
+                    ("ALIGN", (1, 0), (1, -1), "RIGHT"),
                     ("LEFTPADDING", (0, 0), (-1, -1), 0),
                     ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                 ]
@@ -196,7 +225,7 @@ class TransactionDocumentOut:
         total = Paragraph(
             f"{export_texts.get('summaryPriceText', TransactionDocumentOut.ERROR_TEXT)}: "
             f"{format_number_to_locale(total_count)} {suffix}",
-            paragraph_style("Helvetica", 14, "right"),
+            paragraph_style(BOLD_FONT, TOTAL_FONT_SIZE, "right"),
         )
         return total
 
@@ -207,8 +236,9 @@ class TransactionDocumentOut:
         data = [
             [
                 Paragraph(
-                    f"{export_texts.get('createdAtDateTimeText', TransactionDocumentOut.ERROR_TEXT)} {format_current_datetime_to_locale()}",
-                    paragraph_style("Helvetica", 12, "left"),
+                    f"{export_texts.get('createdAtDateTimeText', TransactionDocumentOut.ERROR_TEXT)} "
+                    f"{format_current_datetime_to_locale()}",
+                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
                 ),
                 [
                     create_horizontal_line(),
@@ -216,7 +246,7 @@ class TransactionDocumentOut:
                         export_texts.get(
                             "signatureText", TransactionDocumentOut.ERROR_TEXT
                         ),
-                        paragraph_style("Helvetica", 12, "center"),
+                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "center"),
                     ),
                 ],
             ]
@@ -247,10 +277,11 @@ class TransactionDocumentOut:
         export_texts: dict[str, str],
     ) -> None:
         canvas.saveState()
-        canvas.setFont("Helvetica", 8)
+        canvas.setFont(REGULAR_FONT, 8)
         canvas.drawString(
             A4[0] // 2,
             10 * mm,
-            f"{export_texts.get('pageText', TransactionDocumentOut.ERROR_TEXT)} {document.page}",
+            f"{export_texts.get('pageText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{document.page}",
         )
         canvas.restoreState()

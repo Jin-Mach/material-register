@@ -62,7 +62,7 @@
     "OUT": "Issue",
     "paymentTypeText": "Payment:",
     "CASH": "Cash",
-    "TRANSFER": "Transfer",
+    "TRANSFER": "Bank Transfer",
     "createdAtText": "Date:",
     "currencySuffix": "£",
     "categoryText": "Category",

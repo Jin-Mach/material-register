@@ -62,7 +62,7 @@
     "OUT": "Vývoz",
     "paymentTypeText": "Platba:",
     "CASH": "Hotovost",
-    "TRANSFER": "Převod",
+    "TRANSFER": "Převod na účet",
     "createdAtText": "Datum:",
     "currencySuffix": "Kč",
     "categoryText": "Kategorie",

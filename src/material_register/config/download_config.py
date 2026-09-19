@@ -38,5 +38,11 @@ ICONS_MAP = {
     "images/tools_icons/databaseButtonIcon.png": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/images/tools_icons/databaseButtonIcon.png",
 }
 
+FONTS_MAP = {
+    "fonts/DejaVuSans.ttf": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/fonts/DejaVuSans.ttf",
+    "fonts/DejaVuSans-Bold.ttf": "https://raw.githubusercontent.com/Jin-Mach/material-register/main/resources/fonts/DejaVuSans-Bold.ttf",
+}
+
 FILES_SUFFIXES = [".toml", ".json", ".qss"]
 ICONS_SUFFIXES = [".png", ".jpg", ".jpeg"]
+FONTS_SUFFIXES = [".ttf"]

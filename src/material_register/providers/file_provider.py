@@ -9,6 +9,7 @@ from material_register.config.file_config import (
     HEADERS_KEYS,
     NOTIFICATION_KEYS,
     REQUIRED_CONFIG_FILES,
+    REQUIRED_FONTS_FILES,
     REQUIRED_IMAGES,
     REQUIRED_JSON_FILES,
     REQUIRED_STYLES_FILES,
@@ -30,6 +31,8 @@ class FileProvider:
         invalid_files.update(config_files)
         style_files = cls._check_style_files(resources_path)
         invalid_files.update(style_files)
+        fonts_folder = cls._check_fonts(resources_path)
+        invalid_files.update(fonts_folder)
         return invalid_files
 
     @classmethod
@@ -75,6 +78,15 @@ class FileProvider:
                 continue
             if not cls._is_qss_valid(file_path):
                 invalid_files.add(file_path)
+        return invalid_files
+
+    @classmethod
+    def _check_fonts(cls, base_path: Path) -> set[Path]:
+        invalid_files = set()
+        for path in REQUIRED_FONTS_FILES:
+            font_path = base_path / path
+            if not font_path.exists():
+                invalid_files.add(font_path)
         return invalid_files
 
     @classmethod
