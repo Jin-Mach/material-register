@@ -1,5 +1,9 @@
 from pathlib import Path
 
+from PySide6.QtCore import QPoint, QRect, QSize, Qt
+from PySide6.QtGui import QPainter
+from PySide6.QtPdf import QPdfDocument
+from PySide6.QtPrintSupport import QPrinter
 from PySide6.QtWidgets import QWidget
 
 from material_register.core.app_context import AppContext
@@ -24,6 +28,46 @@ class DocumentsController:
             DocumentsController._handle_documents_error(
                 e, f"{DocumentsController.__class__.__name__}.save_pdf_document", parent
             )
+
+    @staticmethod
+    def print_pdf_document(
+        pdf_document: QPdfDocument, printer_name: str, parent: QWidget
+    ) -> None:
+        painter = None
+        try:
+            printer = QPrinter(QPrinter.PrinterMode.HighResolution)
+            printer.setPrinterName(printer_name)
+            printer_resolution = printer.resolution()
+            printer_rectangle = printer.pageRect(QPrinter.Unit.DevicePixel)
+            page_count = pdf_document.pageCount()
+            painter = QPainter(printer)
+            for page in range(page_count):
+                page_size = pdf_document.pagePointSize(page)
+                image_size = QSize(
+                    round(page_size.width() / 72 * printer_resolution),
+                    round(page_size.height() / 72 * printer_resolution),
+                )
+                image = pdf_document.render(page, image_size)
+                scaled_size = image_size.scaled(
+                    printer_rectangle.size().toSize(),
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                )
+                target_rectangle = QRect(
+                    QPoint(printer_rectangle.x(), printer_rectangle.y()), scaled_size
+                )
+                target_rectangle.moveCenter(printer_rectangle.center().toPoint())
+                painter.drawImage(target_rectangle, image)
+                if page < page_count - 1:
+                    printer.newPage()
+        except Exception as e:
+            DocumentsController._handle_documents_error(
+                e,
+                f"{DocumentsController.__class__.__name__}.print_pdf_document",
+                parent,
+            )
+        finally:
+            if painter is not None:
+                painter.end()
 
     @staticmethod
     def _handle_documents_error(error: Exception, method: str, parent: QWidget) -> None:

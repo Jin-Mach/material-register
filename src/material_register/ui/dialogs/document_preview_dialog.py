@@ -4,6 +4,7 @@ from PySide6.QtCore import QBuffer, QByteArray, QSize, QStandardPaths
 from PySide6.QtGui import QShowEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
 from PySide6.QtWidgets import (
     QApplication,
     QDialog,
@@ -129,9 +130,19 @@ class DocumentPreviewDialog(QDialog):
 
     def _print_document(self) -> None:
         printer_name = self.settings.get("user", {}).get("printerNameLineEdit", "")
-        if not printer_name:
+        printer_info = QPrinterInfo.printerInfo(printer_name)
+        if not printer_name or printer_info.isNull():
+            printer = QPrinter()
+            dialog = QPrintDialog(printer, self)
+            if dialog.exec() == QPrintDialog.DialogCode.Accepted:
+                printer_info = QPrinterInfo.printerInfo(printer.printerName())
+                if not printer.printerName() or printer_info.isNull():
+                    return
+                DocumentsController.print_pdf_document(
+                    self.pdf_document, printer.printerName(), self
+                )
             return
-        print("Print")
+        DocumentsController.print_pdf_document(self.pdf_document, printer_name, self)
 
     def _save_document(self) -> None:
         path = self.settings.get("user", {}).get("savePathLineEdit", "")
