@@ -1,3 +1,4 @@
+from PySide6.QtGui import QShowEvent
 from PySide6.QtCore import QBuffer, QByteArray, QSize
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
@@ -7,10 +8,11 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QPushButton,
     QVBoxLayout,
-    QWidget,
+    QWidget, QApplication
 )
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -18,6 +20,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 class DocumentPreviewDialog(QDialog):
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
+        self.setMinimumSize(400, 500)
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -57,6 +60,7 @@ class DocumentPreviewDialog(QDialog):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_view()
         self._setup_icons()
 
     def _setup_texts(self) -> None:
@@ -69,6 +73,11 @@ class DocumentPreviewDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, buttons):
             return
+
+    def _setup_view(self) -> None:
+        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitInView)
+        self.pdf_view.setPageSpacing(10)
 
     def _setup_icons(self) -> None:
         self.print_document_button.setIcon(UiIcons.PRINT_ICON)
@@ -103,3 +112,14 @@ class DocumentPreviewDialog(QDialog):
 
     def _save_document(self) -> None:
         print("Save")
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        screen = QApplication.primaryScreen()
+        available_geometry = screen.availableGeometry()
+        dpi = screen.logicalDotsPerInch()
+        a4_height = int((297 / 25.4) * dpi)
+        height = min(int(available_geometry.height() * 0.9), a4_height)
+        width = int(height * 210 / 297)
+        self.setFixedSize(width, height)
+        centre_dialog(self)
