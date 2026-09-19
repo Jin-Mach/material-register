@@ -5,6 +5,8 @@ import requests
 from material_register.config.download_config import (
     FILES_MAP,
     FILES_SUFFIXES,
+    FONTS_MAP,
+    FONTS_SUFFIXES,
     ICONS_MAP,
     ICONS_SUFFIXES,
 )
@@ -20,7 +22,11 @@ class DownloadProvider:
             for invalid_file in invalid_files:
                 relative = invalid_file.relative_to(resource_path)
                 relative_str = relative.as_posix()
-                url = FILES_MAP.get(relative_str) or ICONS_MAP.get(relative_str)
+                url = (
+                    FILES_MAP.get(relative_str)
+                    or ICONS_MAP.get(relative_str)
+                    or FONTS_MAP.get(relative_str)
+                )
                 if not url:
                     return False
                 if not cls._save_file(url, invalid_file):
@@ -38,7 +44,7 @@ class DownloadProvider:
             path.parent.mkdir(parents=True, exist_ok=True)
             if path.suffix in FILES_SUFFIXES:
                 path.write_text(response.text, encoding="utf-8")
-            elif path.suffix in ICONS_SUFFIXES:
+            elif path.suffix in ICONS_SUFFIXES or path.suffix in FONTS_SUFFIXES:
                 path.write_bytes(response.content)
             else:
                 return False
