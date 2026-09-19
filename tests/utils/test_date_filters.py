@@ -8,10 +8,10 @@ from material_register.utils.date_filters import get_filter_range
 @pytest.mark.parametrize(
     "key, expected_start",
     [
-        ("today", "2026-07-11 00:00:00"),
-        ("week", "2026-07-06 00:00:00"),
-        ("month", "2026-07-01 00:00:00"),
-        ("year", "2026-01-01 00:00:00"),
+        ("today", "2026-07-10 22:00:00"),
+        ("week", "2026-07-05 22:00:00"),
+        ("month", "2026-06-30 22:00:00"),
+        ("year", "2025-12-31 23:00:00"),
     ],
 )
 def test_filter_range_start_dates(monkeypatch, key: str, expected_start: str) -> None:
@@ -32,17 +32,17 @@ def test_week_filter_is_monday_to_current_day(monkeypatch) -> None:
         lambda: fixed_now,
     )
     start, end = get_filter_range("week")
-    assert start == "2026-07-06 00:00:00"
+    assert start == "2026-07-05 22:00:00"
     assert end == "2026-07-11 15:30:45"
 
 
 @pytest.mark.parametrize(
     "fixed_date, expected_start",
     [
-        (datetime(2026, 1, 31, 12, 0, tzinfo=UTC), "2026-01-01 00:00:00"),
-        (datetime(2026, 2, 28, 12, 0, tzinfo=UTC), "2026-02-01 00:00:00"),
-        (datetime(2026, 3, 31, 12, 0, tzinfo=UTC), "2026-03-01 00:00:00"),
-        (datetime(2026, 12, 31, 12, 0, tzinfo=UTC), "2026-12-01 00:00:00"),
+        (datetime(2026, 1, 31, 12, 0, tzinfo=UTC), "2025-12-31 23:00:00"),
+        (datetime(2026, 2, 28, 12, 0, tzinfo=UTC), "2026-01-31 23:00:00"),
+        (datetime(2026, 3, 31, 12, 0, tzinfo=UTC), "2026-02-28 23:00:00"),
+        (datetime(2026, 12, 31, 12, 0, tzinfo=UTC), "2026-11-30 23:00:00"),
     ],
 )
 def test_month_filter_starts_first_day(
@@ -58,20 +58,22 @@ def test_month_filter_starts_first_day(
 
 
 @pytest.mark.parametrize(
-    "fixed_date",
+    "fixed_date, expected_start",
     [
-        datetime(2026, 1, 1, 0, 0, tzinfo=UTC),
-        datetime(2026, 6, 15, 12, 0, tzinfo=UTC),
-        datetime(2026, 12, 31, 23, 59, tzinfo=UTC),
+        (datetime(2026, 1, 1, 0, 0, tzinfo=UTC), "2025-12-31 23:00:00"),
+        (datetime(2026, 6, 15, 12, 0, tzinfo=UTC), "2025-12-31 23:00:00"),
+        (datetime(2026, 12, 31, 23, 59, tzinfo=UTC), "2026-12-31 23:00:00"),
     ],
 )
-def test_year_filter_starts_first_january(monkeypatch, fixed_date: datetime) -> None:
+def test_year_filter_starts_first_january(
+    monkeypatch, fixed_date: datetime, expected_start: str
+) -> None:
     monkeypatch.setattr(
         "material_register.utils.date_filters._now",
         lambda: fixed_date,
     )
     start, end = get_filter_range("year")
-    assert start == "2026-01-01 00:00:00"
+    assert start == expected_start
     assert end == fixed_date.strftime("%Y-%m-%d %H:%M:%S")
 
 

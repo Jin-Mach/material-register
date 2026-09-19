@@ -29,8 +29,8 @@ TRANSACTIONS_QUERY_IN = """
                 
                 WHERE 
                     trans.type = 'IN' 
-                    AND trans.created_at >= date('now') 
-                    AND trans.created_at < date('now', '+1 day')
+                    AND trans.created_at >= date('now', 'localtime') 
+                    AND trans.created_at < date('now', 'localtime', '+1 day')
                 
                 GROUP BY trans.id
                 ORDER BY trans.created_at DESC, trans.id DESC;
@@ -70,8 +70,8 @@ TRANSACTIONS_QUERY_OUT = """
                               
                 WHERE 
                     trans.type = 'OUT' 
-                    AND trans.created_at >= date('now') 
-                    AND trans.created_at < date('now', '+1 day')
+                    AND trans.created_at >= date('now', 'localtime') 
+                    AND trans.created_at < date('now', 'localtime', '+1 day')
                 
                 GROUP BY trans.id
                 ORDER BY trans.created_at DESC, trans.id DESC;
