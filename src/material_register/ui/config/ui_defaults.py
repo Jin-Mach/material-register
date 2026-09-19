@@ -362,8 +362,9 @@ DEFAULT_TEXTS = {
     },
     "SettingsDocumentsWidget": {
         "printGroupBoxText": "Printing",
-        "printPathLabelText": "Printer:",
-        "printPathButtonText": "Select printer",
+        "printerNameLabelText": "Printer:",
+        "printerNameButtonText": "Select printer",
+        "printerDialogTitle": "Select Printer",
         "saveGroupBoxText": "Saving",
         "savePathLabelText": "Path:",
         "savePathButtonText": "Select folder",

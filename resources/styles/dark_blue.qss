@@ -681,7 +681,7 @@ QLabel#addressLabel,
 QLabel#address,
 QCheckBox#activeValue,
 QCheckBox#activeCheckbox,
-QLabel#printPathLabel,
+QLabel#printerNameLabel,
 QLabel#savePathLabel,
 QLabel#settingsInfoLabel {
     background-color: transparent;

@@ -108,9 +108,14 @@
     "YES": "Restore",
     "NO": "Cancel"
   },
-    "PDF_FAILED": {
+  "PDF_FAILED": {
     "TITLE": "Error",
     "TEXT": "An error occurred while working with the PDF file.",
+    "CLOSE": "Close"
+  },
+  "NO_PRINTERS": {
+    "TITLE": "Error",
+    "TEXT": "No printer available",
     "CLOSE": "Close"
   }
 }

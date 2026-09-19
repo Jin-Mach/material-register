@@ -2,10 +2,13 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QStandardPaths, Qt
 from PySide6.QtGui import QFontMetrics
+from PySide6.QtPrintSupport import QPrinterInfo
 from PySide6.QtWidgets import (
+    QFileDialog,
     QFormLayout,
     QGroupBox,
     QHBoxLayout,
+    QInputDialog,
     QLabel,
     QLineEdit,
     QPushButton,
@@ -15,7 +18,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.controllers.settings_controllers.documents_settings_controller import (
+    DocumentsSettingsController,
+)
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -29,7 +36,10 @@ class SettingsDocumentsWidget(QWidget):
     def __init__(self, settings_dialog: "SettingsDialog") -> None:
         super().__init__(settings_dialog)
         self.settings_dialog = settings_dialog
-        self.print_current_path = ""
+        self.documents_settings_controller = DocumentsSettingsController(
+            self.settings_dialog
+        )
+        self.printer_name = ""
         self.save_current_path = ""
         self.setLayout(self._create_ui())
         self._setup_ui()
@@ -55,21 +65,21 @@ class SettingsDocumentsWidget(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(self.SPACING)
         form_layout = QFormLayout()
-        self.print_path_label = QLabel()
-        self.print_path_label.setObjectName("printPathLabel")
-        self.print_path_line_edit = QLineEdit()
-        self.print_path_line_edit.setObjectName("printPathLineEdit")
-        self.print_path_line_edit.setMinimumWidth(self.WIDTH)
-        self.print_path_line_edit.setSizePolicy(
+        self.printer_name_label = QLabel()
+        self.printer_name_label.setObjectName("printerNameLabel")
+        self.printer_name_line_edit = QLineEdit()
+        self.printer_name_line_edit.setObjectName("printerNameLineEdit")
+        self.printer_name_line_edit.setMinimumWidth(self.WIDTH)
+        self.printer_name_line_edit.setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
         )
-        self.print_path_line_edit.setReadOnly(True)
-        self.print_path_button = QPushButton()
-        self.print_path_button.setObjectName("printPathButton")
+        self.printer_name_line_edit.setReadOnly(True)
+        self.printer_name_button = QPushButton()
+        self.printer_name_button.setObjectName("printerNameButton")
         path_layout = QHBoxLayout()
-        path_layout.addWidget(self.print_path_line_edit)
-        path_layout.addWidget(self.print_path_button)
-        form_layout.addRow(self.print_path_label, path_layout)
+        path_layout.addWidget(self.printer_name_line_edit)
+        path_layout.addWidget(self.printer_name_button)
+        form_layout.addRow(self.printer_name_label, path_layout)
         main_layout.addLayout(form_layout)
         self.print_group_box.setLayout(main_layout)
         return self.print_group_box
@@ -119,10 +129,15 @@ class SettingsDocumentsWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self.apply_settings()
         self.set_folder_path()
+        self._create_connection()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.printer_dialog_title = ui_texts.get("printerDialogTitle", "Select Printer")
+        self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Folder")
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
@@ -131,22 +146,72 @@ class SettingsDocumentsWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
+    def apply_settings(self) -> None:
+        user_settings = self.documents_settings_controller.settings.get("user", {})
+        self.printer_name = user_settings.get("printerNameLineEdit", "")
+        self.save_current_path = user_settings.get("savePathLineEdit", "")
+
     def set_folder_path(self) -> None:
         documents_path = QStandardPaths.writableLocation(
             QStandardPaths.StandardLocation.DocumentsLocation
         )
-        self.print_current_path = documents_path
-        self.save_current_path = documents_path
-        SettingsDocumentsWidget._set_elided_path(
-            self.print_path_line_edit, self.print_current_path
-        )
-        SettingsDocumentsWidget._set_elided_path(
-            self.save_path_line_edit, self.save_current_path
-        )
-        self.print_path_line_edit.setToolTip(self.print_current_path)
+        if not self.save_current_path:
+            self.save_current_path = documents_path
+        self.printer_name_line_edit.setText(self.printer_name)
+        self._set_elided_path(self.save_path_line_edit, self.save_current_path)
+        self.printer_name_line_edit.setToolTip(self.printer_name)
         self.save_path_line_edit.setToolTip(self.save_current_path)
-        self.print_path_line_edit.setToolTipDuration(3000)
+        self.printer_name_line_edit.setToolTipDuration(3000)
         self.save_path_line_edit.setToolTipDuration(3000)
+
+    def _create_connection(self) -> None:
+        self.printer_name_button.clicked.connect(self.select_printer)
+        self.save_path_button.clicked.connect(self.select_save_path)
+        self.restore_button.clicked.connect(
+            lambda: self.documents_settings_controller.restore_settings(self)
+        )
+        self.save_button.clicked.connect(
+            lambda: self.documents_settings_controller.update_settings(self)
+        )
+
+    def select_printer(self) -> None:
+        printers = QPrinterInfo.availablePrinters()
+        if not printers:
+            MessageBoxes.show_error(self, "NO_PRINTERS")
+            return
+        printer_names = []
+        for printer in printers:
+            printer_names.append(printer.printerName())
+        current_index = (
+            printer_names.index(self.printer_name)
+            if self.printer_name in printer_names
+            else 0
+        )
+        printer_name, accepted = QInputDialog.getItem(
+            self,
+            self.printer_dialog_title,
+            self.printer_name_label.text(),
+            printer_names,
+            current_index,
+            False,
+        )
+        if not accepted:
+            return
+        self.printer_name = printer_name
+        self.printer_name_line_edit.setText(self.printer_name)
+        self.printer_name_line_edit.setToolTip(self.printer_name)
+
+    def select_save_path(self) -> None:
+        path = QFileDialog.getExistingDirectory(
+            self,
+            self.folder_dialog_title,
+            self.save_current_path,
+        )
+        if not path:
+            return
+        self.save_current_path = path
+        self._set_elided_path(self.save_path_line_edit, self.save_current_path)
+        self.save_path_line_edit.setToolTip(self.save_current_path)
 
     @staticmethod
     def _set_elided_path(line_edit: QLineEdit, path: str) -> None:
@@ -155,3 +220,9 @@ class SettingsDocumentsWidget(QWidget):
             path, Qt.TextElideMode.ElideMiddle, line_edit.width()
         )
         line_edit.setText(elided_path)
+
+    def get_documents_settings_data(self) -> dict[str, str]:
+        return {
+            "printerNameLineEdit": self.printer_name,
+            "savePathLineEdit": self.save_current_path,
+        }

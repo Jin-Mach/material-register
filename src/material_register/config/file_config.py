@@ -351,8 +351,9 @@ UI_KEYS = [
     ("BaseExportWidget", "saveButtonText"),
     ("BaseExportWidget", "saveButtonTooltipText"),
     ("SettingsDocumentsWidget", "printGroupBoxText"),
-    ("SettingsDocumentsWidget", "printPathLabelText"),
-    ("SettingsDocumentsWidget", "printPathButtonText"),
+    ("SettingsDocumentsWidget", "printerNameLabelText"),
+    ("SettingsDocumentsWidget", "printerNameButtonText"),
+    ("SettingsDocumentsWidget", "printerDialogTitle"),
     ("SettingsDocumentsWidget", "saveGroupBoxText"),
     ("SettingsDocumentsWidget", "savePathLabelText"),
     ("SettingsDocumentsWidget", "savePathButtonText"),
@@ -491,6 +492,7 @@ CONFIRM_STRUCTURE = {
     "CUSTOM_BACKUP": ["TITLE", "TEXT", "YES", "NO"],
     "RESTORE_DATABASE": ["TITLE", "TEXT", "YES", "NO"],
     "PDF_FAILED": ["TITLE", "TEXT", "CLOSE"],
+    "NO_PRINTERS": ["TITLE", "TEXT", "CLOSE"],
 }
 
 NOTIFICATION_KEYS = [

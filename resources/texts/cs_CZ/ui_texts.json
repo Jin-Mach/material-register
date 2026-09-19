@@ -380,8 +380,9 @@
   },
   "SettingsDocumentsWidget": {
     "printGroupBoxText": "Tisk",
-    "printPathLabelText": "Tiskárna:",
-    "printPathButtonText": "Vybrat tiskárnu",
+    "printerNameLabelText": "Tiskárna:",
+    "printerNameButtonText": "Vybrat tiskárnu",
+    "printerDialogTitle": "Vybrat tiskárnu",
     "saveGroupBoxText": "Ukládání",
     "savePathLabelText": "Cesta:",
     "savePathButtonText": "Vybrat složku",

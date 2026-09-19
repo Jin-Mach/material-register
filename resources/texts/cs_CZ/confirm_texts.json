@@ -112,5 +112,10 @@
     "TITLE": "Chyba",
     "TEXT": "Chyba při práci se souborem PDF.",
     "CLOSE": "Zavřít"
+  },
+  "NO_PRINTERS": {
+    "TITLE": "Chyba",
+    "TEXT": "Není dostupná žádná tiskárna.",
+    "CLOSE": "Zavřít"
   }
 }

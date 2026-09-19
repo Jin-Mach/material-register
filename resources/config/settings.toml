@@ -51,6 +51,14 @@ openFolderRadioButton = false
 openFileRadioButton = false
 useLastOptionsCheckbox = false
 
+[export.documents.default]
+printerNameLineEdit = ""
+savePathLineEdit = ""
+
+[export.documents.user]
+printerNameLineEdit = ""
+savePathLineEdit = ""
+
 [tools.settings.default]
 containerSizeCheckbox = true
 balanceCashCheckbox = true
