@@ -31,7 +31,7 @@ class DocumentsController:
 
     @staticmethod
     def print_document(
-            pdf_document: QPdfDocument, printer_name: str, parent: QWidget
+        pdf_document: QPdfDocument, printer_name: str, parent: QWidget
     ) -> None:
         printer_info = QPrinterInfo.printerInfo(printer_name)
 
@@ -54,9 +54,7 @@ class DocumentsController:
             printer_name = printer.printerName()
             if not printer_name:
                 return
-        DocumentsController._print_pdf_document(
-            pdf_document, printer_name, parent
-        )
+        DocumentsController._print_pdf_document(pdf_document, printer_name, parent)
 
     @staticmethod
     def _print_pdf_document(
@@ -91,9 +89,7 @@ class DocumentsController:
                 painter.drawImage(target_rectangle, image)
                 if page < page_count - 1:
                     printer.newPage()
-            notification_texts = TextsProvider.NOTIFICATION_TEXTS.get(
-                "DOCUMENTS", None
-            )
+            notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("DOCUMENTS", None)
             if notification_texts:
                 DocumentsController._notification_handler(
                     notification_texts,

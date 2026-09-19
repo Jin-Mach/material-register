@@ -127,3 +127,8 @@ def test_get_transaction_items(connection, schema) -> None:
     assert result[1].commodity_name == "67890"
     assert result[1].commodity_suffix == "ks"
     assert result[1].category_name == "FE"
+
+
+def test_get_transaction_items_returns_none_on_query_error(connection, schema) -> None:
+    result = TransactionItemsQueries.get_transaction_items(connection, 1)
+    assert result is None

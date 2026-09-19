@@ -75,6 +75,13 @@ class TransactionDocumentController(QObject):
         items_data = TransactionItemsQueries.get_transaction_items(
             self.db_connection, self.transaction_id
         )
+        if not items_data:
+            TransactionDocumentController._handle_export_error(
+                "Transaction items could not be loaded",
+                f"{self.__class__.__name__}.create_pdf_document",
+                self.transactions_widget,
+            )
+            return
         self._start_worker(
             transaction,
             items_data,

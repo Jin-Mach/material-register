@@ -138,6 +138,13 @@ class TransactionsController:
         items_data = TransactionItemsQueries.get_transaction_items(
             self.db_connection, transaction_id
         )
+        if not items_data:
+            TransactionsController._handle_db_error(
+                "Transaction items could not be loaded",
+                f"{self.__class__.__name__}.update_transaction",
+                self.transactions_widget,
+            )
+            return
         create_data = TransactionsController._transaction_to_dict(transaction)
         old_dialog_data = create_data.copy()
         if transaction_type == TRANSFER_IN:

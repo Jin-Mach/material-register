@@ -141,6 +141,9 @@ class TransactionsService:
             items = TransactionItemsQueries.get_transaction_items(
                 db_connection, transaction_id
             )
+            if items is None:
+                db_connection.rollback()
+                return False, "Failed to load transaction items"
             for item in items:
                 amount = TransactionsService._get_amount(
                     transfer_type, item.unit_count, negate=True

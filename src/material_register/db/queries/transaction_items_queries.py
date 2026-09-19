@@ -52,12 +52,12 @@ class TransactionItemsQueries:
     @staticmethod
     def get_transaction_items(
         db_connection: QSqlDatabase, transaction_id: int
-    ) -> list[TransactionItemDetail]:
+    ) -> list[TransactionItemDetail] | None:
         query = QSqlQuery(db_connection)
         query.prepare(SELECTED_TRANSACTION_DATA)
         query.addBindValue(transaction_id)
         if not query.exec():
-            return []
+            return None
         result = []
         while query.next():
             result.append(
