@@ -24,5 +24,8 @@
   },
   "BACKUP": {
     "BACKUP_CREATED": "Záloha vytvořena"
+  },
+  "DOCUMENTS": {
+    "DOCUMENT_SAVED": "Soubor uložen"
   }
 }

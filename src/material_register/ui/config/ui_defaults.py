@@ -449,6 +449,7 @@ DEFAULT_TEXTS = {
         "titleText": "Preview",
         "printDocumentButtonTooltipText": "Print document",
         "saveDocumentButtonTooltipText": "Save document",
+        "pdfDefaultName": "Document",
         "zoomInButtonTooltipText": "Zoom in",
         "zoomResetButtonTooltipText": "Reset zoom",
         "zoomOutButtonTooltipText": "Zoom out",

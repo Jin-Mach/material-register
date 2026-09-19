@@ -59,6 +59,8 @@ class TransactionDocumentIn:
         content.extend(
             create_header(
                 export_texts.get("titleText", TransactionDocumentIn.ERROR_TEXT),
+                export_texts.get("transactionIdText", TransactionDocumentIn.ERROR_TEXT),
+                transaction.transaction_id,
                 export_texts.get("companyText", TransactionDocumentIn.ERROR_TEXT),
                 branch_settings.company_name or "",
                 export_texts.get("branchText", TransactionDocumentIn.ERROR_TEXT),

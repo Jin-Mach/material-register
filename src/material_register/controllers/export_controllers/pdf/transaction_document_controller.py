@@ -46,6 +46,7 @@ class TransactionDocumentController(QObject):
         self.transactions_model_out = transactions_model_out
         self.thread = None
         self.worker = None
+        self.transaction_id = None
         self.export_texts = TextsProvider.EXPORT_TEXTS
         self.branch_settings = UiSettings.get_branch_settings()
         self._models_map = {
@@ -70,9 +71,9 @@ class TransactionDocumentController(QObject):
         if not model_index.isValid():
             return
         transaction = model.transaction_data[model_index.row()]
-        transaction_id = transaction.transaction_id
+        self.transaction_id = transaction.transaction_id
         items_data = TransactionItemsQueries.get_transaction_items(
-            self.db_connection, transaction_id
+            self.db_connection, self.transaction_id
         )
         self._start_worker(
             transaction,
@@ -121,6 +122,7 @@ class TransactionDocumentController(QObject):
     def _reset_variables(self) -> None:
         self.thread = None
         self.worker = None
+        self.transaction_id = None
 
     def _finish_export(
         self, pdf_document: bytes | None = None, error: str | None = None
@@ -134,8 +136,9 @@ class TransactionDocumentController(QObject):
             self._reset_variables()
             return
         preview_dialog = DocumentPreviewDialog(self.transactions_widget)
-        preview_dialog.load_pdf_from_bytes(pdf_document)
+        preview_dialog.load_pdf_from_bytes(pdf_document, self.transaction_id)
         preview_dialog.exec()
+        self._reset_variables()
 
     def _get_tab_context(
         self,

@@ -423,6 +423,7 @@ UI_KEYS = [
     ("DocumentPreviewDialog", "titleText"),
     ("DocumentPreviewDialog", "printDocumentButtonTooltipText"),
     ("DocumentPreviewDialog", "saveDocumentButtonTooltipText"),
+    ("DocumentPreviewDialog", "pdfDefaultName"),
     ("DocumentPreviewDialog", "zoomInButtonTooltipText"),
     ("DocumentPreviewDialog", "zoomResetButtonTooltipText"),
     ("DocumentPreviewDialog", "zoomOutButtonTooltipText"),
@@ -510,6 +511,7 @@ NOTIFICATION_KEYS = [
     ("TRANSACTIONS", "DELETE_TRANSACTION"),
     ("EXPORT", "EXPORT_COMPLETED"),
     ("BACKUP", "BACKUP_CREATED"),
+    ("DOCUMENTS", "DOCUMENT_SAVED"),
 ]
 
 STATUS_KEYS = [
@@ -570,6 +572,7 @@ EXPORT_KEYS = [
     ("TransactionsSheet", "summaryPriceText"),
     ("TransactionsSheet", "countText"),
     ("TransactionDocument", "titleText"),
+    ("TransactionDocument", "transactionIdText"),
     ("TransactionDocument", "companyText"),
     ("TransactionDocument", "branchText"),
     ("TransactionDocument", "addressText"),

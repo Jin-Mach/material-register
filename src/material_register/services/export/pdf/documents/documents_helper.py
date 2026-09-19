@@ -1,6 +1,6 @@
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import HRFlowable, Paragraph
+from reportlab.platypus import HRFlowable, Paragraph, Table
 
 from material_register.services.export.config.font_constants import (
     HEADER_FONT_SIZE,
@@ -44,6 +44,8 @@ def create_horizontal_line(
 
 def create_header(
     title_text: str,
+    transaction_id_text: str,
+    transaction_id: int,
     company_text: str,
     company_name: str,
     branch_text: str,
@@ -52,16 +54,24 @@ def create_header(
     address: str,
     company_id_text: str,
     company_id: str,
-) -> list[Paragraph]:
+) -> list:
     title = Paragraph(
         title_text,
-        style=paragraph_style(REGULAR_FONT, TITLE_FONT_SIZE, "center"),
+        style=paragraph_style(REGULAR_FONT, TITLE_FONT_SIZE, "left"),
     )
-    company_name = Paragraph(
+    transaction_number = Paragraph(
+        f"{transaction_id_text} {transaction_id:06d}",
+        style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "right"),
+    )
+    header_title = Table(
+        [[title, transaction_number]],
+        colWidths=["50%", "50%"],
+    )
+    company_name_paragraph = Paragraph(
         f"{company_text} {company_name}",
         style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
     )
-    branch_name = Paragraph(
+    branch_name_paragraph = Paragraph(
         f"{branch_text} {branch_name}",
         style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
     )
@@ -74,10 +84,10 @@ def create_header(
         style=paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
     )
     return [
-        title,
+        header_title,
         create_horizontal_line(),
-        company_name,
-        branch_name,
+        company_name_paragraph,
+        branch_name_paragraph,
         branch_address,
         branch_company_id,
     ]

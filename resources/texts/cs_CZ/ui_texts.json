@@ -467,6 +467,7 @@
     "titleText": "Náhled",
     "printDocumentButtonTooltipText": "Tisk dokumentu",
     "saveDocumentButtonTooltipText": "Uložit dokument",
+    "pdfDefaultName": "Doklad",
     "zoomInButtonTooltipText": "Přiblížit",
     "zoomResetButtonTooltipText": "Výchozí velikost",
     "zoomOutButtonTooltipText": "Oddálit",

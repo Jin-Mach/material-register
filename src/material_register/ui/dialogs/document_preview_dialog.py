@@ -1,4 +1,6 @@
-from PySide6.QtCore import QBuffer, QByteArray, QSize
+from pathlib import Path
+
+from PySide6.QtCore import QBuffer, QByteArray, QSize, QStandardPaths
 from PySide6.QtGui import QShowEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
@@ -12,6 +14,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.controllers.documents_controller import DocumentsController
+from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_icons import UiIcons
@@ -28,7 +32,10 @@ class DocumentPreviewDialog(QDialog):
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
+        self.settings = SettingsProvider.SETTINGS.get("export", {}).get("documents", {})
         self._current_zoom = 1.0
+        self._pdf_bytes = None
+        self._pdf_file_name = None
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -70,6 +77,8 @@ class DocumentPreviewDialog(QDialog):
 
     def _setup_texts(self) -> None:
         buttons = self.findChildren(QPushButton)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self._pdf_default_name = ui_texts.get("pdfDefaultName", "Document")
         if UiTexts.set_ui_texts(self, buttons):
             return
         ErrorHandler.handle_error(
@@ -109,7 +118,9 @@ class DocumentPreviewDialog(QDialog):
         self.zoom_out_button.clicked.connect(self._zoom_out)
         self.close_button.clicked.connect(self.close)
 
-    def load_pdf_from_bytes(self, pdf_bytes: bytes) -> None:
+    def load_pdf_from_bytes(self, pdf_bytes: bytes, transaction_id: int) -> None:
+        self._pdf_bytes = pdf_bytes
+        self._pdf_file_name = f"{self._pdf_default_name}_{transaction_id:06d}.pdf"
         self.pdf_buffer.setData(QByteArray(pdf_bytes))
         self.pdf_buffer.open(QBuffer.OpenModeFlag.ReadOnly)
         self.pdf_document.load(self.pdf_buffer)
@@ -117,10 +128,19 @@ class DocumentPreviewDialog(QDialog):
         self._current_zoom = self._get_fit_in_view_zoom()
 
     def _print_document(self) -> None:
+        printer_name = self.settings.get("user", {}).get("printerNameLineEdit", "")
+        if not printer_name:
+            return
         print("Print")
 
     def _save_document(self) -> None:
-        print("Save")
+        path = self.settings.get("user", {}).get("savePathLineEdit", "")
+        if not path:
+            path = QStandardPaths.writableLocation(
+                QStandardPaths.StandardLocation.DocumentsLocation
+            )
+        path = Path(path) / self._pdf_file_name
+        DocumentsController.save_pdf_document(self._pdf_bytes, path, self)
 
     def _zoom_in(self) -> None:
         if self.pdf_view.zoomMode() != QPdfView.ZoomMode.Custom:

@@ -24,5 +24,8 @@
   },
   "BACKUP": {
     "BACKUP_CREATED": "Backup created"
+  },
+  "DOCUMENTS": {
+    "DOCUMENT_SAVED": "Document saved"
   }
 }
