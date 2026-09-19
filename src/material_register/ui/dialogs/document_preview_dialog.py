@@ -1,14 +1,15 @@
-from PySide6.QtGui import QShowEvent
 from PySide6.QtCore import QBuffer, QByteArray, QSize
+from PySide6.QtGui import QShowEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
+    QApplication,
     QDialog,
     QDialogButtonBox,
     QHBoxLayout,
     QPushButton,
     QVBoxLayout,
-    QWidget, QApplication
+    QWidget,
 )
 
 from material_register.services.error_handler import ErrorHandler
@@ -18,12 +19,16 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 
 class DocumentPreviewDialog(QDialog):
+    MIN_ZOOM_FACTOR = 0.5
+    MAX_ZOOM_FACTOR = 2.0
+
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
         self.setMinimumSize(400, 500)
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
+        self._current_zoom = 1.0
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -99,19 +104,56 @@ class DocumentPreviewDialog(QDialog):
     def _create_connection(self) -> None:
         self.print_document_button.clicked.connect(self._print_document)
         self.save_document_button.clicked.connect(self._save_document)
+        self.zoom_in_button.clicked.connect(self._zoom_in)
+        self.zoom_reset_button.clicked.connect(self._reset_zoom)
+        self.zoom_out_button.clicked.connect(self._zoom_out)
         self.close_button.clicked.connect(self.close)
 
-    def load_pdf_from_bytes(self, pdf_document: bytes) -> None:
-        self.pdf_buffer.setData(QByteArray(pdf_document))
+    def load_pdf_from_bytes(self, pdf_bytes: bytes) -> None:
+        self.pdf_buffer.setData(QByteArray(pdf_bytes))
         self.pdf_buffer.open(QBuffer.OpenModeFlag.ReadOnly)
         self.pdf_document.load(self.pdf_buffer)
         self.pdf_view.setDocument(self.pdf_document)
+        self._current_zoom = self._get_fit_in_view_zoom()
 
     def _print_document(self) -> None:
         print("Print")
 
     def _save_document(self) -> None:
         print("Save")
+
+    def _zoom_in(self) -> None:
+        if self.pdf_view.zoomMode() != QPdfView.ZoomMode.Custom:
+            self._current_zoom = self._get_fit_in_view_zoom()
+            self.pdf_view.setZoomMode(QPdfView.ZoomMode.Custom)
+        self._current_zoom = min(self._current_zoom * 1.1, self.MAX_ZOOM_FACTOR)
+        self.pdf_view.setZoomFactor(self._current_zoom)
+
+    def _reset_zoom(self) -> None:
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitInView)
+        self._current_zoom = self._get_fit_in_view_zoom()
+
+    def _zoom_out(self) -> None:
+        if self.pdf_view.zoomMode() != QPdfView.ZoomMode.Custom:
+            self._current_zoom = self._get_fit_in_view_zoom()
+            self.pdf_view.setZoomMode(QPdfView.ZoomMode.Custom)
+        self._current_zoom = max(self._current_zoom / 1.1, self.MIN_ZOOM_FACTOR)
+        self.pdf_view.setZoomFactor(self._current_zoom)
+
+    def _get_fit_in_view_zoom(self) -> float:
+        if not self.pdf_document or self.pdf_document.pageCount() == 0:
+            return 1.0
+        page_size_points = self.pdf_document.pagePointSize(0)
+        dpi = QApplication.primaryScreen().logicalDotsPerInch()
+        page_width = (page_size_points.width() / 72.0) * dpi
+        page_height = (page_size_points.height() / 72.0) * dpi
+        view_width = self.pdf_view.viewport().width()
+        view_height = self.pdf_view.viewport().height()
+        if page_width <= 0 or page_height <= 0:
+            return 1.0
+        scale_width = view_width / page_width
+        scale_height = view_height / page_height
+        return min(scale_width, scale_height)
 
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
@@ -123,3 +165,4 @@ class DocumentPreviewDialog(QDialog):
         width = int(height * 210 / 297)
         self.setFixedSize(width, height)
         centre_dialog(self)
+        self._current_zoom = self._get_fit_in_view_zoom()
