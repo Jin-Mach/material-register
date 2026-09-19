@@ -80,6 +80,8 @@
     "branchButtonTooltipText": "Zobrazí nastavení pobočky",
     "exportButtonText": "Export",
     "exportButtonTooltipText": "Zobrazí nastavení exportu",
+    "documentsButtonText": "Dokumenty",
+    "documentsButtonTooltipText": "Zobrazí nastavení dokumentů",
     "toolsButtonText": "Nástroje",
     "toolsButtonTooltipText": "Zobrazí nastavení nástrojů"
   },
@@ -375,6 +377,20 @@
     "restoreButtonTooltipText": "Nastaví výchozí hodnoty pro export",
     "saveButtonText": "Uložit",
     "saveButtonTooltipText": "Uloží aktuální nastavení exportu"
+  },
+  "SettingsDocumentsWidget": {
+    "printGroupBoxText": "Tisk",
+    "printPathLabelText": "Tiskárna:",
+    "printPathButtonText": "Vybrat tiskárnu",
+    "saveGroupBoxText": "Ukládání",
+    "savePathLabelText": "Cesta:",
+    "savePathButtonText": "Vybrat složku",
+    "folderDialogTitle": "Vybrat složku pro ukládání",
+    "settingsInfoLabelText": "Změny nastavení se projeví ihned.",
+    "restoreButtonText": "Obnovit výchozí",
+    "restoreButtonTooltipText": "Nastaví výchozí hodnoty pro dokumenty",
+    "saveButtonText": "Uložit",
+    "saveButtonTooltipText": "Uloží aktuální nastavení dokumentů"
   },
   "SettingsToolsWidget": {
     "toolsGroupBoxText": "Nástroje",

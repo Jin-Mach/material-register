@@ -90,7 +90,8 @@ class SettingsDialog(QDialog):
         buttons_map = {
             self.settings_side_panel.branch_button: 0,
             self.settings_side_panel.export_button: 1,
-            self.settings_side_panel.tools_button: 2,
+            self.settings_side_panel.documents_button: 2,
+            self.settings_side_panel.tools_button: 3,
         }
         for button, index in buttons_map.items():
             button.clicked.connect(

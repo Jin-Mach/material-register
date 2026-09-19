@@ -85,6 +85,8 @@
     "branchButtonTooltipText": "Show branch settings",
     "exportButtonText": "Export",
     "exportButtonTooltipText": "Displays export settings",
+    "documentsButtonText": "Documents",
+    "documentsButtonTooltipText": "Displays document settings",
     "toolsButtonText": "Tools",
     "toolsButtonTooltipText": "Displays tool settings"
   },
@@ -390,6 +392,20 @@
     "restoreButtonTooltipText": "Restores default export values",
     "saveButtonText": "Save",
     "saveButtonTooltipText": "Saves current export settings"
+  },
+  "SettingsDocumentsWidget": {
+    "printGroupBoxText": "Printing",
+    "printPathLabelText": "Printer:",
+    "printPathButtonText": "Select printer",
+    "saveGroupBoxText": "Saving",
+    "savePathLabelText": "Path:",
+    "savePathButtonText": "Select folder",
+    "folderDialogTitle": "Select folder for saving",
+    "settingsInfoLabelText": "Changes to the settings take effect immediately.",
+    "restoreButtonText": "Restore defaults",
+    "restoreButtonTooltipText": "Restore default document settings",
+    "saveButtonText": "Save",
+    "saveButtonTooltipText": "Save current document settings"
   },
   "SettingsToolsWidget": {
     "toolsGroupBoxText": "Tools",
