@@ -151,7 +151,9 @@ class RightToolbarWidget(QWidget):
         button = buttons_map[index]
         if self.tools_container.isVisible():
             if self.tools_container.currentIndex() == index:
-                self.main_window.tools_width = self.main_window.splitter.sizes()[1]
+                current_width = self.main_window.splitter.sizes()[1]
+                if current_width > 0:
+                    self.main_window.tools_width = current_width
                 self._animate_tools(self.main_window.tools_width, 0)
                 button.setChecked(False)
                 return
@@ -160,6 +162,8 @@ class RightToolbarWidget(QWidget):
             self.tools_container.setCurrentIndex(index)
             self.tools_container.setVisible(True)
             self.update_tools_max_width()
+            if self.main_window.tools_width <= 0:
+                self.main_window.tools_width = self.main_window.splitter.width() // 3
             self._animate_tools(0, self.main_window.tools_width)
         for current_button in buttons_map.values():
             current_button.setChecked(current_button is button)

@@ -14,7 +14,8 @@ dependencies = [
     "PySide6",
     "requests",
     "tomli_w",
-    "openpyxl"
+    "openpyxl",
+    "reportlab"
 ]
 
 [project.optional-dependencies]
