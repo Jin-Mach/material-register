@@ -365,6 +365,68 @@ def test_update_transaction_items_aggregated_change(
     assert float(query.value(0)) == 7.0
 
 
+def test_update_transaction_changes_commodity_and_quantity(
+    connection,
+    transaction_schema,
+    items_schema,
+    inventory_schema,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transactions (
+            id, type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            1, 'IN', 1, datetime('now'), 'CASH', 'test'
+        )
+    """)
+    query.exec("""
+        INSERT INTO transaction_items (
+            transaction_id, commodity_id, unit_count, price_per_unit
+        ) VALUES (
+            1, 1, 10, 5
+        )
+    """)
+    query.exec("""
+        INSERT OR REPLACE INTO inventory (commodity_id, stock)
+        VALUES (1, 10)
+    """)
+    query.exec("""
+        INSERT OR REPLACE INTO inventory (commodity_id, stock)
+        VALUES (2, 0)
+    """)
+    old_items = [TransactionItem(commodity_id=1, unit_count=10, price_per_unit=5)]
+    new_items = [TransactionItem(commodity_id=2, unit_count=20, price_per_unit=7.5)]
+
+    dialog_old = {
+        "transaction_type": "IN",
+        "customer_id": 1,
+        "payment_type": "CASH",
+        "notes": "test",
+    }
+    dialog_new = dialog_old.copy()
+    ok, error, changed = TransactionsService.update_transaction(
+        connection, 1, dialog_new, dialog_old, new_items, old_items
+    )
+    assert ok is True
+    assert error == ""
+    assert changed is True
+    query.exec("""
+        SELECT commodity_id, unit_count, price_per_unit
+        FROM transaction_items
+        WHERE transaction_id = 1
+    """)
+    assert query.next()
+    assert query.value(0) == 2
+    assert float(query.value(1)) == 20.0
+    assert float(query.value(2)) == 7.5
+    query.exec("SELECT stock FROM inventory WHERE commodity_id = 1")
+    assert query.next()
+    assert float(query.value(0)) == 0.0
+    query.exec("SELECT stock FROM inventory WHERE commodity_id = 2")
+    assert query.next()
+    assert float(query.value(0)) == 20.0
+
+
 def test_update_transaction_remove_all_items(
     connection,
     transaction_schema,
