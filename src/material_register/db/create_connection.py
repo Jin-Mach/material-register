@@ -17,7 +17,10 @@ def create_connection(
         ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
         return None
     query = QSqlQuery(connection)
-    query.exec("PRAGMA foreign_keys = ON")
+    if not query.exec("PRAGMA foreign_keys = ON"):
+        ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+        connection.close()
+        return None
     result, last_query = create_db_tables(connection)
     if not result:
         ErrorHandler.handle_error(last_query.lastError().text(), "db", "critical")
