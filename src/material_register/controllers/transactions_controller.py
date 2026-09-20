@@ -255,6 +255,8 @@ class TransactionsController:
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         data = dialog.get_create_data()
+        if data is None:
+            return None
         if transfer_type == TRANSFER_OUT:
             data.pop("paymentType", None)
         if not TransactionsController._check_data(data):
