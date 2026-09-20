@@ -50,7 +50,6 @@
     "countText": "Celkové množství"
   },
   "TransactionDocument": {
-    "titleText": "Doklad",
     "transactionIdText": "Doklad č.:",
     "companyText": "Firma:",
     "branchText": "Pobočka:",
@@ -70,9 +69,10 @@
     "commodityText": "Položka",
     "quantityText": "Množství",
     "pricePerUnitText": "Cena",
-    "totalPriceText": "Celková cena",
-    "countText": "Celkové množství",
-    "summaryPriceText": "Celkem",
+    "totalPriceText": "Celkem",
+    "totalCountText": "Množství",
+    "summaryPriceText": "Celková cena:",
+    "summaryCountText": "Celkové množství:",
     "createdAtDateTimeText": "Vytvořeno:",
     "signatureText": "Podpis",
     "pageText": "Strana"

@@ -1,11 +1,13 @@
 from io import BytesIO
 
+from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
-from reportlab.pdfgen.canvas import Canvas
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.platypus import (
     Paragraph,
     SimpleDocTemplate,
+    Spacer,
     Table,
     TableStyle,
     TopPadder,
@@ -17,20 +19,22 @@ from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
 from material_register.services.export.config.font_constants import (
+    BLACK_COLOR,
     BOLD_FONT,
-    HEADER_FONT_SIZE,
+    GREY_COLOR,
     REGULAR_FONT,
     STANDARD_FONT_SIZE,
     TOTAL_FONT_SIZE,
 )
 from material_register.services.export.pdf.documents.documents_helper import (
+    create_footer,
     create_header,
     create_horizontal_line,
+    create_transaction_customer_section,
     paragraph_style,
 )
 from material_register.utils.formatting_utils import (
     format_current_datetime_to_locale,
-    format_datetime_to_locale,
     format_number_to_locale,
 )
 
@@ -58,109 +62,50 @@ class TransactionDocumentOut:
         content = []
         content.extend(
             create_header(
-                export_texts.get("titleText", TransactionDocumentOut._ERROR_TEXT),
-                export_texts.get(
-                    "transactionIdText", TransactionDocumentOut._ERROR_TEXT
-                ),
-                transaction.transaction_id,
-                export_texts.get("companyText", TransactionDocumentOut._ERROR_TEXT),
-                branch_settings.company_name or "",
-                export_texts.get("branchText", TransactionDocumentOut._ERROR_TEXT),
-                branch_settings.branch_name or "",
-                export_texts.get("addressText", TransactionDocumentOut._ERROR_TEXT),
-                branch_settings.branch_address or "",
-                export_texts.get("companyIdText", TransactionDocumentOut._ERROR_TEXT),
-                branch_settings.company_id or "",
+                transaction,
+                branch_settings,
+                export_texts,
             )
         )
-        content.append(create_horizontal_line())
+        content.append(Spacer(1, 5 * mm))
         content.append(
-            TransactionDocumentOut._create_transaction_info(transaction, export_texts)
+            create_transaction_customer_section(
+                transaction,
+                export_texts,
+            )
         )
-        content.append(create_horizontal_line())
-        content.extend(
-            TransactionDocumentOut._create_customer_section(transaction, export_texts)
+        content.append(Spacer(1, 5 * mm))
+        content.append(
+            TransactionDocumentOut._create_items_table(
+                items_data,
+                transaction.suffix,
+                export_texts,
+            )
         )
-        content.append(create_horizontal_line())
-        items_table = TransactionDocumentOut._create_items_table(
-            items_data, transaction.suffix, export_texts
-        )
-        content.append(items_table)
-        content.append(create_horizontal_line())
+        content.append(Spacer(1, 5 * mm))
         content.append(
             TransactionDocumentOut._create_total_count_section(
-                transaction.total, transaction.suffix, export_texts
+                transaction.total,
+                transaction.suffix,
+                export_texts,
             )
         )
-        content.append(create_horizontal_line())
+        content.append(Spacer(1, 5 * mm))
         content.append(TransactionDocumentOut._create_signature_section(export_texts))
         document.build(
             content,
-            onFirstPage=lambda canvas, doc: TransactionDocumentOut._create_footer(
-                canvas, doc, export_texts
+            onFirstPage=lambda canvas, doc: create_footer(
+                canvas,
+                doc,
+                export_texts,
             ),
-            onLaterPages=lambda canvas, doc: TransactionDocumentOut._create_footer(
-                canvas, doc, export_texts
+            onLaterPages=lambda canvas, doc: create_footer(
+                canvas,
+                doc,
+                export_texts,
             ),
         )
         return pdf_buffer.getvalue()
-
-    @staticmethod
-    def _create_transaction_info(
-        transaction: Transaction,
-        export_texts: dict[str, str],
-    ) -> Table:
-        data = [
-            [
-                Paragraph(
-                    f"{export_texts.get('transactionTypeText', TransactionDocumentOut._ERROR_TEXT)} "
-                    f"{export_texts.get(transaction.transaction_type, TransactionDocumentOut._ERROR_TEXT)}",
-                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
-                ),
-                Paragraph(
-                    f"{export_texts.get('createdAtText', TransactionDocumentOut._ERROR_TEXT)} "
-                    f"{format_datetime_to_locale(transaction.transaction_created_at)}",
-                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
-                ),
-            ],
-        ]
-        table = Table(
-            data,
-            colWidths=[83 * mm, 83 * mm],
-        )
-        table.setStyle(
-            TableStyle(
-                [
-                    ("ALIGN", (0, 0), (0, -1), "LEFT"),
-                    ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-                    ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                    ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-                ]
-            )
-        )
-        return table
-
-    @staticmethod
-    def _create_customer_section(
-        transaction: Transaction,
-        export_texts: dict[str, str],
-    ) -> list[Paragraph]:
-        customer_name = Paragraph(
-            f"{export_texts.get('customerNameText', TransactionDocumentOut._ERROR_TEXT)} "
-            f"{transaction.customer_name}",
-            paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
-        )
-        customer_address = Paragraph(
-            f"{export_texts.get('addressText', TransactionDocumentOut._ERROR_TEXT)} "
-            f"{transaction.customer_address}",
-            paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
-        )
-        customer_document = Paragraph(
-            f"{export_texts.get('documentNumberText', TransactionDocumentOut._ERROR_TEXT)} "
-            f"{transaction.customer_document_number}",
-            paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
-        )
-        return [customer_name, customer_address, customer_document]
 
     @staticmethod
     def _create_items_table(
@@ -172,19 +117,36 @@ class TransactionDocumentOut:
             [
                 Paragraph(
                     export_texts.get(
-                        "categoryText", TransactionDocumentOut._ERROR_TEXT
+                        "categoryText",
+                        TransactionDocumentOut._ERROR_TEXT,
                     ),
-                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                    paragraph_style(
+                        BOLD_FONT,
+                        STANDARD_FONT_SIZE,
+                        "left",
+                    ),
                 ),
                 Paragraph(
                     export_texts.get(
-                        "commodityText", TransactionDocumentOut._ERROR_TEXT
+                        "commodityText",
+                        TransactionDocumentOut._ERROR_TEXT,
                     ),
-                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                    paragraph_style(
+                        BOLD_FONT,
+                        STANDARD_FONT_SIZE,
+                        "left",
+                    ),
                 ),
                 Paragraph(
-                    export_texts.get("countText", TransactionDocumentOut._ERROR_TEXT),
-                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
+                    export_texts.get(
+                        "totalCountText",
+                        TransactionDocumentOut._ERROR_TEXT,
+                    ),
+                    paragraph_style(
+                        BOLD_FONT,
+                        STANDARD_FONT_SIZE,
+                        "right",
+                    ),
                 ),
             ]
         ]
@@ -193,15 +155,27 @@ class TransactionDocumentOut:
                 [
                     Paragraph(
                         item.category_name,
-                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                        paragraph_style(
+                            REGULAR_FONT,
+                            STANDARD_FONT_SIZE,
+                            "left",
+                        ),
                     ),
                     Paragraph(
                         item.commodity_name,
-                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                        paragraph_style(
+                            REGULAR_FONT,
+                            STANDARD_FONT_SIZE,
+                            "left",
+                        ),
                     ),
                     Paragraph(
                         f"{format_number_to_locale(item.unit_count)} {suffix}",
-                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
+                        paragraph_style(
+                            REGULAR_FONT,
+                            STANDARD_FONT_SIZE,
+                            "right",
+                        ),
                     ),
                 ]
             )
@@ -213,10 +187,15 @@ class TransactionDocumentOut:
         table.setStyle(
             TableStyle(
                 [
-                    ("ALIGN", (0, 0), (0, -1), "LEFT"),
-                    ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-                    ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                    ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                    ("ALIGN", (0, 0), (1, -1), "LEFT"),
+                    ("ALIGN", (2, 0), (2, -1), "RIGHT"),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 5),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 5),
+                    ("TOPPADDING", (0, 0), (-1, -1), 5),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+                    ("BACKGROUND", (0, 0), (-1, 0), HexColor(GREY_COLOR)),
+                    ("LINEBELOW", (0, 0), (-1, 0), 0.6, HexColor(BLACK_COLOR)),
+                    ("BOX", (0, 0), (-1, -1), 0.6, HexColor(BLACK_COLOR)),
                 ]
             )
         )
@@ -227,13 +206,43 @@ class TransactionDocumentOut:
         total_count: float,
         suffix: str,
         export_texts: dict[str, str],
-    ) -> Paragraph:
-        total = Paragraph(
-            f"{export_texts.get('summaryPriceText', TransactionDocumentOut._ERROR_TEXT)}: "
-            f"{format_number_to_locale(total_count)} {suffix}",
-            paragraph_style(BOLD_FONT, TOTAL_FONT_SIZE, "right"),
+    ) -> Table:
+        text = (
+            f"{export_texts.get('summaryCountText', TransactionDocumentOut._ERROR_TEXT)} "
+            f"{format_number_to_locale(total_count)} {suffix}"
         )
-        return total
+        text_width = stringWidth(
+            text,
+            BOLD_FONT,
+            TOTAL_FONT_SIZE,
+        )
+        box_width = text_width + 10
+        total = Paragraph(
+            text,
+            paragraph_style(
+                BOLD_FONT,
+                TOTAL_FONT_SIZE,
+                "right",
+            ),
+        )
+        table = Table(
+            [[total]],
+            colWidths=[box_width],
+        )
+        table.hAlign = "RIGHT"
+        table.setStyle(
+            TableStyle(
+                [
+                    ("LEFTPADDING", (0, 0), (-1, -1), 5),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 5),
+                    ("TOPPADDING", (0, 0), (-1, -1), 3),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                    ("BACKGROUND", (0, 0), (0, 0), HexColor(GREY_COLOR)),
+                    ("BOX", (0, 0), (0, 0), 1.2, HexColor(BLACK_COLOR)),
+                ]
+            )
+        )
+        return table
 
     @staticmethod
     def _create_signature_section(
@@ -244,15 +253,24 @@ class TransactionDocumentOut:
                 Paragraph(
                     f"{export_texts.get('createdAtDateTimeText', TransactionDocumentOut._ERROR_TEXT)} "
                     f"{format_current_datetime_to_locale()}",
-                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                    paragraph_style(
+                        REGULAR_FONT,
+                        STANDARD_FONT_SIZE,
+                        "left",
+                    ),
                 ),
                 [
                     create_horizontal_line(),
                     Paragraph(
                         export_texts.get(
-                            "signatureText", TransactionDocumentOut._ERROR_TEXT
+                            "signatureText",
+                            TransactionDocumentOut._ERROR_TEXT,
                         ),
-                        paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "center"),
+                        paragraph_style(
+                            REGULAR_FONT,
+                            STANDARD_FONT_SIZE,
+                            "center",
+                        ),
                     ),
                 ],
             ]
@@ -275,19 +293,3 @@ class TransactionDocumentOut:
             )
         )
         return TopPadder(table)
-
-    @staticmethod
-    def _create_footer(
-        canvas: Canvas,
-        document: SimpleDocTemplate,
-        export_texts: dict[str, str],
-    ) -> None:
-        canvas.saveState()
-        canvas.setFont(REGULAR_FONT, 8)
-        canvas.drawString(
-            A4[0] // 2,
-            10 * mm,
-            f"{export_texts.get('pageText', TransactionDocumentOut._ERROR_TEXT)} "
-            f"{document.page}",
-        )
-        canvas.restoreState()

@@ -50,7 +50,6 @@
     "countText": "Exported quantities"
   },
   "TransactionDocument": {
-    "titleText": "Document",
     "transactionIdText": "Document No.:",
     "companyText": "Company:",
     "branchText": "Branch:",
@@ -70,9 +69,10 @@
     "commodityText": "Item",
     "quantityText": "Quantity",
     "pricePerUnitText": "Price",
-    "totalPriceText": "Total Price",
-    "countText": "Total Quantity",
-    "summaryPriceText": "Total",
+    "totalPriceText": "Total",
+    "totalCountText": "Quantity",
+    "summaryPriceText": "Total Price:",
+    "summaryCountText": "Total Quantity:",
     "createdAtDateTimeText": "Created:",
     "signatureText": "Signature",
     "pageText": "Page"

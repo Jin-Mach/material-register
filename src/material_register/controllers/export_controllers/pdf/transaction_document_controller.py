@@ -48,7 +48,6 @@ class TransactionDocumentController(QObject):
         self.worker = None
         self.transaction_id = None
         self.export_texts = TextsProvider.EXPORT_TEXTS
-        self.branch_settings = UiSettings.get_branch_settings()
         self._models_map = {
             0: (self.transactions_model_in, TRANSFER_IN),
             1: (self.transactions_model_out, TRANSFER_OUT),
@@ -82,11 +81,12 @@ class TransactionDocumentController(QObject):
                 self.transactions_widget,
             )
             return
+        branch_settings = UiSettings.get_branch_settings()
         self._start_worker(
             transaction,
             items_data,
             transaction_type,
-            self.branch_settings,
+            branch_settings,
             self.export_texts,
         )
 
