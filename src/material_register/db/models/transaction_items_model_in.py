@@ -15,7 +15,7 @@ from material_register.utils.formatting_utils import format_number_to_locale
 class TransactionItemsModelIn(QStandardItemModel):
     def __init__(self, price_suffix: str) -> None:
         super().__init__()
-        self.price_suffix = price_suffix
+        self._price_suffix = price_suffix
         self._setup_model()
 
     def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
@@ -28,7 +28,7 @@ class TransactionItemsModelIn(QStandardItemModel):
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 if value is None:
                     return ""
-                return f"{format_number_to_locale(value)} {self.price_suffix}"
+                return f"{format_number_to_locale(value)} {self._price_suffix}"
             if column == ITEM_MODEL_IN_COLUMNS.index("unitCount"):
                 value = self.data(index, Qt.ItemDataRole.UserRole)
                 commodity_suffix = self.data(index, Qt.ItemDataRole.UserRole + 1)
@@ -86,7 +86,7 @@ class TransactionItemsModelIn(QStandardItemModel):
 
     def return_total(self) -> str:
         total_count = format_number_to_locale(self._calculate_total_price())
-        return f"{total_count} {self.price_suffix}"
+        return f"{total_count} {self._price_suffix}"
 
     def get_transaction_item_data(
         self, index: QModelIndex

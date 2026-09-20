@@ -20,7 +20,7 @@ class CustomersContextMenu(QMenu):
         super().__init__(customers_view)
         self.customers_controller = customers_controller
         self._create_ui()
-        self.create_connection()
+        self._create_connection()
         self.customer_index = None
 
     def _create_ui(self) -> None:
@@ -38,7 +38,7 @@ class CustomersContextMenu(QMenu):
                 if key in ui_texts:
                     widget.setText(ui_texts[key])
 
-    def create_connection(self) -> None:
+    def _create_connection(self) -> None:
         self.update_customer_action.triggered.connect(self._update_customer)
         self.active_customer_action.triggered.connect(self._change_customer_active)
 

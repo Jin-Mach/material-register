@@ -130,7 +130,7 @@ class NotesWidget(QWidget):
     def _create_connection(self) -> None:
         self.permanent_notes_edit.textChanged.connect(self._update_button_states)
         self.local_notes_edit.textChanged.connect(self._update_button_states)
-        self.search_edit.textChanged.connect(self.search_in_notes)
+        self.search_edit.textChanged.connect(self._search_in_notes)
         self.permanent_copy_button.clicked.connect(
             lambda: NotesWidget._copy_notes_to_clipboard(self.permanent_notes_edit)
         )
@@ -144,7 +144,7 @@ class NotesWidget(QWidget):
             lambda: NotesWidget._delete_notes(self.local_notes_edit)
         )
 
-    def search_in_notes(self) -> None:
+    def _search_in_notes(self) -> None:
         text = self.search_edit.text()
         selections = self._get_selections(text)
         self.permanent_notes_edit.setExtraSelections(selections)

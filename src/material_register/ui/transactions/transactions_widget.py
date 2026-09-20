@@ -40,12 +40,12 @@ class TransactionsWidget(QWidget):
         self.transaction_document_controller = TransactionDocumentController(
             self, self.transactions_load_model_in, self.transactions_load_model_out
         )
-        self.setLayout(self.create_ui())
+        self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
         self._apply_timer()
 
-    def create_ui(self) -> QVBoxLayout:
+    def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         main_layout.setSpacing(0)
         self.transactions_actions_widget = TransactionsActionsWidget(self)

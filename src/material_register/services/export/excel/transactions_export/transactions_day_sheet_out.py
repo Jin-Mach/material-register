@@ -21,14 +21,14 @@ from material_register.utils.formatting_utils import (
 
 # noinspection PyDunderSlots
 class TransactionsDaySheetOut:
-    START_ROW = 1
-    LAST_COLUMN = 6
-    TITLE_FONT_SIZE = 12
-    DEFAULT_FONT_SIZE = 10
-    TITLE_ROW_HEIGHT = 20
-    DEFAULT_ROW_HEIGHT = 15
-    NOTES_ROWS = 4
-    ERROR_TEXT = "[N/A]"
+    _START_ROW = 1
+    _LAST_COLUMN = 6
+    _TITLE_FONT_SIZE = 12
+    _DEFAULT_FONT_SIZE = 10
+    _TITLE_ROW_HEIGHT = 20
+    _DEFAULT_ROW_HEIGHT = 15
+    _NOTES_ROWS = 4
+    _ERROR_TEXT = "[N/A]"
 
     @staticmethod
     def create_sheet(
@@ -37,11 +37,11 @@ class TransactionsDaySheetOut:
         export_texts: dict[str, str],
         day_data: TransactionsExportDay,
     ) -> Worksheet:
-        row = TransactionsDaySheetOut.START_ROW
+        row = TransactionsDaySheetOut._START_ROW
         row = TransactionsDaySheetOut._create_header(
             sheet,
             row,
-            TransactionsDaySheetOut.LAST_COLUMN,
+            TransactionsDaySheetOut._LAST_COLUMN,
             export_settings,
             export_texts,
             day_data,
@@ -49,7 +49,7 @@ class TransactionsDaySheetOut:
         row = TransactionsDaySheetOut._create_count_section(
             sheet,
             row,
-            TransactionsDaySheetOut.LAST_COLUMN,
+            TransactionsDaySheetOut._LAST_COLUMN,
             export_texts,
             day_data,
         )
@@ -57,16 +57,16 @@ class TransactionsDaySheetOut:
         row = TransactionsDaySheetOut._create_transactions_section(
             sheet,
             row,
-            TransactionsDaySheetOut.LAST_COLUMN,
+            TransactionsDaySheetOut._LAST_COLUMN,
             export_texts,
             day_data,
         )
         TransactionsDaySheetOut._auto_size_columns(sheet)
-        page_text = export_texts.get("pageText", TransactionsDaySheetOut.ERROR_TEXT)
+        page_text = export_texts.get("pageText", TransactionsDaySheetOut._ERROR_TEXT)
         TransactionsDaySheetOut._setup_sheet(
             sheet,
             row,
-            TransactionsDaySheetOut.LAST_COLUMN,
+            TransactionsDaySheetOut._LAST_COLUMN,
             freeze_row,
             page_text,
         )
@@ -111,7 +111,7 @@ class TransactionsDaySheetOut:
             column=1,
             value=export_texts.get(
                 "titleText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
         )
         sheet.merge_cells(
@@ -123,14 +123,14 @@ class TransactionsDaySheetOut:
         TransactionsDaySheetOut._cell_alignment(cell)
         TransactionsDaySheetOut._cell_font(
             cell,
-            font_size=TransactionsDaySheetOut.TITLE_FONT_SIZE,
+            font_size=TransactionsDaySheetOut._TITLE_FONT_SIZE,
             bold=True,
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetOut.TITLE_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetOut._TITLE_ROW_HEIGHT
         row += 1
         range_text = export_texts.get(
             "rangeText",
-            TransactionsDaySheetOut.ERROR_TEXT,
+            TransactionsDaySheetOut._ERROR_TEXT,
         )
         cell = sheet.cell(row=row, column=1, value=range_text)
         TransactionsDaySheetOut._cell_alignment(
@@ -139,7 +139,7 @@ class TransactionsDaySheetOut:
         )
         TransactionsDaySheetOut._cell_font(
             cell,
-            TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+            TransactionsDaySheetOut._DEFAULT_FONT_SIZE,
             bold=True,
         )
         period_value = format_date_to_locale(f"{day_data.transaction_date} 00:00:00")
@@ -153,12 +153,12 @@ class TransactionsDaySheetOut:
         TransactionsDaySheetOut._cell_alignment(cell)
         TransactionsDaySheetOut._cell_font(
             cell,
-            TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+            TransactionsDaySheetOut._DEFAULT_FONT_SIZE,
             bold=True,
         )
         branch_text = export_texts.get(
             "branchText",
-            TransactionsDaySheetOut.ERROR_TEXT,
+            TransactionsDaySheetOut._ERROR_TEXT,
         )
         cell = sheet.cell(
             row=row,
@@ -171,12 +171,12 @@ class TransactionsDaySheetOut:
         )
         TransactionsDaySheetOut._cell_font(
             cell,
-            TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+            TransactionsDaySheetOut._DEFAULT_FONT_SIZE,
             bold=True,
         )
         branch_value = export_settings.get(
             "branchNameLineEdit",
-            TransactionsDaySheetOut.ERROR_TEXT,
+            TransactionsDaySheetOut._ERROR_TEXT,
         )
         cell = sheet.cell(
             row=row,
@@ -192,10 +192,10 @@ class TransactionsDaySheetOut:
         TransactionsDaySheetOut._cell_alignment(cell)
         TransactionsDaySheetOut._cell_font(
             cell,
-            TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+            TransactionsDaySheetOut._DEFAULT_FONT_SIZE,
             bold=True,
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         TransactionsDaySheetOut._set_borders(
             sheet,
             start_row=start_row,
@@ -210,7 +210,7 @@ class TransactionsDaySheetOut:
             end_row=row,
             end_column=last_column,
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -228,9 +228,9 @@ class TransactionsDaySheetOut:
         category_totals: dict[str, tuple[float, str]] = {}
         for transaction in day_data.transactions_list or []:
             for item in transaction.transaction_items or []:
-                category = item.category or TransactionsDaySheetOut.ERROR_TEXT
+                category = item.category or TransactionsDaySheetOut._ERROR_TEXT
                 quantity = item.unit_count or 0.0
-                unit = item.commodity_unit or TransactionsDaySheetOut.ERROR_TEXT
+                unit = item.commodity_unit or TransactionsDaySheetOut._ERROR_TEXT
                 if category in category_totals:
                     current_quantity, current_unit = category_totals[category]
                     category_totals[category] = (
@@ -247,7 +247,7 @@ class TransactionsDaySheetOut:
             column=1,
             value=export_texts.get(
                 "notesText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
         )
         sheet.merge_cells(
@@ -263,7 +263,7 @@ class TransactionsDaySheetOut:
             column=count_label_column,
             value=export_texts.get(
                 "countText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
         )
         sheet.merge_cells(
@@ -274,10 +274,10 @@ class TransactionsDaySheetOut:
         )
         TransactionsDaySheetOut._cell_alignment(cell)
         TransactionsDaySheetOut._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         row += 1
         notes_rows = max(
-            TransactionsDaySheetOut.NOTES_ROWS,
+            TransactionsDaySheetOut._NOTES_ROWS,
             len(category_totals),
         )
         notes_start_row = row
@@ -292,12 +292,12 @@ class TransactionsDaySheetOut:
         TransactionsDaySheetOut._cell_alignment(cell)
         TransactionsDaySheetOut._cell_font(
             cell,
-            TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+            TransactionsDaySheetOut._DEFAULT_FONT_SIZE,
         )
         for current_row in range(notes_start_row, notes_end_row + 1):
             sheet.row_dimensions[
                 current_row
-            ].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+            ].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         category_row = row
         for category, (quantity, unit) in category_totals.items():
             cell = sheet.cell(
@@ -332,7 +332,7 @@ class TransactionsDaySheetOut:
             TransactionsDaySheetOut._cell_font(cell, bold=True)
             sheet.row_dimensions[
                 category_row
-            ].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+            ].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
             category_row += 1
         if category_row <= notes_end_row:
             sheet.merge_cells(
@@ -361,7 +361,7 @@ class TransactionsDaySheetOut:
         )
         sheet.row_dimensions[
             spacer_row
-        ].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        ].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         return spacer_row + 1
 
     @staticmethod
@@ -406,32 +406,32 @@ class TransactionsDaySheetOut:
             (
                 export_texts.get(
                     "documentNumberText",
-                    TransactionsDaySheetOut.ERROR_TEXT,
+                    TransactionsDaySheetOut._ERROR_TEXT,
                 ),
-                transaction.document_number or TransactionsDaySheetOut.ERROR_TEXT,
+                transaction.document_number or TransactionsDaySheetOut._ERROR_TEXT,
             ),
             (
                 export_texts.get(
                     "customerNameText",
-                    TransactionsDaySheetOut.ERROR_TEXT,
+                    TransactionsDaySheetOut._ERROR_TEXT,
                 ),
-                transaction.customer_name or TransactionsDaySheetOut.ERROR_TEXT,
+                transaction.customer_name or TransactionsDaySheetOut._ERROR_TEXT,
             ),
             (
                 export_texts.get(
                     "addressText",
-                    TransactionsDaySheetOut.ERROR_TEXT,
+                    TransactionsDaySheetOut._ERROR_TEXT,
                 ),
-                transaction.address or TransactionsDaySheetOut.ERROR_TEXT,
+                transaction.address or TransactionsDaySheetOut._ERROR_TEXT,
             ),
             (
                 export_texts.get(
                     "createdAtText",
-                    TransactionsDaySheetOut.ERROR_TEXT,
+                    TransactionsDaySheetOut._ERROR_TEXT,
                 ),
                 format_time_to_locale(transaction.created_at)
                 if transaction.created_at
-                else TransactionsDaySheetOut.ERROR_TEXT,
+                else TransactionsDaySheetOut._ERROR_TEXT,
             ),
         ]
         row = TransactionsDaySheetOut._create_items_header(
@@ -463,7 +463,7 @@ class TransactionsDaySheetOut:
             TransactionsDaySheetOut._cell_font(cell)
             sheet.row_dimensions[
                 customer_row
-            ].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+            ].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         items_row = row
         item_quantity_cells = []
         if transaction.transaction_items:
@@ -505,14 +505,14 @@ class TransactionsDaySheetOut:
             )
             TransactionsDaySheetOut._cell_font(
                 cell,
-                TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+                TransactionsDaySheetOut._DEFAULT_FONT_SIZE,
             )
         cell = sheet.cell(
             row=total_row,
             column=items_end_column - 1,
             value=export_texts.get(
                 "summaryPriceText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
         )
         TransactionsDaySheetOut._cell_alignment(
@@ -548,7 +548,7 @@ class TransactionsDaySheetOut:
         )
         sheet.row_dimensions[
             total_row
-        ].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        ].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         TransactionsDaySheetOut._set_borders(
             sheet,
             start_row=transaction_start_row,
@@ -580,7 +580,7 @@ class TransactionsDaySheetOut:
             column=customer_start_column,
             value=export_texts.get(
                 "customerNameText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
         )
         sheet.merge_cells(
@@ -594,15 +594,15 @@ class TransactionsDaySheetOut:
         headers = [
             export_texts.get(
                 "categoryText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
             export_texts.get(
                 "commodityText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
             export_texts.get(
                 "quantityText",
-                TransactionsDaySheetOut.ERROR_TEXT,
+                TransactionsDaySheetOut._ERROR_TEXT,
             ),
         ]
         for column, value in zip(
@@ -616,7 +616,7 @@ class TransactionsDaySheetOut:
             )
             TransactionsDaySheetOut._cell_alignment(cell)
             TransactionsDaySheetOut._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -654,7 +654,7 @@ class TransactionsDaySheetOut:
             horizontal="right",
         )
         TransactionsDaySheetOut._cell_font(cell)
-        sheet.row_dimensions[row].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -669,7 +669,7 @@ class TransactionsDaySheetOut:
             end_row=row,
             end_column=last_column,
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetOut.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -690,7 +690,7 @@ class TransactionsDaySheetOut:
             cell,
             font_size=font_size,
             bold=bold,
-            default_font_size=TransactionsDaySheetOut.DEFAULT_FONT_SIZE,
+            default_font_size=TransactionsDaySheetOut._DEFAULT_FONT_SIZE,
         )
 
     @staticmethod

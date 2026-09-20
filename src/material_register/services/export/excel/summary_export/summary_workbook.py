@@ -12,7 +12,7 @@ from material_register.services.export.excel.summary_export.summary_sheet import
 
 
 class SummaryWorkbook:
-    ERROR_TEXT = ["N/A"]
+    _ERROR_TEXT = ["N/A"]
 
     @staticmethod
     def create_workbook(
@@ -25,7 +25,7 @@ class SummaryWorkbook:
         workbook.remove(workbook.active)
         summary_texts = export_texts.get("SummarySheet", {})
         sheet = workbook.create_sheet(
-            summary_texts.get("sheetName", SummaryWorkbook.ERROR_TEXT)
+            summary_texts.get("sheetName", SummaryWorkbook._ERROR_TEXT)
         )
         _, last_balance = SummarySheet.create_sheet(
             sheet, export_settings, summary_texts, in_data, out_data

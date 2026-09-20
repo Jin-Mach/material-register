@@ -18,9 +18,9 @@ from material_register.utils.formatting_utils import (
 class TransactionsLoadModelIn(QAbstractTableModel):
     def __init__(self, db_connection: QSqlDatabase) -> None:
         super().__init__()
-        self.db_connection = db_connection
-        self.tooltip_texts = {}
-        self.suffix = ""
+        self._db_connection = db_connection
+        self._tooltip_texts = {}
+        self._suffix = ""
         self.transaction_data = []
         self.headers = {}
         self.total_count = 0
@@ -34,16 +34,16 @@ class TransactionsLoadModelIn(QAbstractTableModel):
             if column == "transaction_created_at":
                 return format_datetime_to_locale(transaction.transaction_created_at)
             if column == "total":
-                return f"{format_number_to_locale(transaction.total)} {self.suffix}"
+                return f"{format_number_to_locale(transaction.total)} {self._suffix}"
             return getattr(transaction, column, None)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == "total":
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
         if role == Qt.ItemDataRole.ToolTipRole:
-            if self.tooltip_texts:
+            if self._tooltip_texts:
                 tooltip = TransactionsLoadModelIn._setup_tooltip(
-                    transaction, self.tooltip_texts
+                    transaction, self._tooltip_texts
                 )
                 if tooltip:
                     return tooltip
@@ -91,7 +91,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
     def load_transactions_data(self) -> list[Transaction]:
         self.beginResetModel()
         self.transaction_data = TransactionsLoadQueries.load_transaction_in(
-            self.db_connection
+            self._db_connection
         )
         self.endResetModel()
         self.total_count = len(self.transaction_data)
@@ -103,10 +103,10 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         self.endResetModel()
 
     def set_suffix(self, suffix: str) -> None:
-        self.suffix = suffix
+        self._suffix = suffix
 
     def set_tooltip_texts(self, tooltip_texts: dict[str, str]) -> None:
-        self.tooltip_texts = tooltip_texts
+        self._tooltip_texts = tooltip_texts
 
     @staticmethod
     def _setup_tooltip(transaction: Transaction, tooltip_texts: dict[str, str]) -> str:

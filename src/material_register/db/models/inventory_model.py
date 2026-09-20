@@ -14,7 +14,7 @@ from material_register.utils.formatting_utils import format_number_to_locale
 class InventoryModel(QSqlQueryModel):
     def __init__(self, connection: QSqlDatabase) -> None:
         super().__init__()
-        self.connection = connection
+        self._connection = connection
 
     def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
         if not index.isValid():
@@ -54,7 +54,7 @@ class InventoryModel(QSqlQueryModel):
         return super().data(index, role)
 
     def load_inventory_data(self) -> tuple[bool, str]:
-        self.setQuery(INVENTORY_QUERY, self.connection)
+        self.setQuery(INVENTORY_QUERY, self._connection)
         error = self.lastError()
         if error.isValid():
             return False, error.text()

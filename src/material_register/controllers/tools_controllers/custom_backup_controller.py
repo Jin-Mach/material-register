@@ -25,57 +25,57 @@ if TYPE_CHECKING:
 class CustomBackupController(QObject):
     def __init__(self, database_backup_widget: "DatabaseBackupWidget", /) -> None:
         super().__init__()
-        self.database_backup_widget = database_backup_widget
-        self.database_folder = PathsProvider.database
-        self.database_path = (self.database_folder / DATABASE_NAME).with_suffix(".db")
-        self.ui_texts = UiTexts.UI_TEXTS
-        self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("BACKUP", None)
-        self.thread = None
-        self.worker = None
-        self.progress_dialog = None
+        self._database_backup_widget = database_backup_widget
+        self._database_folder = PathsProvider.database
+        self._database_path = (self._database_folder / DATABASE_NAME).with_suffix(".db")
+        self._ui_texts = UiTexts.UI_TEXTS
+        self._notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("BACKUP", None)
+        self._thread = None
+        self._worker = None
+        self._progress_dialog = None
 
     def start_backup_thread(self) -> None:
-        result = self.database_backup_widget.get_custom_backup_path()
+        result = self._database_backup_widget.get_custom_backup_path()
         if result is None:
             return
         backup_path, displayed_path = result
         if backup_path.exists():
             question = MessageBoxes.show_question(
-                self.database_backup_widget,
+                self._database_backup_widget,
                 "FILE_EXISTS",
                 displayed_path,
             )
             if not question:
                 return
         question = MessageBoxes.show_question(
-            self.database_backup_widget,
+            self._database_backup_widget,
             "CUSTOM_BACKUP",
             displayed_path,
         )
         if not question:
             return
-        self.progress_dialog = ProgressDialog(
-            self.ui_texts,
+        self._progress_dialog = ProgressDialog(
+            self._ui_texts,
             AppContext.MAIN_WINDOW,
         )
-        self.progress_dialog.set_label_text("backupInProgressText")
-        self.progress_dialog.show()
+        self._progress_dialog.set_label_text("backupInProgressText")
+        self._progress_dialog.show()
         QTimer.singleShot(
             1000,
             lambda: self._start_worker(backup_path),
         )
 
     def _start_worker(self, backup_path: Path) -> None:
-        self.thread = QThread()
-        self.worker = CustomBackupWorker(
-            self.database_path,
+        self._thread = QThread()
+        self._worker = CustomBackupWorker(
+            self._database_path,
             backup_path,
         )
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.run)
-        self.worker.error.connect(self._backup_error)
-        self.worker.finished.connect(self._backup_finished)
-        self.thread.start()
+        self._worker.moveToThread(self._thread)
+        self._thread.started.connect(self._worker.run)
+        self._worker.error.connect(self._backup_error)
+        self._worker.finished.connect(self._backup_finished)
+        self._thread.start()
 
     def _backup_error(self, key: str) -> None:
         self._clean_thread()
@@ -86,29 +86,29 @@ class CustomBackupController(QObject):
         self._finish_backup()
 
     def _finish_backup(self, key: str | None = None) -> None:
-        self.progress_dialog.close()
+        self._progress_dialog.close()
         if key is None:
             CustomBackupController._notification_handler(
-                self.notification_texts,
+                self._notification_texts,
                 "BACKUP_CREATED",
                 "Backup created",
             )
             self._reset_variables()
             return
-        ErrorDialog(self.database_backup_widget).show_dialog(key, False)
+        ErrorDialog(self._database_backup_widget).show_dialog(key, False)
         self._reset_variables()
 
     def _clean_thread(self) -> None:
-        self.thread.quit()
-        self.thread.wait()
-        if self.worker:
-            self.worker.deleteLater()
-        self.thread.deleteLater()
+        self._thread.quit()
+        self._thread.wait()
+        if self._worker:
+            self._worker.deleteLater()
+        self._thread.deleteLater()
 
     def _reset_variables(self) -> None:
-        self.thread = None
-        self.worker = None
-        self.progress_dialog = None
+        self._thread = None
+        self._worker = None
+        self._progress_dialog = None
 
     @staticmethod
     def _notification_handler(

@@ -22,14 +22,14 @@ from material_register.utils.formatting_utils import format_date_range_to_locale
 
 # noinspection PyDunderSlots
 class SummarySheet:
-    START_ROW = 1
-    LAST_COLUMN = 10
-    TITLE_FONT_SIZE = 12
-    DEFAULT_FONT_SIZE = 10
-    TITLE_ROW_HEIGHT = 20
-    DEFAULT_ROW_HEIGHT = 15
-    NOTES_ROWS = 5
-    ERROR_TEXT = "[N/A]"
+    _START_ROW = 1
+    _LAST_COLUMN = 10
+    _TITLE_FONT_SIZE = 12
+    _DEFAULT_FONT_SIZE = 10
+    _TITLE_ROW_HEIGHT = 20
+    _DEFAULT_ROW_HEIGHT = 15
+    _NOTES_ROWS = 5
+    _ERROR_TEXT = "[N/A]"
 
     @staticmethod
     def create_sheet(
@@ -42,14 +42,14 @@ class SummarySheet:
         summary_in_data = SummaryReport.get_summary_data_in(data_in)
         cash_value, transfer_value = SummaryReport.get_payment_totals(data_in)
         summary_out_data = SummaryReport.get_summary_data_out(out_data)
-        row = SummarySheet.START_ROW
+        row = SummarySheet._START_ROW
         row = SummarySheet._create_header(
-            sheet, row, SummarySheet.LAST_COLUMN, export_settings, export_texts
+            sheet, row, SummarySheet._LAST_COLUMN, export_settings, export_texts
         )
         row, total_value = SummarySheet._create_financial_section(
             sheet,
             row,
-            SummarySheet.LAST_COLUMN,
+            SummarySheet._LAST_COLUMN,
             export_settings,
             export_texts,
             cash_value,
@@ -60,24 +60,24 @@ class SummarySheet:
         in_section_row = SummarySheet._create_data_in_section(
             sheet,
             data_section_row,
-            SummarySheet.LAST_COLUMN,
+            SummarySheet._LAST_COLUMN,
             export_texts,
             summary_in_data,
         )
         out_section_row = SummarySheet._create_data_out_section(
             sheet,
             data_section_row,
-            SummarySheet.LAST_COLUMN,
+            SummarySheet._LAST_COLUMN,
             export_texts,
             summary_out_data,
         )
         row = SummarySheet._create_data_spacer(
-            sheet, in_section_row, out_section_row, SummarySheet.LAST_COLUMN
+            sheet, in_section_row, out_section_row, SummarySheet._LAST_COLUMN
         )
         SummarySheet._auto_size_columns(sheet)
-        page_text = export_texts.get("pageText", SummarySheet.ERROR_TEXT)
+        page_text = export_texts.get("pageText", SummarySheet._ERROR_TEXT)
         SummarySheet._setup_sheet(
-            sheet, row, SummarySheet.LAST_COLUMN, freeze_row, page_text
+            sheet, row, SummarySheet._LAST_COLUMN, freeze_row, page_text
         )
         return sheet, total_value
 
@@ -119,19 +119,21 @@ class SummarySheet:
         cell = sheet.cell(
             row=row,
             column=1,
-            value=export_texts.get("titleText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("titleText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
         SummarySheet._cell_alignment(cell)
-        SummarySheet._cell_font(cell, font_size=SummarySheet.TITLE_FONT_SIZE, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.TITLE_ROW_HEIGHT
+        SummarySheet._cell_font(
+            cell, font_size=SummarySheet._TITLE_FONT_SIZE, bold=True
+        )
+        sheet.row_dimensions[row].height = SummarySheet._TITLE_ROW_HEIGHT
         row += 1
-        range_text = export_texts.get("rangeText", SummarySheet.ERROR_TEXT)
+        range_text = export_texts.get("rangeText", SummarySheet._ERROR_TEXT)
         cell = sheet.cell(row=row, column=1, value=range_text)
         SummarySheet._cell_alignment(cell, horizontal="left")
-        SummarySheet._cell_font(cell, SummarySheet.DEFAULT_FONT_SIZE, bold=True)
+        SummarySheet._cell_font(cell, SummarySheet._DEFAULT_FONT_SIZE, bold=True)
         period_value = SummarySheet._get_period_range(
             export_settings.get("from_date", None), export_settings.get("to_date", None)
         )
@@ -140,13 +142,13 @@ class SummarySheet:
             start_row=row, start_column=2, end_row=row, end_column=middle_column
         )
         SummarySheet._cell_alignment(cell)
-        SummarySheet._cell_font(cell, SummarySheet.DEFAULT_FONT_SIZE, bold=True)
-        branch_text = export_texts.get("branchText", SummarySheet.ERROR_TEXT)
+        SummarySheet._cell_font(cell, SummarySheet._DEFAULT_FONT_SIZE, bold=True)
+        branch_text = export_texts.get("branchText", SummarySheet._ERROR_TEXT)
         cell = sheet.cell(row=row, column=branch_label_column, value=branch_text)
         SummarySheet._cell_alignment(cell, horizontal="left")
-        SummarySheet._cell_font(cell, SummarySheet.DEFAULT_FONT_SIZE, bold=True)
+        SummarySheet._cell_font(cell, SummarySheet._DEFAULT_FONT_SIZE, bold=True)
         branch_value = export_settings.get(
-            "branchNameLineEdit", SummarySheet.ERROR_TEXT
+            "branchNameLineEdit", SummarySheet._ERROR_TEXT
         )
         cell = sheet.cell(row=row, column=branch_value_column, value=branch_value)
         sheet.merge_cells(
@@ -156,8 +158,8 @@ class SummarySheet:
             end_column=last_column,
         )
         SummarySheet._cell_alignment(cell)
-        SummarySheet._cell_font(cell, SummarySheet.DEFAULT_FONT_SIZE, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        SummarySheet._cell_font(cell, SummarySheet._DEFAULT_FONT_SIZE, bold=True)
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         SummarySheet._set_borders(
             sheet,
             start_row=start_row,
@@ -169,7 +171,7 @@ class SummarySheet:
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -186,23 +188,23 @@ class SummarySheet:
         middle_column = last_column // 2
         financial_label_column = middle_column + 1
         financial_value_column = middle_column + 3
-        currency_suffix = export_texts.get("currencySuffix", SummarySheet.ERROR_TEXT)
+        currency_suffix = export_texts.get("currencySuffix", SummarySheet._ERROR_TEXT)
         cell_format = f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         cell = sheet.cell(
             row=row,
             column=1,
-            value=export_texts.get("notesText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("notesText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=middle_column
         )
         SummarySheet._cell_alignment(cell)
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("financialText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("financialText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -212,25 +214,25 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell)
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         cell = sheet.cell(row=row, column=1)
         sheet.merge_cells(
             start_row=row,
             start_column=1,
-            end_row=row + SummarySheet.NOTES_ROWS,
+            end_row=row + SummarySheet._NOTES_ROWS,
             end_column=middle_column,
         )
         SummarySheet._cell_alignment(cell, horizontal="left", vertical="top")
-        SummarySheet._cell_font(cell, SummarySheet.DEFAULT_FONT_SIZE)
-        for current_row in range(row, row + SummarySheet.NOTES_ROWS):
-            sheet.row_dimensions[current_row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        SummarySheet._cell_font(cell, SummarySheet._DEFAULT_FONT_SIZE)
+        for current_row in range(row, row + SummarySheet._NOTES_ROWS):
+            sheet.row_dimensions[current_row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         opening_balance_row = row
         opening_balance = export_settings.get("openingBalanceSpinbox", 0.0)
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("openingBalanceText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("openingBalanceText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -250,13 +252,13 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         income = export_settings.get("income", 0.0)
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("incomeText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("incomeText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -276,12 +278,12 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("cashText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("cashText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -301,14 +303,14 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         expense_row = row
         expense = export_settings.get("expense", 0.0) * -1
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("expenseText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("expenseText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -328,12 +330,12 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("balanceText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("balanceText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -358,12 +360,12 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("transferText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("transferText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -387,7 +389,7 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         SummarySheet._set_borders(
             sheet,
             start_row=start_row,
@@ -407,7 +409,7 @@ class SummarySheet:
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         total = round(opening_balance + income - cash_value + expense, 1)
         return row + 1, total
 
@@ -422,14 +424,14 @@ class SummarySheet:
         start_row = row
         first_column = 1
         middle_column = last_column // 2
-        currency_suffix = export_texts.get("currencySuffix", SummarySheet.ERROR_TEXT)
+        currency_suffix = export_texts.get("currencySuffix", SummarySheet._ERROR_TEXT)
         money_cell_format = (
             f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         )
         cell = sheet.cell(
             row=row,
             column=first_column,
-            value=export_texts.get("buybackText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("buybackText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -439,7 +441,7 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell)
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         for category, category_data in in_data.items():
             cell = sheet.cell(row=row, column=first_column, value=category)
@@ -451,44 +453,44 @@ class SummarySheet:
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+            sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
             row += 1
             cell = sheet.cell(
                 row=row,
                 column=first_column,
-                value=export_texts.get("commodityText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("commodityText", SummarySheet._ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
             cell = sheet.cell(
                 row=row,
                 column=first_column + 1,
-                value=export_texts.get("paymentTypeText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("paymentTypeText", SummarySheet._ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
             cell = sheet.cell(
                 row=row,
                 column=first_column + 2,
-                value=export_texts.get("pricePerUnitText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("pricePerUnitText", SummarySheet._ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
             cell = sheet.cell(
                 row=row,
                 column=first_column + 3,
-                value=export_texts.get("quantityText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("quantityText", SummarySheet._ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
             cell = sheet.cell(
                 row=row,
                 column=first_column + 4,
-                value=export_texts.get("totalPriceText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("totalPriceText", SummarySheet._ERROR_TEXT),
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+            sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
             row += 1
             row = SummarySheet._create_category_in_section(
                 sheet, row, last_column, export_texts, category_data, money_cell_format
@@ -516,7 +518,7 @@ class SummarySheet:
         cell = sheet.cell(
             row=row,
             column=first_column,
-            value=export_texts.get("exportText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("exportText", SummarySheet._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -526,7 +528,7 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell)
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         for category, category_data in data_out.items():
             cell = sheet.cell(row=row, column=first_column, value=category)
@@ -538,12 +540,12 @@ class SummarySheet:
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+            sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
             row += 1
             cell = sheet.cell(
                 row=row,
                 column=first_column,
-                value=export_texts.get("commodityText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("commodityText", SummarySheet._ERROR_TEXT),
             )
             sheet.merge_cells(
                 start_row=row,
@@ -556,7 +558,7 @@ class SummarySheet:
             cell = sheet.cell(
                 row=row,
                 column=first_column + 2,
-                value=export_texts.get("quantityText", SummarySheet.ERROR_TEXT),
+                value=export_texts.get("quantityText", SummarySheet._ERROR_TEXT),
             )
             sheet.merge_cells(
                 start_row=row,
@@ -566,7 +568,7 @@ class SummarySheet:
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+            sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
             row += 1
             row = SummarySheet._create_category_out_section(
                 sheet, row, last_column, category_data
@@ -606,7 +608,7 @@ class SummarySheet:
             )
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell, bold=True)
-            payment_text = export_texts.get(item.payment_type, SummarySheet.ERROR_TEXT)
+            payment_text = export_texts.get(item.payment_type, SummarySheet._ERROR_TEXT)
             cell = sheet.cell(row=row, column=payment_type_column, value=payment_text)
             SummarySheet._cell_alignment(cell)
             SummarySheet._cell_font(cell)
@@ -624,7 +626,7 @@ class SummarySheet:
             cell.number_format = money_cell_format
             SummarySheet._cell_alignment(cell, horizontal="right")
             SummarySheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+            sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
             row += 1
         summary_value_column = middle_column
         sheet.merge_cells(
@@ -633,7 +635,7 @@ class SummarySheet:
         cell = sheet.cell(
             row=row,
             column=summary_label_column,
-            value=export_texts.get("summaryPriceText", SummarySheet.ERROR_TEXT),
+            value=export_texts.get("summaryPriceText", SummarySheet._ERROR_TEXT),
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
@@ -648,7 +650,7 @@ class SummarySheet:
         cell.number_format = money_cell_format
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -687,7 +689,7 @@ class SummarySheet:
             )
             SummarySheet._cell_alignment(cell, horizontal="right")
             SummarySheet._cell_font(cell, bold=True)
-            sheet.row_dimensions[row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+            sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
             if index + 1 != stop_index:
                 row += 1
         return row + 1
@@ -717,7 +719,7 @@ class SummarySheet:
         sheet.merge_cells(
             start_row=last_row, start_column=1, end_row=last_row, end_column=last_column
         )
-        sheet.row_dimensions[last_row].height = SummarySheet.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[last_row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         return last_row + 1
 
     @staticmethod
@@ -732,7 +734,7 @@ class SummarySheet:
             cell,
             font_size=font_size,
             bold=bold,
-            default_font_size=SummarySheet.DEFAULT_FONT_SIZE,
+            default_font_size=SummarySheet._DEFAULT_FONT_SIZE,
         )
 
     @staticmethod
@@ -760,5 +762,5 @@ class SummarySheet:
     @staticmethod
     def _get_period_range(from_date: str | None, to_date: str | None) -> str:
         if from_date is None or to_date is None:
-            return SummarySheet.ERROR_TEXT
+            return SummarySheet._ERROR_TEXT
         return format_date_range_to_locale(from_date, to_date)

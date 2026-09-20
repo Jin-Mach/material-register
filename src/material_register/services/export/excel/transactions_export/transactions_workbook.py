@@ -16,7 +16,7 @@ from material_register.utils.date_filters import parse_date
 
 
 class TransactionsWorkbook:
-    ERROR_TEXT = ["N/A"]
+    _ERROR_TEXT = ["N/A"]
 
     @staticmethod
     def create_workbook(

@@ -25,40 +25,40 @@ if TYPE_CHECKING:
 class DatabaseRestoreController(QObject):
     def __init__(self, database_backup_widget: "DatabaseBackupWidget") -> None:
         super().__init__()
-        self.database_backup_widget = database_backup_widget
-        self.database_folder = PathsProvider.database
-        self.database_path = (self.database_folder / DATABASE_NAME).with_suffix(".db")
-        self.ui_texts = UiTexts.UI_TEXTS
-        self.thread = None
-        self.worker = None
-        self.progress_dialog = None
+        self._database_backup_widget = database_backup_widget
+        self._database_folder = PathsProvider.database
+        self._database_path = (self._database_folder / DATABASE_NAME).with_suffix(".db")
+        self._ui_texts = UiTexts.UI_TEXTS
+        self._thread = None
+        self._worker = None
+        self._progress_dialog = None
 
     def start_restore_thread(self) -> None:
-        restore_path = self.database_backup_widget.restore_path
+        restore_path = self._database_backup_widget.restore_path
         if restore_path is None:
             return
-        self.database_folder.mkdir(parents=True, exist_ok=True)
-        displayed_path = self.database_backup_widget.get_displayed_path(restore_path)
+        self._database_folder.mkdir(parents=True, exist_ok=True)
+        displayed_path = self._database_backup_widget.get_displayed_path(restore_path)
         question = MessageBoxes.show_question(
-            self.database_backup_widget, "RESTORE_DATABASE", displayed_path
+            self._database_backup_widget, "RESTORE_DATABASE", displayed_path
         )
         if not question:
             return
-        self.progress_dialog = ProgressDialog(self.ui_texts, AppContext.MAIN_WINDOW)
-        self.progress_dialog.set_label_text("restoreInProgressText")
-        self.progress_dialog.show()
+        self._progress_dialog = ProgressDialog(self._ui_texts, AppContext.MAIN_WINDOW)
+        self._progress_dialog.set_label_text("restoreInProgressText")
+        self._progress_dialog.show()
         QTimer.singleShot(
-            0, lambda: self._start_worker(self.database_path, restore_path)
+            0, lambda: self._start_worker(self._database_path, restore_path)
         )
 
     def _start_worker(self, database_path: Path, restore_path: Path) -> None:
-        self.thread = QThread()
-        self.worker = DatabaseRestoreWorker(database_path, restore_path)
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.run)
-        self.worker.error.connect(self._restore_error)
-        self.worker.finished.connect(self._restore_finished)
-        self.thread.start()
+        self._thread = QThread()
+        self._worker = DatabaseRestoreWorker(database_path, restore_path)
+        self._worker.moveToThread(self._thread)
+        self._thread.started.connect(self._worker.run)
+        self._worker.error.connect(self._restore_error)
+        self._worker.finished.connect(self._restore_finished)
+        self._thread.start()
 
     def _restore_error(self, key: str) -> None:
         self._clean_thread()
@@ -73,25 +73,25 @@ class DatabaseRestoreController(QObject):
 
     def _finish_restore(self, key: str | None = None) -> None:
         if key is None:
-            self.progress_dialog.set_label_text("restartApplicationText")
+            self._progress_dialog.set_label_text("restartApplicationText")
             QTimer.singleShot(1000, self._restart_application)
             return
-        ErrorDialog(self.database_backup_widget).show_dialog(key, False)
+        ErrorDialog(self._database_backup_widget).show_dialog(key, False)
         self._reset_variables()
 
     def _restart_application(self) -> None:
-        self.progress_dialog.close()
+        self._progress_dialog.close()
         LockProvider.unlock_app()
         restart_application("--database-restored")
 
     def _clean_thread(self) -> None:
-        self.thread.quit()
-        self.thread.wait()
-        if self.worker:
-            self.worker.deleteLater()
-        self.thread.deleteLater()
+        self._thread.quit()
+        self._thread.wait()
+        if self._worker:
+            self._worker.deleteLater()
+        self._thread.deleteLater()
 
     def _reset_variables(self) -> None:
-        self.thread = None
-        self.worker = None
-        self.progress_dialog = None
+        self._thread = None
+        self._worker = None
+        self._progress_dialog = None

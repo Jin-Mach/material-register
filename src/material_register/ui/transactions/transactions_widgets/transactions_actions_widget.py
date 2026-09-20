@@ -12,10 +12,10 @@ if TYPE_CHECKING:
 class TransactionsActionsWidget(QWidget):
     def __init__(self, transactions_widget: "TransactionsWidget") -> None:
         super().__init__(transactions_widget)
-        self.setLayout(self.create_ui())
+        self.setLayout(self._create_ui())
         self._setup_ui()
 
-    def create_ui(self) -> QHBoxLayout:
+    def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
         self.in_transaction_button = QPushButton()
         self.in_transaction_button.setObjectName("inTransactionButton")

@@ -22,14 +22,14 @@ from material_register.utils.formatting_utils import (
 
 # noinspection PyDunderSlots
 class TransactionsDaySheetIn:
-    START_ROW = 1
-    LAST_COLUMN = 8
-    TITLE_FONT_SIZE = 12
-    DEFAULT_FONT_SIZE = 10
-    TITLE_ROW_HEIGHT = 20
-    DEFAULT_ROW_HEIGHT = 15
-    NOTES_ROWS = 3
-    ERROR_TEXT = "[N/A]"
+    _START_ROW = 1
+    _LAST_COLUMN = 8
+    _TITLE_FONT_SIZE = 12
+    _DEFAULT_FONT_SIZE = 10
+    _TITLE_ROW_HEIGHT = 20
+    _DEFAULT_ROW_HEIGHT = 15
+    _NOTES_ROWS = 3
+    _ERROR_TEXT = "[N/A]"
 
     @staticmethod
     def create_sheet(
@@ -38,33 +38,33 @@ class TransactionsDaySheetIn:
         export_texts: dict[str, str],
         day_data: TransactionsExportDay,
     ) -> Worksheet:
-        row = TransactionsDaySheetIn.START_ROW
+        row = TransactionsDaySheetIn._START_ROW
         row = TransactionsDaySheetIn._create_header(
             sheet,
             row,
-            TransactionsDaySheetIn.LAST_COLUMN,
+            TransactionsDaySheetIn._LAST_COLUMN,
             export_settings,
             export_texts,
             day_data,
         )
         cash_cell, transfer_cell, total_cell, row = (
             TransactionsDaySheetIn._create_financial_section(
-                sheet, row, TransactionsDaySheetIn.LAST_COLUMN, export_texts
+                sheet, row, TransactionsDaySheetIn._LAST_COLUMN, export_texts
             )
         )
         freeze_row = row
         row, transaction_total_cells = (
             TransactionsDaySheetIn._create_transactions_section(
-                sheet, row, TransactionsDaySheetIn.LAST_COLUMN, export_texts, day_data
+                sheet, row, TransactionsDaySheetIn._LAST_COLUMN, export_texts, day_data
             )
         )
         TransactionsDaySheetIn._set_financial_formulas(
             cash_cell, transfer_cell, total_cell, transaction_total_cells
         )
         TransactionsDaySheetIn._auto_size_columns(sheet)
-        page_text = export_texts.get("pageText", TransactionsDaySheetIn.ERROR_TEXT)
+        page_text = export_texts.get("pageText", TransactionsDaySheetIn._ERROR_TEXT)
         TransactionsDaySheetIn._setup_sheet(
-            sheet, row, TransactionsDaySheetIn.LAST_COLUMN, freeze_row, page_text
+            sheet, row, TransactionsDaySheetIn._LAST_COLUMN, freeze_row, page_text
         )
         return sheet
 
@@ -105,22 +105,22 @@ class TransactionsDaySheetIn:
         cell = sheet.cell(
             row=row,
             column=1,
-            value=export_texts.get("titleText", TransactionsDaySheetIn.ERROR_TEXT),
+            value=export_texts.get("titleText", TransactionsDaySheetIn._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
         TransactionsDaySheetIn._cell_alignment(cell)
         TransactionsDaySheetIn._cell_font(
-            cell, font_size=TransactionsDaySheetIn.TITLE_FONT_SIZE, bold=True
+            cell, font_size=TransactionsDaySheetIn._TITLE_FONT_SIZE, bold=True
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.TITLE_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._TITLE_ROW_HEIGHT
         row += 1
-        range_text = export_texts.get("rangeText", TransactionsDaySheetIn.ERROR_TEXT)
+        range_text = export_texts.get("rangeText", TransactionsDaySheetIn._ERROR_TEXT)
         cell = sheet.cell(row=row, column=1, value=range_text)
         TransactionsDaySheetIn._cell_alignment(cell, horizontal="left")
         TransactionsDaySheetIn._cell_font(
-            cell, TransactionsDaySheetIn.DEFAULT_FONT_SIZE, bold=True
+            cell, TransactionsDaySheetIn._DEFAULT_FONT_SIZE, bold=True
         )
         period_value = format_date_to_locale(f"{day_data.transaction_date} 00:00:00")
         cell = sheet.cell(row=row, column=2, value=period_value)
@@ -129,16 +129,16 @@ class TransactionsDaySheetIn:
         )
         TransactionsDaySheetIn._cell_alignment(cell)
         TransactionsDaySheetIn._cell_font(
-            cell, TransactionsDaySheetIn.DEFAULT_FONT_SIZE, bold=True
+            cell, TransactionsDaySheetIn._DEFAULT_FONT_SIZE, bold=True
         )
-        branch_text = export_texts.get("branchText", TransactionsDaySheetIn.ERROR_TEXT)
+        branch_text = export_texts.get("branchText", TransactionsDaySheetIn._ERROR_TEXT)
         cell = sheet.cell(row=row, column=middle_column, value=branch_text)
         TransactionsDaySheetIn._cell_alignment(cell, horizontal="left")
         TransactionsDaySheetIn._cell_font(
-            cell, TransactionsDaySheetIn.DEFAULT_FONT_SIZE, bold=True
+            cell, TransactionsDaySheetIn._DEFAULT_FONT_SIZE, bold=True
         )
         branch_value = export_settings.get(
-            "branchNameLineEdit", TransactionsDaySheetIn.ERROR_TEXT
+            "branchNameLineEdit", TransactionsDaySheetIn._ERROR_TEXT
         )
         cell = sheet.cell(row=row, column=middle_column + 1, value=branch_value)
         sheet.merge_cells(
@@ -149,9 +149,9 @@ class TransactionsDaySheetIn:
         )
         TransactionsDaySheetIn._cell_alignment(cell)
         TransactionsDaySheetIn._cell_font(
-            cell, TransactionsDaySheetIn.DEFAULT_FONT_SIZE, bold=True
+            cell, TransactionsDaySheetIn._DEFAULT_FONT_SIZE, bold=True
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         TransactionsDaySheetIn._set_borders(
             sheet,
             start_row=start_row,
@@ -163,7 +163,7 @@ class TransactionsDaySheetIn:
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -175,24 +175,24 @@ class TransactionsDaySheetIn:
         financial_label_column = middle_column + 1
         financial_value_column = middle_column + 3
         currency_suffix = export_texts.get(
-            "currencySuffix", TransactionsDaySheetIn.ERROR_TEXT
+            "currencySuffix", TransactionsDaySheetIn._ERROR_TEXT
         )
         cell_format = f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         cell = sheet.cell(
             row=row,
             column=1,
-            value=export_texts.get("notesText", TransactionsDaySheetIn.ERROR_TEXT),
+            value=export_texts.get("notesText", TransactionsDaySheetIn._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=middle_column
         )
         TransactionsDaySheetIn._cell_alignment(cell)
         TransactionsDaySheetIn._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("financialText", TransactionsDaySheetIn.ERROR_TEXT),
+            value=export_texts.get("financialText", TransactionsDaySheetIn._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -202,27 +202,27 @@ class TransactionsDaySheetIn:
         )
         TransactionsDaySheetIn._cell_alignment(cell)
         TransactionsDaySheetIn._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         row += 1
         cell = sheet.cell(row=row, column=1)
         sheet.merge_cells(
             start_row=row,
             start_column=1,
-            end_row=row + TransactionsDaySheetIn.NOTES_ROWS,
+            end_row=row + TransactionsDaySheetIn._NOTES_ROWS,
             end_column=middle_column,
         )
         TransactionsDaySheetIn._cell_alignment(cell, horizontal="left", vertical="top")
         TransactionsDaySheetIn._cell_font(
-            cell, TransactionsDaySheetIn.DEFAULT_FONT_SIZE
+            cell, TransactionsDaySheetIn._DEFAULT_FONT_SIZE
         )
-        for current_row in range(row, row + TransactionsDaySheetIn.NOTES_ROWS):
+        for current_row in range(row, row + TransactionsDaySheetIn._NOTES_ROWS):
             sheet.row_dimensions[
                 current_row
-            ].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+            ].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("CASH", TransactionsDaySheetIn.ERROR_TEXT),
+            value=export_texts.get("CASH", TransactionsDaySheetIn._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -246,7 +246,7 @@ class TransactionsDaySheetIn:
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
-            value=export_texts.get("TRANSFER", TransactionsDaySheetIn.ERROR_TEXT),
+            value=export_texts.get("TRANSFER", TransactionsDaySheetIn._ERROR_TEXT),
         )
         sheet.merge_cells(
             start_row=row,
@@ -271,7 +271,7 @@ class TransactionsDaySheetIn:
             row=row,
             column=financial_label_column,
             value=export_texts.get(
-                "summaryPriceText", TransactionsDaySheetIn.ERROR_TEXT
+                "summaryPriceText", TransactionsDaySheetIn._ERROR_TEXT
             ),
         )
         sheet.merge_cells(
@@ -311,7 +311,7 @@ class TransactionsDaySheetIn:
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         return cash_cell, transfer_cell, total_cell, row + 1
 
     @staticmethod
@@ -379,29 +379,31 @@ class TransactionsDaySheetIn:
         customer_lines = [
             (
                 export_texts.get(
-                    "documentNumberText", TransactionsDaySheetIn.ERROR_TEXT
+                    "documentNumberText", TransactionsDaySheetIn._ERROR_TEXT
                 ),
-                transaction.document_number or TransactionsDaySheetIn.ERROR_TEXT,
+                transaction.document_number or TransactionsDaySheetIn._ERROR_TEXT,
             ),
             (
-                export_texts.get("customerNameText", TransactionsDaySheetIn.ERROR_TEXT),
-                transaction.customer_name or TransactionsDaySheetIn.ERROR_TEXT,
+                export_texts.get(
+                    "customerNameText", TransactionsDaySheetIn._ERROR_TEXT
+                ),
+                transaction.customer_name or TransactionsDaySheetIn._ERROR_TEXT,
             ),
             (
-                export_texts.get("addressText", TransactionsDaySheetIn.ERROR_TEXT),
-                transaction.address or TransactionsDaySheetIn.ERROR_TEXT,
+                export_texts.get("addressText", TransactionsDaySheetIn._ERROR_TEXT),
+                transaction.address or TransactionsDaySheetIn._ERROR_TEXT,
             ),
             (
-                export_texts.get("createdAtText", TransactionsDaySheetIn.ERROR_TEXT),
+                export_texts.get("createdAtText", TransactionsDaySheetIn._ERROR_TEXT),
                 format_time_to_locale(transaction.created_at)
                 if transaction.created_at
-                else TransactionsDaySheetIn.ERROR_TEXT,
+                else TransactionsDaySheetIn._ERROR_TEXT,
             ),
             (
-                export_texts.get("paymentTypeText", TransactionsDaySheetIn.ERROR_TEXT),
+                export_texts.get("paymentTypeText", TransactionsDaySheetIn._ERROR_TEXT),
                 export_texts.get(
                     transaction.payment_type,
-                    transaction.payment_type or TransactionsDaySheetIn.ERROR_TEXT,
+                    transaction.payment_type or TransactionsDaySheetIn._ERROR_TEXT,
                 ),
             ),
         ]
@@ -432,7 +434,7 @@ class TransactionsDaySheetIn:
             TransactionsDaySheetIn._cell_font(cell)
             sheet.row_dimensions[
                 customer_row
-            ].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+            ].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         items_row = row
         item_total_cells = []
         if transaction.transaction_items:
@@ -472,19 +474,19 @@ class TransactionsDaySheetIn:
             )
             TransactionsDaySheetIn._cell_font(
                 cell,
-                TransactionsDaySheetIn.DEFAULT_FONT_SIZE,
+                TransactionsDaySheetIn._DEFAULT_FONT_SIZE,
             )
         cell = sheet.cell(
             row=total_row,
             column=items_end_column - 1,
             value=export_texts.get(
-                "summaryPriceText", TransactionsDaySheetIn.ERROR_TEXT
+                "summaryPriceText", TransactionsDaySheetIn._ERROR_TEXT
             ),
         )
         TransactionsDaySheetIn._cell_alignment(cell, horizontal="right")
         TransactionsDaySheetIn._cell_font(cell, bold=True)
         currency_suffix = export_texts.get(
-            "currencySuffix", TransactionsDaySheetIn.ERROR_TEXT
+            "currencySuffix", TransactionsDaySheetIn._ERROR_TEXT
         )
         transaction_total_cell = sheet.cell(
             row=total_row,
@@ -517,7 +519,7 @@ class TransactionsDaySheetIn:
         )
         sheet.row_dimensions[
             total_row
-        ].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        ].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         TransactionsDaySheetIn._set_borders(
             sheet,
             start_row=transaction_start_row,
@@ -549,7 +551,7 @@ class TransactionsDaySheetIn:
             row=row,
             column=customer_start_column,
             value=export_texts.get(
-                "customerNameText", TransactionsDaySheetIn.ERROR_TEXT
+                "customerNameText", TransactionsDaySheetIn._ERROR_TEXT
             ),
         )
         sheet.merge_cells(
@@ -561,17 +563,17 @@ class TransactionsDaySheetIn:
         TransactionsDaySheetIn._cell_alignment(cell)
         TransactionsDaySheetIn._cell_font(cell, bold=True)
         headers = [
-            export_texts.get("categoryText", TransactionsDaySheetIn.ERROR_TEXT),
-            export_texts.get("commodityText", TransactionsDaySheetIn.ERROR_TEXT),
-            export_texts.get("quantityText", TransactionsDaySheetIn.ERROR_TEXT),
-            export_texts.get("pricePerUnitText", TransactionsDaySheetIn.ERROR_TEXT),
-            export_texts.get("totalPriceText", TransactionsDaySheetIn.ERROR_TEXT),
+            export_texts.get("categoryText", TransactionsDaySheetIn._ERROR_TEXT),
+            export_texts.get("commodityText", TransactionsDaySheetIn._ERROR_TEXT),
+            export_texts.get("quantityText", TransactionsDaySheetIn._ERROR_TEXT),
+            export_texts.get("pricePerUnitText", TransactionsDaySheetIn._ERROR_TEXT),
+            export_texts.get("totalPriceText", TransactionsDaySheetIn._ERROR_TEXT),
         ]
         for column, value in zip(range(start_column, end_column + 1), headers):
             cell = sheet.cell(row=row, column=column, value=value)
             TransactionsDaySheetIn._cell_alignment(cell)
             TransactionsDaySheetIn._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -583,7 +585,7 @@ class TransactionsDaySheetIn:
         start_column: int,
     ) -> int:
         currency_suffix = export_texts.get(
-            "currencySuffix", TransactionsDaySheetIn.ERROR_TEXT
+            "currencySuffix", TransactionsDaySheetIn._ERROR_TEXT
         )
         money_cell_format = (
             f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
@@ -612,7 +614,7 @@ class TransactionsDaySheetIn:
         cell.number_format = money_cell_format
         TransactionsDaySheetIn._cell_alignment(cell, horizontal="right")
         TransactionsDaySheetIn._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -620,7 +622,7 @@ class TransactionsDaySheetIn:
         sheet.merge_cells(
             start_row=row, start_column=1, end_row=row, end_column=last_column
         )
-        sheet.row_dimensions[row].height = TransactionsDaySheetIn.DEFAULT_ROW_HEIGHT
+        sheet.row_dimensions[row].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         return row + 1
 
     @staticmethod
@@ -635,7 +637,7 @@ class TransactionsDaySheetIn:
             cell,
             font_size=font_size,
             bold=bold,
-            default_font_size=TransactionsDaySheetIn.DEFAULT_FONT_SIZE,
+            default_font_size=TransactionsDaySheetIn._DEFAULT_FONT_SIZE,
         )
 
     @staticmethod

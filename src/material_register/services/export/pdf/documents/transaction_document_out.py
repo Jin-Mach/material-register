@@ -36,7 +36,7 @@ from material_register.utils.formatting_utils import (
 
 
 class TransactionDocumentOut:
-    ERROR_TEXT = "N/A"
+    _ERROR_TEXT = "N/A"
 
     @staticmethod
     def create_document(
@@ -58,18 +58,18 @@ class TransactionDocumentOut:
         content = []
         content.extend(
             create_header(
-                export_texts.get("titleText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("titleText", TransactionDocumentOut._ERROR_TEXT),
                 export_texts.get(
-                    "transactionIdText", TransactionDocumentOut.ERROR_TEXT
+                    "transactionIdText", TransactionDocumentOut._ERROR_TEXT
                 ),
                 transaction.transaction_id,
-                export_texts.get("companyText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("companyText", TransactionDocumentOut._ERROR_TEXT),
                 branch_settings.company_name or "",
-                export_texts.get("branchText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("branchText", TransactionDocumentOut._ERROR_TEXT),
                 branch_settings.branch_name or "",
-                export_texts.get("addressText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("addressText", TransactionDocumentOut._ERROR_TEXT),
                 branch_settings.branch_address or "",
-                export_texts.get("companyIdText", TransactionDocumentOut.ERROR_TEXT),
+                export_texts.get("companyIdText", TransactionDocumentOut._ERROR_TEXT),
                 branch_settings.company_id or "",
             )
         )
@@ -113,12 +113,12 @@ class TransactionDocumentOut:
         data = [
             [
                 Paragraph(
-                    f"{export_texts.get('transactionTypeText', TransactionDocumentOut.ERROR_TEXT)} "
-                    f"{export_texts.get(transaction.transaction_type, TransactionDocumentOut.ERROR_TEXT)}",
+                    f"{export_texts.get('transactionTypeText', TransactionDocumentOut._ERROR_TEXT)} "
+                    f"{export_texts.get(transaction.transaction_type, TransactionDocumentOut._ERROR_TEXT)}",
                     paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
                 ),
                 Paragraph(
-                    f"{export_texts.get('createdAtText', TransactionDocumentOut.ERROR_TEXT)} "
+                    f"{export_texts.get('createdAtText', TransactionDocumentOut._ERROR_TEXT)} "
                     f"{format_datetime_to_locale(transaction.transaction_created_at)}",
                     paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
                 ),
@@ -146,17 +146,17 @@ class TransactionDocumentOut:
         export_texts: dict[str, str],
     ) -> list[Paragraph]:
         customer_name = Paragraph(
-            f"{export_texts.get('customerNameText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{export_texts.get('customerNameText', TransactionDocumentOut._ERROR_TEXT)} "
             f"{transaction.customer_name}",
             paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
         )
         customer_address = Paragraph(
-            f"{export_texts.get('addressText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{export_texts.get('addressText', TransactionDocumentOut._ERROR_TEXT)} "
             f"{transaction.customer_address}",
             paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
         )
         customer_document = Paragraph(
-            f"{export_texts.get('documentNumberText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{export_texts.get('documentNumberText', TransactionDocumentOut._ERROR_TEXT)} "
             f"{transaction.customer_document_number}",
             paragraph_style(REGULAR_FONT, HEADER_FONT_SIZE, "left"),
         )
@@ -171,17 +171,19 @@ class TransactionDocumentOut:
         data = [
             [
                 Paragraph(
-                    export_texts.get("categoryText", TransactionDocumentOut.ERROR_TEXT),
-                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
-                ),
-                Paragraph(
                     export_texts.get(
-                        "commodityText", TransactionDocumentOut.ERROR_TEXT
+                        "categoryText", TransactionDocumentOut._ERROR_TEXT
                     ),
                     paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
                 ),
                 Paragraph(
-                    export_texts.get("countText", TransactionDocumentOut.ERROR_TEXT),
+                    export_texts.get(
+                        "commodityText", TransactionDocumentOut._ERROR_TEXT
+                    ),
+                    paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
+                ),
+                Paragraph(
+                    export_texts.get("countText", TransactionDocumentOut._ERROR_TEXT),
                     paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "right"),
                 ),
             ]
@@ -227,7 +229,7 @@ class TransactionDocumentOut:
         export_texts: dict[str, str],
     ) -> Paragraph:
         total = Paragraph(
-            f"{export_texts.get('summaryPriceText', TransactionDocumentOut.ERROR_TEXT)}: "
+            f"{export_texts.get('summaryPriceText', TransactionDocumentOut._ERROR_TEXT)}: "
             f"{format_number_to_locale(total_count)} {suffix}",
             paragraph_style(BOLD_FONT, TOTAL_FONT_SIZE, "right"),
         )
@@ -240,7 +242,7 @@ class TransactionDocumentOut:
         data = [
             [
                 Paragraph(
-                    f"{export_texts.get('createdAtDateTimeText', TransactionDocumentOut.ERROR_TEXT)} "
+                    f"{export_texts.get('createdAtDateTimeText', TransactionDocumentOut._ERROR_TEXT)} "
                     f"{format_current_datetime_to_locale()}",
                     paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "left"),
                 ),
@@ -248,7 +250,7 @@ class TransactionDocumentOut:
                     create_horizontal_line(),
                     Paragraph(
                         export_texts.get(
-                            "signatureText", TransactionDocumentOut.ERROR_TEXT
+                            "signatureText", TransactionDocumentOut._ERROR_TEXT
                         ),
                         paragraph_style(REGULAR_FONT, STANDARD_FONT_SIZE, "center"),
                     ),
@@ -285,7 +287,7 @@ class TransactionDocumentOut:
         canvas.drawString(
             A4[0] // 2,
             10 * mm,
-            f"{export_texts.get('pageText', TransactionDocumentOut.ERROR_TEXT)} "
+            f"{export_texts.get('pageText', TransactionDocumentOut._ERROR_TEXT)} "
             f"{document.page}",
         )
         canvas.restoreState()
