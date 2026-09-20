@@ -85,7 +85,7 @@ class TransactionItemsModelOut(QStandardItemModel):
             )
         return transaction_items
 
-    def _calculate_total_unit(self) -> tuple[int, str]:
+    def _calculate_total_unit(self) -> tuple[int | float, str]:
         total_count = 0
         unit_suffix = ""
         for row in range(self.rowCount()):
