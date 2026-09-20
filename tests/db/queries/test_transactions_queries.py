@@ -220,6 +220,13 @@ def test_get_basic_filter_data(connection, filter_schema):
     assert row.transaction_type == "IN"
 
 
+def test_get_basic_filter_data_returns_none_on_query_error(connection) -> None:
+    result = TransactionsQueries.get_basic_filter_data(
+        connection, "IN", "2000-01-01 00:00:00", "2100-01-01 00:00:00"
+    )
+    assert result is None
+
+
 def test_get_total_price(connection, filter_schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""

@@ -78,14 +78,14 @@ class TransactionsQueries:
         transaction_type: str,
         from_date: str,
         end_date: str,
-    ) -> list[Transaction]:
+    ) -> list[Transaction] | None:
         query = QSqlQuery(db_connection)
         query.prepare(TRANSACTIONS_BASIC_FILTER_QUERY)
         query.addBindValue(transaction_type)
         query.addBindValue(from_date)
         query.addBindValue(end_date)
         if not query.exec():
-            return []
+            return None
         results = []
         while query.next():
             results.append(

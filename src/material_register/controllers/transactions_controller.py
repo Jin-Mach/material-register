@@ -155,13 +155,6 @@ class TransactionsController:
             self.items_dialog = TransactionItemsDialogOut(
                 self, create_data, self.transactions_widget, transaction_type
             )
-            if not items_data:
-                TransactionsController._handle_db_error(
-                    "Transaction has no items during update",
-                    f"{self.__class__.__name__}.update_transaction",
-                    self.transactions_widget,
-                )
-                return
             self.active_commodity_unit = items_data[0].commodity_suffix
         item_model = self.items_dialog.get_current_model()
         if item_model is None:
@@ -337,12 +330,17 @@ class TransactionsController:
         filtered_data = TransactionsQueries.get_basic_filter_data(
             self.db_connection, transaction_type, from_date, to_date
         )
+        if filtered_data is None:
+            TransactionsController._handle_db_error(
+                "Failed to load filtered transactions",
+                f"{self.__class__.__name__}.set_basic_transactions_filter",
+                self.transactions_widget,
+            )
+            return
         model.set_basic_filter(filtered_data)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
         self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
         self.transactions_widget.transactions_proxy_filter_out.set_filtered_text("")
-        if not filtered_data:
-            model.load_transactions_data()
         self._update_counts()
         self.update_total_price()
 
@@ -366,6 +364,13 @@ class TransactionsController:
             filtered_data = TransactionsQueries.get_basic_filter_data(
                 self.db_connection, transaction_type, from_date, to_date
             )
+            if filtered_data is None:
+                TransactionsController._handle_db_error(
+                    "Failed to load filtered transactions",
+                    f"{self.__class__.__name__}.reset_model_data",
+                    self.transactions_widget,
+                )
+                return
             model.set_basic_filter(filtered_data)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
         self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
@@ -383,6 +388,13 @@ class TransactionsController:
             filtered_data = TransactionsQueries.get_basic_filter_data(
                 self.db_connection, transfer_type, from_date, to_date
             )
+            if filtered_data is None:
+                TransactionsController._handle_db_error(
+                    "Failed to load filtered transactions",
+                    f"{self.__class__.__name__}.refresh_models_data",
+                    self.transactions_widget,
+                )
+                return
             model.set_basic_filter(filtered_data)
         self._update_counts()
         self.update_total_price()
