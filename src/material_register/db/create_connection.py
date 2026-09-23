@@ -2,6 +2,8 @@ from pathlib import Path
 
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
+from material_register.db.database_setup import DatabaseSetup
+from material_register.db.utils.database_validator import is_schema_valid
 from material_register.services.error_handler import ErrorHandler
 
 
@@ -16,14 +18,18 @@ def create_connection(
     if not connection.open():
         ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
         return None
-    query = QSqlQuery(connection)
-    if not query.exec("PRAGMA foreign_keys = ON"):
-        ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+    if not DatabaseSetup.setup_init(connection):
         connection.close()
         return None
     result, last_query = create_db_tables(connection)
     if not result:
         ErrorHandler.handle_error(last_query.lastError().text(), "db", "critical")
+        connection.close()
+        return None
+    ok, error = is_schema_valid(connection)
+    if not ok:
+        ErrorHandler.handle_error(error, "db", "critical")
+        connection.close()
         return None
     return connection
 

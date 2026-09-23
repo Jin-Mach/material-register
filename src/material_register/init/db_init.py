@@ -4,7 +4,6 @@ from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.db.create_connection import create_connection
-from material_register.db.utils.database_validator import is_schema_valid
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.error_handler import ErrorHandler
 
@@ -20,10 +19,6 @@ class DbInit:
                 PathsProvider.database, cls.DATABASE_NAME, "main_connection"
             )
             if cls.db_connection is None:
-                return False, "DATABASE_FAILED"
-            schema_ok, schema_error = is_schema_valid(cls.db_connection)
-            if not schema_ok:
-                ErrorHandler.handle_error(schema_error, "db", "critical")
                 return False, "DATABASE_FAILED"
             return True, ""
         except Exception as e:
