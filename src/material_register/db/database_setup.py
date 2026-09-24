@@ -31,3 +31,12 @@ class DatabaseSetup:
             ErrorHandler.handle_error(error, "db", "critical")
             return False
         return True
+
+    @staticmethod
+    def is_new_database(db_connection: QSqlDatabase) -> tuple[bool, str]:
+        query = QSqlQuery(db_connection)
+        if not query.exec(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='customers'"
+        ):
+            return False, query.lastError().text()
+        return not query.next(), ""

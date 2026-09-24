@@ -3,6 +3,7 @@ from pathlib import Path
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.database_setup import DatabaseSetup
+from material_register.db.migration.database_migration import DatabaseMigration
 from material_register.db.utils.database_validator import is_schema_valid
 from material_register.services.error_handler import ErrorHandler
 
@@ -19,6 +20,15 @@ def create_connection(
         ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
         return None
     if not DatabaseSetup.setup_init(connection):
+        connection.close()
+        return None
+    is_new, error = DatabaseSetup.is_new_database(connection)
+    if error:
+        ErrorHandler.handle_error(error, "db", "critical")
+        connection.close()
+        return None
+    if not is_new and not DatabaseMigration.migration_init(connection):
+        ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
         connection.close()
         return None
     result, last_query = create_db_tables(connection)
