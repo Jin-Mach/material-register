@@ -137,7 +137,9 @@ def test_add_column(
     )
     assert column_added is result
     if result:
-        assert ColumnMigration.column_exists(connection, table_name, column_name) is True
+        assert (
+            ColumnMigration.column_exists(connection, table_name, column_name) is True
+        )
 
 
 @pytest.mark.parametrize(
