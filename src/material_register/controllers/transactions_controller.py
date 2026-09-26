@@ -153,7 +153,11 @@ class TransactionsController:
         old_dialog_data = create_data.copy()
         if transaction_type == TRANSFER_IN:
             self._items_dialog = TransactionItemsDialogIn(
-                self, create_data, self.transactions_widget, transaction_type
+                self,
+                create_data["paymentType"],
+                create_data,
+                self.transactions_widget,
+                transaction_type,
             )
         if transaction_type == TRANSFER_OUT:
             self._items_dialog = TransactionItemsDialogOut(
