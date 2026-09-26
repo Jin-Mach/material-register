@@ -22,7 +22,8 @@ def schema(connection) -> None:
             customer_id INTEGER,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
             payment_type TEXT,
-            notes TEXT
+            notes TEXT,
+            is_invoiced INTEGER NOT NULL DEFAULT 0 CHECK(is_invoiced IN (0, 1))
         )
     """)
 
@@ -51,7 +52,8 @@ def filter_schema(connection):
             customer_id INTEGER,
             created_at TEXT,
             payment_type TEXT,
-            notes TEXT
+            notes TEXT,
+            is_invoiced INTEGER NOT NULL DEFAULT 0 CHECK(is_invoiced IN (0, 1))
         )
     """)
     query.exec("""
@@ -72,18 +74,22 @@ def filter_schema(connection):
 
 def test_insert_into_transactions(connection, schema) -> None:
     ok, error, transaction_id = TransactionsQueries.insert_into_transactions(
-        connection, "IN", 1, "CASH", "notes"
+        connection, "IN", 1, "CASH", False, "notes"
     )
     assert ok is True
     assert error == ""
     assert isinstance(transaction_id, int)
     query = QSqlQuery(connection)
-    query.exec("SELECT type, customer_id, payment_type, notes FROM transactions")
+    query.exec("""
+        SELECT type, customer_id, payment_type, notes, is_invoiced
+        FROM transactions
+    """)
     assert query.next()
     assert query.value(0) == "IN"
     assert query.value(1) == 1
     assert query.value(2) == "CASH"
     assert query.value(3) == "notes"
+    assert query.value(4) == 0
 
 
 def test_delete_transaction(connection, schema) -> None:
@@ -133,14 +139,19 @@ def test_update_transaction(connection, schema) -> None:
     query.exec("SELECT id FROM transactions")
     assert query.next()
     transaction_id = query.value(0)
-
     ok, error = TransactionsQueries.update_transaction(
-        connection, transaction_id, "OUT", 2, "TRANSFER", "updated_notes"
+        connection,
+        transaction_id,
+        "OUT",
+        2,
+        "TRANSFER",
+        False,
+        "updated_notes",
     )
     assert ok is True
     assert error == ""
     query.prepare("""
-        SELECT type, customer_id, payment_type, notes 
+        SELECT type, customer_id, payment_type, notes
         FROM transactions
         WHERE id = ?
     """)
@@ -211,7 +222,10 @@ def test_get_basic_filter_data(connection, filter_schema):
         (2, 1, 10, 5)
     """)
     result = TransactionsQueries.get_basic_filter_data(
-        connection, "IN", "2000-01-01 00:00:00", "2100-01-01 00:00:00"
+        connection,
+        "IN",
+        "2000-01-01 00:00:00",
+        "2100-01-01 00:00:00",
     )
     assert isinstance(result, list)
     assert len(result) == 2
@@ -222,7 +236,10 @@ def test_get_basic_filter_data(connection, filter_schema):
 
 def test_get_basic_filter_data_returns_none_on_query_error(connection) -> None:
     result = TransactionsQueries.get_basic_filter_data(
-        connection, "IN", "2000-01-01 00:00:00", "2100-01-01 00:00:00"
+        connection,
+        "IN",
+        "2000-01-01 00:00:00",
+        "2100-01-01 00:00:00",
     )
     assert result is None
 
@@ -248,11 +265,13 @@ def test_get_total_price(connection, filter_schema) -> None:
             transaction_id, commodity_id,
             unit_count, price_per_unit
         ) VALUES
-        (1, 1, 2, 10),   -- 20
-        (2, 1, 3, 5)     -- 15
+        (1, 1, 2, 10),
+        (2, 1, 3, 5)
     """)
     total = TransactionsQueries.get_total_price(
-        connection, "2025-01-01 00:00:00", "2025-12-31 23:59:59"
+        connection,
+        "2025-01-01 00:00:00",
+        "2025-12-31 23:59:59",
     )
     assert isinstance(total, float)
     assert total == 35.0

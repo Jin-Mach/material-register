@@ -35,6 +35,7 @@ class TransactionItemsDialogIn(QDialog):
     def __init__(
         self,
         transactions_controller: "TransactionsController",
+        payment_type: str,
         create_data: dict[str, str | int],
         transactions_widget: "TransactionsWidget",
         transfer_type: str,
@@ -42,6 +43,7 @@ class TransactionItemsDialogIn(QDialog):
         super().__init__(transactions_widget)
         self.setMinimumSize(800, 500)
         self.transactions_controller = transactions_controller
+        self.payment_type = payment_type
         self.create_data = create_data
         self.transactions_widget = transactions_widget
         self.transfer_type = transfer_type
@@ -115,6 +117,8 @@ class TransactionItemsDialogIn(QDialog):
         self._setup_create_data(create_data)
         self.transaction_info_widget.set_create_data(
             self.payment_text,
+            self.payment_type,
+            self.is_invoiced,
             self.customer,
             self.document_number,
             self.address,
@@ -128,6 +132,7 @@ class TransactionItemsDialogIn(QDialog):
             payment_text = self.transfer_payment
         self.payment_text = payment_text
         self.payment_type = payment_type
+        self.is_invoiced = create_data.get("isInvoiced", False)
         self.customer_id = create_data.get("customerId", None)
         self.customer = create_data.get("customer", "")
         self.document_number = create_data.get("documentNumber", "")
@@ -200,11 +205,12 @@ class TransactionItemsDialogIn(QDialog):
         )
         return index, data
 
-    def return_transaction_data(self) -> dict[str, str | int]:
+    def return_transaction_data(self) -> dict[str, str | int | bool]:
         return {
             "transaction_type": self.transfer_type,
             "customer_id": self.customer_id,
             "payment_type": self.payment_type,
+            "is_invoiced": self.transaction_info_widget.is_invoiced(),
             "notes": self.transaction_info_widget.get_notes(),
         }
 
@@ -212,7 +218,6 @@ class TransactionItemsDialogIn(QDialog):
         return self.transactions_items_widget.current_model
 
     def setup_total_value(self, model):
-        """Delegate total value setup to the items widget."""
         self.transactions_items_widget.setup_total_value(model)
 
     def showEvent(self, event: QShowEvent) -> None:

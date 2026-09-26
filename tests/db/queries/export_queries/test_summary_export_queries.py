@@ -35,9 +35,11 @@ def schema(connection) -> None:
         CREATE TABLE transactions (
             id INTEGER PRIMARY KEY,
             type TEXT,
+            customer_id INTEGER,
             created_at TEXT,
             payment_type TEXT,
-            notes TEXT
+            notes TEXT,
+            is_invoiced INTEGER NOT NULL DEFAULT 0 CHECK(is_invoiced IN (0, 1))
         )
     """)
     query.exec("""
@@ -56,12 +58,12 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
     query.exec("INSERT INTO categories VALUES (1, 'Fe')")
     query.exec("INSERT INTO commodities VALUES (1, 'Fe 12345', 1, 'kg')")
     query.exec("""
-        INSERT INTO transactions VALUES 
-        (1, 'IN', '2026-07-25 08:00:00', 'CASH', NULL)
+        INSERT INTO transactions VALUES
+        (1, 'IN', NULL, '2026-07-25 08:00:00', 'CASH', NULL, 0)
     """)
     query.exec("""
-        INSERT INTO transactions VALUES 
-        (2, 'IN', '2026-07-25 09:00:00', 'TRANSFER', NULL)
+        INSERT INTO transactions VALUES
+        (2, 'IN', NULL, '2026-07-25 09:00:00', 'TRANSFER', NULL, 0)
     """)
     query.exec("""
         INSERT INTO transaction_items VALUES
@@ -74,11 +76,12 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
     ok, error, results = SummaryExportQueries.load_export_data_in(
         connection, "2026-07-25 08:00:00", "2026-07-25 09:00:00"
     )
-    assert ok == True
+    assert ok is True
     assert error == ""
     assert len(results) == 2
     assert results[0].category_name == "Fe"
     assert results[0].payment_type == "CASH"
+    assert results[0].is_invoiced is False
     assert results[0].commodity_name == "Fe 12345"
     assert results[0].commodity_unit == "kg"
     assert results[0].price_per_unit == 3.5
@@ -86,6 +89,7 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
     assert results[0].total_price == 350
     assert results[1].category_name == "Fe"
     assert results[1].payment_type == "TRANSFER"
+    assert results[1].is_invoiced is False
     assert results[1].commodity_name == "Fe 12345"
     assert results[1].commodity_unit == "kg"
     assert results[1].price_per_unit == 3.5
@@ -98,12 +102,12 @@ def test_load_export_data_out(connection: QSqlDatabase, schema) -> None:
     query.exec("INSERT INTO categories VALUES (1, 'Fe')")
     query.exec("INSERT INTO commodities VALUES (1, 'Fe 12345', 1, 'kg')")
     query.exec("""
-        INSERT INTO transactions VALUES 
-        (1, 'OUT', '2026-07-25 08:00:00', NULL, NULL)
+        INSERT INTO transactions VALUES
+        (1, 'IN', NULL, '2026-07-25 08:00:00', 'TRANSFER', NULL, 0)
     """)
     query.exec("""
-        INSERT INTO transactions VALUES 
-        (2, 'OUT', '2026-07-25 09:00:00', NULL, NULL)
+        INSERT INTO transactions VALUES
+        (2, 'OUT', NULL, '2026-07-25 09:00:00', NULL, NULL, 0)
     """)
     query.exec("""
         INSERT INTO transaction_items VALUES
@@ -116,10 +120,10 @@ def test_load_export_data_out(connection: QSqlDatabase, schema) -> None:
     ok, error, results = SummaryExportQueries.load_export_data_out(
         connection, "2026-07-25 08:00:00", "2026-07-25 09:00:00"
     )
-    assert ok == True
+    assert ok is True
     assert error == ""
     assert len(results) == 1
     assert results[0].category_name == "Fe"
     assert results[0].commodity_name == "Fe 12345"
     assert results[0].commodity_unit == "kg"
-    assert results[0].total_quantity == 150
+    assert results[0].total_quantity == 50

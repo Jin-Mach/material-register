@@ -14,15 +14,17 @@ class TransactionsQueries:
         transaction_type: str,
         customer_id: int,
         payment_type: str | None,
+        is_invoiced: bool,
         notes: str,
     ) -> tuple[bool, str, int | None]:
         query = QSqlQuery(db_connection)
         query.prepare(
-            "INSERT INTO transactions (type, customer_id, payment_type, notes) VALUES (?, ?, ?, ?)"
+            "INSERT INTO transactions (type, customer_id, payment_type, is_invoiced, notes) VALUES (?, ?, ?, ?, ?)"
         )
         query.addBindValue(transaction_type)
         query.addBindValue(customer_id)
         query.addBindValue(payment_type)
+        query.addBindValue(is_invoiced)
         query.addBindValue(notes)
         ok = query.exec()
         error = ""
@@ -40,17 +42,19 @@ class TransactionsQueries:
         transaction_type: str,
         customer_id: int,
         payment_type: str | None,
+        is_invoiced: bool,
         notes: str,
     ) -> tuple[bool, str]:
         query = QSqlQuery(db_connection)
         query.prepare(
             "UPDATE transactions SET "
-            "type = ?, customer_id = ?, payment_type = ?, notes = ? "
+            "type = ?, customer_id = ?, payment_type = ?, is_invoiced = ?, notes = ? "
             "WHERE id = ?"
         )
         query.addBindValue(transaction_type)
         query.addBindValue(customer_id)
         query.addBindValue(payment_type)
+        query.addBindValue(is_invoiced)
         query.addBindValue(notes)
         query.addBindValue(transaction_id)
         ok = query.exec()

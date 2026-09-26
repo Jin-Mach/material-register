@@ -70,9 +70,9 @@ class TransactionsExportQueries:
         transaction = TransactionsExportTransaction(
             created_at=query.value(1),
             payment_type=query.value(2),
-            customer_name=query.value(10),
-            document_number=query.value(3),
-            address=query.value(4),
+            customer_name=query.value(11),
+            document_number=query.value(4),
+            address=query.value(5),
             transaction_items=[],
         )
         transaction.transaction_items.append(
@@ -83,9 +83,9 @@ class TransactionsExportQueries:
     @staticmethod
     def _create_transaction_item(query: QSqlQuery) -> TransactionExportItem:
         return TransactionExportItem(
-            category=query.value(9),
-            commodity_name=query.value(7),
-            commodity_unit=query.value(8),
-            unit_count=query.value(5),
-            price_per_unit=query.value(6),
+            category=query.value(10),
+            commodity_name=query.value(8),
+            commodity_unit=query.value(9),
+            unit_count=query.value(6),
+            price_per_unit=query.value(7),
         )

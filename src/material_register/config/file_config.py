@@ -270,6 +270,7 @@ UI_KEYS = [
     ("TransactionItemsDialogOut", "cancelTransactionButtonTooltipText"),
     ("TransactionItemsDialogOut", "CASH"),
     ("TransactionItemsDialogOut", "TRANSFER"),
+    ("TransactionInfoWidget", "isInvoicedCheckBoxText"),
     ("TransactionInfoWidget", "customerGroupBoxText"),
     ("TransactionInfoWidget", "customerNameLabelText"),
     ("TransactionInfoWidget", "documentNumberLabelText"),

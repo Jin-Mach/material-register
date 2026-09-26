@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
+    QCheckBox,
     QFormLayout,
     QGroupBox,
     QHBoxLayout,
@@ -49,9 +50,18 @@ class TransactionInfoWidget(QWidget):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         main_layout.setSpacing(5)
+        payment_layout = QHBoxLayout()
+        payment_layout.setContentsMargins(0, 0, 0, 0)
+        payment_layout.addStretch()
         self.payment_info = QLabel()
         self.payment_info.setObjectName("paymentInfo")
         self.payment_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        payment_layout.addWidget(self.payment_info)
+        payment_layout.addSpacing(20)
+        self.is_invoiced_checkbox = QCheckBox()
+        self.is_invoiced_checkbox.setObjectName("isInvoicedCheckBox")
+        payment_layout.addWidget(self.is_invoiced_checkbox)
+        payment_layout.addStretch()
         customer_notes_layout = QHBoxLayout()
         self.customer_group_box = QGroupBox()
         self.customer_group_box.setObjectName("customerGroupBox")
@@ -87,6 +97,8 @@ class TransactionInfoWidget(QWidget):
         count_layout = QHBoxLayout()
         self.notes_count_label = QLabel()
         self.notes_count_label.setObjectName("notesCountLabel")
+        payment_layout.addWidget(self.payment_info)
+        payment_layout.addWidget(self.is_invoiced_checkbox)
         customer_form_layout.addRow(self.customer_name_label, self.customer_name)
         customer_form_layout.addRow(self.document_number_label, self.document_number)
         customer_form_layout.addRow(self.address_label, self.address)
@@ -102,7 +114,7 @@ class TransactionInfoWidget(QWidget):
         self.notes_group_box.setLayout(notes_layout)
         customer_notes_layout.addWidget(self.customer_group_box)
         customer_notes_layout.addWidget(self.notes_group_box, 3)
-        main_layout.addWidget(self.payment_info)
+        main_layout.addLayout(payment_layout)
         main_layout.addLayout(customer_notes_layout)
         return main_layout
 
@@ -114,6 +126,7 @@ class TransactionInfoWidget(QWidget):
 
     def _setup_texts(self) -> None:
         widgets = [
+            self.is_invoiced_checkbox,
             self.customer_group_box,
             self.customer_name_label,
             self.document_number_label,
@@ -155,24 +168,35 @@ class TransactionInfoWidget(QWidget):
             TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
         )
 
-    def _apply_transfer_type(self, payment_text: str) -> None:
+    def _apply_transfer_type(self, payment_type: str, payment_text: str) -> None:
         if self.transfer_type == TRANSFER_OUT:
             self.payment_info.hide()
+            self.is_invoiced_checkbox.hide()
         self.payment_info.setText(payment_text)
+        if payment_type == "CASH":
+            self.is_invoiced_checkbox.hide()
+        elif payment_type == "TRANSFER":
+            self.is_invoiced_checkbox.show()
 
     def set_create_data(
         self,
-        payment_text: str,
+        payment_text: str | None,
+        payment_type: str | None,
+        is_invoiced: bool,
         customer: str,
         document_number: str,
         address: str,
         notes: str,
     ) -> None:
-        self._apply_transfer_type(payment_text)
+        self._apply_transfer_type(payment_type, payment_text)
+        self.is_invoiced_checkbox.setChecked(is_invoiced)
         self.customer_name.setText(customer)
         self.document_number.setText(document_number)
         self.address.setText(address)
         self.notes_edit.setPlainText(notes)
+
+    def is_invoiced(self) -> bool:
+        return self.is_invoiced_checkbox.isChecked()
 
     def get_notes(self) -> str:
         return self.notes_edit.toPlainText().strip()

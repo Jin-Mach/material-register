@@ -29,11 +29,12 @@ class SummaryExportQueries:
                 SummaryExportItemIn(
                     category_name=query.value(0),
                     payment_type=query.value(1),
-                    commodity_name=query.value(2),
-                    commodity_unit=query.value(3),
-                    price_per_unit=query.value(4),
-                    total_quantity=query.value(5),
-                    total_price=query.value(6),
+                    is_invoiced=bool(query.value(2)),
+                    commodity_name=query.value(3),
+                    commodity_unit=query.value(4),
+                    price_per_unit=query.value(5),
+                    total_quantity=query.value(6),
+                    total_price=query.value(7),
                 )
             )
         return True, "", results

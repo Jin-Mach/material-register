@@ -2,7 +2,8 @@ SUMMARY_QUERY_IN = """
             SELECT
                 category.name AS category,
                 
-                trans.payment_type,
+                trans.payment_type AS payment_type,
+                trans.is_invoiced AS is_invoiced,
                 
                 commodity.name AS commodity,
                 commodity.unit AS commodity_unit,
@@ -31,12 +32,14 @@ SUMMARY_QUERY_IN = """
             GROUP BY
                 category.name,
                 payment_type,
+                is_invoiced,
                 commodity.name,
                 items.price_per_unit
             
             ORDER BY
                 category.name,
                 payment_type,
+                is_invoiced,
                 commodity.name,
                 items.price_per_unit
 """
@@ -81,6 +84,7 @@ TRANSACTIONS_QUERY_IN = """
                 date(trans.created_at) AS transaction_date,
                 trans.created_at AS created_at,
                 trans.payment_type AS payment_type,
+                trans.is_invoiced AS is_invoiced,
 
                 customer.document_number AS document_number,
                 customer.address AS address,
@@ -133,6 +137,7 @@ TRANSACTIONS_QUERY_OUT = """
                 date(trans.created_at) AS transaction_date,
                 trans.created_at AS created_at,
                 NULL AS payment_type,
+                NULL AS is_invoiced,
                 
                 customer.document_number AS document_number,
                 customer.address AS address,

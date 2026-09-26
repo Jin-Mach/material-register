@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class SummaryExportItemIn:
     category_name: str | None = None
     payment_type: str | None = None
+    is_invoiced: bool = False
     commodity_name: str | None = None
     commodity_unit: str | None = None
     price_per_unit: float | None = None

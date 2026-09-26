@@ -25,6 +25,7 @@ def transaction_schema(connection) -> None:
             customer_id INTEGER,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
             payment_type TEXT,
+            is_invoiced INTEGER NOT NULL DEFAULT 0,
             notes TEXT
         )
     """)
@@ -68,6 +69,7 @@ def old_dialog_data() -> dict[str, str | int]:
         "transaction_type": "IN",
         "customer_id": 1,
         "payment_type": "CASH",
+        "is_invoiced": False,
         "notes": "old notes",
     }
 
@@ -174,6 +176,7 @@ def test_create_transaction_success(
         "transaction_type": "IN",
         "customer_id": 1,
         "payment_type": "CASH",
+        "is_invoiced": False,
         "notes": "creation test",
     }
     items = [
@@ -210,6 +213,7 @@ def test_create_transaction_invalid_transfer_type_rolls_back(
         "transaction_type": "BAD_TYPE",
         "customer_id": 1,
         "payment_type": "CASH",
+        "is_invoiced": False,
         "notes": "invalid transfer",
     }
     items = [
@@ -305,6 +309,7 @@ def test_update_transaction_items_change_updates_inventory(
         "transaction_type": "IN",
         "customer_id": 1,
         "payment_type": "CASH",
+        "is_invoiced": False,
         "notes": "old",
     }
     dialog_new = dialog_old.copy()
@@ -351,6 +356,7 @@ def test_update_transaction_items_aggregated_change(
         "transaction_type": "IN",
         "customer_id": 1,
         "payment_type": "CASH",
+        "is_invoiced": False,
         "notes": "agg",
     }
     dialog_new = dialog_old.copy()
@@ -401,6 +407,7 @@ def test_update_transaction_changes_commodity_and_quantity(
         "transaction_type": "IN",
         "customer_id": 1,
         "payment_type": "CASH",
+        "is_invoiced": False,
         "notes": "test",
     }
     dialog_new = dialog_old.copy()
@@ -455,6 +462,7 @@ def test_update_transaction_remove_all_items(
         "transaction_type": "IN",
         "customer_id": 1,
         "payment_type": "CASH",
+        "is_invoiced": False,
         "notes": "remove",
     }
     dialog_new = dialog_old.copy()

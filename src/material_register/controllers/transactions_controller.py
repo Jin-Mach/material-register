@@ -90,7 +90,11 @@ class TransactionsController:
             return
         if transfer_type == TRANSFER_IN:
             self._items_dialog = TransactionItemsDialogIn(
-                self, create_data, self.transactions_widget, transfer_type
+                self,
+                create_data["paymentType"],
+                create_data,
+                self.transactions_widget,
+                transfer_type,
             )
         if transfer_type == TRANSFER_OUT:
             self._items_dialog = TransactionItemsDialogOut(
@@ -451,9 +455,10 @@ class TransactionsController:
     @staticmethod
     def _transaction_to_dict(
         transaction: Transaction,
-    ) -> dict[str, str | int | float | None]:
+    ) -> dict[str, str | int | float | bool | None]:
         return {
             "paymentType": transaction.payment_type,
+            "isInvoiced": transaction.is_invoiced,
             "customerId": transaction.customer_id,
             "customer": transaction.customer_name,
             "documentNumber": transaction.customer_document_number,

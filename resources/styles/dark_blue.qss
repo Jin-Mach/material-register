@@ -683,7 +683,8 @@ QCheckBox#activeValue,
 QCheckBox#activeCheckbox,
 QLabel#printerNameLabel,
 QLabel#savePathLabel,
-QLabel#settingsInfoLabel {
+QLabel#settingsInfoLabel,
+QCheckBox#isInvoicedCheckBox {
     background-color: transparent;
 }
 

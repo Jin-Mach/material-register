@@ -25,6 +25,7 @@ class TransactionsService:
                     dialog_data["transaction_type"],
                     dialog_data["customer_id"],
                     dialog_data["payment_type"],
+                    dialog_data["is_invoiced"],
                     dialog_data["notes"],
                 )
             )
@@ -93,6 +94,7 @@ class TransactionsService:
                 new_dialog_data["transaction_type"],
                 new_dialog_data["customer_id"],
                 new_dialog_data["payment_type"],
+                new_dialog_data["is_invoiced"],
                 new_dialog_data["notes"],
             )
             if not ok:

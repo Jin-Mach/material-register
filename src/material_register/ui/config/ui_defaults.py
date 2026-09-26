@@ -270,6 +270,7 @@ DEFAULT_TEXTS = {
         "TRANSFER": "Bank transfer",
     },
     "TransactionInfoWidget": {
+        "isInvoicedCheckBoxText": "Invoice",
         "customerGroupBoxText": "Customer",
         "customerNameLabelText": "Name:",
         "documentNumberLabelText": "Document:",
