@@ -40,6 +40,7 @@ DATABASE_SCHEMA = {
         "customer_id",
         "created_at",
         "payment_type",
+        "is_invoiced",
         "notes",
     },
     "transaction_items": {

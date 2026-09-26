@@ -91,7 +91,7 @@ class ColumnMigration:
 
     @staticmethod
     def _validate_check(check: str) -> tuple[bool, str]:
-        if not check.startswith("CHECK (") or not check.endswith(")"):
+        if not check.startswith("CHECK(") or not check.endswith(")"):
             ErrorHandler.handle_error("Check syntax failed", "db", "critical")
             return False, ""
         return True, check

@@ -5,6 +5,7 @@ from PySide6.QtSql import QSqlDatabase, QSqlQuery
 from material_register.db.database_setup import DatabaseSetup
 from material_register.db.migration.database_migration import DatabaseMigration
 from material_register.db.utils.database_validator import is_schema_valid
+from material_register.services.database_backup_service import DatabaseBackupService
 from material_register.services.error_handler import ErrorHandler
 
 
@@ -31,6 +32,27 @@ def create_connection(
         ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
         connection.close()
         return None
+    if not is_new:
+        current_version = DatabaseMigration.DB_VERSION
+        latest_version = max(DatabaseMigration.MIGRATIONS_MAP)
+        if current_version < latest_version:
+            database_file = database_path / db_name
+            history_directory = database_path / "history"
+            history_directory.mkdir(parents=True, exist_ok=True)
+            backup_path = (
+                history_directory / f"{database_file.stem}_V{current_version}.db"
+            )
+            if (
+                not backup_path.exists()
+                and not DatabaseBackupService.create_custom_backup(
+                    database_file, backup_path
+                )
+            ):
+                connection.close()
+                return None
+            if not DatabaseMigration.migrate(connection):
+                connection.close()
+                return None
     result, last_query = create_db_tables(connection)
     if not result:
         ErrorHandler.handle_error(last_query.lastError().text(), "db", "critical")
@@ -127,6 +149,7 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
             customer_id INTEGER,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
             payment_type TEXT,
+            is_invoiced INTEGER NOT NULL DEFAULT 0,
             notes TEXT,
             
             CHECK(type IN ('IN', 'OUT')),
@@ -135,6 +158,7 @@ def create_db_tables(connection: QSqlDatabase) -> tuple[bool, QSqlQuery]:
                 OR 
                 (type = 'OUT' AND payment_type IS NULL)
             ),
+            CHECK(is_invoiced IN (0, 1)),
 
             FOREIGN KEY(customer_id)
                 REFERENCES customers(id)

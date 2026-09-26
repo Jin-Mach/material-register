@@ -75,7 +75,7 @@ def test_table_exists(
             "INTEGER",
             False,
             None,
-            "CHECK (valid >= 0)",
+            "CHECK(valid >= 0)",
             None,
             True,
         ),
@@ -168,7 +168,7 @@ def test_validate_default(
     "check, result",
     [
         ("fake check", (False, "")),
-        ("CHECK (id > 0)", (True, "CHECK (id > 0)")),
+        ("CHECK(id > 0)", (True, "CHECK(id > 0)")),
     ],
     ids=["fake check", "check ok"],
 )

@@ -3,7 +3,7 @@ from functools import partial
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.db_constants import DATABASE_NAME, DATABASE_SCHEMA
+from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.db.migration.column_migration import ColumnMigration
 from material_register.db.migration.database_migration import DatabaseMigration
 from material_register.db.utils.database_validator import (
@@ -34,6 +34,15 @@ def schema(connection: QSqlDatabase) -> None:
             """)
 
 
+@pytest.fixture(autouse=True)
+def restore_migrations_map():
+    original_map = DatabaseMigration.MIGRATIONS_MAP.copy()
+    original_version = DatabaseMigration.DB_VERSION
+    yield
+    DatabaseMigration.MIGRATIONS_MAP = original_map
+    DatabaseMigration.DB_VERSION = original_version
+
+
 def test_migration_init_reads_db_version(connection: QSqlDatabase) -> None:
     assert DatabaseMigration.migration_init(connection) is True
     assert DatabaseMigration.DB_VERSION == 0
@@ -52,12 +61,13 @@ def test_migrate_real_database() -> None:
     migration_column = "is_invoiced"
     root = PathsProvider.get_base_path()
     assert root is not None
-    database_path = root / "database" / f"{DATABASE_NAME}.db"
+    database_path = root / "database" / "history" / "material_register_V0.db"
+    if not database_path.exists():
+        pytest.skip("V0 database not available")
     database_test_path = (
         root / "database" / "database_test" / f"{DATABASE_NAME}_test.db"
     )
     database_test_path.parent.mkdir(parents=True, exist_ok=True)
-    DATABASE_SCHEMA[migration_table].add(migration_column)
     try:
         result = DatabaseBackupService.create_custom_backup(
             database_path, database_test_path
@@ -142,7 +152,6 @@ def test_migrate_real_database() -> None:
         while query.next():
             assert query.value(0) == 0
     finally:
-        DATABASE_SCHEMA[migration_table].remove(migration_column)
         if database_test_path.exists():
             database_test_path.unlink()
 
@@ -174,7 +183,7 @@ def test_real_column_migration(connection: QSqlDatabase) -> None:
     [
         ("fake_table", "notes", "TEXT", False, None, None, None),
         ("fake_table", "stock", "INTEGER", False, 0, None, None),
-        ("fake_table", "active", "INTEGER", True, 1, "CHECK (active IN (0, 1))", None),
+        ("fake_table", "active", "INTEGER", True, 1, "CHECK(active IN (0, 1))", None),
         (
             "fake_table",
             "category_id",

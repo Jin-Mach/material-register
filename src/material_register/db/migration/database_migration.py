@@ -17,7 +17,7 @@ class DatabaseMigration:
                 data_type="INTEGER",
                 not_null=True,
                 default=0,
-                check="CHECK (is_invoiced IN (0, 1))",
+                check="CHECK(is_invoiced IN (0, 1))",
             )
         ]
     }
@@ -38,24 +38,49 @@ class DatabaseMigration:
     def migrate(cls, db_connection: QSqlDatabase) -> bool:
         if cls.DB_VERSION is None:
             return False
-        for version, migration_list in cls.MIGRATIONS_MAP.items():
-            if cls.DB_VERSION >= version:
-                continue
-            for migration in migration_list:
-                if not migration(db_connection):
+
+        if not db_connection.transaction():
+            ErrorHandler.handle_error(
+                "Migration BEGIN failed.",
+                "db",
+                "critical",
+            )
+            return False
+        current_version = cls.DB_VERSION
+        try:
+            for version, migration_list in sorted(cls.MIGRATIONS_MAP.items()):
+                if current_version >= version:
+                    continue
+                for migration in migration_list:
+                    if not migration(db_connection):
+                        ErrorHandler.handle_error(
+                            f"{migration.func.__name__} failed.",
+                            "db",
+                            "critical",
+                        )
+                        db_connection.rollback()
+                        return False
+                query = QSqlQuery(db_connection)
+                if not query.exec(f"PRAGMA user_version = {version}"):
                     ErrorHandler.handle_error(
-                        f"{migration.func.__name__} failed.",
+                        query.lastError().text(),
                         "db",
                         "critical",
                     )
+                    db_connection.rollback()
                     return False
-            query = QSqlQuery(db_connection)
-            if not query.exec(f"PRAGMA user_version = {version}"):
-                ErrorHandler.handle_error(
-                    query.lastError().text(),
-                    "db",
-                    "critical",
-                )
-                return False
-            cls.DB_VERSION = version
+                current_version = version
+        except Exception as e:
+            ErrorHandler.handle_error(e, "db", "critical")
+            db_connection.rollback()
+            return False
+        if not db_connection.commit():
+            ErrorHandler.handle_error(
+                db_connection.lastError().text(),
+                "db",
+                "critical",
+            )
+            db_connection.rollback()
+            return False
+        cls.DB_VERSION = current_version
         return True
