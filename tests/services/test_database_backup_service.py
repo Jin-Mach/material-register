@@ -1,5 +1,6 @@
 import sqlite3
 
+from material_register.providers.paths_provider import PathsProvider
 from material_register.services.database_backup_service import DatabaseBackupService
 
 
@@ -108,3 +109,21 @@ def test_restore_database(tmp_path) -> None:
         cursor = database.execute("SELECT name FROM test WHERE id = 1")
         row = cursor.fetchone()
     assert row[0] == "Test"
+
+
+def test_delete_backup_folder(tmp_path) -> None:
+    backup_folder = tmp_path / "backup"
+    year_folder = backup_folder / "2026"
+    year_folder.mkdir(parents=True)
+    (year_folder / "01.db").touch()
+    (year_folder / "02.db").touch()
+    PathsProvider.database = tmp_path
+    result = DatabaseBackupService.delete_backup_folder()
+    assert result is True
+    assert not backup_folder.exists()
+
+
+def test_delete_backup_folder_when_folder_does_not_exist(tmp_path) -> None:
+    PathsProvider.database = tmp_path
+    result = DatabaseBackupService.delete_backup_folder()
+    assert result is True

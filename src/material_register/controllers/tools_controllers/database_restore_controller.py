@@ -78,7 +78,9 @@ class DatabaseRestoreController(QObject):
             QTimer.singleShot(1000, self._restart_application)
             return
         self._progress_dialog.close()
-        ErrorHandler.handle_error(f"{self.__class__.__name__}._finish_restore failed: {key}", "db", "critical")
+        ErrorHandler.handle_error(
+            f"{self.__class__.__name__}._finish_restore failed: {key}", "db", "critical"
+        )
         ErrorDialog(self._database_backup_widget).show_dialog("RESTORE_ERROR", False)
         self._reset_variables()
 

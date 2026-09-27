@@ -1,7 +1,9 @@
+import shutil
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 
+from material_register.providers.paths_provider import PathsProvider
 from material_register.services.error_handler import ErrorHandler
 
 
@@ -74,6 +76,18 @@ class DatabaseBackupService:
         except Exception as e:
             ErrorHandler.handle_error(e, "db", "critical")
             return False
+
+    @staticmethod
+    def delete_backup_folder() -> bool:
+        backup_folder = PathsProvider.database / "backup"
+        if not backup_folder.exists():
+            return True
+        try:
+            shutil.rmtree(backup_folder)
+        except OSError as e:
+            ErrorHandler.handle_error(e, "db", "critical")
+            return False
+        return True
 
     @staticmethod
     def _clear_year_folder(backup_directory: Path, backup_path: Path) -> None:

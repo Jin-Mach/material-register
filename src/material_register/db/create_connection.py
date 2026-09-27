@@ -32,6 +32,7 @@ def create_connection(
         ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
         connection.close()
         return None
+    migration_completed = False
     if not is_new:
         current_version = DatabaseMigration.DB_VERSION
         latest_version = max(DatabaseMigration.MIGRATIONS_MAP)
@@ -53,6 +54,7 @@ def create_connection(
             if not DatabaseMigration.migrate(connection):
                 connection.close()
                 return None
+            migration_completed = True
     result, last_query = create_db_tables(connection)
     if not result:
         ErrorHandler.handle_error(last_query.lastError().text(), "db", "critical")
@@ -63,6 +65,10 @@ def create_connection(
         ErrorHandler.handle_error(error, "db", "critical")
         connection.close()
         return None
+    if migration_completed:
+        if not DatabaseBackupService.delete_backup_folder():
+            connection.close()
+            return None
     return connection
 
 
