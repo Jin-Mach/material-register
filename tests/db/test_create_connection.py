@@ -57,3 +57,12 @@ def test_trigger_new_commodity(tmp_path):
     query.exec("SELECT stock FROM inventory WHERE commodity_id = 1")
     assert query.next()
     assert query.value(0) == 0
+
+def test_create_connection_twice(tmp_path):
+    db_dir = tmp_path / "db"
+    db_dir.mkdir()
+    db = create_connection(db_dir, "test.db", "test_connection")
+    assert db is not None
+    db.close()
+    db = create_connection(db_dir, "test.db", "test_connection_2")
+    assert db is not None

@@ -65,6 +65,13 @@ def create_connection(
         ErrorHandler.handle_error(error, "db", "critical")
         connection.close()
         return None
+    if is_new:
+        query = QSqlQuery(connection)
+        latest_version = max(DatabaseMigration.MIGRATIONS_MAP)
+        if not query.exec(f"PRAGMA user_version = {latest_version}"):
+            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            connection.close()
+            return None
     if migration_completed:
         if not DatabaseBackupService.delete_backup_folder():
             connection.close()
