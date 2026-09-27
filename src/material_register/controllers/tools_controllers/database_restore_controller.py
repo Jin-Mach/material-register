@@ -7,6 +7,7 @@ from material_register.core.app_context import AppContext
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.lock_provider import LockProvider
 from material_register.providers.paths_provider import PathsProvider
+from material_register.services.error_handler import ErrorHandler
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
@@ -76,7 +77,9 @@ class DatabaseRestoreController(QObject):
             self._progress_dialog.set_label_text("restartApplicationText")
             QTimer.singleShot(1000, self._restart_application)
             return
-        ErrorDialog(self._database_backup_widget).show_dialog(key, False)
+        self._progress_dialog.close()
+        ErrorHandler.handle_error(f"{self.__class__.__name__}._finish_restore failed: {key}", "db", "critical")
+        ErrorDialog(self._database_backup_widget).show_dialog("RESTORE_ERROR", False)
         self._reset_variables()
 
     def _restart_application(self) -> None:
