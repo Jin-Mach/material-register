@@ -1,4 +1,4 @@
-from openpyxl.styles import Alignment, Border, Font, Side
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.worksheet.worksheet import Worksheet
 
 
@@ -43,3 +43,14 @@ def set_borders(
             if cell.column == end_column:
                 right = side
             cell.border = Border(top=top, bottom=bottom, left=left, right=right)
+
+
+def set_background_color(
+    cell,
+    fill_type: str = "solid",
+    background_color: str | None = None,
+) -> None:
+    cell.fill = PatternFill(
+        fill_type=fill_type,
+        fgColor=background_color,
+    )

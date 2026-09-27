@@ -12,6 +12,7 @@ from material_register.domain.export_dataclass.summary_dataclass import (
 from material_register.services.export.excel.excel_helpers import (
     cell_alignment,
     cell_font,
+    set_background_color,
     set_borders,
 )
 from material_register.services.export.excel.summary_export.summary_report import (
@@ -28,7 +29,7 @@ class SummarySheet:
     _DEFAULT_FONT_SIZE = 10
     _TITLE_ROW_HEIGHT = 20
     _DEFAULT_ROW_HEIGHT = 15
-    _NOTES_ROWS = 5
+    _NOTES_ROWS = 10
     _ERROR_TEXT = "[N/A]"
 
     @staticmethod
@@ -40,7 +41,15 @@ class SummarySheet:
         out_data: list[SummaryExportItemOut],
     ) -> tuple[Worksheet, float]:
         summary_in_data = SummaryReport.get_summary_data_in(data_in)
-        cash_value, transfer_value = SummaryReport.get_payment_totals(data_in)
+        cash_value, _ = SummaryReport.get_payment_totals(data_in)
+        invoiced_transfer_value = 0.0
+        normal_transfer_value = 0.0
+        for item in data_in:
+            if item.payment_type == "TRANSFER":
+                if item.is_invoiced:
+                    invoiced_transfer_value += item.total_price or 0.0
+                else:
+                    normal_transfer_value += item.total_price or 0.0
         summary_out_data = SummaryReport.get_summary_data_out(out_data)
         row = SummarySheet._START_ROW
         row = SummarySheet._create_header(
@@ -53,7 +62,8 @@ class SummarySheet:
             export_settings,
             export_texts,
             cash_value,
-            transfer_value,
+            normal_transfer_value,
+            invoiced_transfer_value,
         )
         freeze_row = row
         data_section_row = row
@@ -182,9 +192,9 @@ class SummarySheet:
         export_settings: dict[str, Path | str | float | bool],
         export_texts: dict[str, str],
         cash_value: float,
-        transfer_value: float,
+        normal_transfer_value: float,
+        invoiced_transfer_value: float,
     ) -> tuple[int, float]:
-        start_row = row
         middle_column = last_column // 2
         financial_label_column = middle_column + 1
         financial_value_column = middle_column + 3
@@ -214,19 +224,33 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell)
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
+        cash_section_row = row
+        cell = sheet.cell(
+            row=row,
+            column=financial_label_column,
+            value=export_texts.get("cashSectionText", SummarySheet._ERROR_TEXT),
+        )
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_label_column,
+            end_row=row,
+            end_column=last_column,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="left")
+        SummarySheet._cell_font(cell, bold=True)
         cell = sheet.cell(row=row, column=1)
         sheet.merge_cells(
             start_row=row,
             start_column=1,
-            end_row=row + SummarySheet._NOTES_ROWS,
+            end_row=row + SummarySheet._NOTES_ROWS - 1,
             end_column=middle_column,
         )
         SummarySheet._cell_alignment(cell, horizontal="left", vertical="top")
         SummarySheet._cell_font(cell, SummarySheet._DEFAULT_FONT_SIZE)
         for current_row in range(row, row + SummarySheet._NOTES_ROWS):
             sheet.row_dimensions[current_row].height = SummarySheet._DEFAULT_ROW_HEIGHT
+        row += 1
         opening_balance_row = row
         opening_balance = export_settings.get("openingBalanceSpinbox", 0.0)
         cell = sheet.cell(
@@ -252,7 +276,6 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         income = export_settings.get("income", 0.0)
         cell = sheet.cell(
@@ -278,7 +301,6 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         cell = sheet.cell(
             row=row,
@@ -303,7 +325,6 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
         expense_row = row
         expense = export_settings.get("expense", 0.0) * -1
@@ -330,8 +351,8 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
+        balance_row = row
         cell = sheet.cell(
             row=row,
             column=financial_label_column,
@@ -349,8 +370,7 @@ class SummarySheet:
         balance_value = (
             f"=SUM({column_letter}{opening_balance_row}:{column_letter}{expense_row})"
         )
-        cell = sheet.cell(row=row, column=financial_value_column)
-        cell.value = balance_value
+        cell = sheet.cell(row=row, column=financial_value_column, value=balance_value)
         cell.number_format = cell_format
         sheet.merge_cells(
             start_row=row,
@@ -360,7 +380,21 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
+        row += 1
+        transfer_section_row = row
+        cell = sheet.cell(
+            row=row,
+            column=financial_label_column,
+            value=export_texts.get("transferSectionText", SummarySheet._ERROR_TEXT),
+        )
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_label_column,
+            end_row=row,
+            end_column=last_column,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="left")
+        SummarySheet._cell_font(cell, bold=True)
         row += 1
         cell = sheet.cell(
             row=row,
@@ -376,9 +410,7 @@ class SummarySheet:
         SummarySheet._cell_alignment(cell, horizontal="left")
         SummarySheet._cell_font(cell, bold=True)
         cell = sheet.cell(
-            row=row,
-            column=financial_value_column,
-            value=-transfer_value,
+            row=row, column=financial_value_column, value=-normal_transfer_value
         )
         cell.number_format = cell_format
         sheet.merge_cells(
@@ -389,21 +421,97 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
-        sheet.row_dimensions[row].height = SummarySheet._DEFAULT_ROW_HEIGHT
+        row += 1
+        cell = sheet.cell(
+            row=row,
+            column=financial_label_column,
+            value=export_texts.get("invoicedTransferText", SummarySheet._ERROR_TEXT),
+        )
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_label_column,
+            end_row=row,
+            end_column=financial_label_column + 1,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="left")
+        SummarySheet._cell_font(cell, bold=True)
+        cell = sheet.cell(
+            row=row, column=financial_value_column, value=-invoiced_transfer_value
+        )
+        cell.number_format = cell_format
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_value_column,
+            end_row=row,
+            end_column=last_column,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="right")
+        SummarySheet._cell_font(cell, bold=True)
+        row += 1
+        total_transfer_row = row
+        cell = sheet.cell(
+            row=row,
+            column=financial_label_column,
+            value=export_texts.get("totalTransferText", SummarySheet._ERROR_TEXT),
+        )
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_label_column,
+            end_row=row,
+            end_column=financial_label_column + 1,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="left")
+        SummarySheet._cell_font(cell, bold=True)
+        total_transfer_value = (
+            f"=SUM({column_letter}{row - 2}:{column_letter}{row - 1})"
+        )
+        cell = sheet.cell(
+            row=row, column=financial_value_column, value=total_transfer_value
+        )
+        cell.number_format = cell_format
+        sheet.merge_cells(
+            start_row=row,
+            start_column=financial_value_column,
+            end_row=row,
+            end_column=last_column,
+        )
+        SummarySheet._cell_alignment(cell, horizontal="right")
+        SummarySheet._cell_font(cell, bold=True)
         SummarySheet._set_borders(
             sheet,
-            start_row=start_row,
-            start_column=1,
-            end_row=row,
+            start_row=cash_section_row,
+            start_column=financial_label_column,
+            end_row=balance_row,
             end_column=last_column,
         )
         SummarySheet._set_borders(
             sheet,
-            start_row=row - 1,
-            start_column=financial_value_column,
-            end_row=row - 1,
+            start_row=transfer_section_row,
+            start_column=financial_label_column,
+            end_row=total_transfer_row,
             end_column=last_column,
-            style="medium",
+        )
+        balance_cell = sheet.cell(row=balance_row, column=financial_value_column)
+        SummarySheet._set_background_color(balance_cell, background_color="E7E6E6")
+        SummarySheet._set_borders(
+            sheet,
+            start_row=balance_row,
+            start_column=financial_value_column,
+            end_row=balance_row,
+            end_column=last_column,
+        )
+        total_transfer_cell = sheet.cell(
+            row=total_transfer_row, column=financial_value_column
+        )
+        SummarySheet._set_background_color(
+            total_transfer_cell, background_color="E7E6E6"
+        )
+        SummarySheet._set_borders(
+            sheet,
+            start_row=total_transfer_row,
+            start_column=financial_value_column,
+            end_row=total_transfer_row,
+            end_column=last_column,
         )
         row += 1
         sheet.merge_cells(
@@ -735,6 +843,16 @@ class SummarySheet:
             font_size=font_size,
             bold=bold,
             default_font_size=SummarySheet._DEFAULT_FONT_SIZE,
+        )
+
+    @staticmethod
+    def _set_background_color(
+        cell,
+        background_color: str | None = None,
+    ) -> None:
+        set_background_color(
+            cell,
+            background_color=background_color,
         )
 
     @staticmethod
