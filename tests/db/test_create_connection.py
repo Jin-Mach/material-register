@@ -58,6 +58,7 @@ def test_trigger_new_commodity(tmp_path):
     assert query.next()
     assert query.value(0) == 0
 
+
 def test_create_connection_twice(tmp_path):
     db_dir = tmp_path / "db"
     db_dir.mkdir()

@@ -72,10 +72,9 @@ def create_connection(
             ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
             connection.close()
             return None
-    if migration_completed:
-        if not DatabaseBackupService.delete_backup_folder():
-            connection.close()
-            return None
+    if migration_completed and not DatabaseBackupService.delete_backup_folder():
+        connection.close()
+        return None
     return connection
 
 

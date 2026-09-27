@@ -18,7 +18,8 @@ class TransactionsService:
         items_data: list[TransactionItem],
     ) -> tuple[bool, str]:
         try:
-            db_connection.transaction()
+            if not db_connection.transaction():
+                return False, "Failed to start transaction"
             transaction_ok, transaction_error, transaction_id = (
                 TransactionsQueries.insert_into_transactions(
                     db_connection,
@@ -57,7 +58,9 @@ class TransactionsService:
                 if not ok:
                     db_connection.rollback()
                     return False, inventory_error
-            db_connection.commit()
+            if not db_connection.commit():
+                db_connection.rollback()
+                return False, "Failed to commit transaction"
             return True, ""
         except Exception as e:
             ErrorHandler.handle_error(e, "db", "critical")
@@ -77,7 +80,8 @@ class TransactionsService:
         old_items_data: list[TransactionItem],
     ) -> tuple[bool, str, bool]:
         try:
-            db_connection.transaction()
+            if not db_connection.transaction():
+                return False, "Failed to start transaction"
             new_stock_dict = TransactionsService._get_stock_dict(new_items_data)
             old_stock_dict = TransactionsService._get_stock_dict(old_items_data)
             final_stock_dict = TransactionsService._get_final_stock_dict(
@@ -124,7 +128,9 @@ class TransactionsService:
                 if not ok:
                     db_connection.rollback()
                     return False, inventory_error, False
-            db_connection.commit()
+            if not db_connection.commit():
+                db_connection.rollback()
+                return False, "Failed to commit transaction", False
             return True, "", True
         except Exception as e:
             ErrorHandler.handle_error(e, "db", "critical")
@@ -139,7 +145,8 @@ class TransactionsService:
         db_connection: QSqlDatabase, transaction_id: int, transfer_type: str
     ) -> tuple[bool, str]:
         try:
-            db_connection.transaction()
+            if not db_connection.transaction():
+                return False, "Failed to start transaction"
             items = TransactionItemsQueries.get_transaction_items(
                 db_connection, transaction_id
             )
@@ -162,7 +169,9 @@ class TransactionsService:
             if not ok:
                 db_connection.rollback()
                 return False, error
-            db_connection.commit()
+            if not db_connection.commit():
+                db_connection.rollback()
+                return False, "Failed to commit transaction"
             return True, ""
         except Exception as e:
             ErrorHandler.handle_error(e, "db", "critical")
