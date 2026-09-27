@@ -4,6 +4,7 @@ from pathlib import Path
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtWidgets import QApplication
 
+from material_register.controllers.time_controller import TimeController
 from material_register.core.app_context import AppContext
 from material_register.core.application_setup import ApplicationSetup
 from material_register.providers.style_provider import StyleProvider
@@ -48,6 +49,7 @@ class InitController(QObject):
     def _finish_ok(self) -> None:
         self.splash_screen.close()
         ApplicationSetup.setup_ui()
+        AppContext.TIME_CONTROLLER = TimeController()
         self.main_window = MainWindow()
         AppContext.set_main_window(self.main_window)
         StyleProvider.apply_style()

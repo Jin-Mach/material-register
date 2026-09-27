@@ -25,6 +25,7 @@ from material_register.controllers.tools_controllers.database_backup_controller 
 from material_register.controllers.tools_controllers.database_restore_controller import (
     DatabaseRestoreController,
 )
+from material_register.core.app_context import AppContext
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widgets.database_backup_widgets.database_backup_tree_widget import (
@@ -184,6 +185,9 @@ class DatabaseBackupWidget(QWidget):
         self.custom_restore_button.clicked.connect(self.get_custom_restore_path)
         self.restore_backup_button.clicked.connect(
             self.database_restore_controller.start_restore_thread
+        )
+        AppContext.TIME_CONTROLLER.hourly_database_backup.connect(
+            self.database_backup_controller.start_thread
         )
 
     def setup_info_group(self) -> None:
