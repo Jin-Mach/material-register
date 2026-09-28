@@ -22,8 +22,16 @@ def format_date_to_locale(iso_datetime: str) -> str:
 
 
 def format_date_range_to_locale(from_date: str, to_date: str) -> str:
-    from_formatted = format_date_to_locale(from_date)
-    to_formatted = format_date_to_locale(to_date)
+    from_date_time = QDateTime.fromString(from_date, DATE_FORMAT)
+    from_date_time.setTimeSpec(Qt.TimeSpec.UTC)
+    from_date_time = from_date_time.toLocalTime()
+    to_date_time = QDateTime.fromString(to_date, DATE_FORMAT)
+    to_date_time.setTimeSpec(Qt.TimeSpec.UTC)
+    to_date_time = to_date_time.toLocalTime()
+    from_formatted = _locale.toString(
+        from_date_time.date(), QLocale.FormatType.ShortFormat
+    )
+    to_formatted = _locale.toString(to_date_time.date(), QLocale.FormatType.ShortFormat)
     return f"{from_formatted} - {to_formatted}"
 
 
