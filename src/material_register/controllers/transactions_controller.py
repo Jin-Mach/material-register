@@ -200,6 +200,9 @@ class TransactionsController:
                 return
             self.refresh_models_data()
             self.inventory_model.load_inventory_data()
+            self._update_detail_widget_by_transaction_id(
+                transaction_id, transaction_type
+            )
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             TransactionsController._notification_handler(
                 self._notification_text, "UPDATE_TRANSACTION", "Transaction updated"
@@ -234,10 +237,49 @@ class TransactionsController:
             self._update_counts()
             self.update_total_price()
             self._update_cash_balance_value()
+            self._reset_detail_widget_data(model)
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             TransactionsController._notification_handler(
                 self._notification_text, "DELETE_TRANSACTION", "Transaction deleted"
             )
+
+    def _update_detail_widget_by_transaction_id(
+        self, transaction_id: int, transaction_type: str
+    ) -> None:
+        model = None
+        if transaction_type == TRANSFER_IN:
+            model = self.transactions_model_in
+        if transaction_type == TRANSFER_OUT:
+            model = self.transactions_model_out
+        if model is None:
+            return
+        for row, transaction in enumerate(model.transaction_data):
+            if transaction.transaction_id == transaction_id:
+                source_index = model.index(row, 0)
+                proxy_index = self.transactions_widget.active_proxy.mapFromSource(
+                    source_index
+                )
+                self.update_transaction_detail_widget(proxy_index)
+                break
+
+    def _reset_detail_widget_data(
+        self, model: TransactionItemsModelIn | TransactionItemsModelOut
+    ) -> None:
+        view = None
+        if model.rowCount() == 0:
+            self.transactions_widget.transaction_detail_widget.reset_data()
+            return
+        if isinstance(model, TransactionItemsModelIn):
+            view = self.transactions_widget.transactions_tab_widget.transaction_in_view
+        if isinstance(model, TransactionItemsModelOut):
+            view = self.transactions_widget.transactions_tab_widget.transaction_out_view
+        if view is None:
+            return
+        proxy_index = view.currentIndex()
+        if proxy_index.isValid():
+            self.update_transaction_detail_widget(proxy_index)
+        else:
+            self.transactions_widget.transaction_detail_widget.reset()
 
     def update_transaction_detail_widget(self, proxy_index: QModelIndex) -> None:
         tab_context = self._get_tab_context()

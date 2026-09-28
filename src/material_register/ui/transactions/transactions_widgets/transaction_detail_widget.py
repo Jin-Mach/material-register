@@ -226,6 +226,18 @@ class TransactionDetailWidget(QWidget):
         else:
             self._apply_payment_data(create_data)
 
+    def reset_data(self) -> None:
+        self.detail_view.setModel(None)
+        self.items_model = None
+        self.customer_name.clear()
+        self.customer_document.clear()
+        self.address_label.clear()
+        self.notes_label.clear()
+        self.payment_info.clear()
+        self.is_invoiced_checkbox.setChecked(False)
+        self.payment_info.hide()
+        self.is_invoiced_checkbox.hide()
+
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
         self.setFixedHeight(self.height())
