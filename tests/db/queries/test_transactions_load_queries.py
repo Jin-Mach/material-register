@@ -113,3 +113,98 @@ def test_load_transaction_out(connection: QSqlDatabase, schema) -> None:
     results = TransactionsLoadQueries.load_transactions_out(connection)
     assert len(results) > 0, "No results returned"
     assert results[0].total == 10.0, f"Expected 10.0, got {results[0].total}"
+
+
+def test_load_transaction_in_respects_local_day_boundary(
+    connection: QSqlDatabase, schema
+) -> None:
+    query = QSqlQuery(connection)
+
+    query.exec("INSERT INTO commodities VALUES (1, 'kg')")
+    query.exec(
+        "INSERT INTO customers VALUES "
+        "(1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)"
+    )
+    query.exec("""
+        INSERT INTO transactions
+            (id, type, customer_id, created_at, payment_type, is_invoiced)
+        VALUES
+            (
+                1, 'IN', 1,
+                datetime('now', 'localtime', 'start of day', 'utc', '-1 second'),
+                'TRANSFER', 0
+            ),
+            (
+                2, 'IN', 1,
+                datetime('now', 'localtime', 'start of day', 'utc'),
+                'TRANSFER', 0
+            ),
+            (
+                3, 'IN', 1,
+                datetime('now', 'localtime', 'start of day', 'utc', '+1 day', '-1 second'),
+                'TRANSFER', 0
+            ),
+            (
+                4, 'IN', 1,
+                datetime('now', 'localtime', 'start of day', 'utc', '+1 day'),
+                'TRANSFER', 0
+            )
+    """)
+    query.exec("""
+        INSERT INTO transaction_items
+            (id, transaction_id, commodity_id, unit_count, price_per_unit)
+        VALUES
+            (1, 1, 1, 10, 20),
+            (2, 2, 1, 10, 20),
+            (3, 3, 1, 10, 20),
+            (4, 4, 1, 10, 20)
+    """)
+    results = TransactionsLoadQueries.load_transaction_in(connection)
+    assert {transaction.transaction_id for transaction in results} == {2, 3}
+
+
+def test_load_transaction_out_respects_local_day_boundary(
+    connection: QSqlDatabase, schema
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("INSERT INTO commodities VALUES (1, 'kg')")
+    query.exec(
+        "INSERT INTO customers VALUES "
+        "(1, 'Fake company', NULL, NULL, 'ICO123', 'Mars', NULL, NULL, NULL, NULL)"
+    )
+    query.exec("""
+        INSERT INTO transactions
+            (id, type, customer_id, created_at, payment_type, is_invoiced)
+        VALUES
+            (
+                1, 'OUT', 1,
+                datetime('now', 'localtime', 'start of day', 'utc', '-1 second'),
+                NULL, 0
+            ),
+            (
+                2, 'OUT', 1,
+                datetime('now', 'localtime', 'start of day', 'utc'),
+                NULL, 0
+            ),
+            (
+                3, 'OUT', 1,
+                datetime('now', 'localtime', 'start of day', 'utc', '+1 day', '-1 second'),
+                NULL, 0
+            ),
+            (
+                4, 'OUT', 1,
+                datetime('now', 'localtime', 'start of day', 'utc', '+1 day'),
+                NULL, 0
+            )
+    """)
+    query.exec("""
+        INSERT INTO transaction_items
+            (id, transaction_id, commodity_id, unit_count, price_per_unit)
+        VALUES
+            (1, 1, 1, 10, 20),
+            (2, 2, 1, 10, 20),
+            (3, 3, 1, 10, 20),
+            (4, 4, 1, 10, 20)
+    """)
+    results = TransactionsLoadQueries.load_transactions_out(connection)
+    assert {transaction.transaction_id for transaction in results} == {2, 3}
