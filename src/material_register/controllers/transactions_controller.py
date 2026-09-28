@@ -239,6 +239,31 @@ class TransactionsController:
                 self._notification_text, "DELETE_TRANSACTION", "Transaction deleted"
             )
 
+    def update_transaction_detail_widget(self, proxy_index: QModelIndex) -> None:
+        tab_context = self._get_tab_context()
+        if tab_context is None:
+            return
+        model, transaction_type = tab_context
+        model_index = self.transactions_widget.active_proxy.mapToSource(proxy_index)
+        if not model_index.isValid():
+            return
+        transaction = model.transaction_data[model_index.row()]
+        transaction_id = transaction.transaction_id
+        items_data = TransactionItemsQueries.get_transaction_items(
+            self._db_connection, transaction_id
+        )
+        if not items_data:
+            TransactionsController._handle_db_error(
+                "Transaction items could not be loaded",
+                f"{self.__class__.__name__}.update_transaction_detail_widget",
+                self.transactions_widget,
+            )
+            return
+        create_data = TransactionsController._transaction_to_dict(transaction)
+        self.transactions_widget.transaction_detail_widget.update_data(
+            create_data, items_data, transaction_type
+        )
+
     def create_transaction_data(
         self, transfer_type: str, update_transaction: bool = False
     ) -> dict[str, str | int | None] | None:

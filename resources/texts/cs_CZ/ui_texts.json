@@ -44,6 +44,20 @@
     "baseFilterComboboxItems": ["Dnes", "Tento týden", "Tento měsíc", "Tento rok"],
     "searchLineEditPlaceholderText": "Zadej text pro vyhledávání..."
   },
+  "TransactionDetailWidget": {
+    "infoTabText": "Info",
+    "itemsTabText": "Položky",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod na účet",
+    "isInvoicedCheckBoxText": "Faktura",
+    "customerGroupBoxText": "Zákazník",
+    "customerNameLabelText": "Jméno:",
+    "documentNumberLabelText": "Doklad:",
+    "addressLabelText": "Adresa:",
+    "notesGroupBoxText": "Poznámky",
+    "itemsGroupBoxText": "Položky",
+    "priceSuffix": "Kč"
+  },
   "TransactionsTabWidget": {
     "inTabTitleText": "Výkup",
     "outTabTitleText": "Vývoz"

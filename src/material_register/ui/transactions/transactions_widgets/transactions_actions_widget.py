@@ -17,6 +17,8 @@ class TransactionsActionsWidget(QWidget):
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
+        main_layout.setSpacing(10)
+        main_layout.setContentsMargins(0, 5, 0, 0)
         self.in_transaction_button = QPushButton()
         self.in_transaction_button.setObjectName("inTransactionButton")
         self.out_transaction_button = QPushButton()

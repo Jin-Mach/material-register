@@ -16,6 +16,9 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import PRICE_STYLE
 from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.ui.transactions.transactions_widgets.transaction_detail_widget import (
+    TransactionDetailWidget,
+)
 from material_register.ui.transactions.transactions_widgets.transactions_actions_widget import (
     TransactionsActionsWidget,
 )
@@ -47,8 +50,10 @@ class TransactionsWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(0)
+        main_layout.setSpacing(5)
+        main_layout.setContentsMargins(5, 5, 5, 5)
         self.transactions_actions_widget = TransactionsActionsWidget(self)
+        self.transaction_detail_widget = TransactionDetailWidget(self)
         self.transactions_tab_widget = TransactionsTabWidget(self)
         count_group_box = QGroupBox()
         count_layout = QHBoxLayout()
@@ -64,8 +69,10 @@ class TransactionsWidget(QWidget):
         count_layout.addWidget(self.price_count_label)
         count_layout.addWidget(self.price_count_value)
         count_group_box.setLayout(count_layout)
-        main_layout.addWidget(self.transactions_actions_widget)
-        main_layout.addWidget(self.transactions_tab_widget)
+        main_layout.addWidget(self.transactions_actions_widget, 0)
+        main_layout.addWidget(self.transaction_detail_widget, 0)
+        main_layout.addSpacing(5)
+        main_layout.addWidget(self.transactions_tab_widget, 1)
         main_layout.addWidget(count_group_box)
         return main_layout
 
@@ -127,6 +134,12 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.currentChanged.connect(self._on_tab_changed)
         self.transactions_actions_widget.search_line_edit.textChanged.connect(
             self._on_text_changed
+        )
+        self.transactions_tab_widget.transaction_in_view.selectionModel().currentChanged.connect(
+            self.transactions_controller.update_transaction_detail_widget
+        )
+        self.transactions_tab_widget.transactions_out_view.selectionModel().currentChanged.connect(
+            self.transactions_controller.update_transaction_detail_widget
         )
 
     def _setup_in_model(self) -> None:

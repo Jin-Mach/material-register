@@ -35,6 +35,11 @@ class TransactionItemsModelIn(QStandardItemModel):
                 if value is None:
                     return ""
                 return f"{format_number_to_locale(value)} {commodity_suffix}"
+            if column == ITEM_MODEL_IN_COLUMNS.index("pricePerUnit"):
+                value = self.data(index, Qt.ItemDataRole.UserRole)
+                if value is None:
+                    return ""
+                return f"{format_number_to_locale(value)} {self._price_suffix}"
             return super().data(index, role)
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == total_column:
@@ -52,6 +57,10 @@ class TransactionItemsModelIn(QStandardItemModel):
                 value.setData(transaction_item["unitCount"], Qt.ItemDataRole.UserRole)
                 value.setData(
                     transaction_item["commoditySuffix"], Qt.ItemDataRole.UserRole + 1
+                )
+            if key == "pricePerUnit":
+                value.setData(
+                    transaction_item["pricePerUnit"], Qt.ItemDataRole.UserRole
                 )
             items_list.append(value)
         total = TransactionItemsModelIn.get_item_total_count(
@@ -72,6 +81,8 @@ class TransactionItemsModelIn(QStandardItemModel):
                     index, data["commoditySuffix"], Qt.ItemDataRole.UserRole + 1
                 )
                 self.setData(index, data["unitCount"], Qt.ItemDataRole.DisplayRole)
+            elif key == "pricePerUnit":
+                self.setData(index, data["pricePerUnit"], Qt.ItemDataRole.UserRole)
             elif key == "totalPrice":
                 total = self._calculate_total_count(
                     data["unitCount"], data["pricePerUnit"]

@@ -9,8 +9,8 @@
     "category": "Kategorie",
     "commodity": "Položka",
     "commodityId": "Id položky",
-    "unitCount": "Celkové množství",
-    "pricePerUnit": "Jednotková cena (Kč)",
+    "unitCount": "Množství",
+    "pricePerUnit": "Cena",
     "totalPrice": "Celková částka"
   },
   "TransactionsView": {
@@ -28,5 +28,13 @@
     "2": "Jednotka",
     "3": "Stav zásob",
     "4": "Stav"
+  },
+  "TransactionDetailView": {
+    "category": "Kategorie",
+    "commodity": "Položka",
+    "commodityId": "Id položky",
+    "unitCount": "Množství",
+    "pricePerUnit": "Cena",
+    "totalPrice": "Celková částka"
   }
 }

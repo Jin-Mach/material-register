@@ -44,7 +44,7 @@ def test_update_item(model, item) -> None:
     index_unit = model.index(0, ITEM_MODEL_IN_COLUMNS.index("unitCount"))
     assert model.data(index_unit, Qt.ItemDataRole.DisplayRole) == "5,0 kg"
     index_price = model.index(0, ITEM_MODEL_IN_COLUMNS.index("pricePerUnit"))
-    assert model.data(index_price, Qt.ItemDataRole.DisplayRole) == 12
+    assert model.data(index_price, Qt.ItemDataRole.DisplayRole) == "12,0 £"
     index_total = model.index(0, ITEM_MODEL_IN_COLUMNS.index("totalPrice"))
     assert model.data(index_total, Qt.ItemDataRole.DisplayRole) == "60,0 £"
 

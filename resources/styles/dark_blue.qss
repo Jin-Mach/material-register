@@ -684,6 +684,7 @@ QCheckBox#activeCheckbox,
 QLabel#printerNameLabel,
 QLabel#savePathLabel,
 QLabel#settingsInfoLabel,
+QLabel#paymentInfo,
 QCheckBox#isInvoicedCheckBox {
     background-color: transparent;
 }
@@ -733,4 +734,10 @@ QAbstractSpinBox::down-arrow {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 5px solid #c8c9cc;
+}
+
+QFrame#transactionDetailFrame {
+    background-color: #232528;
+    border: 1px solid #45484d;
+    border-radius: 4px;
 }

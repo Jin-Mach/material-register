@@ -49,6 +49,20 @@
     ],
     "searchLineEditPlaceholderText": "Enter search text..."
   },
+  "TransactionDetailWidget": {
+    "infoTabText": "Info",
+    "itemsTabText": "Items",
+    "CASH": "Cash",
+    "TRANSFER": "Bank transfer",
+    "isInvoicedCheckBoxText": "Invoice",
+    "customerGroupBoxText": "Customer",
+    "customerNameLabelText": "Name:",
+    "documentNumberLabelText": "Document:",
+    "addressLabelText": "Address:",
+    "notesGroupBoxText": "Notes",
+    "itemsGroupBoxText": "Items",
+    "priceSuffix": "£"
+  },
   "TransactionsTabWidget": {
     "inTabTitleText": "Purchase",
     "outTabTitleText": "Sale"

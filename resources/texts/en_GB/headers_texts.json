@@ -9,8 +9,8 @@
     "category": "Category",
     "commodity": "Item",
     "commodityId": "Item ID",
-    "unitCount": "Total quantity",
-    "pricePerUnit": "Unit price (CZK)",
+    "unitCount": "Quantity",
+    "pricePerUnit": "Price",
     "totalPrice": "Total amount"
   },
   "TransactionsView": {
@@ -28,5 +28,13 @@
     "2": "Unit",
     "3": "Stock quantity",
     "4": "Status"
+  },
+  "TransactionDetailView": {
+    "category": "Category",
+    "commodity": "Item",
+    "commodityId": "Item ID",
+    "unitCount": "Quantity",
+    "pricePerUnit": "Price",
+    "totalPrice": "Total amount"
   }
 }
