@@ -9,6 +9,7 @@ from material_register.utils.formatting_utils import (
     format_datetime_to_locale,
     format_number_to_locale,
     format_time_to_locale,
+    format_utc_date_to_locale,
 )
 
 
@@ -110,4 +111,9 @@ def test_format_date_to_utc_end_of_day() -> None:
     date = QDate(2026, 9, 28)
     result = format_date_to_utc(date, True)
     expected = QDateTime(date, QTime(23, 59, 59)).toUTC().toString(DATE_FORMAT)
+    assert result == expected
+
+def test_format_utc_date_to_locale() -> None:
+    result = format_utc_date_to_locale("2026-07-05 22:30:00")
+    expected = "06.07.2026"
     assert result == expected

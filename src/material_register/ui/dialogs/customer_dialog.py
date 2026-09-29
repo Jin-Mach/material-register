@@ -31,6 +31,7 @@ from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu, setup_text_edit
+from material_register.utils.formatting_utils import format_utc_date_to_locale
 
 if TYPE_CHECKING:
     from material_register.ui.customers.customers_widget import CustomersWidget
@@ -212,8 +213,7 @@ class CustomerDialog(QDialog):
         self._apply_type_state()
         for widget, value in customer_input_map.items():
             if isinstance(widget, QLabel):
-                date = datetime.fromisoformat(value)
-                widget.setText(f"{self.created_label_text} {date.strftime('%d.%m.%Y')}")
+                widget.setText(f"{self.created_label_text} {format_utc_date_to_locale(value)}")
             if isinstance(widget, QLineEdit):
                 widget.setText(value)
             if isinstance(widget, QCheckBox):

@@ -61,3 +61,9 @@ def format_date_to_utc(date: QDate, end_of_day: bool = False) -> str:
     date_time.setTimeZone(QTimeZone.systemTimeZone())
     date_time = date_time.toUTC()
     return date_time.toString(DATE_FORMAT)
+
+def format_utc_date_to_locale(iso_datetime: str) -> str:
+    date_time = QDateTime.fromString(iso_datetime, DATE_FORMAT)
+    date_time.setTimeZone(QTimeZone.utc())
+    date_time = date_time.toLocalTime()
+    return _locale.toString(date_time.date(), QLocale.FormatType.ShortFormat)
