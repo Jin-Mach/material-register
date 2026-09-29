@@ -14,6 +14,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    PAYMENT_TRANSFER,
 )
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_info_widget import (
@@ -136,7 +137,7 @@ class TransactionItemsDialogIn(QDialog):
     def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
         payment_type = create_data.get("paymentType", "N/A")
         payment_text = self.cash_payment
-        if payment_type == "TRANSFER":
+        if payment_type == PAYMENT_TRANSFER:
             payment_text = self.transfer_payment
         self.payment_text = payment_text
         self.payment_type = payment_type

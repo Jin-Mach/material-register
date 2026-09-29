@@ -18,6 +18,7 @@ from material_register.services.export.excel.excel_helpers import (
 from material_register.services.export.excel.summary_export.summary_report import (
     SummaryReport,
 )
+from material_register.ui.config.ui_constants import PAYMENT_TRANSFER
 from material_register.utils.formatting_utils import format_date_range_to_locale
 
 
@@ -45,7 +46,7 @@ class SummarySheet:
         invoiced_transfer_value = 0.0
         normal_transfer_value = 0.0
         for item in data_in:
-            if item.payment_type == "TRANSFER":
+            if item.payment_type == PAYMENT_TRANSFER:
                 if item.is_invoiced:
                     invoiced_transfer_value += item.total_price or 0.0
                 else:

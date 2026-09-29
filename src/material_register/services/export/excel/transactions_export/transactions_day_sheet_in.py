@@ -14,6 +14,7 @@ from material_register.services.export.excel.excel_helpers import (
     cell_font,
     set_borders,
 )
+from material_register.ui.config.ui_constants import PAYMENT_CASH, PAYMENT_TRANSFER
 from material_register.utils.formatting_utils import (
     format_date_to_locale,
     format_time_to_locale,
@@ -323,11 +324,11 @@ class TransactionsDaySheetIn:
     ) -> None:
         cash_cells = []
         for payment_type, cell in transaction_total_cells:
-            if payment_type == "CASH":
+            if payment_type == PAYMENT_CASH:
                 cash_cells.append(cell.coordinate)
         transfer_cells = []
         for payment_type, cell in transaction_total_cells:
-            if payment_type == "TRANSFER":
+            if payment_type == PAYMENT_TRANSFER:
                 transfer_cells.append(cell.coordinate)
         if cash_cells:
             cash_cell.value = f"=SUM({','.join(cash_cells)})"

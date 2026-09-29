@@ -4,6 +4,7 @@ from material_register.domain.export_dataclass.summary_dataclass import (
     SummaryItemDataIn,
     SummaryItemDataOut,
 )
+from material_register.ui.config.ui_constants import PAYMENT_CASH, PAYMENT_TRANSFER
 
 
 class SummaryReport:
@@ -71,8 +72,8 @@ class SummaryReport:
         cash = 0.0
         transfer = 0.0
         for item in in_data:
-            if item.payment_type == "CASH":
+            if item.payment_type == PAYMENT_CASH:
                 cash += item.total_price or 0.0
-            elif item.payment_type == "TRANSFER":
+            elif item.payment_type == PAYMENT_TRANSFER:
                 transfer += item.total_price or 0.0
         return cash, transfer

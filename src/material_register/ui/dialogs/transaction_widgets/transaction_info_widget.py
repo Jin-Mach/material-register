@@ -20,6 +20,8 @@ from material_register.ui.config.styles_constants import WARNING_STYLE
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    PAYMENT_CASH,
+    PAYMENT_TRANSFER,
     TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
     TRANSFER_OUT,
 )
@@ -175,9 +177,9 @@ class TransactionInfoWidget(QWidget):
             self.payment_info.hide()
             self.is_invoiced_checkbox.hide()
         self.payment_info.setText(payment_text)
-        if payment_type == "CASH":
+        if payment_type == PAYMENT_CASH:
             self.is_invoiced_checkbox.hide()
-        elif payment_type == "TRANSFER":
+        elif payment_type == PAYMENT_TRANSFER:
             self.is_invoiced_checkbox.show()
 
     def set_create_data(
