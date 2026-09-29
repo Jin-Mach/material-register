@@ -72,6 +72,34 @@ def test_load_export_data_in(connection: QSqlDatabase, schema) -> None:
     assert results[0].transactions_list[0].transaction_items[0].price_per_unit == 3.5
 
 
+def test_load_export_data_in_converts_utc_date_to_local_date(
+    connection: QSqlDatabase, schema
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec(
+        "INSERT INTO customers VALUES (1, 'John', 'Doe', NULL, 'DOC123', 'Some address')"
+    )
+    query.exec("INSERT INTO categories VALUES (1, 'Fe')")
+    query.exec("INSERT INTO commodities VALUES (1, 'Fe 12345', 1, 'kg')")
+    query.exec(
+        "INSERT INTO transactions VALUES "
+        "(1, 'IN', 1, '2026-07-05 22:30:00', 'CASH', NULL, 0)"
+    )
+    query.exec("INSERT INTO transaction_items VALUES (1, 1, 1, 100, 3.5)")
+
+    ok, error, results = TransactionsExportQueries.load_export_data(
+        connection,
+        "2026-07-05 22:00:00",
+        "2026-07-06 21:59:59",
+        1,
+        TRANSFER_IN,
+    )
+    assert ok is True, error
+    assert error == ""
+    assert len(results) == 1
+    assert results[0].transaction_date == "2026-07-06"
+
+
 def test_load_export_data_out(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec(
@@ -105,6 +133,34 @@ def test_load_export_data_out(connection: QSqlDatabase, schema) -> None:
     assert results[0].transactions_list[0].transaction_items[0].commodity_unit == "kg"
     assert results[0].transactions_list[0].transaction_items[0].unit_count == 100
     assert results[0].transactions_list[0].transaction_items[0].price_per_unit == ""
+
+
+def test_load_export_data_out_converts_utc_date_to_local_date(
+    connection: QSqlDatabase, schema
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec(
+        "INSERT INTO customers VALUES (1, 'John', 'Doe', NULL, 'DOC123', 'Some address')"
+    )
+    query.exec("INSERT INTO categories VALUES (1, 'Fe')")
+    query.exec("INSERT INTO commodities VALUES (1, 'Fe 12345', 1, 'kg')")
+    query.exec(
+        "INSERT INTO transactions VALUES "
+        "(1, 'OUT', 1, '2026-07-05 22:30:00', NULL, NULL, 0)"
+    )
+    query.exec("INSERT INTO transaction_items VALUES (1, 1, 1, 100, 3.5)")
+
+    ok, error, results = TransactionsExportQueries.load_export_data(
+        connection,
+        "2026-07-05 22:00:00",
+        "2026-07-06 21:59:59",
+        1,
+        TRANSFER_OUT,
+    )
+    assert ok is True, error
+    assert error == ""
+    assert len(results) == 1
+    assert results[0].transaction_date == "2026-07-06"
 
 
 def test_load_export_data_unknown_transfer_type(

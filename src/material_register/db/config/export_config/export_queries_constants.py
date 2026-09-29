@@ -81,7 +81,7 @@ SUMMARY_QUERY_OUT = """
 TRANSACTIONS_QUERY_IN = """
             SELECT
                 
-                date(trans.created_at) AS transaction_date,
+                date(trans.created_at, 'localtime') AS transaction_date,
                 trans.created_at AS created_at,
                 trans.payment_type AS payment_type,
                 trans.is_invoiced AS is_invoiced,
@@ -134,7 +134,7 @@ TRANSACTIONS_QUERY_IN = """
 TRANSACTIONS_QUERY_OUT = """
             SELECT
                 
-                date(trans.created_at) AS transaction_date,
+                date(trans.created_at, 'localtime') AS transaction_date,
                 trans.created_at AS created_at,
                 NULL AS payment_type,
                 NULL AS is_invoiced,
