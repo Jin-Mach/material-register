@@ -113,6 +113,7 @@ def test_format_date_to_utc_end_of_day() -> None:
     expected = QDateTime(date, QTime(23, 59, 59)).toUTC().toString(DATE_FORMAT)
     assert result == expected
 
+
 def test_format_utc_date_to_locale() -> None:
     result = format_utc_date_to_locale("2026-07-05 22:30:00")
     expected = "06.07.2026"

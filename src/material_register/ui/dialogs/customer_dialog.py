@@ -213,7 +213,9 @@ class CustomerDialog(QDialog):
         self._apply_type_state()
         for widget, value in customer_input_map.items():
             if isinstance(widget, QLabel):
-                widget.setText(f"{self.created_label_text} {format_utc_date_to_locale(value)}")
+                widget.setText(
+                    f"{self.created_label_text} {format_utc_date_to_locale(value)}"
+                )
             if isinstance(widget, QLineEdit):
                 widget.setText(value)
             if isinstance(widget, QCheckBox):

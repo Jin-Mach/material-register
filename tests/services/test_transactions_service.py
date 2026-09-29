@@ -166,7 +166,7 @@ def test_update_transaction_header_changes(
         assert notes == "old notes"
 
 
-def test_create_transaction_success(
+def test_create_transaction_in_success(
     connection,
     transaction_schema,
     items_schema,
@@ -199,6 +199,67 @@ def test_create_transaction_success(
     assert float(query.value(1)) == 5.0
     assert float(query.value(2)) == 10.0
     query.exec("SELECT stock FROM inventory WHERE commodity_id = 2")
+    assert query.next()
+    assert float(query.value(0)) == 5.0
+
+
+def test_create_transaction_out_success(
+    connection,
+    transaction_schema,
+    items_schema,
+    inventory_schema,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        UPDATE inventory
+        SET stock = 10
+        WHERE commodity_id = 2
+    """)
+
+    dialog_data = {
+        "transaction_type": "OUT",
+        "customer_id": 1,
+        "payment_type": "CASH",
+        "is_invoiced": False,
+        "notes": "out creation test",
+    }
+    items = [
+        TransactionItem(
+            commodity_id=2,
+            unit_count=5,
+            price_per_unit=10,
+        )
+    ]
+
+    ok, error = TransactionsService.create_transaction(
+        connection,
+        dialog_data,
+        items,
+    )
+    assert ok is True
+    assert error == ""
+    query.exec("SELECT COUNT(*) FROM transactions")
+    assert query.next()
+    assert query.value(0) == 1
+    query.exec("""
+        SELECT type
+        FROM transactions
+    """)
+    assert query.next()
+    assert query.value(0) == "OUT"
+    query.exec("""
+        SELECT commodity_id, unit_count, price_per_unit
+        FROM transaction_items
+    """)
+    assert query.next()
+    assert query.value(0) == 2
+    assert float(query.value(1)) == 5.0
+    assert float(query.value(2)) == 10.0
+    query.exec("""
+        SELECT stock
+        FROM inventory
+        WHERE commodity_id = 2
+    """)
     assert query.next()
     assert float(query.value(0)) == 5.0
 
@@ -480,7 +541,60 @@ def test_update_transaction_remove_all_items(
     assert float(query.value(0)) == 6.0
 
 
-def test_delete_transaction_updates_inventory_and_removes_items(
+def test_update_transaction_out_items_change_updates_inventory(
+    connection,
+    transaction_schema,
+    items_schema,
+    inventory_schema,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transactions (
+            id, type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            1, 'OUT', 1, datetime('now'), 'CASH', 'out update'
+        )
+    """)
+    query.exec("""
+        INSERT INTO transaction_items (
+            transaction_id, commodity_id, unit_count, price_per_unit
+        ) VALUES (
+            1, 2, 2, 5
+        )
+    """)
+    query.exec("UPDATE inventory SET stock = 8 WHERE commodity_id = 2")
+
+    old_items = [TransactionItem(commodity_id=2, unit_count=2, price_per_unit=5)]
+    new_items = [TransactionItem(commodity_id=2, unit_count=5, price_per_unit=5)]
+    dialog_old = {
+        "transaction_type": "OUT",
+        "customer_id": 1,
+        "payment_type": "CASH",
+        "is_invoiced": False,
+        "notes": "out update",
+    }
+    dialog_new = dialog_old.copy()
+    ok, error, changed = TransactionsService.update_transaction(
+        connection,
+        1,
+        dialog_new,
+        dialog_old,
+        new_items,
+        old_items,
+    )
+    assert ok is True
+    assert error == ""
+    assert changed is True
+    query.exec("""
+        SELECT stock
+        FROM inventory
+        WHERE commodity_id = 2
+    """)
+    assert query.next()
+    assert float(query.value(0)) == 5.0
+
+
+def test_delete_transaction_in_updates_inventory_and_removes_items(
     connection,
     transaction_schema,
     items_schema,
@@ -541,6 +655,70 @@ def test_delete_transaction_updates_inventory_and_removes_items(
     query.exec("SELECT stock FROM inventory WHERE commodity_id = 2")
     assert query.next()
     assert float(query.value(0)) == 6.0
+
+
+def test_delete_transaction_out_updates_inventory_and_removes_items(
+    connection,
+    transaction_schema,
+    items_schema,
+    inventory_schema,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        CREATE TABLE categories (
+            id INTEGER PRIMARY KEY,
+            name TEXT
+        )
+    """)
+    query.exec("""
+        CREATE TABLE commodities (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            unit TEXT,
+            category_id INTEGER
+        )
+    """)
+    query.exec("INSERT INTO categories (id, name) VALUES (1, 'Cat')")
+    query.exec(
+        "INSERT INTO commodities (id, name, unit, category_id) "
+        "VALUES (2, 'Apple', 'kg', 1)"
+    )
+    query.exec("""
+        INSERT INTO transactions (
+            id, type, customer_id, created_at, payment_type, notes
+        ) VALUES (
+            1, 'OUT', 1, datetime('now'), 'CASH', 'to_delete'
+        )
+    """)
+    query.exec("""
+        INSERT INTO transaction_items (
+            transaction_id, commodity_id, unit_count, price_per_unit
+        ) VALUES (
+            1, 2, 4, 10
+        )
+    """)
+    query.exec("UPDATE inventory SET stock = 6 WHERE commodity_id = 2")
+
+    ok, error = TransactionsService.delete_transaction(
+        connection,
+        1,
+        "OUT",
+    )
+    assert ok is True
+    assert error == ""
+    query.exec("SELECT COUNT(*) FROM transactions")
+    assert query.next()
+    assert query.value(0) == 0
+    query.exec("SELECT COUNT(*) FROM transaction_items")
+    assert query.next()
+    assert query.value(0) == 0
+    query.exec("""
+        SELECT stock
+        FROM inventory
+        WHERE commodity_id = 2
+    """)
+    assert query.next()
+    assert float(query.value(0)) == 10.0
 
 
 def test_transactions_service_helpers_get_amount_and_stock_dict_and_final_dict() -> (
