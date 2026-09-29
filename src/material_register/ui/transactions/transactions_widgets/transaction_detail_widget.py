@@ -230,7 +230,7 @@ class TransactionDetailWidget(QWidget):
             )
         self._setup_customer_data(create_data)
         if transaction_type == TRANSFER_OUT:
-            self.payment_info.hide()
+            self.payment_info.setText("")
             self.is_invoiced_checkbox.hide()
         else:
             self._apply_payment_data(create_data)

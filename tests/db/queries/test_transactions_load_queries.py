@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
@@ -62,7 +62,7 @@ def schema(connection) -> None:
 
 
 def get_timestamp() -> str:
-    return datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def test_load_transaction_in(connection: QSqlDatabase, schema) -> None:
