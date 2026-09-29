@@ -9,6 +9,10 @@ from PySide6.QtWidgets import QWidget
 from material_register.core.app_context import AppContext
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_EXPORT,
+)
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
 
@@ -108,7 +112,9 @@ class DocumentsController:
 
     @staticmethod
     def _handle_documents_error(error: Exception, method: str, parent: QWidget) -> None:
-        ErrorHandler.handle_error(f"{error}: {method}", "export", "warning")
+        ErrorHandler.handle_error(
+            f"{error}: {method}", LOGGER_EXPORT, LOG_LEVEL_WARNING
+        )
         ErrorDialog(parent).show_dialog("DOCUMENT_ERROR", False)
 
     @staticmethod

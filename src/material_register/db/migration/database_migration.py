@@ -4,6 +4,10 @@ from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.migration.column_migration import ColumnMigration
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 
 
 class DatabaseMigration:
@@ -26,10 +30,14 @@ class DatabaseMigration:
     def migration_init(cls, db_connection: QSqlDatabase) -> bool:
         query = QSqlQuery(db_connection)
         if not query.exec("PRAGMA user_version"):
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return False
         if not query.next():
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return False
         cls.DB_VERSION = query.value(0)
         return True
@@ -42,8 +50,8 @@ class DatabaseMigration:
         if not db_connection.transaction():
             ErrorHandler.handle_error(
                 "Migration BEGIN failed.",
-                "db",
-                "critical",
+                LOGGER_DB,
+                LOG_LEVEL_CRITICAL,
             )
             return False
         current_version = cls.DB_VERSION
@@ -55,8 +63,8 @@ class DatabaseMigration:
                     if not migration(db_connection):
                         ErrorHandler.handle_error(
                             f"{migration.func.__name__} failed.",
-                            "db",
-                            "critical",
+                            LOGGER_DB,
+                            LOG_LEVEL_CRITICAL,
                         )
                         db_connection.rollback()
                         return False
@@ -64,21 +72,21 @@ class DatabaseMigration:
                 if not query.exec(f"PRAGMA user_version = {version}"):
                     ErrorHandler.handle_error(
                         query.lastError().text(),
-                        "db",
-                        "critical",
+                        LOGGER_DB,
+                        LOG_LEVEL_CRITICAL,
                     )
                     db_connection.rollback()
                     return False
                 current_version = version
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             db_connection.rollback()
             return False
         if not db_connection.commit():
             ErrorHandler.handle_error(
                 db_connection.lastError().text(),
-                "db",
-                "critical",
+                LOGGER_DB,
+                LOG_LEVEL_CRITICAL,
             )
             db_connection.rollback()
             return False

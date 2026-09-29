@@ -9,7 +9,11 @@ from material_register.db.config.model_constants import (
 )
 from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.ui_constants import INVENTORY_HORIZONTAL_PADDING
+from material_register.ui.config.ui_constants import (
+    INVENTORY_HORIZONTAL_PADDING,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.headers_texts import HeadersTexts
 
 if TYPE_CHECKING:
@@ -28,7 +32,9 @@ class InventoryView(QTableView):
             return
         if not HeadersTexts.set_inventory_headers_text(self, model):
             ErrorHandler.handle_error(
-                f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Headers text load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = error
         self._setup_columns()

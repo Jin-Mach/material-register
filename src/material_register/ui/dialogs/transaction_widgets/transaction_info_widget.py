@@ -18,6 +18,8 @@ from PySide6.QtWidgets import (
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import WARNING_STYLE
 from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
     TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
     TRANSFER_OUT,
 )
@@ -140,7 +142,9 @@ class TransactionInfoWidget(QWidget):
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):

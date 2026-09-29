@@ -30,6 +30,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
     SUMMARY_BALANCE_PRICE_MIN_VALUE,
     SUMMARY_EXPORT_PRICE_MAX_VALUE,
     SUMMARY_EXPORT_PRICE_MIN_VALUE,
@@ -298,7 +300,9 @@ class SummaryExportWidget(QWidget):
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
             ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
@@ -309,7 +313,9 @@ class SummaryExportWidget(QWidget):
         type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
         if not type_items:
             ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
@@ -320,7 +326,9 @@ class SummaryExportWidget(QWidget):
             )
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
@@ -331,7 +339,9 @@ class SummaryExportWidget(QWidget):
             "export", EXPORT_TYPE_SUMMARY, self.findChildren(QWidget)
         ):
             ErrorHandler.handle_error(
-                f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Settings load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return

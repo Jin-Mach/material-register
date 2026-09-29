@@ -22,6 +22,8 @@ from material_register.ui.config.ui_constants import (
     CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE,
     CATEGORY_COMMODITY_DIALOG_MIN_VALUE,
     INTEGER_SUFFIXES,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
     TRANSFER_OUT,
 )
 from material_register.ui.dialogs.message_boxes import MessageBoxes
@@ -154,7 +156,9 @@ class CategoryCommodityDialog(QDialog):
                 self.setWindowTitle(ui_texts.get("updateTitleText", ""))
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)

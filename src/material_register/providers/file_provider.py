@@ -17,6 +17,10 @@ from material_register.config.file_config import (
     UI_KEYS,
 )
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_APP,
+)
 
 
 class FileProvider:
@@ -110,7 +114,7 @@ class FileProvider:
                 return cls._check_export_json(data)
             return False
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, LOGGER_APP, LOG_LEVEL_ERROR)
             return False
 
     @staticmethod
@@ -120,7 +124,7 @@ class FileProvider:
                 tomllib.load(settings_file)
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, LOGGER_APP, LOG_LEVEL_ERROR)
             return False
 
     @staticmethod
@@ -128,7 +132,7 @@ class FileProvider:
         try:
             return bool(file.read_text(encoding="utf-8").strip())
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, LOGGER_APP, LOG_LEVEL_ERROR)
             return False
 
     @classmethod

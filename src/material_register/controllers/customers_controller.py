@@ -10,6 +10,12 @@ from material_register.init.data_init import DataInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOG_LEVEL_WARNING,
+    LOGGER_DB,
+    LOGGER_UI,
+)
 from material_register.ui.dialogs.customer_dialog import CustomerDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
@@ -59,8 +65,8 @@ class CustomersController:
         if customer_id == -1:
             ErrorHandler.handle_error(
                 f"Invalid customer selection index: {self.__class__.__name__}",
-                "ui",
-                "warning",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             return
         customer_data = self.customers_model.get_customer_by_id(customer_id)
@@ -161,7 +167,7 @@ class CustomersController:
         error = model.lastError().text()
         if not error:
             error = f"Unknown database error: {method}"
-        ErrorHandler.handle_error(f"{error}: {method}", "db", "critical")
+        ErrorHandler.handle_error(f"{error}: {method}", LOGGER_DB, LOG_LEVEL_CRITICAL)
         ErrorDialog(parent).show_dialog("DATABASE_ERROR", False)
 
     @staticmethod

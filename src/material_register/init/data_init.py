@@ -12,6 +12,10 @@ from material_register.db.models.transactions_load_model_out import (
 from material_register.init.db_init import DbInit
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 
 
 class DataInit:
@@ -38,5 +42,5 @@ class DataInit:
             cls.inventory_model = InventoryModel(DbInit.db_connection)
             return True, ""
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False, "DATABASE_FAILED"

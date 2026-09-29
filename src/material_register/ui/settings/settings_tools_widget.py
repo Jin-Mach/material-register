@@ -15,6 +15,10 @@ from material_register.controllers.settings_controllers.tools_settings_controlle
     ToolsSettingsController,
 )
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -106,7 +110,9 @@ class SettingsToolsWidget(QWidget):
         widgets = self.findChildren(QWidget)
         if not UiTexts.set_ui_texts(self, widgets):
             ErrorHandler.handle_error(
-                f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Settings load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "CONFIG_LOAD_FAILED"
             return
@@ -124,7 +130,9 @@ class SettingsToolsWidget(QWidget):
             "tools", "settings", self.findChildren(QWidget)
         ):
             ErrorHandler.handle_error(
-                f"Settings load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Settings load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_settings_error = "CONFIG_LOAD_FAILED"
             return

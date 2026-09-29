@@ -13,7 +13,12 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.services.export.excel.transactions_export.transactions_workbook import (
     TransactionsWorkbook,
 )
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_EXPORT,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.utils.date_filters import parse_date
 from material_register.utils.system import is_disk_writable
 
@@ -83,7 +88,7 @@ class TransactionsExportWorker(QObject):
                     return
             self.finished.emit()
         except Exception as e:
-            ErrorHandler.handle_error(e, "export", "error")
+            ErrorHandler.handle_error(e, LOGGER_EXPORT, LOG_LEVEL_ERROR)
             self.error.emit(f"Export failed: {e}")
 
     def _create_non_split_exports(

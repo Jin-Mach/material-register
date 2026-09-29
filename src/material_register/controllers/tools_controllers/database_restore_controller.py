@@ -8,6 +8,10 @@ from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.lock_provider import LockProvider
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
@@ -79,7 +83,9 @@ class DatabaseRestoreController(QObject):
             return
         self._progress_dialog.close()
         ErrorHandler.handle_error(
-            f"{self.__class__.__name__}._finish_restore failed: {key}", "db", "critical"
+            f"{self.__class__.__name__}._finish_restore failed: {key}",
+            LOGGER_DB,
+            LOG_LEVEL_CRITICAL,
         )
         ErrorDialog(self._database_backup_widget).show_dialog("RESTORE_ERROR", False)
         self._reset_variables()

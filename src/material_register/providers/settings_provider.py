@@ -5,6 +5,10 @@ from typing import Any
 import tomli_w
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_SETTINGS,
+)
 
 
 class SettingsProvider:
@@ -26,7 +30,7 @@ class SettingsProvider:
                 tomli_w.dump(cls.SETTINGS, settings_file)
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "settings", "error")
+            ErrorHandler.handle_error(e, LOGGER_SETTINGS, LOG_LEVEL_ERROR)
             return False
 
     @classmethod
@@ -42,7 +46,7 @@ class SettingsProvider:
                     user[key] = value
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "settings", "error")
+            ErrorHandler.handle_error(e, LOGGER_SETTINGS, LOG_LEVEL_ERROR)
             return False
 
     @classmethod
@@ -57,7 +61,7 @@ class SettingsProvider:
             cls.SETTINGS = user_settings
             return cls.save_settings()
         except Exception as e:
-            ErrorHandler.handle_error(e, "settings", "error")
+            ErrorHandler.handle_error(e, LOGGER_SETTINGS, LOG_LEVEL_ERROR)
             return False
 
     @staticmethod
@@ -113,5 +117,5 @@ class SettingsProvider:
             with open(settings_path, "rb") as settings_file:
                 return tomllib.load(settings_file)
         except Exception as e:
-            ErrorHandler.handle_error(e, "settings", "error")
+            ErrorHandler.handle_error(e, LOGGER_SETTINGS, LOG_LEVEL_ERROR)
             return {}

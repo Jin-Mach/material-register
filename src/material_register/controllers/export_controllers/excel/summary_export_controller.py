@@ -9,7 +9,11 @@ from material_register.core.app_context import AppContext
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.ui_constants import EXPORT_TYPE_SUMMARY
+from material_register.ui.config.ui_constants import (
+    EXPORT_TYPE_SUMMARY,
+    LOG_LEVEL_CRITICAL,
+    LOGGER_EXPORT,
+)
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
@@ -252,7 +256,9 @@ class SummaryExportController(QObject):
     ) -> None:
         if not error:
             error = f"Unknown export error: {method}"
-        ErrorHandler.handle_error(f"{error}: {method}", "export", "critical")
+        ErrorHandler.handle_error(
+            f"{error}: {method}", LOGGER_EXPORT, LOG_LEVEL_CRITICAL
+        )
         ErrorDialog(parent).show_dialog(error_key, False)
 
     @staticmethod

@@ -7,7 +7,13 @@ from material_register.db.queries.transaction_items_queries import (
 from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.domain.transaction_item_dataclass import TransactionItem
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOG_LEVEL_WARNING,
+    LOGGER_DB,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 
 
 class TransactionsService:
@@ -63,11 +69,11 @@ class TransactionsService:
                 return False, "Failed to commit transaction"
             return True, ""
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             try:
                 db_connection.rollback()
             except Exception as rb_e:
-                ErrorHandler.handle_error(rb_e, "db", "warning")
+                ErrorHandler.handle_error(rb_e, LOGGER_DB, LOG_LEVEL_WARNING)
             return False, str(e)
 
     @staticmethod
@@ -133,11 +139,11 @@ class TransactionsService:
                 return False, "Failed to commit transaction", False
             return True, "", True
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             try:
                 db_connection.rollback()
             except Exception as rb_e:
-                ErrorHandler.handle_error(rb_e, "db", "warning")
+                ErrorHandler.handle_error(rb_e, LOGGER_DB, LOG_LEVEL_WARNING)
             return False, str(e), False
 
     @staticmethod
@@ -174,11 +180,11 @@ class TransactionsService:
                 return False, "Failed to commit transaction"
             return True, ""
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             try:
                 db_connection.rollback()
             except Exception as rb_e:
-                ErrorHandler.handle_error(rb_e, "db", "warning")
+                ErrorHandler.handle_error(rb_e, LOGGER_DB, LOG_LEVEL_WARNING)
             return False, str(e)
 
     @staticmethod

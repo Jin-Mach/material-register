@@ -15,6 +15,10 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.catalog.catalog_widgets.commodity_card_widget import (
     CommodityCardWidget,
 )
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
@@ -71,7 +75,9 @@ class CommoditiesGridWidget(QWidget):
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):

@@ -12,7 +12,12 @@ from material_register.services.export.pdf.documents.transaction_document_in imp
 from material_register.services.export.pdf.documents.transaction_document_out import (
     TransactionDocumentOut,
 )
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_EXPORT,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 
 
 class TransactionDocumentWorker(QObject):
@@ -57,5 +62,5 @@ class TransactionDocumentWorker(QObject):
                 return
             self.finished.emit(pdf_document)
         except Exception as e:
-            ErrorHandler.handle_error(e, "export", "error")
+            ErrorHandler.handle_error(e, LOGGER_EXPORT, LOG_LEVEL_ERROR)
             self.error.emit(f"Document failed: {e}")

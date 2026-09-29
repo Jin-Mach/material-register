@@ -5,6 +5,10 @@ from PySide6.QtCore import QStandardPaths
 
 from material_register.config.project_constants import PROJECT_NAME
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_APP,
+)
 
 
 class PathsProvider:
@@ -61,5 +65,5 @@ class PathsProvider:
                     return parent
             return None
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, LOGGER_APP, LOG_LEVEL_ERROR)
             return None

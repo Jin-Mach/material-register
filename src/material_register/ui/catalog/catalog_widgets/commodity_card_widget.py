@@ -16,6 +16,10 @@ from PySide6.QtWidgets import (
 
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import setup_text_edit
 from material_register.utils.formatting_utils import format_number_to_locale
@@ -88,7 +92,9 @@ class CommodityCardWidget(QTabWidget):
         if UiTexts.set_texts(ui_texts, self, widgets):
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 

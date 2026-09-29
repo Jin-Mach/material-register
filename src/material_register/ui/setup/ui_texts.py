@@ -1,6 +1,10 @@
 from PySide6.QtWidgets import QWidget
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 
 
@@ -22,7 +26,7 @@ class UiTexts:
                 return False
             return UiTexts.set_texts(ui_texts, parent, widgets, tooltip_duration)
         except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
             return False
 
     @staticmethod
@@ -35,7 +39,7 @@ class UiTexts:
                 return False
             return UiTexts.set_texts(ui_texts, parent, widgets, tooltip_duration)
         except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
             return False
 
     @staticmethod
@@ -64,5 +68,5 @@ class UiTexts:
                     widget.setPlaceholderText(ui_texts[placeholder])
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
             return False

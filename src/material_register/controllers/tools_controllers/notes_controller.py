@@ -1,6 +1,10 @@
 from typing import TYPE_CHECKING
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_APP,
+)
 from material_register.ui.helpers.text_file_handler import TextFileHandler
 
 if TYPE_CHECKING:
@@ -23,4 +27,6 @@ class NotesController:
         if not TextFileHandler.save_document(
             "toolbar_notes.txt", self.notes_widget.get_permanent_notes()
         ):
-            ErrorHandler.handle_error("Save notes failed", "app", "warning")
+            ErrorHandler.handle_error(
+                "Save notes failed", LOGGER_APP, LOG_LEVEL_WARNING
+            )

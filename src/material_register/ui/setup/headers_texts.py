@@ -6,6 +6,10 @@ from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 
 if TYPE_CHECKING:
     from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
@@ -47,7 +51,7 @@ class HeadersTexts:
                     model.setHeaderData(column, Qt.Orientation.Horizontal, text)
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
             return False
 
     @classmethod
@@ -70,7 +74,7 @@ class HeadersTexts:
             )
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
             return False
 
     @classmethod
@@ -85,5 +89,5 @@ class HeadersTexts:
                 model.setHeaderData(int(index), Qt.Orientation.Horizontal, text)
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
             return False

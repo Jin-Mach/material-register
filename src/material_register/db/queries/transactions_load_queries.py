@@ -6,6 +6,10 @@ from material_register.db.config.queries_constants import (
 )
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 
 
 class TransactionsLoadQueries:
@@ -13,7 +17,9 @@ class TransactionsLoadQueries:
     def load_transaction_in(db_connection: QSqlDatabase) -> list[Transaction]:
         query = QSqlQuery(db_connection)
         if not query.exec(TRANSACTIONS_QUERY_IN):
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return []
         results = []
         while query.next():
@@ -43,7 +49,9 @@ class TransactionsLoadQueries:
     def load_transactions_out(db_connection: QSqlDatabase) -> list[Transaction]:
         query = QSqlQuery(db_connection)
         if not query.exec(TRANSACTIONS_QUERY_OUT):
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return []
         results = []
         while query.next():

@@ -10,6 +10,10 @@ from material_register.db.models.transaction_items_model_out import (
     TransactionItemsModelOut,
 )
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.headers_texts import HeadersTexts
 
 if TYPE_CHECKING:
@@ -27,7 +31,9 @@ class TransactionView(QTableView):
         model = self.model()
         if not isinstance(model, (TransactionItemsModelIn, TransactionItemsModelOut)):
             ErrorHandler.handle_error(
-                f"Invalid model instance: {self.__class__.__name__}", "ui", "warning"
+                f"Invalid model instance: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
             return
@@ -40,7 +46,9 @@ class TransactionView(QTableView):
     ) -> None:
         if not HeadersTexts.set_headers_text(self, model):
             ErrorHandler.handle_error(
-                f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Headers text load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 

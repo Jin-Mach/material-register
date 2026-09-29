@@ -6,6 +6,10 @@ from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.ui_icons import UiIcons
 
 if TYPE_CHECKING:
@@ -45,7 +49,7 @@ class CatalogTreeWidget(QTreeWidget):
                         item.setIcon(0, UiIcons.ITEM_ICON)
                         item.setToolTip(0, commodity.name)
         except Exception as e:
-            ErrorHandler.handle_error(e, "ui", "warning")
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
         finally:
             self.blockSignals(False)
             self.setUpdatesEnabled(True)

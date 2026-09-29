@@ -29,6 +29,8 @@ from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.transactions_service import TransactionsService
 from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
     PAYMENT_VALUES,
     TRANSFER_IN,
     TRANSFER_OUT,
@@ -587,7 +589,7 @@ class TransactionsController:
     def _handle_db_error(error: str, method: str, parent: QWidget) -> None:
         if not error:
             error = f"Unknown database error: {method}"
-        ErrorHandler.handle_error(f"{error}: {method}", "db", "critical")
+        ErrorHandler.handle_error(f"{error}: {method}", LOGGER_DB, LOG_LEVEL_CRITICAL)
         ErrorDialog(parent).show_dialog("DATABASE_ERROR", False)
 
     @staticmethod

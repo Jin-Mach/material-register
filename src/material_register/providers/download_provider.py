@@ -11,6 +11,10 @@ from material_register.config.download_config import (
     ICONS_SUFFIXES,
 )
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_APP,
+)
 from material_register.utils.network import is_internet_available
 from material_register.utils.system import is_disk_writable
 
@@ -33,7 +37,7 @@ class DownloadProvider:
                     return False
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, LOGGER_APP, LOG_LEVEL_ERROR)
             return False
 
     @classmethod
@@ -50,7 +54,7 @@ class DownloadProvider:
                 return False
             return True
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, LOGGER_APP, LOG_LEVEL_ERROR)
             return False
 
     @staticmethod

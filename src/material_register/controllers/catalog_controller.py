@@ -11,6 +11,10 @@ from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 from material_register.ui.dialogs.category_dialog import CategoryDialog
 from material_register.ui.dialogs.commodity_dialog import CommodityDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -248,7 +252,7 @@ class CatalogController:
     def _handle_db_error(error: str, method: str, parent: QWidget) -> None:
         if not error:
             error = f"Unknown database error: {method}"
-        ErrorHandler.handle_error(f"{error}: {method}", "db", "critical")
+        ErrorHandler.handle_error(f"{error}: {method}", LOGGER_DB, LOG_LEVEL_CRITICAL)
         ErrorDialog(parent).show_dialog("DATABASE_ERROR", False)
 
     @staticmethod

@@ -18,6 +18,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     COMMODITY_DIALOG_MAX_PRICE_VALUE,
     COMMODITY_DIALOG_MIN_VALUE,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import (
@@ -84,7 +86,9 @@ class UpdateCommoditiesPriceDialog(QDialog):
         if UiTexts.set_ui_texts(self, self.findChildren(QWidget)):
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, self.findChildren(QWidget)):

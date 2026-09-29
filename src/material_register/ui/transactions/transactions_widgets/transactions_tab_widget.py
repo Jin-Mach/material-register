@@ -4,6 +4,10 @@ from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QSizePolicy, QTabWidget
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.transactions.transactions_widgets.transactions_view import (
     TransactionsView,
@@ -30,7 +34,9 @@ class TransactionsTabWidget(QTabWidget):
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
             ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return

@@ -11,6 +11,10 @@ from PySide6.QtWidgets import (
 )
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widgets.cash_balance_widget import (
@@ -83,7 +87,9 @@ class RightToolbarWidget(QWidget):
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):
@@ -93,7 +99,9 @@ class RightToolbarWidget(QWidget):
         widgets = [self.notes_button, self.cash_balance_button, self.database_button]
         if not UiIcons.set_icons("tools", widgets, icon_size=24):
             ErrorHandler.handle_error(
-                f"Icons load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Icons load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "ICONS_LOAD_FAILED"
             return

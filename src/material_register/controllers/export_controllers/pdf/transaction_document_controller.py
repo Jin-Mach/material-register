@@ -14,7 +14,12 @@ from material_register.domain.transaction_item_detail_dataclass import (
 from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_EXPORT,
+    TRANSFER_IN,
+    TRANSFER_OUT,
+)
 from material_register.ui.dialogs.document_preview_dialog import DocumentPreviewDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.setup.ui_settings import UiSettings
@@ -162,5 +167,7 @@ class TransactionDocumentController(QObject):
     ) -> None:
         if not error:
             error = f"Unknown document error: {method}"
-        ErrorHandler.handle_error(f"{error}: {method}", "export", "critical")
+        ErrorHandler.handle_error(
+            f"{error}: {method}", LOGGER_EXPORT, LOG_LEVEL_CRITICAL
+        )
         ErrorDialog(parent).show_dialog(error_key, False)

@@ -9,6 +9,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
     EXPORT_TYPE_TRANSACTIONS,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
 )
 from material_register.ui.settings.settings_widgets.base_export_widget import (
     BaseExportWidget,
@@ -46,7 +48,9 @@ class SettingsExportWidget(QWidget):
         if ui_texts:
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 

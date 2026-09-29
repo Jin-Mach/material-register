@@ -7,6 +7,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_SUMMARY,
     EXPORT_TYPE_TRANSACTIONS,
+    LOG_LEVEL_WARNING,
+    LOGGER_SETTINGS,
 )
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
@@ -99,5 +101,7 @@ class ExportSettingsController:
     def _handle_settings_error(error: str, method: str, parent: QWidget) -> None:
         if not error:
             error = f"Settings failed: {method}"
-        ErrorHandler.handle_error(f"{error}: {method}", "settings", "warning")
+        ErrorHandler.handle_error(
+            f"{error}: {method}", LOGGER_SETTINGS, LOG_LEVEL_WARNING
+        )
         ErrorDialog(parent).show_dialog("SETTINGS_FAILED", False)

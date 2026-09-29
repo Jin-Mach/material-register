@@ -22,6 +22,8 @@ from material_register.ui.config.ui_constants import (
     CASH_BALANCE_MAX_VALUE,
     CASH_BALANCE_MIN_VALUE,
     CASH_BALANCE_NEGATIVE_MIN_VALUE,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
@@ -158,7 +160,9 @@ class CashBalanceWidget(QWidget):
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         if UiTexts.set_default_texts(self, widgets):

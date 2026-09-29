@@ -5,6 +5,10 @@ from pathlib import Path
 
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 
 
 class DatabaseBackupService:
@@ -23,10 +27,10 @@ class DatabaseBackupService:
             DatabaseBackupService._clear_year_folder(backup_directory, backup_path)
             return True
         except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
 
     @staticmethod
@@ -43,10 +47,10 @@ class DatabaseBackupService:
                     database.backup(backup)
             return True
         except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
 
     @staticmethod
@@ -57,10 +61,10 @@ class DatabaseBackupService:
                     database.backup(backup)
             return True
         except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
 
     @staticmethod
@@ -71,10 +75,10 @@ class DatabaseBackupService:
                     backup.backup(database)
             return True
         except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
 
     @staticmethod
@@ -85,7 +89,7 @@ class DatabaseBackupService:
         try:
             shutil.rmtree(backup_folder)
         except OSError as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
         return True
 

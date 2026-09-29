@@ -1,6 +1,10 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 
 
 class ColumnMigration:
@@ -10,7 +14,9 @@ class ColumnMigration:
     ) -> bool:
         query = QSqlQuery(db_connection)
         if not query.exec(f"PRAGMA table_info({table_name})"):
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return False
         while query.next():
             column_name = query.value(1)
@@ -32,7 +38,9 @@ class ColumnMigration:
         query = QSqlQuery(db_connection)
         if not ColumnMigration._table_exists(db_connection, table_name.strip()):
             ErrorHandler.handle_error(
-                f"Table '{table_name.strip()}' does not exist", "db", "critical"
+                f"Table '{table_name.strip()}' does not exist",
+                LOGGER_DB,
+                LOG_LEVEL_CRITICAL,
             )
             return False
         sql = f"ALTER TABLE {table_name.strip()} ADD COLUMN {column_name.strip()}"
@@ -56,7 +64,9 @@ class ColumnMigration:
                 return False
             sql += f" {references}"
         if not query.exec(sql):
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return False
         return True
 
@@ -66,7 +76,9 @@ class ColumnMigration:
         if not query.exec(
             f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'"
         ):
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return False
         return query.next()
 
@@ -81,8 +93,8 @@ class ColumnMigration:
             ]:
                 ErrorHandler.handle_error(
                     "CURRENT time defaults are not supported with ADD COLUMN",
-                    "db",
-                    "critical",
+                    LOGGER_DB,
+                    LOG_LEVEL_CRITICAL,
                 )
                 return False, ""
             default = stripped.replace("'", "''")
@@ -92,13 +104,17 @@ class ColumnMigration:
     @staticmethod
     def _validate_check(check: str) -> tuple[bool, str]:
         if not check.startswith("CHECK(") or not check.endswith(")"):
-            ErrorHandler.handle_error("Check syntax failed", "db", "critical")
+            ErrorHandler.handle_error(
+                "Check syntax failed", LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return False, ""
         return True, check
 
     @staticmethod
     def _validate_references(references: str) -> tuple[bool, str]:
         if not references.startswith("REFERENCES "):
-            ErrorHandler.handle_error("References syntax failed", "db", "critical")
+            ErrorHandler.handle_error(
+                "References syntax failed", LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             return False, ""
         return True, references

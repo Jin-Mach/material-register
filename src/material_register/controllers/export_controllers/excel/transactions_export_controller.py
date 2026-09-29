@@ -11,6 +11,8 @@ from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_TRANSACTIONS,
+    LOG_LEVEL_CRITICAL,
+    LOGGER_EXPORT,
     TRANSFER_IN,
     TRANSFER_OUT,
 )
@@ -279,8 +281,8 @@ class TransactionsExportController(QObject):
             error = f"Unknown export error: {method}"
         ErrorHandler.handle_error(
             f"{error}: {method}",
-            "export",
-            "critical",
+            LOGGER_EXPORT,
+            LOG_LEVEL_CRITICAL,
         )
         ErrorDialog(parent).show_dialog(error_key, False)
 

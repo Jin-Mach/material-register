@@ -4,6 +4,10 @@ from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QHeaderView, QSizePolicy, QTableView
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 from material_register.ui.setup.headers_texts import HeadersTexts
 from material_register.ui.setup.ui_texts import UiTexts
@@ -47,13 +51,17 @@ class TransactionsView(QTableView):
             model = model.sourceModel()
         if not HeadersTexts.set_transactions_headers_text(self, model):
             ErrorHandler.handle_error(
-                f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Headers text load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = error
         self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not self.menu_texts:
             ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = error
             self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
@@ -82,7 +90,9 @@ class TransactionsView(QTableView):
         menu.set_customer_index(index)
         if not self.menu_texts:
             ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = True
         menu.set_ui_texts(self.menu_texts)

@@ -7,6 +7,10 @@ from material_register.controllers.tools_controllers.cash_balance_controller imp
 )
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_SETTINGS,
+)
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 
@@ -113,5 +117,7 @@ class ToolsSettingsController:
     def _handle_settings_error(error: str, method: str, parent: QWidget) -> None:
         if not error:
             error = f"Settings failed: {method}"
-        ErrorHandler.handle_error(f"{error}: {method}", "settings", "warning")
+        ErrorHandler.handle_error(
+            f"{error}: {method}", LOGGER_SETTINGS, LOG_LEVEL_WARNING
+        )
         ErrorDialog(parent).show_dialog("SETTINGS_FAILED", False)

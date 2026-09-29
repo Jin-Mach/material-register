@@ -7,29 +7,39 @@ from material_register.db.migration.database_migration import DatabaseMigration
 from material_register.db.utils.database_validator import is_schema_valid
 from material_register.services.database_backup_service import DatabaseBackupService
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 
 
 def create_connection(
     database_path: Path | None, db_name: str, connection_name: str
 ) -> QSqlDatabase | None:
     if database_path is None:
-        ErrorHandler.handle_error("Database path is None", "db", "critical")
+        ErrorHandler.handle_error(
+            "Database path is None", LOGGER_DB, LOG_LEVEL_CRITICAL
+        )
         return None
     connection = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     connection.setDatabaseName(str(database_path / db_name))
     if not connection.open():
-        ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
+        ErrorHandler.handle_error(
+            connection.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+        )
         return None
     if not DatabaseSetup.setup_init(connection):
         connection.close()
         return None
     is_new, error = DatabaseSetup.is_new_database(connection)
     if error:
-        ErrorHandler.handle_error(error, "db", "critical")
+        ErrorHandler.handle_error(error, LOGGER_DB, LOG_LEVEL_CRITICAL)
         connection.close()
         return None
     if not is_new and not DatabaseMigration.migration_init(connection):
-        ErrorHandler.handle_error(connection.lastError().text(), "db", "critical")
+        ErrorHandler.handle_error(
+            connection.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+        )
         connection.close()
         return None
     migration_completed = False
@@ -57,19 +67,23 @@ def create_connection(
             migration_completed = True
     result, last_query = create_db_tables(connection)
     if not result:
-        ErrorHandler.handle_error(last_query.lastError().text(), "db", "critical")
+        ErrorHandler.handle_error(
+            last_query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+        )
         connection.close()
         return None
     ok, error = is_schema_valid(connection)
     if not ok:
-        ErrorHandler.handle_error(error, "db", "critical")
+        ErrorHandler.handle_error(error, LOGGER_DB, LOG_LEVEL_CRITICAL)
         connection.close()
         return None
     if is_new:
         query = QSqlQuery(connection)
         latest_version = max(DatabaseMigration.MIGRATIONS_MAP)
         if not query.exec(f"PRAGMA user_version = {latest_version}"):
-            ErrorHandler.handle_error(query.lastError().text(), "db", "critical")
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
             connection.close()
             return None
     if migration_completed and not DatabaseBackupService.delete_backup_folder():

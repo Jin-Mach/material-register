@@ -19,6 +19,8 @@ from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.config.ui_constants import (
     ADD_MODE,
     CATEGORY_DIALOG_NOTES_LENGTH,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
     UPDATE_MODE,
 )
 from material_register.ui.helpers.notes_length_handler import check_notes_length
@@ -101,7 +103,9 @@ class CategoryDialog(QDialog):
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)

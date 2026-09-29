@@ -6,7 +6,11 @@ from PySide6.QtWidgets import QHeaderView, QTableView
 from material_register.db.config.model_constants import CUSTOMERS_HIDDEN_COLUMNS
 from material_register.db.models.customers_model import CustomersModel
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.ui_constants import CUSTOMERS_HORIZONTAL_PADDING
+from material_register.ui.config.ui_constants import (
+    CUSTOMERS_HORIZONTAL_PADDING,
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 from material_register.ui.customers.customers_widgets.customers_context_menu import (
     CustomersContextMenu,
@@ -48,7 +52,9 @@ class CustomersView(QTableView):
         if self.menu_texts:
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
@@ -57,7 +63,9 @@ class CustomersView(QTableView):
         if HeadersTexts.set_headers_text(self, model):
             return
         ErrorHandler.handle_error(
-            f"Headers text load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Headers text load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
@@ -116,7 +124,9 @@ class CustomersView(QTableView):
         menu.set_customer_index(index)
         if not self.menu_texts:
             ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         menu.set_ui_texts(self.menu_texts)

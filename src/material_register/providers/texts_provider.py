@@ -2,6 +2,10 @@ import json
 from pathlib import Path
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_APP,
+)
 
 
 class TextsProvider:
@@ -39,5 +43,5 @@ class TextsProvider:
             file_path = resources_path / "texts" / cls.CURRENT_LANGUAGE / json_file
             return json.loads(file_path.read_text(encoding="utf-8"))
         except Exception as e:
-            ErrorHandler.handle_error(e, "app", "error")
+            ErrorHandler.handle_error(e, LOGGER_APP, LOG_LEVEL_ERROR)
             return {}

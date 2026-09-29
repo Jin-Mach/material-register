@@ -8,6 +8,10 @@ from material_register.providers.paths_provider import PathsProvider
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_ERROR,
+)
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.setup.error_texts import ErrorTexts
 from material_register.ui.setup.headers_texts import HeadersTexts
@@ -62,7 +66,7 @@ class SetupInit:
             return True, ""
         except Exception as e:
             if getattr(ErrorHandler, "loggers_map", None):
-                ErrorHandler.handle_error(e, "error", "critical")
+                ErrorHandler.handle_error(e, LOGGER_ERROR, LOG_LEVEL_CRITICAL)
             else:
                 print("SetupInit error before logger initialization:")
                 traceback.print_exc()

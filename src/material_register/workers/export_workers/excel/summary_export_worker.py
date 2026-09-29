@@ -10,6 +10,10 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.services.export.excel.summary_export.summary_workbook import (
     SummaryWorkbook,
 )
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_ERROR,
+    LOGGER_EXPORT,
+)
 from material_register.utils.system import is_disk_writable
 
 
@@ -66,5 +70,5 @@ class SummaryExportWorker(QObject):
             workbook.save(export_path)
             self.finished.emit(last_balance)
         except Exception as e:
-            ErrorHandler.handle_error(e, "export", "error")
+            ErrorHandler.handle_error(e, LOGGER_EXPORT, LOG_LEVEL_ERROR)
             self.error.emit(f"Export failed: {e}")

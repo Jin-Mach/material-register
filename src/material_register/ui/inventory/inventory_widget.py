@@ -7,6 +7,10 @@ from material_register.controllers.inventory_controller import InventoryControll
 from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.inventory.inventory_widgets.inventory_actions_widget import (
     InventoryActionsWidget,
 )
@@ -52,7 +56,9 @@ class InventoryWidget(QWidget):
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not ui_texts:
             ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
             )
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return

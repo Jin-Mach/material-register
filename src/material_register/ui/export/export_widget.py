@@ -3,6 +3,10 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QTabWidget, QVBoxLayout, QWidget
 
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_WARNING,
+    LOGGER_UI,
+)
 from material_register.ui.export.export_widgets.summary_export_widget import (
     SummaryExportWidget,
 )
@@ -41,7 +45,9 @@ class ExportWidget(QWidget):
         if ui_texts:
             return
         ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}", "ui", "warning"
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 

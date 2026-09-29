@@ -6,6 +6,10 @@ from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.db.create_connection import create_connection
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.ui_constants import (
+    LOG_LEVEL_CRITICAL,
+    LOGGER_DB,
+)
 
 
 class DbInit:
@@ -22,7 +26,7 @@ class DbInit:
                 return False, "DATABASE_FAILED"
             return True, ""
         except Exception as e:
-            ErrorHandler.handle_error(e, "db", "critical")
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False, "DATABASE_FAILED"
 
     @classmethod
