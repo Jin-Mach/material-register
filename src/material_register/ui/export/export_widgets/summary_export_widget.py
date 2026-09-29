@@ -38,6 +38,7 @@ from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
 from material_register.utils.date_filters import get_filter_range
+from material_register.utils.formatting_utils import format_date_to_utc
 from material_register.utils.normalizer import normalize_value
 
 if TYPE_CHECKING:
@@ -491,8 +492,8 @@ class SummaryExportWidget(QWidget):
                 if date_range is not None:
                     return date_range
         date_range = (
-            self.from_date_edit.date().toString("yyyy-MM-dd 00:00:00"),
-            self.to_date_edit.date().toString("yyyy-MM-dd 23:59:59"),
+            format_date_to_utc(self.from_date_edit.date()),
+            format_date_to_utc(self.to_date_edit.date(), True),
         )
         return date_range
 

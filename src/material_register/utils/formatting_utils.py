@@ -1,4 +1,4 @@
-from PySide6.QtCore import QDateTime, QLocale, QTimeZone
+from PySide6.QtCore import QDate, QDateTime, QLocale, QTimeZone
 
 DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
 
@@ -47,3 +47,17 @@ def format_current_datetime_to_locale() -> str:
         QDateTime.currentDateTime(),
         QLocale.FormatType.ShortFormat,
     )
+
+
+def format_date_to_utc(date: QDate, end_of_day: bool = False) -> str:
+    if end_of_day:
+        time = "23:59:59"
+    else:
+        time = "00:00:00"
+    date_time = QDateTime.fromString(
+        f"{date.toString('yyyy-MM-dd')} {time}",
+        DATE_FORMAT,
+    )
+    date_time.setTimeZone(QTimeZone.systemTimeZone())
+    date_time = date_time.toUTC()
+    return date_time.toString(DATE_FORMAT)

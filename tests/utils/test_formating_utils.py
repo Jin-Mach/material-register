@@ -2,8 +2,10 @@ import pytest
 from PySide6.QtCore import QDate, QDateTime, QLocale, QTime
 
 from material_register.utils.formatting_utils import (
+    DATE_FORMAT,
     format_date_range_to_locale,
     format_date_to_locale,
+    format_date_to_utc,
     format_datetime_to_locale,
     format_number_to_locale,
     format_time_to_locale,
@@ -95,3 +97,17 @@ def test_format_time_to_locale(iso_datetime: str, expected_time: QTime) -> None:
         QLocale.FormatType.ShortFormat,
     )
     assert format_time_to_locale(iso_datetime) == expected
+
+
+def test_format_date_to_utc() -> None:
+    date = QDate(2026, 9, 28)
+    result = format_date_to_utc(date)
+    expected = QDateTime(date, QTime(0, 0, 0)).toUTC().toString(DATE_FORMAT)
+    assert result == expected
+
+
+def test_format_date_to_utc_end_of_day() -> None:
+    date = QDate(2026, 9, 28)
+    result = format_date_to_utc(date, True)
+    expected = QDateTime(date, QTime(23, 59, 59)).toUTC().toString(DATE_FORMAT)
+    assert result == expected
