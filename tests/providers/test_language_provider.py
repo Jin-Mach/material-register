@@ -8,6 +8,6 @@ from material_register.providers.language_provider import LanguageProvider
     [("cs_CZ", "cs_CZ"), ("zu_ZA", "en_GB"), ("", "en_GB")],
     ids=["OS based language", "default language", "no locale"],
 )
-def test_set_language_code(locale_return, expected) -> None:
+def test_set_language_code(locale_return: str, expected: str) -> None:
     result = LanguageProvider._set_language_code(locale_return)
     assert result == expected

@@ -11,7 +11,7 @@ def reset_ui_texts():
     UiTexts.UI_TEXTS = {}
 
 
-def test_set_ui_texts_button_text(qtbot):
+def test_set_ui_texts_button_text(qtbot) -> None:
     widget = QWidget()
     button = QPushButton()
     button.setObjectName("button")
@@ -23,7 +23,7 @@ def test_set_ui_texts_button_text(qtbot):
     assert button.text() == "Button Text"
 
 
-def test_set_ui_texts_tooltip(qtbot):
+def test_set_ui_texts_tooltip(qtbot) -> None:
     widget = QWidget()
     button = QPushButton()
     button.setObjectName("button")
@@ -35,7 +35,7 @@ def test_set_ui_texts_tooltip(qtbot):
     assert button.toolTip() == "Tooltip text"
 
 
-def test_set_ui_texts_window_title(qtbot):
+def test_set_ui_texts_window_title(qtbot) -> None:
     widget = QWidget()
     qtbot.addWidget(widget)
     UiTexts.setup_init({"QWidget": {"titleText": "Main Title"}})
@@ -44,7 +44,7 @@ def test_set_ui_texts_window_title(qtbot):
     assert widget.windowTitle() == "Main Title"
 
 
-def test_set_ui_texts_no_data(qtbot):
+def test_set_ui_texts_no_data(qtbot) -> None:
     widget = QWidget()
     button = QPushButton()
     button.setObjectName("button")
@@ -56,7 +56,7 @@ def test_set_ui_texts_no_data(qtbot):
     assert button.text() == ""
 
 
-def test_set_ui_texts_missing_key(qtbot):
+def test_set_ui_texts_missing_key(qtbot) -> None:
     widget = QWidget()
     button = QPushButton()
     button.setObjectName("button")

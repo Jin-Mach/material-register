@@ -494,9 +494,10 @@ class TransactionsDaySheetIn:
             column=items_end_column,
         )
         if item_total_cells:
-            transaction_total_cell.value = (
-                f"=SUM({','.join(cell.coordinate for cell in item_total_cells)})"
-            )
+            cell_coordinates = []
+            for cell in item_total_cells:
+                cell_coordinates.append(cell.coordinate)
+            transaction_total_cell.value = f"=SUM({','.join(cell_coordinates)})"
         else:
             transaction_total_cell.value = "=0"
         transaction_total_cell.number_format = (
@@ -633,7 +634,9 @@ class TransactionsDaySheetIn:
         cell_alignment(cell, horizontal=horizontal, vertical=vertical)
 
     @staticmethod
-    def _cell_font(cell, font_size: int | None = None, bold: bool = False) -> None:
+    def _cell_font(
+        cell: Cell, font_size: int | None = None, bold: bool = False
+    ) -> None:
         cell_font(
             cell,
             font_size=font_size,

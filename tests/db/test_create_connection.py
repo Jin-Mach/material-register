@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from PySide6.QtSql import QSqlQuery
 
 from material_register.db.create_connection import create_connection
@@ -8,13 +10,13 @@ def test_db_is_none() -> None:
     assert db is None
 
 
-def test_create_connection_invalid_path(tmp_path) -> None:
+def test_create_connection_invalid_path(tmp_path: Path) -> None:
     invalid_dir = tmp_path / "invalid_dir" / "invalid_dir_2"
     db = create_connection(invalid_dir, "test.db", "test_connection")
     assert db is None
 
 
-def test_create_connection_success(tmp_path):
+def test_create_connection_success(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
     db = create_connection(db_dir, "test.db", "test_connection")
@@ -22,7 +24,7 @@ def test_create_connection_success(tmp_path):
     assert (db_dir / "test.db").exists()
 
 
-def test_tables_created(tmp_path):
+def test_tables_created(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
     db = create_connection(db_dir, "test.db", "test_connection")
@@ -43,7 +45,7 @@ def test_tables_created(tmp_path):
     assert expected.issubset(set(tables))
 
 
-def test_trigger_new_commodity(tmp_path):
+def test_trigger_new_commodity(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
     db = create_connection(db_dir, "test.db", "test_connection")
@@ -59,7 +61,7 @@ def test_trigger_new_commodity(tmp_path):
     assert query.value(0) == 0
 
 
-def test_create_connection_twice(tmp_path):
+def test_create_connection_twice(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
     db = create_connection(db_dir, "test.db", "test_connection")

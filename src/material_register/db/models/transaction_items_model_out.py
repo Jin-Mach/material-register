@@ -16,7 +16,9 @@ class TransactionItemsModelOut(QStandardItemModel):
         super().__init__()
         self._setup_model()
 
-    def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
+    def data(
+        self, index: QModelIndex, role: Qt.ItemDataRole = Qt.ItemDataRole.DisplayRole
+    ) -> Any:
         if not index.isValid():
             return None
         column = index.column()

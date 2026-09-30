@@ -1,13 +1,16 @@
+from openpyxl.cell import Cell
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.worksheet.worksheet import Worksheet
 
 
-def cell_alignment(cell, horizontal: str = "center", vertical: str = "center") -> None:
+def cell_alignment(
+    cell: Cell, horizontal: str = "center", vertical: str = "center"
+) -> None:
     cell.alignment = Alignment(horizontal=horizontal, vertical=vertical, wrap_text=True)
 
 
 def cell_font(
-    cell,
+    cell: Cell,
     font_size: int | None = None,
     bold: bool = False,
     default_font_size: int | None = None,
@@ -46,7 +49,7 @@ def set_borders(
 
 
 def set_background_color(
-    cell,
+    cell: Cell,
     fill_type: str = "solid",
     background_color: str | None = None,
 ) -> None:

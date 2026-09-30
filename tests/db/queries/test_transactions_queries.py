@@ -13,7 +13,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE transactions (
@@ -29,7 +29,7 @@ def schema(connection) -> None:
 
 
 @pytest.fixture
-def filter_schema(connection):
+def filter_schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE customers (
@@ -72,7 +72,7 @@ def filter_schema(connection):
     """)
 
 
-def test_insert_into_transactions(connection, schema) -> None:
+def test_insert_into_transactions(connection: QSqlDatabase, schema) -> None:
     ok, error, transaction_id = TransactionsQueries.insert_into_transactions(
         connection, "IN", 1, "CASH", False, "notes"
     )
@@ -92,7 +92,7 @@ def test_insert_into_transactions(connection, schema) -> None:
     assert query.value(4) == 0
 
 
-def test_delete_transaction(connection, schema) -> None:
+def test_delete_transaction(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transactions (
@@ -127,7 +127,7 @@ def test_delete_transaction(connection, schema) -> None:
     assert query.value(0) == id_to_check
 
 
-def test_update_transaction(connection, schema) -> None:
+def test_update_transaction(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transactions (
@@ -164,7 +164,7 @@ def test_update_transaction(connection, schema) -> None:
     assert query.value(3) == "updated_notes"
 
 
-def test_get_basic_filter_data(connection, filter_schema):
+def test_get_basic_filter_data(connection: QSqlDatabase, filter_schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO customers (
@@ -234,7 +234,9 @@ def test_get_basic_filter_data(connection, filter_schema):
     assert row.transaction_type == "IN"
 
 
-def test_get_basic_filter_data_returns_none_on_query_error(connection) -> None:
+def test_get_basic_filter_data_returns_none_on_query_error(
+    connection: QSqlDatabase,
+) -> None:
     result = TransactionsQueries.get_basic_filter_data(
         connection,
         "IN",
@@ -244,7 +246,7 @@ def test_get_basic_filter_data_returns_none_on_query_error(connection) -> None:
     assert result is None
 
 
-def test_get_total_price(connection, filter_schema) -> None:
+def test_get_total_price(connection: QSqlDatabase, filter_schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transactions (

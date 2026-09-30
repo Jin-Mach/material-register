@@ -24,13 +24,17 @@ def item() -> dict[str, str | int | float]:
     }
 
 
-def test_add_item(model, item) -> None:
+def test_add_item(
+    model: TransactionItemsModelIn, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     assert model.rowCount() == 1
     assert model.columnCount() == 6
 
 
-def test_update_item(model, item) -> None:
+def test_update_item(
+    model: TransactionItemsModelIn, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     updated_item = {
         "category": "Food",
@@ -49,26 +53,34 @@ def test_update_item(model, item) -> None:
     assert model.data(index_total, Qt.ItemDataRole.DisplayRole) == "60,0 £"
 
 
-def test_total_price_calculation(model, item) -> None:
+def test_total_price_calculation(
+    model: TransactionItemsModelIn, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     assert model._calculate_total_price() == 20.0
 
 
-def test_display_total_price(model, item) -> None:
+def test_display_total_price(
+    model: TransactionItemsModelIn, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     index = model.index(0, ITEM_MODEL_IN_COLUMNS.index("totalPrice"))
     value = model.data(index, Qt.ItemDataRole.DisplayRole)
     assert "20,0 £" in value
 
 
-def test_display_unit_with_suffix(model, item) -> None:
+def test_display_unit_with_suffix(
+    model: TransactionItemsModelIn, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     index = model.index(0, ITEM_MODEL_IN_COLUMNS.index("unitCount"))
     value = model.data(index, Qt.ItemDataRole.DisplayRole)
     assert value == "2,0 kg"
 
 
-def test_get_data(model, item) -> None:
+def test_get_data(
+    model: TransactionItemsModelIn, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     result = model.get_data()
     assert len(result) == 1

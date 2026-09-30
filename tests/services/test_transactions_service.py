@@ -16,7 +16,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def transaction_schema(connection) -> None:
+def transaction_schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE transactions (
@@ -32,7 +32,7 @@ def transaction_schema(connection) -> None:
 
 
 @pytest.fixture
-def items_schema(connection) -> None:
+def items_schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE transaction_items (
@@ -49,7 +49,7 @@ def items_schema(connection) -> None:
 
 
 @pytest.fixture
-def inventory_schema(connection) -> None:
+def inventory_schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE inventory (
@@ -94,14 +94,14 @@ def old_items_data() -> list[TransactionItem]:
     ],
 )
 def test_update_transaction_header_changes(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
-    old_dialog_data,
-    old_items_data,
-    column_name,
-    new_value,
+    old_dialog_data: dict[str, str | int],
+    old_items_data: list[TransactionItem],
+    column_name: str,
+    new_value: int | str,
 ) -> None:
     query = QSqlQuery(connection)
     query.exec("""
@@ -167,7 +167,7 @@ def test_update_transaction_header_changes(
 
 
 def test_create_transaction_in_success(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -204,7 +204,7 @@ def test_create_transaction_in_success(
 
 
 def test_create_transaction_out_success(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -265,7 +265,7 @@ def test_create_transaction_out_success(
 
 
 def test_create_transaction_invalid_transfer_type_rolls_back(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -300,12 +300,12 @@ def test_create_transaction_invalid_transfer_type_rolls_back(
 
 
 def test_update_transaction_no_changes(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
-    old_dialog_data,
-    old_items_data,
+    old_dialog_data: dict[str, str | int],
+    old_items_data: list[TransactionItem],
 ) -> None:
     query = QSqlQuery(connection)
     query.exec("""
@@ -343,7 +343,7 @@ def test_update_transaction_no_changes(
 
 
 def test_update_transaction_items_change_updates_inventory(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -386,7 +386,7 @@ def test_update_transaction_items_change_updates_inventory(
 
 
 def test_update_transaction_items_aggregated_change(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -433,7 +433,7 @@ def test_update_transaction_items_aggregated_change(
 
 
 def test_update_transaction_changes_commodity_and_quantity(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -496,7 +496,7 @@ def test_update_transaction_changes_commodity_and_quantity(
 
 
 def test_update_transaction_remove_all_items(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -542,7 +542,7 @@ def test_update_transaction_remove_all_items(
 
 
 def test_update_transaction_out_items_change_updates_inventory(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -595,7 +595,7 @@ def test_update_transaction_out_items_change_updates_inventory(
 
 
 def test_delete_transaction_in_updates_inventory_and_removes_items(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,
@@ -658,7 +658,7 @@ def test_delete_transaction_in_updates_inventory_and_removes_items(
 
 
 def test_delete_transaction_out_updates_inventory_and_removes_items(
-    connection,
+    connection: QSqlDatabase,
     transaction_schema,
     items_schema,
     inventory_schema,

@@ -24,13 +24,17 @@ def item() -> dict[str, str | int | float]:
     }
 
 
-def test_add_item(model, item) -> None:
+def test_add_item(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     assert model.rowCount() == 1
     assert model.columnCount() == len(ITEM_MODEL_OUT_COLUMNS)
 
 
-def test_update_item(model, item) -> None:
+def test_update_item(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     updated_item = {
         "category": "Food",
@@ -47,26 +51,34 @@ def test_update_item(model, item) -> None:
     assert model.data(index_category, Qt.ItemDataRole.DisplayRole) == "Food"
 
 
-def test_display_unit_with_suffix(model, item) -> None:
+def test_display_unit_with_suffix(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     index = model.index(0, ITEM_MODEL_OUT_COLUMNS.index("unitCount"))
     value = model.data(index, Qt.ItemDataRole.DisplayRole)
     assert value == "2,0 kg"
 
 
-def test_return_total(model, item) -> None:
+def test_return_total(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     assert model.return_total() == "2,0 kg"
 
 
-def test_calculate_total_unit(model, item) -> None:
+def test_calculate_total_unit(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     total, suffix = model._calculate_total_unit()
     assert total == 2
     assert suffix == "kg"
 
 
-def test_delete_item(model, item) -> None:
+def test_delete_item(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     assert model.rowCount() == 1
     index = model.index(0, 0)
@@ -74,7 +86,9 @@ def test_delete_item(model, item) -> None:
     assert model.rowCount() == 0
 
 
-def test_get_transaction_item_data(model, item) -> None:
+def test_get_transaction_item_data(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     index = model.index(0, 0)
     data = model.get_transaction_item_data(index)
@@ -82,7 +96,9 @@ def test_get_transaction_item_data(model, item) -> None:
     assert data["unitCount"] == 2.0
 
 
-def test_get_data(model, item) -> None:
+def test_get_data(
+    model: TransactionItemsModelOut, item: dict[str, str | int | float]
+) -> None:
     model.add_item(item)
     result = model.get_data()
     assert len(result) == 1

@@ -5,7 +5,7 @@ class ErrorTexts:
     ERROR_TEXTS = {}
 
     @classmethod
-    def setup_init(cls, error_texts) -> None:
+    def setup_init(cls, error_texts: dict[str, str]) -> None:
         cls.ERROR_TEXTS = error_texts
 
     @classmethod

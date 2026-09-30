@@ -15,7 +15,7 @@ def reset_headers():
 
 
 @pytest.fixture
-def sql_model(qtbot):
+def sql_model(qtbot) -> QSqlTableModel:
     db = QSqlDatabase.addDatabase("QSQLITE", "test_conn")
     db.setDatabaseName(":memory:")
     db.open()
@@ -28,7 +28,7 @@ def sql_model(qtbot):
     return model
 
 
-def test_set_headers_text_success(qtbot, sql_model):
+def test_set_headers_text_success(qtbot, sql_model: QSqlTableModel) -> None:
     view = QTableView()
     qtbot.addWidget(view)
     HeadersTexts.setup_init({"QTableView": {"id": "ID Column", "name": "Name Column"}})
@@ -38,7 +38,7 @@ def test_set_headers_text_success(qtbot, sql_model):
     assert sql_model.headerData(1, Qt.Orientation.Horizontal) == "Name Column"
 
 
-def test_set_headers_text_partial_mapping(qtbot, sql_model):
+def test_set_headers_text_partial_mapping(qtbot, sql_model: QSqlTableModel) -> None:
     view = QTableView()
     qtbot.addWidget(view)
     HeadersTexts.setup_init({"QTableView": {"name": "Only Name"}})
@@ -47,7 +47,7 @@ def test_set_headers_text_partial_mapping(qtbot, sql_model):
     assert sql_model.headerData(1, Qt.Orientation.Horizontal) == "Only Name"
 
 
-def test_set_headers_text_no_config(qtbot, sql_model):
+def test_set_headers_text_no_config(qtbot, sql_model: QSqlTableModel) -> None:
     view = QTableView()
     qtbot.addWidget(view)
     HeadersTexts.setup_init({})
@@ -55,7 +55,7 @@ def test_set_headers_text_no_config(qtbot, sql_model):
     assert result is False
 
 
-def test_set_headers_text_invalid_key(qtbot, sql_model):
+def test_set_headers_text_invalid_key(qtbot, sql_model: QSqlTableModel) -> None:
     view = QTableView()
     qtbot.addWidget(view)
     HeadersTexts.setup_init({"QTableView": {"wrong_column": "X"}})

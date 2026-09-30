@@ -1,6 +1,6 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.queries_constants import (
+from material_register.db.config.transactions_queries_constants import (
     TRANSACTION_TOTAL_PRICE,
     TRANSACTIONS_BASIC_FILTER_QUERY,
 )

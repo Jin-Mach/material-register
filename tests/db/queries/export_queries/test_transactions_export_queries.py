@@ -16,7 +16,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec(
         "CREATE TABLE customers (id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, company TEXT, document_number TEXT, address TEXT)"

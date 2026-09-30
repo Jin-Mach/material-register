@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QSize, Qt, QVariantAnimation
+from PySide6.QtGui import QResizeEvent
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QPushButton,
@@ -182,6 +183,6 @@ class RightToolbarWidget(QWidget):
     def update_tools_max_width(self) -> None:
         self.tools_container.setMaximumWidth(self.main_window.splitter.width() // 2)
 
-    def resizeEvent(self, event) -> None:
+    def resizeEvent(self, event: QResizeEvent) -> None:
         super().resizeEvent(event)
         self.update_tools_max_width()

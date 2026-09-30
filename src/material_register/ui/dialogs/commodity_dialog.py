@@ -235,7 +235,7 @@ class CommodityDialog(QDialog):
     def _update_required_styles(self) -> None:
         self._set_required_style(self.name_input)
 
-    def _set_required_style(self, widget) -> None:
+    def _set_required_style(self, widget: QLineEdit) -> None:
         invalid = not self._is_input_valid() or not self._is_commodity_valid()
         if invalid:
             widget.setStyleSheet(INVALID_INPUT_STYLE)

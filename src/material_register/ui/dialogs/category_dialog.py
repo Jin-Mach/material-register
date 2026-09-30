@@ -157,14 +157,18 @@ class CategoryDialog(QDialog):
             self._is_input_valid() and self._is_category_valid()
         )
 
-    def _set_required_style(self, widget) -> None:
+    def _set_required_style(self, widget: QLineEdit) -> None:
         text = widget.text().strip()
         if widget == self.category_name_input:
+            ignored_id = None
+            if self.mode == UPDATE_MODE:
+                ignored_id = self.category_data.id
             invalid = (
                 not text
-            ) or self.catalog_widget.catalog_controller.category_exists(
-                text,
-                ignored_id=self.category_data.id if self.mode == UPDATE_MODE else None,
+                or self.catalog_widget.catalog_controller.category_exists(
+                    text,
+                    ignored_id=ignored_id,
+                )
             )
         else:
             invalid = not text

@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QSize
@@ -111,7 +112,9 @@ class CommodityCardWidget(QTabWidget):
         self.active_value.setChecked(bool(commodity.active))
         self.notes_edit.setPlainText(commodity.notes)
 
-    def create_connection(self, commodity: Commodity, on_update_clicked) -> None:
+    def create_connection(
+        self, commodity: Commodity, on_update_clicked: Callable[[Commodity], None]
+    ) -> None:
         self.update_commodity_button.clicked.connect(
             lambda: on_update_clicked(commodity)
         )

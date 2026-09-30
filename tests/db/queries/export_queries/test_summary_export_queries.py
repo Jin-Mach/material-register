@@ -15,7 +15,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE categories (

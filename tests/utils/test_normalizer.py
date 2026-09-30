@@ -34,7 +34,7 @@ from material_register.utils.normalizer import normalize_text, normalize_whitesp
         "accent-mixed",
     ],
 )
-def test_normalize_text_special_chars(input_text, expected):
+def test_normalize_text_special_chars(input_text: str, expected: str) -> None:
     assert normalize_text(input_text) == expected
 
 
@@ -63,5 +63,5 @@ def test_normalize_text_special_chars(input_text, expected):
         "only-spaces",
     ],
 )
-def test_normalize_whitespace(input_text, expected):
+def test_normalize_whitespace(input_text: str, expected: str) -> None:
     assert normalize_whitespace(input_text) == expected

@@ -212,7 +212,7 @@ class CategoryCommodityDialog(QDialog):
             enabled=[self.unit_spinbox, self.price_spinbox]
         )
 
-    def setup_update(self, item_data) -> None:
+    def setup_update(self, item_data: dict[str, str | int | float]) -> None:
         self._setup_categories_items()
         self.category_combo_box.setCurrentText(item_data["category"])
         self._setup_commodities_items()

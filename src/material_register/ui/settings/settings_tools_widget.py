@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 class SettingsToolsWidget(QWidget):
     SPACING = 10
 
-    def __init__(self, settings_dialog: "SettingsDialog"):
+    def __init__(self, settings_dialog: "SettingsDialog") -> None:
         super().__init__(settings_dialog)
         self.settings_dialog = settings_dialog
         self.tools_settings_controller = ToolsSettingsController(self)

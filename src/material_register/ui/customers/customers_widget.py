@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 # noinspection PyUnresolvedReferences
 class CustomersWidget(QWidget):
-    def __init__(self, stacked_widget: "StackedWidget"):
+    def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
         self.stacked_widget = stacked_widget
         self.customers_controller = CustomersController(self)

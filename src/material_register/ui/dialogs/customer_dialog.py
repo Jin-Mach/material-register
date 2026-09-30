@@ -309,7 +309,7 @@ class CustomerDialog(QDialog):
         ):
             self._set_required_style(widget)
 
-    def _set_required_style(self, widget) -> None:
+    def _set_required_style(self, widget: QLineEdit) -> None:
         if widget.isEnabled() and not widget.text().strip():
             widget.setStyleSheet(INVALID_INPUT_STYLE)
         else:
@@ -332,7 +332,7 @@ class CustomerDialog(QDialog):
         self._on_document_type_changed()
         self._update_save_button_state()
 
-    def _on_type_changed(self):
+    def _on_type_changed(self) -> None:
         self._apply_type_state()
         self._on_form_changed()
 

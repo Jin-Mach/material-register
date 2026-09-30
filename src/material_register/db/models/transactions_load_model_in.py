@@ -25,7 +25,9 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         self.headers = {}
         self.total_count = 0
 
-    def data(self, index: QModelIndex, role=Qt.ItemDataRole.DisplayRole) -> Any:
+    def data(
+        self, index: QModelIndex, role: Qt.ItemDataRole = Qt.ItemDataRole.DisplayRole
+    ) -> Any:
         if not index.isValid():
             return None
         transaction = self.transaction_data[index.row()]

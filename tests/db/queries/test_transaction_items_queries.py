@@ -15,7 +15,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE transaction_items (
@@ -37,7 +37,12 @@ def schema(connection) -> None:
     ids=["IN", "OUT"],
 )
 def test_insert_into_transaction_items(
-    connection, schema, transaction_id, commodity_id, unit_count, price_per_unit
+    connection: QSqlDatabase,
+    schema,
+    transaction_id: int,
+    commodity_id: int,
+    unit_count: float,
+    price_per_unit: float,
 ) -> None:
     ok, error = TransactionItemsQueries.insert_into_transaction_items(
         connection, transaction_id, commodity_id, unit_count, price_per_unit
@@ -55,7 +60,7 @@ def test_insert_into_transaction_items(
     assert query.value(3) == price_per_unit
 
 
-def test_delete_transaction_items(connection, schema) -> None:
+def test_delete_transaction_items(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transaction_items
@@ -84,7 +89,7 @@ def test_delete_transaction_items(connection, schema) -> None:
     assert query.value(0) == 1
 
 
-def test_get_transaction_items(connection, schema) -> None:
+def test_get_transaction_items(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO transaction_items (transaction_id, commodity_id, unit_count, price_per_unit)
@@ -129,6 +134,8 @@ def test_get_transaction_items(connection, schema) -> None:
     assert result[1].category_name == "FE"
 
 
-def test_get_transaction_items_returns_none_on_query_error(connection, schema) -> None:
+def test_get_transaction_items_returns_none_on_query_error(
+    connection: QSqlDatabase, schema
+) -> None:
     result = TransactionItemsQueries.get_transaction_items(connection, 1)
     assert result is None

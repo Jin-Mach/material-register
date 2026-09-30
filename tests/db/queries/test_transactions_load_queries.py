@@ -17,7 +17,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE customers (
@@ -160,7 +160,10 @@ def test_load_transaction_in_respects_local_day_boundary(
             (4, 4, 1, 10, 20)
     """)
     results = TransactionsLoadQueries.load_transaction_in(connection)
-    assert {transaction.transaction_id for transaction in results} == {2, 3}
+    transaction_ids = set()
+    for transaction in results:
+        transaction_ids.add(transaction.transaction_id)
+    assert transaction_ids == {2, 3}
 
 
 def test_load_transaction_out_respects_local_day_boundary(
@@ -207,4 +210,7 @@ def test_load_transaction_out_respects_local_day_boundary(
             (4, 4, 1, 10, 20)
     """)
     results = TransactionsLoadQueries.load_transactions_out(connection)
-    assert {transaction.transaction_id for transaction in results} == {2, 3}
+    transaction_ids = set()
+    for transaction in results:
+        transaction_ids.add(transaction.transaction_id)
+    assert transaction_ids == {2, 3}

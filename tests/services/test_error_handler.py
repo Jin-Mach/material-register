@@ -4,21 +4,21 @@ from material_register.services.error_handler import ErrorHandler
 
 
 class FakeLogger:
-    def __init__(self):
+    def __init__(self) -> None:
         self.calls = []
 
-    def warning(self, msg, exc_info=None):
+    def warning(self, msg, exc_info=None) -> None:
         self.calls.append(("warning", msg, bool(exc_info)))
 
-    def error(self, msg, exc_info=None):
+    def error(self, msg, exc_info=None) -> None:
         self.calls.append(("error", msg, bool(exc_info)))
 
-    def critical(self, msg, exc_info=None):
+    def critical(self, msg, exc_info=None) -> None:
         self.calls.append(("critical", msg, bool(exc_info)))
 
 
 @pytest.fixture
-def fake_logger():
+def fake_logger() -> FakeLogger:
     return FakeLogger()
 
 
@@ -31,13 +31,15 @@ def fake_logger():
         ("invalid", ("warning", "fail", False)),
     ],
 )
-def test_handle_error(level, expected, fake_logger):
+def test_handle_error(
+    level: str, expected: tuple[str, str, bool], fake_logger: FakeLogger
+) -> None:
     ErrorHandler.loggers_map = {"app": fake_logger}
     ErrorHandler.handle_error("fail", "app", level)
     assert fake_logger.calls[0] == expected
 
 
-def test_handle_error_exception(fake_logger):
+def test_handle_error_exception(fake_logger: FakeLogger) -> None:
     ErrorHandler.loggers_map = {"app": fake_logger}
     ErrorHandler.handle_error(ValueError("fail"), "app", "error")
     assert fake_logger.calls[0] == ("error", "fail", True)

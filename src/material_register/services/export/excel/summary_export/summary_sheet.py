@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from openpyxl.cell import Cell
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
@@ -838,7 +839,9 @@ class SummarySheet:
         cell_alignment(cell, horizontal=horizontal, vertical=vertical)
 
     @staticmethod
-    def _cell_font(cell, font_size: int | None = None, bold: bool = False) -> None:
+    def _cell_font(
+        cell: Cell, font_size: int | None = None, bold: bool = False
+    ) -> None:
         cell_font(
             cell,
             font_size=font_size,

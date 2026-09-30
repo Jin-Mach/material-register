@@ -14,7 +14,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE commodities (
@@ -29,7 +29,7 @@ def schema(connection) -> None:
     """)
 
 
-def test_create_commodity(connection, schema) -> None:
+def test_create_commodity(connection: QSqlDatabase, schema) -> None:
     ok, error = CommoditiesQueries.create_commodity(
         connection, "A", 1, "kg", 10.0, "note", 1
     )
@@ -48,7 +48,7 @@ def test_create_commodity(connection, schema) -> None:
     assert query.value(5) == 1
 
 
-def test_update_commodity(connection, schema) -> None:
+def test_update_commodity(connection: QSqlDatabase, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "old", 1, "kg", 5.0, "note", 1)
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM commodities WHERE name='old'")
@@ -92,7 +92,7 @@ def test_change_active(connection, schema) -> None:
     assert query.value(0) == 0
 
 
-def test_get_commodities(connection, schema) -> None:
+def test_get_commodities(connection: QSqlDatabase, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "n1", 1)
     CommoditiesQueries.create_commodity(connection, "B", 2, "pcs", 20.0, "n2", 0)
     data = CommoditiesQueries.get_commodities(connection)
@@ -119,7 +119,7 @@ def test_get_commodities(connection, schema) -> None:
     ]
 
 
-def test_update_commodity_price(connection, schema) -> None:
+def test_update_commodity_price(connection: QSqlDatabase, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "note", 1)
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM commodities WHERE name='A'")
@@ -137,7 +137,7 @@ def test_update_commodity_price(connection, schema) -> None:
     assert query.value(0) == 20.0
 
 
-def test_commodity_exists(connection, schema) -> None:
+def test_commodity_exists(connection: QSqlDatabase, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "note", 1)
     assert CommoditiesQueries.commodity_exists(connection, "A") is True
     assert CommoditiesQueries.commodity_exists(connection, "B") is False

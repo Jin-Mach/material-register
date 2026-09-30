@@ -92,7 +92,7 @@ class SettingsDialog(QDialog):
     def _setup_context_menu(self) -> None:
         disable_context_menu(self.findChildren(QWidget))
 
-    def _create_connection(self):
+    def _create_connection(self) -> None:
         buttons_map = {
             self.settings_side_panel.branch_button: 0,
             self.settings_side_panel.export_button: 1,

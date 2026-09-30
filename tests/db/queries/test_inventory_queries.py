@@ -1,7 +1,7 @@
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.queries_constants import INVENTORY_QUERY
+from material_register.db.config.transactions_queries_constants import INVENTORY_QUERY
 from material_register.db.queries.inventory_queries import InventoryQueries
 
 
@@ -14,7 +14,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE categories (
@@ -42,7 +42,7 @@ def schema(connection) -> None:
     """)
 
 
-def test_get_inventory(connection, schema) -> None:
+def test_get_inventory(connection: QSqlDatabase, schema) -> None:
     insert_query = QSqlQuery(connection)
     insert_query.exec("""
         INSERT INTO categories (name, notes)
@@ -86,7 +86,7 @@ def test_get_inventory(connection, schema) -> None:
     ]
 
 
-def test_update_inventory_item(connection, schema) -> None:
+def test_update_inventory_item(connection: QSqlDatabase, schema) -> None:
     insert_query = QSqlQuery(connection)
     insert_query.exec("""
             INSERT INTO categories (name, notes)

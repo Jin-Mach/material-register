@@ -8,12 +8,13 @@ from PySide6.QtWidgets import (
     QLabel,
     QStyle,
     QVBoxLayout,
+    QWidget,
 )
 
 
 # noinspection PyTypeChecker
 class MessageBoxDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget) -> None:
         super().__init__(parent)
         self.setLayout(self._create_ui())
         self._setup_ui()

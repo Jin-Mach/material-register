@@ -32,6 +32,9 @@ if TYPE_CHECKING:
     from material_register.controllers.transactions_controller import (
         TransactionsController,
     )
+    from material_register.db.models.transaction_items_model_in import (
+        TransactionItemsModelIn,
+    )
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
 
 
@@ -223,10 +226,10 @@ class TransactionItemsDialogIn(QDialog):
             "notes": self.transaction_info_widget.get_notes(),
         }
 
-    def get_current_model(self):
+    def get_current_model(self) -> "TransactionItemsModelIn":
         return self.transactions_items_widget.current_model
 
-    def setup_total_value(self, model):
+    def setup_total_value(self, model: "TransactionItemsModelIn") -> None:
         self.transactions_items_widget.setup_total_value(model)
 
     def showEvent(self, event: QShowEvent) -> None:

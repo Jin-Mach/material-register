@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QCheckBox, QLineEdit, QRadioButton, QSpinBox, QWid
 from material_register.ui.setup.ui_settings import UiSettings
 
 
-def test_set_ui_settings_line_edit(qtbot):
+def test_set_ui_settings_line_edit(qtbot) -> None:
     widget = QWidget()
     line_edit = QLineEdit()
     line_edit.setObjectName("branchNameLineEdit")
@@ -17,7 +17,7 @@ def test_set_ui_settings_line_edit(qtbot):
     assert line_edit.text() == "Some branch"
 
 
-def test_set_ui_settings_spinbox(qtbot):
+def test_set_ui_settings_spinbox(qtbot) -> None:
     widget = QWidget()
     spinbox = QSpinBox()
     spinbox.setObjectName("openingBalanceSpinbox")
@@ -32,7 +32,7 @@ def test_set_ui_settings_spinbox(qtbot):
     assert spinbox.value() == 1000
 
 
-def test_set_ui_settings_checkbox(qtbot):
+def test_set_ui_settings_checkbox(qtbot) -> None:
     widget = QWidget()
     checkbox = QCheckBox()
     checkbox.setObjectName("saveLastBalanceCheckbox")
@@ -46,7 +46,7 @@ def test_set_ui_settings_checkbox(qtbot):
     assert checkbox.isChecked() is True
 
 
-def test_set_ui_settings_radiobutton(qtbot):
+def test_set_ui_settings_radiobutton(qtbot) -> None:
     widget = QWidget()
     radio = QRadioButton()
     radio.setObjectName("openFolderRadioButton")
@@ -60,7 +60,7 @@ def test_set_ui_settings_radiobutton(qtbot):
     assert radio.isChecked() is True
 
 
-def test_set_ui_settings_multiple_widgets(qtbot):
+def test_set_ui_settings_multiple_widgets(qtbot) -> None:
     widget = QWidget()
     branch = QLineEdit()
     branch.setObjectName("branchNameLineEdit")
@@ -91,7 +91,7 @@ def test_set_ui_settings_multiple_widgets(qtbot):
     assert save_checkbox.isChecked() is False
 
 
-def test_set_ui_settings_missing_data(qtbot):
+def test_set_ui_settings_missing_data(qtbot) -> None:
     widget = QWidget()
     line_edit = QLineEdit()
     line_edit.setObjectName("branchNameLineEdit")
@@ -107,7 +107,7 @@ def test_set_ui_settings_missing_data(qtbot):
     assert line_edit.text() == ""
 
 
-def test_set_ui_settings_missing_key(qtbot):
+def test_set_ui_settings_missing_key(qtbot) -> None:
     widget = QWidget()
     line_edit = QLineEdit()
     line_edit.setObjectName("branchNameLineEdit")
@@ -123,7 +123,7 @@ def test_set_ui_settings_missing_key(qtbot):
     assert line_edit.text() == ""
 
 
-def test_get_branch_settings():
+def test_get_branch_settings() -> None:
     UiSettings.setup_init(
         {
             "branch": {
@@ -155,7 +155,7 @@ def test_get_branch_settings():
     assert result.opening_hours == "Mon-Fri 8:00-16:00"
 
 
-def test_get_branch_settings_missing_data():
+def test_get_branch_settings_missing_data() -> None:
     UiSettings.setup_init({})
     result = UiSettings.get_branch_settings()
     assert result.company_name is None

@@ -71,13 +71,11 @@ def test_create_transaction_dialog_selects_customer(
 ) -> None:
     dialog.customer_name_input.setText("Acme s.r.o.")
     dialog._on_customer_selected("Acme s.r.o.")
-
     assert dialog.selected_customer is not None
     assert dialog.selected_customer.id == 7
     assert dialog.customer_document_number.text() == "ABC-123"
     assert dialog.customer_address.text() == "Prague"
     assert dialog.continue_transaction_button.isEnabled() is True
-
     data = dialog.get_create_data()
     assert data is not None
     assert data["paymentType"] == "CASH"
@@ -92,9 +90,7 @@ def test_create_transaction_dialog_clears_selection_on_edit(
 ) -> None:
     dialog.customer_name_input.setText("Acme s.r.o.")
     dialog._on_customer_selected("Acme s.r.o.")
-
     dialog._customer_name_edited()
-
     assert dialog.selected_customer is None
     assert dialog.customer_document_number.text() == ""
     assert dialog.customer_address.text() == ""
@@ -125,14 +121,11 @@ def test_create_transaction_dialog_out_transfer_hides_payment_type(qtbot) -> Non
         TRANSFER_OUT,
     )
     qtbot.addWidget(dialog)
-
     assert dialog.payment_type_label.isHidden() is True
     assert dialog.payment_type_combobox.isHidden() is True
-
     dialog.customer_name_input.setText("Beta")
     dialog._on_customer_selected("Beta")
     data = dialog.get_create_data()
-
     assert data is not None
     assert data["paymentType"] == "NONE"
     assert data["customerId"] == 13

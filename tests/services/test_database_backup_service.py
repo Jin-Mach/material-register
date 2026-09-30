@@ -1,17 +1,18 @@
 import sqlite3
+from pathlib import Path
 
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.database_backup_service import DatabaseBackupService
 
 
-def create_test_database(database_path) -> None:
+def create_test_database(database_path: Path) -> None:
     with sqlite3.connect(database_path) as database:
         database.execute("CREATE TABLE test (id INTEGER, name TEXT)")
         database.execute("INSERT INTO test VALUES (1, 'Test')")
         database.commit()
 
 
-def test_create_month_backup(tmp_path) -> None:
+def test_create_month_backup(tmp_path: Path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     result = DatabaseBackupService.create_month_backup(
@@ -27,7 +28,7 @@ def test_create_month_backup(tmp_path) -> None:
             assert row[1] == "Test"
 
 
-def test_create_month_backup_when_backup_exists(tmp_path) -> None:
+def test_create_month_backup_when_backup_exists(tmp_path: Path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     backup_directory = tmp_path / "backup" / "2026"
@@ -40,7 +41,7 @@ def test_create_month_backup_when_backup_exists(tmp_path) -> None:
     assert result is False
 
 
-def test_create_year_backup(tmp_path) -> None:
+def test_create_year_backup(tmp_path: Path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     result = DatabaseBackupService.create_year_backup(database_path, year=2025)
@@ -54,7 +55,7 @@ def test_create_year_backup(tmp_path) -> None:
             assert row[1] == "Test"
 
 
-def test_create_year_backup_removes_month_backups(tmp_path) -> None:
+def test_create_year_backup_removes_month_backups(tmp_path: Path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     backup_directory = tmp_path / "backup" / "2025"
@@ -70,7 +71,7 @@ def test_create_year_backup_removes_month_backups(tmp_path) -> None:
     assert not (backup_directory / "03.db").exists()
 
 
-def test_create_year_backup_when_backup_exists(tmp_path) -> None:
+def test_create_year_backup_when_backup_exists(tmp_path: Path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     backup_directory = tmp_path / "backup" / "2025"
@@ -81,7 +82,7 @@ def test_create_year_backup_when_backup_exists(tmp_path) -> None:
     assert result is False
 
 
-def test_create_custom_backup(tmp_path) -> None:
+def test_create_custom_backup(tmp_path: Path) -> None:
     database_path = tmp_path / "database.db"
     create_test_database(database_path)
     backup_path = tmp_path / "test_backup.db"
@@ -95,7 +96,7 @@ def test_create_custom_backup(tmp_path) -> None:
             assert row[1] == "Test"
 
 
-def test_restore_database(tmp_path) -> None:
+def test_restore_database(tmp_path: Path) -> None:
     database_path = tmp_path / "database.db"
     backup_path = tmp_path / "backup.db"
     create_test_database(database_path)
@@ -111,7 +112,7 @@ def test_restore_database(tmp_path) -> None:
     assert row[0] == "Test"
 
 
-def test_delete_backup_folder(tmp_path) -> None:
+def test_delete_backup_folder(tmp_path: Path) -> None:
     backup_folder = tmp_path / "backup"
     year_folder = backup_folder / "2026"
     year_folder.mkdir(parents=True)
@@ -123,7 +124,7 @@ def test_delete_backup_folder(tmp_path) -> None:
     assert not backup_folder.exists()
 
 
-def test_delete_backup_folder_when_folder_does_not_exist(tmp_path) -> None:
+def test_delete_backup_folder_when_folder_does_not_exist(tmp_path: Path) -> None:
     PathsProvider.database = tmp_path
     result = DatabaseBackupService.delete_backup_folder()
     assert result is True

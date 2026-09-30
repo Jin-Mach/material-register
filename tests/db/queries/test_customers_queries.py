@@ -13,7 +13,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     ok = query.exec("""
         CREATE TABLE IF NOT EXISTS customers (
@@ -35,7 +35,7 @@ def schema(connection) -> None:
     assert ok, query.lastError().text()
 
 
-def test_get_customers(connection, schema):
+def test_get_customers(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         INSERT INTO customers

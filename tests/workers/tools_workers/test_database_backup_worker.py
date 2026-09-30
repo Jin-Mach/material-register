@@ -1,11 +1,12 @@
 from datetime import UTC, datetime
+from pathlib import Path
 
 from material_register.workers.tools_workers.database_backup_worker import (
     DatabaseBackupWorker,
 )
 
 
-def test_find_missing_backup_when_backup_directory_is_empty(tmp_path):
+def test_find_missing_backup_when_backup_directory_is_empty(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup"
     backup_path.mkdir()
     result = DatabaseBackupWorker._find_missing_backup(
@@ -14,7 +15,7 @@ def test_find_missing_backup_when_backup_directory_is_empty(tmp_path):
     assert result == (2025, None)
 
 
-def test_find_missing_backup_when_year_backup_is_missing(tmp_path):
+def test_find_missing_backup_when_year_backup_is_missing(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup"
     backup_path.mkdir()
     result = DatabaseBackupWorker._find_missing_backup(
@@ -23,7 +24,7 @@ def test_find_missing_backup_when_year_backup_is_missing(tmp_path):
     assert result == (2025, None)
 
 
-def test_find_missing_backup_in_january(tmp_path):
+def test_find_missing_backup_in_january(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup"
     previous_year_path = backup_path / "2025"
     previous_year_path.mkdir(parents=True)
@@ -34,7 +35,7 @@ def test_find_missing_backup_in_january(tmp_path):
     assert result == (None, None)
 
 
-def test_find_missing_backup_when_month_backup_is_missing(tmp_path):
+def test_find_missing_backup_when_month_backup_is_missing(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup"
     previous_year_path = backup_path / "2025"
     current_year_path = backup_path / "2026"
@@ -47,7 +48,7 @@ def test_find_missing_backup_when_month_backup_is_missing(tmp_path):
     assert result == (2026, 4)
 
 
-def test_find_missing_backup_when_month_backup_exists(tmp_path):
+def test_find_missing_backup_when_month_backup_exists(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup"
     previous_year_path = backup_path / "2025"
     current_year_path = backup_path / "2026"
@@ -61,7 +62,7 @@ def test_find_missing_backup_when_month_backup_exists(tmp_path):
     assert result == (None, None)
 
 
-def test_find_missing_backup_in_december(tmp_path):
+def test_find_missing_backup_in_december(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup"
     previous_year_path = backup_path / "2025"
     current_year_path = backup_path / "2026"
@@ -74,7 +75,9 @@ def test_find_missing_backup_in_december(tmp_path):
     assert result == (2026, 11)
 
 
-def test_find_missing_backup_when_current_year_directory_is_missing(tmp_path):
+def test_find_missing_backup_when_current_year_directory_is_missing(
+    tmp_path: Path,
+) -> None:
     backup_path = tmp_path / "backup"
     previous_year_path = backup_path / "2025"
     previous_year_path.mkdir(parents=True)

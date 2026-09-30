@@ -1,4 +1,7 @@
-def test_paths_init_creates_structure(tmp_path):
+from pathlib import Path
+
+
+def test_paths_init_creates_structure(tmp_path: Path) -> None:
     base = tmp_path
     (base / "resources").mkdir()
     (base / "config").mkdir()

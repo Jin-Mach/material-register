@@ -14,7 +14,7 @@ def connection() -> QSqlDatabase:
 
 
 @pytest.fixture
-def schema(connection) -> None:
+def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     query.exec("""
         CREATE TABLE categories (
@@ -25,7 +25,7 @@ def schema(connection) -> None:
     """)
 
 
-def test_create_category(connection, schema) -> None:
+def test_create_category(connection: QSqlDatabase, schema) -> None:
     ok, error, category_id = CategoryQueries.create_category(connection, "test", "note")
     assert ok is True
     assert error == ""
@@ -38,7 +38,7 @@ def test_create_category(connection, schema) -> None:
     assert query.value(1) == "note"
 
 
-def test_update_category(connection, schema) -> None:
+def test_update_category(connection: QSqlDatabase, schema) -> None:
     CategoryQueries.create_category(connection, "old", "note")
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM categories WHERE name='old'")
@@ -58,7 +58,7 @@ def test_update_category(connection, schema) -> None:
     assert query.value(1) == "updated"
 
 
-def test_get_categories(connection, schema) -> None:
+def test_get_categories(connection: QSqlDatabase, schema) -> None:
     CategoryQueries.create_category(connection, "A", "n1")
     CategoryQueries.create_category(connection, "B", "n2")
     data = CategoryQueries.get_categories(connection)
@@ -69,13 +69,13 @@ def test_get_categories(connection, schema) -> None:
     ]
 
 
-def test_category_exists(connection, schema) -> None:
+def test_category_exists(connection: QSqlDatabase, schema) -> None:
     CategoryQueries.create_category(connection, "A", "n")
     assert CategoryQueries.category_exists(connection, "A") is True
     assert CategoryQueries.category_exists(connection, "B") is False
 
 
-def test_category_exists_ignored_id(connection, schema) -> None:
+def test_category_exists_ignored_id(connection: QSqlDatabase, schema) -> None:
     CategoryQueries.create_category(connection, "A", "n")
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM categories WHERE name='A'")
@@ -84,7 +84,7 @@ def test_category_exists_ignored_id(connection, schema) -> None:
     assert CategoryQueries.category_exists(connection, "A", ignored_id=cat_id) is False
 
 
-def test_get_category_by_id(connection, schema) -> None:
+def test_get_category_by_id(connection: QSqlDatabase, schema) -> None:
     CategoryQueries.create_category(connection, "A", "note")
     query = QSqlQuery(connection)
     query.exec("SELECT id FROM categories WHERE name='A'")
@@ -96,6 +96,6 @@ def test_get_category_by_id(connection, schema) -> None:
     assert data.id == cat_id
 
 
-def test_get_category_by_id_not_found(connection, schema) -> None:
+def test_get_category_by_id_not_found(connection: QSqlDatabase, schema) -> None:
     data = CategoryQueries.get_category_by_id(connection, 999)
     assert data is None

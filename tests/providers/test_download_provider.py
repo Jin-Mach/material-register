@@ -1,3 +1,4 @@
+from pathlib import Path
 from types import SimpleNamespace
 
 import requests
@@ -5,19 +6,19 @@ import requests
 from material_register.providers.download_provider import DownloadProvider
 
 
-def _fake_response_text(*args, **kwargs):
+def _fake_response_text(*args, **kwargs) -> SimpleNamespace:
     return SimpleNamespace(
         text='{"ok": true}', content=b"", raise_for_status=lambda: None
     )
 
 
-def _fake_response_binary(*args, **kwargs):
+def _fake_response_binary(*args, **kwargs) -> SimpleNamespace:
     return SimpleNamespace(
         text="", content=b"binary-data", raise_for_status=lambda: None
     )
 
 
-def test_save_text_file(tmp_path, monkeypatch) -> None:
+def test_save_text_file(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(requests, "get", _fake_response_text)
     path = tmp_path / "en_GB/ui_texts.json"
     result = DownloadProvider._save_file("https://fake-url", path)
@@ -25,7 +26,7 @@ def test_save_text_file(tmp_path, monkeypatch) -> None:
     assert path.read_text() == '{"ok": true}'
 
 
-def test_save_png_file(tmp_path, monkeypatch) -> None:
+def test_save_png_file(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(requests, "get", _fake_response_binary)
     path = tmp_path / "icon.png"
     result = DownloadProvider._save_file("https://fake-url", path)
@@ -33,7 +34,7 @@ def test_save_png_file(tmp_path, monkeypatch) -> None:
     assert path.read_bytes() == b"binary-data"
 
 
-def test_save_jpg_file(tmp_path, monkeypatch) -> None:
+def test_save_jpg_file(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(requests, "get", _fake_response_binary)
     path = tmp_path / "image.jpg"
     result = DownloadProvider._save_file("https://fake-url", path)
@@ -41,7 +42,7 @@ def test_save_jpg_file(tmp_path, monkeypatch) -> None:
     assert path.read_bytes() == b"binary-data"
 
 
-def test_save_font_file(tmp_path, monkeypatch) -> None:
+def test_save_font_file(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(requests, "get", _fake_response_binary)
     path = tmp_path / "fonts/DejaVuSans.ttf"
     result = DownloadProvider._save_file("https://fake-url", path)
@@ -49,7 +50,7 @@ def test_save_font_file(tmp_path, monkeypatch) -> None:
     assert path.read_bytes() == b"binary-data"
 
 
-def test_download_files_success(tmp_path, monkeypatch) -> None:
+def test_download_files_success(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(requests, "get", _fake_response_text)
     path = tmp_path / "texts/en_GB/ui_texts.json"
     invalid_files = {path}
@@ -58,7 +59,7 @@ def test_download_files_success(tmp_path, monkeypatch) -> None:
     assert path.read_text(encoding="utf-8") == '{"ok": true}'
 
 
-def test_download_font_file(tmp_path, monkeypatch) -> None:
+def test_download_font_file(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(requests, "get", _fake_response_binary)
     path = tmp_path / "fonts/DejaVuSans.ttf"
     invalid_files = {path}

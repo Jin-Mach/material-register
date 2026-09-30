@@ -525,9 +525,10 @@ class TransactionsDaySheetOut:
             column=items_end_column,
         )
         if item_quantity_cells:
-            transaction_total_cell.value = (
-                f"=SUM({','.join(cell.coordinate for cell in item_quantity_cells)})"
-            )
+            cell_coordinates = []
+            for cell in item_quantity_cells:
+                cell_coordinates.append(cell.coordinate)
+            transaction_total_cell.value = f"=SUM({','.join(cell_coordinates)})"
         else:
             transaction_total_cell.value = "=0"
         TransactionsDaySheetOut._cell_alignment(

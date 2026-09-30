@@ -1,8 +1,10 @@
+from pathlib import Path
+
 from material_register.providers.paths_provider import PathsProvider
 from material_register.ui.helpers.text_file_handler import TextFileHandler
 
 
-def test_load_document_creates_file_when_missing(tmp_path, monkeypatch):
+def test_load_document_creates_file_when_missing(tmp_path: Path, monkeypatch) -> None:
     document_dir = tmp_path / "documents"
     document_dir.mkdir()
     monkeypatch.setattr(PathsProvider, "documents", document_dir)
@@ -12,7 +14,7 @@ def test_load_document_creates_file_when_missing(tmp_path, monkeypatch):
     assert (document_dir / "notes.txt").exists()
 
 
-def test_load_document_reads_existing_text(tmp_path, monkeypatch):
+def test_load_document_reads_existing_text(tmp_path: Path, monkeypatch) -> None:
     document_dir = tmp_path / "documents"
     document_dir.mkdir()
     document_path = document_dir / "notes.txt"
@@ -23,7 +25,7 @@ def test_load_document_reads_existing_text(tmp_path, monkeypatch):
     assert content == "Hello world"
 
 
-def test_save_document_saves_text_to_existing_file(tmp_path, monkeypatch):
+def test_save_document_saves_text_to_existing_file(tmp_path: Path, monkeypatch) -> None:
     document_dir = tmp_path / "documents"
     document_dir.mkdir()
     document_path = document_dir / "notes.txt"
@@ -34,7 +36,9 @@ def test_save_document_saves_text_to_existing_file(tmp_path, monkeypatch):
     assert document_path.read_text(encoding="utf-8") == "Saved text"
 
 
-def test_save_document_returns_false_when_file_does_not_exist(tmp_path, monkeypatch):
+def test_save_document_returns_false_when_file_does_not_exist(
+    tmp_path: Path, monkeypatch
+) -> None:
     document_dir = tmp_path / "documents"
     document_dir.mkdir()
     monkeypatch.setattr(PathsProvider, "documents", document_dir)
