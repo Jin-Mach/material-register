@@ -96,6 +96,12 @@
     "TEXT": "Failed to show the file in the file manager.\nCheck the settings or show it manually.",
     "CLOSE": "Close"
   },
+  "NO_CUSTOM_BACKUP_DATA": {
+    "TITLE": "Custom Backup",
+    "TEXT": "The database contains no data.\nCreate a backup?",
+    "YES": "Yes",
+    "NO": "Cancel"
+  },
   "CUSTOM_BACKUP": {
     "TITLE": "Custom Backup",
     "TEXT": "Create a custom backup in the selected location?",

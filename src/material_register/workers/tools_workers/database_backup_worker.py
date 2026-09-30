@@ -4,6 +4,10 @@ from pathlib import Path
 from PySide6.QtCore import QObject, Signal, Slot
 
 from material_register.db.config.db_constants import DATABASE_NAME
+from material_register.db.queries.tools_queries.database_backup_queries import (
+    DatabaseBackupQueries,
+)
+from material_register.init.db_init import DbInit
 from material_register.services.database_backup_service import DatabaseBackupService
 
 
@@ -19,9 +23,20 @@ class DatabaseBackupWorker(QObject):
         self.database_path = Path(self.database_folder / DATABASE_NAME).with_suffix(
             ".db"
         )
+        self.db_connection = None
 
     @Slot()
     def run(self) -> None:
+        ok, _, self.db_connection = DbInit.thread_connection(
+            "database_backup_connection"
+        )
+        if not ok:
+            self.error.emit("BACKUP_FAILED")
+            self.finished.emit()
+            return
+        if not DatabaseBackupQueries.has_data(self.db_connection):
+            self.finished.emit()
+            return
         self.backup_folder.mkdir(parents=True, exist_ok=True)
         year, month = DatabaseBackupWorker._find_missing_backup(
             self.backup_folder, datetime.now(UTC)

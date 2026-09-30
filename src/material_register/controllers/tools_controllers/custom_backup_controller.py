@@ -5,6 +5,10 @@ from PySide6.QtCore import QObject, QThread, QTimer
 
 from material_register.core.app_context import AppContext
 from material_register.db.config.db_constants import DATABASE_NAME
+from material_register.db.queries.tools_queries.database_backup_queries import (
+    DatabaseBackupQueries,
+)
+from material_register.init.db_init import DbInit
 from material_register.providers.paths_provider import PathsProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -35,6 +39,13 @@ class CustomBackupController(QObject):
         self._progress_dialog = None
 
     def start_backup_thread(self) -> None:
+        if not DatabaseBackupQueries.has_data(DbInit.db_connection):
+            question = MessageBoxes.show_question(
+                self._database_backup_widget,
+                "NO_CUSTOM_BACKUP_DATA",
+            )
+            if not question:
+                return
         result = self._database_backup_widget.get_custom_backup_path()
         if result is None:
             return

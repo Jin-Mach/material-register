@@ -96,6 +96,12 @@
       "TEXT": "Nepodařilo se zobrazit soubor ve správci souborů.\nZkontrolujte nastavení nebo jej zobrazte ručně.",
       "CLOSE": "Zavřít"
   },
+  "NO_CUSTOM_BACKUP_DATA": {
+    "TITLE": "Vlastní záloha",
+    "TEXT": "Databáze neobsahuje žádná data.\nVytvořit zálohu?",
+    "YES": "Ano",
+    "NO": "Zrušit"
+  },
   "CUSTOM_BACKUP": {
     "TITLE": "Vlastní záloha",
     "TEXT": "Vytvořit vlastní zálohu ve vybraném umístění?",
