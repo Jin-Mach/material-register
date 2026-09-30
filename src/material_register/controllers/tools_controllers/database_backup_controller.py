@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QObject, QThread, QTimer
+from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.paths_provider import PathsProvider
@@ -92,6 +93,11 @@ class DatabaseBackupController(QObject):
         self._clean_thread()
 
     def _clean_thread(self) -> None:
+        if self._worker and self._worker.db_connection:
+            connection_name = self._worker.db_connection.connectionName()
+            self._worker.db_connection.close()
+            self._worker.db_connection = None
+            QSqlDatabase.removeDatabase(connection_name)
         self._thread.quit()
         self._thread.wait()
         if self._worker:
