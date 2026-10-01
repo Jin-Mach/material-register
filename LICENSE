@@ -1,21 +1,33 @@
-MIT License
+Material Register License
 
-Copyright (c) 2026 Jin_Mach
+Copyright © 2026 Jindřich Machytka
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+The source code of Material Register is publicly available under the following terms.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Permitted Use
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+You may:
+
+* view and study the source code,
+* use the source code for educational purposes,
+* create, modify, and use copies of the software for your own private and non-commercial purposes.
+
+Restrictions
+
+Without prior written permission from the author, you may not:
+
+* distribute or publicly make available the software or any modified version of it,
+* sell, sublicense, or otherwise commercially provide the software or any part of it to third parties,
+* use the software or substantial portions of its source code as part of another commercial product or service,
+* remove or alter any copyright or authorship notices.
+
+Commercial Use
+
+Commercial use, distribution, or any other use beyond the permissions granted above requires separate written permission or a license granted by the author.
+
+Warranty and Liability
+
+The software and its source code are provided “as is”, without warranty of any kind, express or implied.
+
+To the extent permitted by applicable law, the author shall not be liable for any damages, loss of data, or other consequences arising from the use or modification of the software.
