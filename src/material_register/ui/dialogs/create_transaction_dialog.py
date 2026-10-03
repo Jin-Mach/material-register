@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QRegularExpression
-from PySide6.QtGui import QRegularExpressionValidator, QShowEvent, Qt
+from PySide6.QtGui import QRegularExpressionValidator, QShowEvent
 from PySide6.QtWidgets import (
     QComboBox,
-    QCompleter,
     QDialog,
     QDialogButtonBox,
     QFormLayout,
@@ -24,6 +23,9 @@ from material_register.ui.config.ui_constants import (
     PAYMENT_VALUES,
     TRANSFER_IN,
     TRANSFER_OUT,
+)
+from material_register.ui.customers.customers_widgets.customers_completer import (
+    CustomersCompleter,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu
@@ -170,13 +172,8 @@ class CreateTransactionDialog(QDialog):
             self.payment_type_combobox.addItem(text, value)
 
     def _setup_completer(self, completer_model: "CustomersCompleterModel") -> None:
-        self.completer = QCompleter()
-        self.completer.popup().setObjectName("customerCompleterPopup")
+        self.completer = CustomersCompleter()
         self.completer.setModel(completer_model)
-        self.completer.setCompletionRole(Qt.ItemDataRole.UserRole + 10)
-        self.completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
-        self.completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-        self.completer.setFilterMode(Qt.MatchFlag.MatchContains)
         self.customer_name_input.setCompleter(self.completer)
 
     def _create_connection(self) -> None:

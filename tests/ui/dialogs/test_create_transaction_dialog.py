@@ -8,6 +8,7 @@ from material_register.ui.dialogs.create_transaction_dialog import (
     CreateTransactionDialog,
 )
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.utils.normalizer import normalize_text
 
 
 class FakeCustomersCompleterModel(QStandardItemModel):
@@ -15,6 +16,7 @@ class FakeCustomersCompleterModel(QStandardItemModel):
         super().__init__()
         item = QStandardItem(f"{customer.company} - {customer.address}")
         item.setData(customer.company, Qt.ItemDataRole.UserRole + 10)
+        item.setData(normalize_text(customer.company), Qt.ItemDataRole.UserRole + 11)
         item.setData(customer, Qt.ItemDataRole.UserRole)
         self.appendRow(item)
 

@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from material_register.domain.customers_dataclass import Customer
+from material_register.utils.normalizer import normalize_text
 
 
 class CustomersCompleterModel(QStandardItemModel):
@@ -15,6 +16,7 @@ class CustomersCompleterModel(QStandardItemModel):
             item = QStandardItem()
             item.setData(f"{name} - {address}", Qt.ItemDataRole.DisplayRole)
             item.setData(name, Qt.ItemDataRole.UserRole + 10)
+            item.setData(normalize_text(name), Qt.ItemDataRole.UserRole + 11)
             item.setData(customer, Qt.ItemDataRole.UserRole)
             self.appendRow(item)
 
