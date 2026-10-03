@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QFont, QShowEvent
+from PySide6.QtGui import QFont, QShowEvent, Qt
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.export_controllers.pdf.transaction_document_controller import (
@@ -60,6 +60,26 @@ class TransactionsWidget(QWidget):
         self.transactions_actions_widget = TransactionsActionsWidget(self)
         self.transaction_detail_widget = TransactionDetailWidget(self)
         self.transactions_tab_widget = TransactionsTabWidget(self)
+        self.actions_group_box = QGroupBox()
+        self.actions_group_box.setObjectName("actionsGroupBox")
+        action_layout = QHBoxLayout()
+        action_layout.setContentsMargins(5, 5, 5, 5)
+        action_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        action_layout.addWidget(self.transactions_actions_widget)
+        self.actions_group_box.setLayout(action_layout)
+        self.detail_group_box = QGroupBox()
+        self.detail_group_box.setObjectName("detailGroupBox")
+        detail_group_layout = QVBoxLayout()
+        detail_group_layout.setContentsMargins(5, 5, 5, 5)
+        detail_group_layout.addWidget(self.transaction_detail_widget)
+        self.detail_group_box.setLayout(detail_group_layout)
+        self.transactions_group_box = QGroupBox()
+        self.transactions_group_box.setObjectName("transactionsGroupBox")
+        transactions_group_layout = QVBoxLayout()
+        transactions_group_layout.setContentsMargins(5, 5, 5, 5)
+        transactions_group_layout.addSpacing(5)
+        transactions_group_layout.addWidget(self.transactions_tab_widget)
+        self.transactions_group_box.setLayout(transactions_group_layout)
         count_group_box = QGroupBox()
         count_layout = QHBoxLayout()
         count_layout.setSpacing(0)
@@ -74,10 +94,9 @@ class TransactionsWidget(QWidget):
         count_layout.addWidget(self.price_count_label)
         count_layout.addWidget(self.price_count_value)
         count_group_box.setLayout(count_layout)
-        main_layout.addWidget(self.transactions_actions_widget, 0)
-        main_layout.addWidget(self.transaction_detail_widget, 0)
-        main_layout.addSpacing(5)
-        main_layout.addWidget(self.transactions_tab_widget, 1)
+        main_layout.addWidget(self.actions_group_box, 0)
+        main_layout.addWidget(self.detail_group_box, 0)
+        main_layout.addWidget(self.transactions_group_box, 1)
         main_layout.addWidget(count_group_box)
         return main_layout
 
@@ -92,15 +111,8 @@ class TransactionsWidget(QWidget):
         self.transactions_controller.update_total_price()
 
     def _setup_texts(self) -> None:
+        widgets = [self.detail_group_box, self.transactions_group_box]
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        if not ui_texts:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
         self.model_in_suffix = ui_texts.get("modelInSuffix", "")
         self.items_count_text = ui_texts.get("itemsCountLabelText", "Count:")
         self.price_prefix = ui_texts.get("pricePrefix", "")
@@ -113,6 +125,15 @@ class TransactionsWidget(QWidget):
             "TRANSFER": ui_texts.get("TRANSFER", "Transfer"),
             "notes_text": ui_texts.get("tooltipNotesText", "Notes:"),
         }
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
 
     def _setup_style(self) -> None:
         font = QFont()

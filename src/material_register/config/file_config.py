@@ -62,6 +62,8 @@ UI_KEYS = [
     ("SidePanel", "inventoryButtonTooltipText"),
     ("SidePanel", "settingsButtonText"),
     ("SidePanel", "settingsButtonTooltipText"),
+    ("TransactionsWidget", "detailGroupBoxText"),
+    ("TransactionsWidget", "transactionsGroupBoxText"),
     ("TransactionsWidget", "modelInSuffix"),
     ("TransactionsWidget", "itemsCountLabelText"),
     ("TransactionsWidget", "pricePrefix"),

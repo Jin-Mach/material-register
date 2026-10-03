@@ -16,6 +16,8 @@ DEFAULT_TEXTS = {
         "settingsButtonTooltipText": "Displays application settings",
     },
     "TransactionsWidget": {
+        "detailGroupBoxText": "Transaction Detail",
+        "transactionsGroupBoxText": "Transaction List",
         "modelInSuffix": "£",
         "itemsCountLabelText": "Displayed:",
         "pricePrefix": "Purchase for period",

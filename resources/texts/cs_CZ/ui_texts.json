@@ -20,6 +20,8 @@
     "settingsButtonTooltipText": "Zobrazí nastavení aplikace"
   },
   "TransactionsWidget": {
+    "detailGroupBoxText": "Detail transakce",
+    "transactionsGroupBoxText": "Seznam transakcí",
     "modelInSuffix": "Kč",
     "itemsCountLabelText": "Zobrazeno:",
     "pricePrefix": "Výkup za období",
