@@ -104,6 +104,11 @@ class CustomersView(QTableView):
                 col, self.columnWidth(col) + CUSTOMERS_HORIZONTAL_PADDING
             )
 
+    def _setup_default_sorting(self) -> None:
+        model = self.model()
+        if isinstance(model, CustomersModel):
+            self.sortByColumn(model.fieldIndex("company"), Qt.SortOrder.AscendingOrder)
+
     def _setup_behavior(self) -> None:
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
         self.setHorizontalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
@@ -112,6 +117,7 @@ class CustomersView(QTableView):
         self.setSelectionMode(QTableView.SelectionMode.SingleSelection)
         self.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.setSortingEnabled(True)
+        self._setup_default_sorting()
         self.setCornerButtonEnabled(False)
         self.setAlternatingRowColors(True)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)

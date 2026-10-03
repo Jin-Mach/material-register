@@ -1,5 +1,6 @@
 import uuid
 
+from PySide6.QtCore import Qt
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.models.customers_model import CustomersModel
@@ -108,3 +109,24 @@ def test_get_total_count() -> None:
     query.exec("INSERT INTO customers (id) VALUES (1)")
     query.exec("INSERT INTO customers (id) VALUES (2)")
     assert model.get_total_count() == 2
+
+
+def test_sort_customers_by_combined_name() -> None:
+    db = _create_test_db()
+    model = CustomersModel(db)
+    query = QSqlQuery(db)
+    query.exec(
+        "INSERT INTO customers (company, document_number, address, company_normalized) VALUES ('Test s.r.o.', '123', 'City', 'test s.r.o.')"
+    )
+    query.exec(
+        "INSERT INTO customers (first_name, last_name, document_number, address, first_name_normalized, last_name_normalized) VALUES ('Adam', 'Test', '456', 'New City', 'adam', 'test')"
+    )
+    query.exec(
+        "INSERT INTO customers (company, document_number, address, company_normalized) VALUES ('New Test s.r.o.', '789', 'Test City', 'new test s.r.o.')"
+    )
+    model.sort(model.fieldIndex("company"), Qt.SortOrder.AscendingOrder)
+    values = [
+        model.data(model.index(row, model.fieldIndex("company")))
+        for row in range(model.rowCount())
+    ]
+    assert values == ["Adam Test", "New test s.r.o.", "Test s.r.o."]

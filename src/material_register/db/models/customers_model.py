@@ -13,6 +13,8 @@ class CustomersModel(BaseSqlTableModel):
     def __init__(self, database: QSqlDatabase, parent=None) -> None:
         super().__init__(database, parent)
         self._database = database
+        self._sort_column = -1
+        self._sort_order = Qt.SortOrder.AscendingOrder
         self.setTable("customers")
         self.setEditStrategy(QSqlTableModel.EditStrategy.OnManualSubmit)
         self.select()
@@ -44,6 +46,35 @@ class CustomersModel(BaseSqlTableModel):
             record = self.record(index.row())
             return record.value("id")
         return super().data(index, role)
+
+    def sort(
+        self, column: int, order: Qt.SortOrder = Qt.SortOrder.AscendingOrder
+    ) -> None:
+        self._sort_column = column
+        self._sort_order = order
+        if column == self.fieldIndex("company"):
+            self.select()
+            return
+        super().sort(column, order)
+
+    def orderByClause(self) -> str:
+        sorting = "ASC"
+        if self._sort_order == Qt.SortOrder.DescendingOrder:
+            sorting = "DESC"
+        if self._sort_column == self.fieldIndex("company"):
+            return f"""
+                ORDER BY
+                    CASE
+                        WHEN company_normalized IS NOT NULL
+                            THEN company_normalized
+                        ELSE first_name_normalized || ' ' || last_name_normalized
+                    END {sorting}
+            """
+        if self._sort_column == self.fieldIndex("address"):
+            return f"""
+                ORDER BY address_normalized {sorting}
+            """
+        return super().orderByClause()
 
     def add_customer(self, customer: Customer) -> bool:
         row = self.rowCount()
