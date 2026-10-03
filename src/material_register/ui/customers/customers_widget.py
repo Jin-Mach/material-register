@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.customers_controller import CustomersController
 from material_register.init.data_init import DataInit
@@ -36,17 +36,28 @@ class CustomersWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(5)
+        main_layout.setContentsMargins(5, 5, 5, 5)
         self.action_widget = CustomersActionsWidget(self)
         self.customers_view = CustomersView(self)
         self.customers_model = DataInit.customers_model
+        self.actions_group_box = QGroupBox()
+        actions_layout = QHBoxLayout()
+        actions_layout.setContentsMargins(5, 5, 5, 5)
+        actions_layout.addWidget(self.action_widget)
+        self.actions_group_box.setLayout(actions_layout)
+        self.count_group_box = QGroupBox()
         count_layout = QHBoxLayout()
+        count_layout.setSpacing(0)
         self.count_label = QLabel()
         self.count_label.setObjectName("countLabel")
         count_layout.addWidget(self.count_label)
-        count_layout.addStretch(0)
-        main_layout.addWidget(self.action_widget)
-        main_layout.addWidget(self.customers_view)
-        main_layout.addLayout(count_layout)
+        count_layout.addStretch()
+        self.count_group_box.setLayout(count_layout)
+        main_layout.addWidget(self.actions_group_box, 0)
+        main_layout.addSpacing(10)
+        main_layout.addWidget(self.customers_view, 1)
+        main_layout.addWidget(self.count_group_box, 0)
         return main_layout
 
     def _create_connection(self) -> None:

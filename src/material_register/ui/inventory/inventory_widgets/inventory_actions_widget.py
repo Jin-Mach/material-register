@@ -21,6 +21,7 @@ class InventoryActionsWidget(QWidget):
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
+        main_layout.setContentsMargins(5, 5, 5, 5)
         self.search_line_edit = QLineEdit()
         self.search_line_edit.setObjectName("searchLineEdit")
         self.search_line_edit.setMinimumWidth(600)

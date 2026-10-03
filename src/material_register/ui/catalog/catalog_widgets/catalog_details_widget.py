@@ -28,12 +28,12 @@ class CatalogDetailsWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(5)
+        main_layout.setContentsMargins(5, 5, 5, 5)
         group_box = QGroupBox()
         group_layout = QVBoxLayout()
-        group_layout.setContentsMargins(0, 0, 0, 0)
         group_layout.setSpacing(5)
+        group_layout.setContentsMargins(5, 5, 5, 5)
         self.stacked_widget = QStackedWidget()
         self.catalog_default_widget = CatalogDefaultWidget(self)
         self.category_with_commodities_widget = CategoryWithCommoditiesWidget(

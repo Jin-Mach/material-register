@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.inventory_controller import InventoryController
 from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
@@ -35,16 +35,27 @@ class InventoryWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(5)
+        main_layout.setContentsMargins(5, 5, 5, 5)
         self.inventory_actions_widget = InventoryActionsWidget(self)
         self.inventory_view = InventoryView(self)
+        self.actions_group_box = QGroupBox()
+        actions_layout = QHBoxLayout()
+        actions_layout.setContentsMargins(5, 5, 5, 5)
+        actions_layout.addWidget(self.inventory_actions_widget)
+        self.actions_group_box.setLayout(actions_layout)
+        self.count_group_box = QGroupBox()
         count_layout = QHBoxLayout()
+        count_layout.setSpacing(0)
         self.count_label = QLabel()
         self.count_label.setObjectName("countLabel")
         count_layout.addWidget(self.count_label)
         count_layout.addStretch()
-        main_layout.addWidget(self.inventory_actions_widget)
-        main_layout.addWidget(self.inventory_view)
-        main_layout.addLayout(count_layout)
+        self.count_group_box.setLayout(count_layout)
+        main_layout.addWidget(self.actions_group_box, 0)
+        main_layout.addSpacing(10)
+        main_layout.addWidget(self.inventory_view, 1)
+        main_layout.addWidget(self.count_group_box, 0)
         return main_layout
 
     def _setup_ui(self) -> None:

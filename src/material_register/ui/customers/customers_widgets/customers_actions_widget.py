@@ -25,6 +25,7 @@ class CustomersActionsWidget(QWidget):
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
+        main_layout.setContentsMargins(5, 5, 5, 5)
         self.add_customer_button = QPushButton()
         self.add_customer_button.setObjectName("addCustomerButton")
         self.search_line_edit = QLineEdit()

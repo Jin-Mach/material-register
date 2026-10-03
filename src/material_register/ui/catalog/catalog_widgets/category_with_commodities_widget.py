@@ -30,6 +30,8 @@ class CategoryWithCommoditiesWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(5)
+        main_layout.setContentsMargins(5, 5, 5, 5)
         self.category_detail_widget = CategoryDetailWidget(self)
         self.commodities_grid_widget = CommoditiesGridWidget(
             self, self.catalog_controller

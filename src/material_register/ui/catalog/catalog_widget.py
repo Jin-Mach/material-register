@@ -1,8 +1,15 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QMargins, Qt
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from material_register.controllers.catalog_controller import CatalogController
 from material_register.services.error_handler import ErrorHandler
@@ -23,6 +30,9 @@ if TYPE_CHECKING:
 
 
 class CatalogWidget(QWidget):
+    SPACING = 5
+    MARGINS = QMargins(5, 5, 5, 5)
+
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
         self.catalog_controller = CatalogController(self)
@@ -32,7 +42,11 @@ class CatalogWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        top_layout = QHBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        main_layout.setContentsMargins(self.MARGINS)
+        content_layout = QHBoxLayout()
+        content_layout.setSpacing(self.SPACING)
+        content_layout.setContentsMargins(self.MARGINS)
         self.add_category_button = QPushButton()
         self.add_category_button.setObjectName("addCategoryButton")
         self.update_commodities_price = QPushButton()
@@ -43,18 +57,31 @@ class CatalogWidget(QWidget):
         font = QFont()
         font.setBold(True)
         self.catalog_title_label.setFont(font)
-        bottom_layout = QHBoxLayout()
         self.tree_widget = CatalogTreeWidget(self)
         self.details_widget = CatalogDetailsWidget(self, self.catalog_controller)
-        top_layout.addWidget(self.add_category_button)
-        top_layout.addWidget(self.update_commodities_price)
-        top_layout.addStretch()
-        top_layout.addWidget(self.catalog_title_label)
-        top_layout.addStretch()
-        bottom_layout.addWidget(self.tree_widget, 1)
-        bottom_layout.addWidget(self.details_widget, 3)
-        main_layout.addLayout(top_layout)
-        main_layout.addLayout(bottom_layout)
+        self.catalog_group_box = QGroupBox()
+        catalog_group_layout = QVBoxLayout()
+        catalog_group_layout.setSpacing(self.SPACING)
+        catalog_group_layout.setContentsMargins(self.MARGINS)
+        actions_layout = QHBoxLayout()
+        actions_layout.setSpacing(self.SPACING * 2)
+        actions_layout.setContentsMargins(self.MARGINS)
+        actions_layout.addWidget(self.add_category_button)
+        actions_layout.addWidget(self.update_commodities_price)
+        actions_layout.addStretch()
+        catalog_group_layout.addLayout(actions_layout)
+        catalog_group_layout.addWidget(self.tree_widget, 1)
+        self.catalog_group_box.setLayout(catalog_group_layout)
+        self.details_group_box = QGroupBox()
+        details_group_layout = QVBoxLayout()
+        details_group_layout.setSpacing(self.SPACING)
+        details_group_layout.setContentsMargins(self.MARGINS)
+        details_group_layout.addWidget(self.catalog_title_label)
+        details_group_layout.addWidget(self.details_widget, 1)
+        self.details_group_box.setLayout(details_group_layout)
+        content_layout.addWidget(self.catalog_group_box, 0)
+        content_layout.addWidget(self.details_group_box, 1)
+        main_layout.addLayout(content_layout)
         return main_layout
 
     def _setup_ui(self) -> None:

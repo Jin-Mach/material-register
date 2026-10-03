@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QMargins, QSize
 from PySide6.QtWidgets import (
     QCheckBox,
     QFormLayout,
@@ -32,6 +32,9 @@ if TYPE_CHECKING:
 
 
 class CommodityCardWidget(QTabWidget):
+    SPACING = 5
+    MARGINS = QMargins(5, 5, 5, 5)
+
     def __init__(self, commodities_grid_widget: "CommoditiesGridWidget") -> None:
         super().__init__(commodities_grid_widget)
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -42,7 +45,11 @@ class CommodityCardWidget(QTabWidget):
     def _create_ui(self) -> QWidget:
         detail_widget = QWidget()
         detail_layout = QVBoxLayout()
+        detail_layout.setSpacing(self.SPACING)
+        detail_layout.setContentsMargins(self.MARGINS)
         values_layout = QFormLayout()
+        values_layout.setSpacing(self.SPACING)
+        values_layout.setContentsMargins(self.MARGINS)
         self.unit_label = QLabel()
         self.unit_label.setObjectName("unitLabel")
         self.unit_value = QLabel()
@@ -57,11 +64,15 @@ class CommodityCardWidget(QTabWidget):
         self.active_value.setObjectName("activeValue")
         self.active_value.setDisabled(True)
         notes_layout = QFormLayout()
+        notes_layout.setSpacing(self.SPACING)
+        notes_layout.setContentsMargins(self.MARGINS)
         self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
         self.notes_edit = QTextEdit()
         self.notes_edit.setReadOnly(True)
         button_layout = QHBoxLayout()
+        button_layout.setSpacing(self.SPACING)
+        button_layout.setContentsMargins(self.MARGINS)
         self.update_commodity_button = QPushButton()
         self.update_commodity_button.setObjectName("updateCommodityButton")
         values_layout.addRow(self.unit_label, self.unit_value)

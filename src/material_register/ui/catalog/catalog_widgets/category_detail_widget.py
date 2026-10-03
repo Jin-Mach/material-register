@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QMargins, Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QFormLayout,
@@ -29,6 +29,9 @@ if TYPE_CHECKING:
 
 
 class CategoryDetailWidget(QWidget):
+    SPACING = 5
+    MARGINS = QMargins(5, 5, 5, 5)
+
     def __init__(
         self, category_with_commodities_widget: "CategoryWithCommoditiesWidget"
     ) -> None:
@@ -39,19 +42,27 @@ class CategoryDetailWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        main_layout.setContentsMargins(self.MARGINS)
         self.category_group_box = QGroupBox()
         self.category_group_box.setObjectName("categoryGroupBox")
         box_layout = QVBoxLayout()
+        box_layout.setSpacing(self.SPACING)
+        box_layout.setContentsMargins(self.MARGINS)
         self.name_label = QLabel()
         self.name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         font = QFont()
         font.setBold(True)
         self.name_label.setFont(font)
         notes_layout = QFormLayout()
+        notes_layout.setSpacing(self.SPACING)
+        notes_layout.setContentsMargins(self.MARGINS)
         self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
         self.notes_edit = QTextEdit()
         button_layout = QHBoxLayout()
+        button_layout.setSpacing(self.SPACING)
+        button_layout.setContentsMargins(self.MARGINS)
         self.update_category_button = QPushButton()
         self.update_category_button.setObjectName("updateCategoryButton")
         self.add_commodity_button = QPushButton()

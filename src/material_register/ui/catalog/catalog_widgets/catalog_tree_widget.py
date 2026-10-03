@@ -20,13 +20,20 @@ class CatalogTreeWidget(QTreeWidget):
     def __init__(self, catalog_widget: "CatalogWidget") -> None:
         super().__init__(catalog_widget)
         self.setHeaderHidden(True)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self._create_connection()
 
     def _create_connection(self) -> None:
-        self.itemExpanded.connect(
-            lambda item: UiIcons.set_tree_widget_icon(item, expanded=True)
-        )
-        self.itemCollapsed.connect(lambda item: UiIcons.set_tree_widget_icon(item))
+        self.itemExpanded.connect(self._on_item_expanded)
+        self.itemCollapsed.connect(self._on_item_collapsed)
+
+    def _on_item_expanded(self, item: QTreeWidgetItem) -> None:
+        UiIcons.set_tree_widget_icon(item, expanded=True)
+        self.resizeColumnToContents(0)
+
+    def _on_item_collapsed(self, item: QTreeWidgetItem) -> None:
+        UiIcons.set_tree_widget_icon(item)
+        self.resizeColumnToContents(0)
 
     def reload_tree(
         self, categories: list[Category], commodities: list[Commodity]

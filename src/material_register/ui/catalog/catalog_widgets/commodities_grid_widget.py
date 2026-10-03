@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QMargins
 from PySide6.QtGui import QResizeEvent, Qt
 from PySide6.QtWidgets import (
     QGridLayout,
@@ -29,6 +30,9 @@ if TYPE_CHECKING:
 
 
 class CommoditiesGridWidget(QWidget):
+    SPACING = 5
+    MARGINS = QMargins(5, 5, 5, 5)
+
     def __init__(
         self,
         category_with_commodities_widget: "CategoryWithCommoditiesWidget",
@@ -43,9 +47,13 @@ class CommoditiesGridWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(self.SPACING)
+        main_layout.setContentsMargins(self.MARGINS)
         self.commodities_group_box = QGroupBox()
         self.commodities_group_box.setObjectName("commoditiesGroupBox")
         box_layout = QVBoxLayout()
+        box_layout.setSpacing(self.SPACING)
+        box_layout.setContentsMargins(self.MARGINS)
         self.scroll_area = QScrollArea()
         self.scroll_area.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.scroll_area.setWidgetResizable(True)
@@ -57,8 +65,8 @@ class CommoditiesGridWidget(QWidget):
         )
         container = QWidget()
         self.grid_layout = QGridLayout()
-        self.grid_layout.setSpacing(10)
-        self.grid_layout.setContentsMargins(10, 10, 10, 10)
+        self.grid_layout.setSpacing(self.SPACING * 2)
+        self.grid_layout.setContentsMargins(5, 10, 5, 5)
         container.setLayout(self.grid_layout)
         self.scroll_area.setWidget(container)
         self.no_commodities_label = QLabel()
