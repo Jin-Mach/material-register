@@ -18,6 +18,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
+    UI_MARGINS_10,
     UI_SPACING,
 )
 from material_register.ui.setup.ui_settings import UiSettings
@@ -42,7 +44,8 @@ class SettingsToolsWidget(QWidget):
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(UI_SPACING * 2)
+        group_layout.setSpacing(UI_SPACING)
+        group_layout.setContentsMargins(*UI_MARGINS_5)
         tools_group = self._create_tools_group()
         cash_balance_group = self._create_cash_balance_group()
         group_layout.addWidget(tools_group)
@@ -60,6 +63,7 @@ class SettingsToolsWidget(QWidget):
         self.tools_group_box.setObjectName("toolsGroupBox")
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.container_size = QCheckBox()
         self.container_size.setObjectName("containerSizeCheckbox")
         main_layout.addWidget(self.container_size)
@@ -71,6 +75,7 @@ class SettingsToolsWidget(QWidget):
         self.cash_balance_group_box.setObjectName("cashBalanceGroupBox")
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.balance_cash = QCheckBox()
         self.balance_cash.setObjectName("balanceCashCheckbox")
         self.values_cash = QCheckBox()
@@ -88,6 +93,7 @@ class SettingsToolsWidget(QWidget):
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
         main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.restore_button = QPushButton()

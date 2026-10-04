@@ -17,7 +17,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
-    UI_MARGINS_10,
+    UI_MARGINS_5,
+    UI_SPACING,
 )
 from material_register.ui.dialogs.settings_widgets.settings_side_panel import (
     SettingsSidePanel,
@@ -45,20 +46,20 @@ class SettingsDialog(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
         widgets_layout = QHBoxLayout()
+        widgets_layout.setSpacing(UI_SPACING)
         widgets_layout.setContentsMargins(0, 0, 0, 0)
-        widgets_layout.setSpacing(0)
         self.settings_side_panel = SettingsSidePanel(self)
-        stacked_layout = QVBoxLayout()
-        stacked_layout.setContentsMargins(0, 0, 0, 0)
-        stacked_layout.setSpacing(0)
         self.settings_stacked_widget = SettingsStackedWidget(self)
+        stacked_layout = QVBoxLayout()
+        stacked_layout.setSpacing(UI_SPACING)
+        stacked_layout.setContentsMargins(*UI_MARGINS_5)
         group_box = QGroupBox()
         buttons_layout = QHBoxLayout()
-        buttons_layout.setContentsMargins(*UI_MARGINS_10)
-        buttons_layout.setSpacing(0)
+        buttons_layout.setContentsMargins(*UI_MARGINS_5)
+        buttons_layout.setSpacing(UI_SPACING * 2)
         self.info_label = QLabel()
         self.info_label.setObjectName("infoLabel")
         self.close_button = QPushButton()
@@ -67,10 +68,10 @@ class SettingsDialog(QDialog):
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.close_button)
         group_box.setLayout(buttons_layout)
-        stacked_layout.addWidget(self.settings_stacked_widget)
-        stacked_layout.addWidget(group_box)
-        widgets_layout.addWidget(self.settings_side_panel)
-        widgets_layout.addLayout(stacked_layout)
+        stacked_layout.addWidget(self.settings_stacked_widget, 1)
+        stacked_layout.addWidget(group_box, 0)
+        widgets_layout.addWidget(self.settings_side_panel, 0)
+        widgets_layout.addLayout(stacked_layout, 1)
         main_layout.addLayout(widgets_layout)
         return main_layout
 

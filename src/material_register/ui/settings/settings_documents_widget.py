@@ -25,6 +25,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
     UI_SPACING,
 )
 from material_register.ui.dialogs.message_boxes import MessageBoxes
@@ -54,6 +55,8 @@ class SettingsDocumentsWidget(QWidget):
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout()
+        group_layout.setSpacing(UI_SPACING)
+        group_layout.setContentsMargins(*UI_MARGINS_5)
         group_layout.addWidget(self._create_print_group())
         group_layout.addWidget(self._create_save_group())
         group_layout.addStretch()
@@ -67,8 +70,11 @@ class SettingsDocumentsWidget(QWidget):
         self.print_group_box = QGroupBox()
         self.print_group_box.setObjectName("printGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         form_layout = QFormLayout()
+        form_layout.setSpacing(UI_SPACING)
+        form_layout.setContentsMargins(*UI_MARGINS_5)
         self.printer_name_label = QLabel()
         self.printer_name_label.setObjectName("printerNameLabel")
         self.printer_name_line_edit = QLineEdit()
@@ -81,6 +87,8 @@ class SettingsDocumentsWidget(QWidget):
         self.printer_name_button = QPushButton()
         self.printer_name_button.setObjectName("printerNameButton")
         path_layout = QHBoxLayout()
+        path_layout.setSpacing(UI_SPACING)
+        path_layout.setContentsMargins(*UI_MARGINS_5)
         path_layout.addWidget(self.printer_name_line_edit)
         path_layout.addWidget(self.printer_name_button)
         form_layout.addRow(self.printer_name_label, path_layout)
@@ -92,8 +100,11 @@ class SettingsDocumentsWidget(QWidget):
         self.save_group_box = QGroupBox()
         self.save_group_box.setObjectName("saveGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         form_layout = QFormLayout()
+        form_layout.setSpacing(UI_SPACING)
+        form_layout.setContentsMargins(*UI_MARGINS_5)
         self.save_path_label = QLabel()
         self.save_path_label.setObjectName("savePathLabel")
         self.save_path_line_edit = QLineEdit()
@@ -106,6 +117,8 @@ class SettingsDocumentsWidget(QWidget):
         self.save_path_button = QPushButton()
         self.save_path_button.setObjectName("savePathButton")
         path_layout = QHBoxLayout()
+        path_layout.setSpacing(UI_SPACING)
+        path_layout.setContentsMargins(*UI_MARGINS_5)
         path_layout.addWidget(self.save_path_line_edit)
         path_layout.addWidget(self.save_path_button)
         form_layout.addRow(self.save_path_label, path_layout)
@@ -118,6 +131,7 @@ class SettingsDocumentsWidget(QWidget):
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
         main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.restore_button = QPushButton()

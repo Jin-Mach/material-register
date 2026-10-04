@@ -22,6 +22,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
+    UI_MARGINS_10,
     UI_SPACING,
 )
 from material_register.ui.setup.ui_settings import UiSettings
@@ -56,11 +58,14 @@ class BaseExportWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(UI_SPACING * 2)
+        group_layout.setSpacing(UI_SPACING)
+        group_layout.setContentsMargins(*UI_MARGINS_5)
         branch_group = self._create_branch_group()
         path_name_group = self._create_path_name_group()
         export_options_group = self._create_export_options_group()
@@ -81,8 +86,11 @@ class BaseExportWidget(QWidget):
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         form_layout = QFormLayout()
+        form_layout.setSpacing(UI_SPACING)
+        form_layout.setContentsMargins(*UI_MARGINS_5)
         self.branch_name_label = QLabel()
         self.branch_name_label.setObjectName("branchNameLabel")
         self.branch_name_line_edit = QLineEdit()
@@ -100,8 +108,11 @@ class BaseExportWidget(QWidget):
         self.path_name_group_box = QGroupBox()
         self.path_name_group_box.setObjectName("pathNameGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         form_layout = QFormLayout()
+        form_layout.setSpacing(UI_SPACING)
+        form_layout.setContentsMargins(*UI_MARGINS_5)
         self.path_label = QLabel()
         self.path_label.setObjectName("pathLabel")
         self.path_line_edit = QLineEdit()
@@ -113,6 +124,8 @@ class BaseExportWidget(QWidget):
         self.path_button = QPushButton()
         self.path_button.setObjectName("pathButton")
         path_layout = QHBoxLayout()
+        path_layout.setSpacing(UI_SPACING)
+        path_layout.setContentsMargins(*UI_MARGINS_5)
         path_layout.addWidget(self.path_line_edit)
         path_layout.addWidget(self.path_button)
         self.file_name_label = QLabel()
@@ -124,6 +137,8 @@ class BaseExportWidget(QWidget):
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
         )
         name_layout = QHBoxLayout()
+        name_layout.setSpacing(UI_SPACING)
+        name_layout.setContentsMargins(*UI_MARGINS_5)
         name_layout.addWidget(self.file_name_line_edit)
         form_layout.addRow(self.path_label, path_layout)
         form_layout.addRow(self.file_name_label, name_layout)
@@ -136,6 +151,7 @@ class BaseExportWidget(QWidget):
         self.export_options_group_box.setObjectName("exportOptionsGroupBox")
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.no_action_radio_button = QRadioButton()
         self.no_action_radio_button.setObjectName("noActionRadioButton")
         self.open_folder_radio_button = QRadioButton()
@@ -153,6 +169,7 @@ class BaseExportWidget(QWidget):
         self.other_settings_group_box.setObjectName("otherSettingsGroupBox")
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.use_last_options_checkbox = QCheckBox()
         self.use_last_options_checkbox.setObjectName("useLastOptionsCheckbox")
         self.save_last_opening_balance_checkbox = QCheckBox()
@@ -168,7 +185,8 @@ class BaseExportWidget(QWidget):
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.restore_button = QPushButton()

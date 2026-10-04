@@ -22,6 +22,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
     UI_SPACING,
 )
 from material_register.ui.setup.ui_settings import UiSettings
@@ -48,24 +49,30 @@ class SettingsBranchWidget(QWidget):
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(UI_SPACING * 2)
+        group_layout.setSpacing(UI_SPACING)
+        group_layout.setContentsMargins(*UI_MARGINS_5)
         branch_group = self._create_branch_group()
         group_layout.addWidget(branch_group)
         group_layout.addStretch()
         actions_group = self._create_actions_group()
         group_widget.setLayout(group_layout)
         scroll_area.setWidget(group_widget)
-        main_layout.addWidget(scroll_area)
-        main_layout.addWidget(actions_group)
+        main_layout.addWidget(scroll_area, 1)
+        main_layout.addWidget(actions_group, 0)
         return main_layout
 
     def _create_branch_group(self) -> QGroupBox:
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         container_layout = QHBoxLayout()
+        container_layout.setSpacing(UI_SPACING)
+        container_layout.setContentsMargins(*UI_MARGINS_5)
         form_layout = QFormLayout()
+        form_layout.setSpacing(UI_SPACING)
+        form_layout.setContentsMargins(*UI_MARGINS_5)
         self.company_name_label = QLabel()
         self.company_name_label.setObjectName("companyNameLabel")
         self.company_name_line_edit = QLineEdit()
@@ -131,7 +138,8 @@ class SettingsBranchWidget(QWidget):
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.save_button = QPushButton()

@@ -11,6 +11,8 @@ from material_register.ui.config.ui_constants import (
     EXPORT_TYPE_TRANSACTIONS,
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
+    UI_SPACING,
 )
 from material_register.ui.settings.settings_widgets.base_export_widget import (
     BaseExportWidget,
@@ -31,6 +33,8 @@ class SettingsExportWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.settings_tab_widget = QTabWidget()
         main_layout.addWidget(self.settings_tab_widget)
         return main_layout
