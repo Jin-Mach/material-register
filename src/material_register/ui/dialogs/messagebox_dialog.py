@@ -103,6 +103,6 @@ class MessageBoxDialog(QDialog):
         self.icon_label.setPixmap(icon.pixmap(32, 32))
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         self.adjustSize()
         self.setFixedSize(self.size())
+        super().showEvent(event)

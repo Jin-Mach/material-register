@@ -118,13 +118,13 @@ class MainWindow(QMainWindow):
         SettingsProvider.save_settings()
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
             screen = self.screen()
             geometry = screen.availableGeometry()
             frame = self.frameGeometry()
             frame.moveCenter(geometry.center())
             self.move(frame.topLeft())
+        super().showEvent(event)
         self._handle_startup_errors()
 
     def resizeEvent(self, event: QResizeEvent) -> None:
@@ -132,6 +132,6 @@ class MainWindow(QMainWindow):
         self.right_toolbar_widget.update_tools_max_width()
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        super().closeEvent(event)
         self._before_close()
         WindowStateManager.save_geometry(self, self.__class__.__name__)
+        super().closeEvent(event)

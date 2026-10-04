@@ -185,7 +185,7 @@ class BaseExportWidget(QWidget):
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(UI_SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         main_layout.setContentsMargins(*UI_MARGINS_5)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")

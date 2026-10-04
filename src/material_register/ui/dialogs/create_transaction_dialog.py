@@ -228,5 +228,5 @@ class CreateTransactionDialog(QDialog):
         }
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         self._set_dialog_size()
+        super().showEvent(event)

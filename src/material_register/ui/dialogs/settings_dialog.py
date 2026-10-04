@@ -114,14 +114,14 @@ class SettingsDialog(QDialog):
         QTimer.singleShot(time_sleep, lambda: self.info_label.setText(""))
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
             screen = self.main_window.screen()
             geometry = screen.availableGeometry()
             frame = self.frameGeometry()
             frame.moveCenter(geometry.center())
             self.move(frame.topLeft())
+        super().showEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        super().closeEvent(event)
         WindowStateManager.save_geometry(self, self.__class__.__name__)
+        super().closeEvent(event)

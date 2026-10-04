@@ -205,7 +205,7 @@ class CategoryDialog(QDialog):
         )
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         self.adjustSize()
         self.setFixedSize(self.size())
         centre_dialog(self)
+        super().showEvent(event)

@@ -84,8 +84,8 @@ class ErrorDialog(QDialog):
         self.exec()
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         centre_dialog(self)
+        super().showEvent(event)
 
     @staticmethod
     def _close_app() -> None:

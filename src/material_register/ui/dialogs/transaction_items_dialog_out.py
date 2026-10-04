@@ -213,9 +213,9 @@ class TransactionItemsDialogOut(QDialog):
         self.transactions_items_widget.setup_total_value(model)
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
             centre_dialog(self)
+        super().showEvent(event)
 
     def done(self, result: int) -> None:
         WindowStateManager.save_geometry(self, self.__class__.__name__)

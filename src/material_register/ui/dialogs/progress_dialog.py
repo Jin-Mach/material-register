@@ -44,6 +44,6 @@ class ProgressDialog(QDialog):
         super().keyPressEvent(event)
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         self.adjustSize()
         self.setFixedSize(self.width(), self.height())
+        super().showEvent(event)

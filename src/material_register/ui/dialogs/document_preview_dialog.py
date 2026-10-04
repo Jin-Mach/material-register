@@ -181,7 +181,6 @@ class DocumentPreviewDialog(QDialog):
         return min(scale_width, scale_height)
 
     def showEvent(self, event: QShowEvent) -> None:
-        super().showEvent(event)
         screen = QApplication.primaryScreen()
         available_geometry = screen.availableGeometry()
         dpi = screen.logicalDotsPerInch()
@@ -190,4 +189,5 @@ class DocumentPreviewDialog(QDialog):
         width = int(height * 210 / 297)
         self.setFixedSize(width, height)
         centre_dialog(self)
+        super().showEvent(event)
         self._current_zoom = self._get_fit_in_view_zoom()
