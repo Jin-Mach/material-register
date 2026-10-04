@@ -44,6 +44,7 @@ from material_register.ui.config.ui_constants import (
     LOGGER_UI,
     TRANSFER_IN,
     TRANSFER_OUT,
+    UI_MARGINS_5,
     UI_MARGINS_10,
     UI_SPACING,
 )
@@ -74,13 +75,14 @@ class TransactionsExportWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(UI_SPACING * 2)
-        main_layout.setContentsMargins(*UI_MARGINS_10)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout(group_widget)
-        group_layout.setSpacing(UI_SPACING * 2)
+        group_layout.setSpacing(UI_SPACING)
+        group_layout.setContentsMargins(*UI_MARGINS_5)
         branch_group = self._create_branch_group()
         path_name_group = self._create_path_name_group()
         date_options_group = self._create_date_options_group()
