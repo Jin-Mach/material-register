@@ -25,6 +25,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.setup.ui_texts import UiTexts
@@ -35,7 +36,6 @@ if TYPE_CHECKING:
 
 class SettingsDocumentsWidget(QWidget):
     WIDTH = 400
-    SPACING = 10
 
     def __init__(self, settings_dialog: "SettingsDialog") -> None:
         super().__init__(settings_dialog)
@@ -67,7 +67,7 @@ class SettingsDocumentsWidget(QWidget):
         self.print_group_box = QGroupBox()
         self.print_group_box.setObjectName("printGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         form_layout = QFormLayout()
         self.printer_name_label = QLabel()
         self.printer_name_label.setObjectName("printerNameLabel")
@@ -92,7 +92,7 @@ class SettingsDocumentsWidget(QWidget):
         self.save_group_box = QGroupBox()
         self.save_group_box.setObjectName("saveGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         form_layout = QFormLayout()
         self.save_path_label = QLabel()
         self.save_path_label.setObjectName("savePathLabel")
@@ -117,7 +117,7 @@ class SettingsDocumentsWidget(QWidget):
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.restore_button = QPushButton()

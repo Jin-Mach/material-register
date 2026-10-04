@@ -20,6 +20,7 @@ from material_register.ui.config.ui_constants import (
     COMMODITY_DIALOG_MIN_VALUE,
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import (
@@ -41,7 +42,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         self.commodities_widget = QWidget()
         self.commodities_layout = QGridLayout()
         self.commodities_layout.setAlignment(Qt.AlignmentFlag.AlignTop)

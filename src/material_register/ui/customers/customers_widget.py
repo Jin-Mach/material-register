@@ -10,6 +10,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
+    UI_SPACING,
 )
 from material_register.ui.customers.customers_widgets.customers_actions_widget import (
     CustomersActionsWidget,
@@ -36,14 +38,14 @@ class CustomersWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
-        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.action_widget = CustomersActionsWidget(self)
         self.customers_view = CustomersView(self)
         self.customers_model = DataInit.customers_model
         self.actions_group_box = QGroupBox()
         actions_layout = QHBoxLayout()
-        actions_layout.setContentsMargins(5, 5, 5, 5)
+        actions_layout.setContentsMargins(*UI_MARGINS_5)
         actions_layout.addWidget(self.action_widget)
         self.actions_group_box.setLayout(actions_layout)
         self.count_group_box = QGroupBox()
@@ -55,7 +57,7 @@ class CustomersWidget(QWidget):
         count_layout.addStretch()
         self.count_group_box.setLayout(count_layout)
         main_layout.addWidget(self.actions_group_box, 0)
-        main_layout.addSpacing(10)
+        main_layout.addSpacing(UI_SPACING * 2)
         main_layout.addWidget(self.customers_view, 1)
         main_layout.addWidget(self.count_group_box, 0)
         return main_layout

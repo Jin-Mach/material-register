@@ -31,6 +31,7 @@ from material_register.ui.config.ui_constants import (
     PAYMENT_TRANSFER,
     TRANSFER_IN,
     TRANSFER_OUT,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.transactions.transactions_widgets.transaction_detail_view import (
@@ -50,7 +51,7 @@ class TransactionDetailWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(0, 0, 0, 0)
         self.tab_widget = QTabWidget()
         self.info_tab = self._create_info_tab()
@@ -63,7 +64,7 @@ class TransactionDetailWidget(QWidget):
     def _create_info_tab(self) -> QWidget:
         info_tab = QWidget()
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(0, 0, 0, 0)
         payment_layout = QHBoxLayout()
         payment_layout.setContentsMargins(0, 0, 0, 0)
@@ -78,7 +79,7 @@ class TransactionDetailWidget(QWidget):
         payment_layout.addWidget(self.is_invoiced_checkbox)
         payment_layout.addStretch()
         info_content_layout = QHBoxLayout()
-        info_content_layout.setSpacing(5)
+        info_content_layout.setSpacing(UI_SPACING)
         customer_section = self._create_customer_section()
         notes_section = self._create_notes_section()
         info_content_layout.addWidget(customer_section)
@@ -93,7 +94,7 @@ class TransactionDetailWidget(QWidget):
         self.customer_group_box.setObjectName("customerGroupBox")
         self.customer_group_box.setFixedWidth(400)
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         form_layout = QFormLayout()
         form_layout.setFormAlignment(
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
@@ -118,7 +119,7 @@ class TransactionDetailWidget(QWidget):
         self.notes_group_box = QGroupBox()
         self.notes_group_box.setObjectName("notesGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         self.notes_label = QLabel()
         self.notes_label.setObjectName("notesLabel")
         self.notes_label.setAlignment(
@@ -132,7 +133,7 @@ class TransactionDetailWidget(QWidget):
     def _create_items_tab(self) -> QWidget:
         items_tab = QWidget()
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(0, 0, 0, 0)
         self.detail_view = TransactionDetailView(self)
         main_layout.addWidget(self.detail_view)

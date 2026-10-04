@@ -20,6 +20,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
@@ -46,7 +47,7 @@ class NotesWidget(QWidget):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         permanent_notes = self._create_permanent_notes()
         local_notes = self._create_local_notes()
         main_layout.addWidget(permanent_notes)

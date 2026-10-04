@@ -25,6 +25,7 @@ from material_register.ui.config.ui_constants import (
     LOGGER_UI,
     TRANSFER_IN,
     TRANSFER_OUT,
+    UI_SPACING,
 )
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_view import (
@@ -56,7 +57,7 @@ class TransactionsItemsWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         self.transactions_items_view = TransactionView(self)
         self.transactions_items_view.setObjectName("transactionsItemsView")
         group_box = QGroupBox()
@@ -70,7 +71,7 @@ class TransactionsItemsWidget(QWidget):
         self.total_price_value_label = QLabel()
         self.total_price_value_label.setObjectName("totalPriceValueLabel")
         buttons_layout = QHBoxLayout()
-        buttons_layout.setSpacing(5)
+        buttons_layout.setSpacing(UI_SPACING)
         self.add_item_button = QPushButton()
         self.add_item_button.setObjectName("addItemButton")
         self.update_item_button = QPushButton()

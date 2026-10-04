@@ -19,6 +19,8 @@ from material_register.ui.config.ui_constants import (
     LOGGER_UI,
     TRANSFER_IN,
     TRANSFER_OUT,
+    UI_MARGINS_5,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.transactions.transactions_widgets.transaction_detail_widget import (
@@ -55,28 +57,28 @@ class TransactionsWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
-        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.transactions_actions_widget = TransactionsActionsWidget(self)
         self.transaction_detail_widget = TransactionDetailWidget(self)
         self.transactions_tab_widget = TransactionsTabWidget(self)
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         action_layout = QHBoxLayout()
-        action_layout.setContentsMargins(5, 5, 5, 5)
+        action_layout.setContentsMargins(*UI_MARGINS_5)
         action_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         action_layout.addWidget(self.transactions_actions_widget)
         self.actions_group_box.setLayout(action_layout)
         self.detail_group_box = QGroupBox()
         self.detail_group_box.setObjectName("detailGroupBox")
         detail_group_layout = QVBoxLayout()
-        detail_group_layout.setContentsMargins(5, 5, 5, 5)
+        detail_group_layout.setContentsMargins(*UI_MARGINS_5)
         detail_group_layout.addWidget(self.transaction_detail_widget)
         self.detail_group_box.setLayout(detail_group_layout)
         self.transactions_group_box = QGroupBox()
         self.transactions_group_box.setObjectName("transactionsGroupBox")
         transactions_group_layout = QVBoxLayout()
-        transactions_group_layout.setContentsMargins(5, 5, 5, 5)
+        transactions_group_layout.setContentsMargins(*UI_MARGINS_5)
         transactions_group_layout.addSpacing(5)
         transactions_group_layout.addWidget(self.transactions_tab_widget)
         self.transactions_group_box.setLayout(transactions_group_layout)

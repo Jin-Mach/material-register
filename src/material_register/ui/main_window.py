@@ -10,6 +10,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.settings_dialog import SettingsDialog
@@ -37,7 +38,7 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         self.side_panel = SidePanel(self)
         self.splitter = QSplitter(Qt.Orientation.Horizontal)
         self.scroll_area = QScrollArea()

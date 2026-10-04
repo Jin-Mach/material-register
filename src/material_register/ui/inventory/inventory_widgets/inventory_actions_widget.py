@@ -6,6 +6,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -21,7 +22,7 @@ class InventoryActionsWidget(QWidget):
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
-        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.search_line_edit = QLineEdit()
         self.search_line_edit.setObjectName("searchLineEdit")
         self.search_line_edit.setMinimumWidth(600)

@@ -6,6 +6,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -27,7 +28,7 @@ class SidePanel(QWidget):
         group_box = QGroupBox()
         group_box.setObjectName("sidePanelGroupBox")
         group_box_layout = QVBoxLayout()
-        group_box_layout.setSpacing(5)
+        group_box_layout.setSpacing(UI_SPACING)
         self.transactions_button = QPushButton()
         self.transactions_button.setObjectName("transactionsButton")
         self.inventory_button = QPushButton()

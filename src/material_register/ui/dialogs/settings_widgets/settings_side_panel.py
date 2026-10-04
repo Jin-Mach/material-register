@@ -6,6 +6,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -27,7 +28,7 @@ class SettingsSidePanel(QWidget):
         group_box = QGroupBox()
         group_box.setObjectName("settingsSidePanelGroupBox")
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(5)
+        group_layout.setSpacing(UI_SPACING)
         self.branch_button = QPushButton()
         self.branch_button.setObjectName("branchButton")
         self.export_button = QPushButton()

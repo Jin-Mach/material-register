@@ -10,6 +10,7 @@ from material_register.ui.catalog.catalog_widgets.catalog_default_widget import 
 from material_register.ui.catalog.catalog_widgets.category_with_commodities_widget import (
     CategoryWithCommoditiesWidget,
 )
+from material_register.ui.config.ui_constants import UI_MARGINS_5, UI_SPACING
 
 if TYPE_CHECKING:
     from material_register.controllers.catalog_controller import CatalogController
@@ -28,12 +29,12 @@ class CatalogDetailsWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
-        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         group_box = QGroupBox()
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(5)
-        group_layout.setContentsMargins(5, 5, 5, 5)
+        group_layout.setSpacing(UI_SPACING)
+        group_layout.setContentsMargins(*UI_MARGINS_5)
         self.stacked_widget = QStackedWidget()
         self.catalog_default_widget = CatalogDefaultWidget(self)
         self.category_with_commodities_widget = CategoryWithCommoditiesWidget(

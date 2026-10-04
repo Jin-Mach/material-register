@@ -2,6 +2,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent, QShowEvent
 from PySide6.QtWidgets import QDialog, QLabel, QProgressBar, QVBoxLayout, QWidget
 
+from material_register.ui.config.ui_constants import UI_MARGINS_10, UI_SPACING
+
 
 class ProgressDialog(QDialog):
     def __init__(
@@ -20,8 +22,8 @@ class ProgressDialog(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(10, 10, 10, 10)
-        main_layout.setSpacing(10)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.progress_label = QLabel()
         self.progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progress_bar = QProgressBar()

@@ -18,6 +18,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
@@ -27,8 +28,6 @@ if TYPE_CHECKING:
 
 
 class SettingsToolsWidget(QWidget):
-    SPACING = 10
-
     def __init__(self, settings_dialog: "SettingsDialog") -> None:
         super().__init__(settings_dialog)
         self.settings_dialog = settings_dialog
@@ -43,7 +42,7 @@ class SettingsToolsWidget(QWidget):
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(self.SPACING)
+        group_layout.setSpacing(UI_SPACING * 2)
         tools_group = self._create_tools_group()
         cash_balance_group = self._create_cash_balance_group()
         group_layout.addWidget(tools_group)
@@ -60,7 +59,7 @@ class SettingsToolsWidget(QWidget):
         self.tools_group_box = QGroupBox()
         self.tools_group_box.setObjectName("toolsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.container_size = QCheckBox()
         self.container_size.setObjectName("containerSizeCheckbox")
         main_layout.addWidget(self.container_size)
@@ -71,7 +70,7 @@ class SettingsToolsWidget(QWidget):
         self.cash_balance_group_box = QGroupBox()
         self.cash_balance_group_box.setObjectName("cashBalanceGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.balance_cash = QCheckBox()
         self.balance_cash.setObjectName("balanceCashCheckbox")
         self.values_cash = QCheckBox()
@@ -88,7 +87,7 @@ class SettingsToolsWidget(QWidget):
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.restore_button = QPushButton()

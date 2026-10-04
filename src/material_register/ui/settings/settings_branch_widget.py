@@ -22,6 +22,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
@@ -32,7 +33,6 @@ if TYPE_CHECKING:
 
 class SettingsBranchWidget(QWidget):
     WIDTH = 400
-    SPACING = 10
 
     def __init__(self, settings_dialog: "SettingsDialog") -> None:
         super().__init__(settings_dialog)
@@ -48,7 +48,7 @@ class SettingsBranchWidget(QWidget):
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(self.SPACING)
+        group_layout.setSpacing(UI_SPACING * 2)
         branch_group = self._create_branch_group()
         group_layout.addWidget(branch_group)
         group_layout.addStretch()
@@ -63,7 +63,7 @@ class SettingsBranchWidget(QWidget):
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         container_layout = QHBoxLayout()
         form_layout = QFormLayout()
         self.company_name_label = QLabel()
@@ -131,7 +131,7 @@ class SettingsBranchWidget(QWidget):
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.save_button = QPushButton()

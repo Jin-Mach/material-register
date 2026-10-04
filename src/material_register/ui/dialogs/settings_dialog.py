@@ -17,6 +17,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_10,
 )
 from material_register.ui.dialogs.settings_widgets.settings_side_panel import (
     SettingsSidePanel,
@@ -56,7 +57,7 @@ class SettingsDialog(QDialog):
         self.settings_stacked_widget = SettingsStackedWidget(self)
         group_box = QGroupBox()
         buttons_layout = QHBoxLayout()
-        buttons_layout.setContentsMargins(10, 10, 10, 10)
+        buttons_layout.setContentsMargins(*UI_MARGINS_10)
         buttons_layout.setSpacing(0)
         self.info_label = QLabel()
         self.info_label.setObjectName("infoLabel")

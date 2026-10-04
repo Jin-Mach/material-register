@@ -20,6 +20,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.helpers.window_positioning import centre_dialog
 from material_register.ui.setup.ui_icons import UiIcons
@@ -45,7 +46,7 @@ class DocumentPreviewDialog(QDialog):
         main_layout = QVBoxLayout()
         buttons_layout = QHBoxLayout()
         buttons_layout.setContentsMargins(0, 0, 0, 0)
-        buttons_layout.setSpacing(5)
+        buttons_layout.setSpacing(UI_SPACING)
         self.print_document_button = QPushButton()
         self.print_document_button.setObjectName("printDocumentButton")
         self.save_document_button = QPushButton()

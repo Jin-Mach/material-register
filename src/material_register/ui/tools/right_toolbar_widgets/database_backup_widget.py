@@ -30,6 +30,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.tools.right_toolbar_widgets.database_backup_widgets.database_backup_tree_widget import (
@@ -55,13 +56,13 @@ class DatabaseBackupWidget(QWidget):
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_widget = QWidget()
         scroll_layout = QVBoxLayout()
         scroll_layout.setContentsMargins(0, 0, 0, 0)
-        scroll_layout.setSpacing(5)
+        scroll_layout.setSpacing(UI_SPACING)
         self.info_group = self._create_info_group()
         self.backup_group = self._create_backup_group()
         scroll_layout.addWidget(self.info_group)

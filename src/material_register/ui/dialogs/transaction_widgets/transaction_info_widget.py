@@ -24,6 +24,7 @@ from material_register.ui.config.ui_constants import (
     PAYMENT_TRANSFER,
     TRANSACTION_INFO_WIDGET_NOTES_LENGTH,
     TRANSFER_OUT,
+    UI_SPACING,
 )
 from material_register.ui.helpers.notes_length_handler import check_notes_length
 from material_register.ui.setup.ui_texts import UiTexts
@@ -53,7 +54,7 @@ class TransactionInfoWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         payment_layout = QHBoxLayout()
         payment_layout.setContentsMargins(0, 0, 0, 0)
         self.payment_info = QLabel()
@@ -66,7 +67,7 @@ class TransactionInfoWidget(QWidget):
         self.customer_group_box.setObjectName("customerGroupBox")
         self.customer_group_box.setMinimumWidth(300)
         customer_layout = QVBoxLayout()
-        customer_layout.setSpacing(5)
+        customer_layout.setSpacing(UI_SPACING)
         customer_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         customer_form_layout = QFormLayout()
         customer_form_layout.setFormAlignment(

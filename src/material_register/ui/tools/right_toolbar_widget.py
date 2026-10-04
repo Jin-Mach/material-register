@@ -15,6 +15,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.ui.setup.ui_texts import UiTexts
@@ -54,7 +55,7 @@ class RightToolbarWidget(QWidget):
         self.buttons_container.setFixedWidth(self.WIDTH)
         buttons_layout = QVBoxLayout()
         buttons_layout.setContentsMargins(0, 5, 0, 5)
-        buttons_layout.setSpacing(5)
+        buttons_layout.setSpacing(UI_SPACING)
         buttons_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.notes_button = QPushButton()
         self.notes_button.setObjectName("notesButton")

@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QDate, QMargins, QRegularExpression, QStandardPaths, Qt
+from PySide6.QtCore import QDate, QRegularExpression, QStandardPaths, Qt
 from PySide6.QtGui import QFontMetrics, QRegularExpressionValidator, QResizeEvent
 from PySide6.QtWidgets import (
     QButtonGroup,
@@ -35,6 +35,8 @@ from material_register.ui.config.ui_constants import (
     SUMMARY_BALANCE_PRICE_MIN_VALUE,
     SUMMARY_EXPORT_PRICE_MAX_VALUE,
     SUMMARY_EXPORT_PRICE_MIN_VALUE,
+    UI_MARGINS_10,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
@@ -49,8 +51,6 @@ if TYPE_CHECKING:
 
 class SummaryExportWidget(QWidget):
     WIDTH = 400
-    SPACING = 10
-    MARGINS = QMargins(10, 10, 10, 10)
 
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__(export_widget)
@@ -66,13 +66,13 @@ class SummaryExportWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        main_layout.setContentsMargins(self.MARGINS)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout(group_widget)
-        group_layout.setSpacing(self.SPACING)
+        group_layout.setSpacing(UI_SPACING * 2)
         branch_group = self._create_branch_group()
         path_name_group = self._create_path_name_group()
         date_options_group = self._create_date_options_group()
@@ -96,8 +96,8 @@ class SummaryExportWidget(QWidget):
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        main_layout.setContentsMargins(self.MARGINS)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         form_layout = QFormLayout()
         self.branch_name_label = QLabel()
         self.branch_name_label.setObjectName("branchNameLabel")
@@ -116,8 +116,8 @@ class SummaryExportWidget(QWidget):
         self.path_name_group_box = QGroupBox()
         self.path_name_group_box.setObjectName("pathNameGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        main_layout.setContentsMargins(self.MARGINS)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         file_type_layout = QHBoxLayout()
         self.file_type_label = QLabel()
         self.file_type_label.setObjectName("fileTypeLabel")
@@ -165,8 +165,8 @@ class SummaryExportWidget(QWidget):
         self.date_options_group_box = QGroupBox()
         self.date_options_group_box.setObjectName("dateOptionsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        main_layout.setContentsMargins(self.MARGINS)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.time_button_group = QButtonGroup()
         standard_time_layout = QHBoxLayout()
         self.today_radio_button = QRadioButton()
@@ -178,11 +178,11 @@ class SummaryExportWidget(QWidget):
         self.year_radio_button = QRadioButton()
         self.year_radio_button.setObjectName("yearRadioButton")
         custom_time_layout = QHBoxLayout()
-        custom_time_layout.setSpacing(self.SPACING)
+        custom_time_layout.setSpacing(UI_SPACING * 2)
         self.custom_radio_button = QRadioButton()
         self.custom_radio_button.setObjectName("customRadioButton")
         from_to_layout = QHBoxLayout()
-        from_to_layout.setSpacing(self.SPACING // 2)
+        from_to_layout.setSpacing(UI_SPACING)
         self.from_date_label = QLabel()
         self.from_date_label.setObjectName("fromDateLabel")
         self.from_date_edit = QDateEdit()
@@ -222,8 +222,8 @@ class SummaryExportWidget(QWidget):
         self.financial_data_group_box.setObjectName("financialDataGroupBox")
         main_layout = QHBoxLayout()
         form_layout = QFormLayout()
-        form_layout.setSpacing(self.SPACING)
-        form_layout.setContentsMargins(self.MARGINS)
+        form_layout.setSpacing(UI_SPACING * 2)
+        form_layout.setContentsMargins(*UI_MARGINS_10)
         self.opening_balance_label = QLabel()
         self.opening_balance_label.setObjectName("openingBalanceLabel")
         self.opening_balance_spinbox = QDoubleSpinBox()
@@ -248,8 +248,8 @@ class SummaryExportWidget(QWidget):
         self.export_options_group_box = QGroupBox()
         self.export_options_group_box.setObjectName("exportOptionsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        main_layout.setContentsMargins(self.MARGINS)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.no_action_radio_button = QRadioButton()
         self.no_action_radio_button.setObjectName("noActionRadioButton")
         self.open_folder_radio_button = QRadioButton()
@@ -267,8 +267,8 @@ class SummaryExportWidget(QWidget):
         self.other_settings_group_box = QGroupBox()
         self.other_settings_group_box.setObjectName("otherSettingsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        main_layout.setContentsMargins(self.MARGINS)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.use_last_options_checkbox = QCheckBox()
         self.use_last_options_checkbox.setObjectName("useLastOptionsCheckbox")
         self.save_last_opening_balance_checkbox = QCheckBox()
@@ -284,8 +284,8 @@ class SummaryExportWidget(QWidget):
         self.export_action_group_box = QGroupBox()
         self.export_action_group_box.setObjectName("exportActionGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(self.SPACING)
-        main_layout.setContentsMargins(self.MARGINS)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_10)
         self.export_button = QPushButton()
         self.export_button.setObjectName("exportButton")
         main_layout.addStretch()

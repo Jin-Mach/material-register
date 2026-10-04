@@ -15,6 +15,7 @@ from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
     PAYMENT_TRANSFER,
+    UI_SPACING,
 )
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.transaction_widgets.transaction_info_widget import (
@@ -62,13 +63,13 @@ class TransactionItemsDialogIn(QDialog):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
+        main_layout.setSpacing(UI_SPACING)
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_widget = QWidget()
         scroll_layout = QVBoxLayout()
         scroll_layout.setContentsMargins(0, 0, 0, 0)
-        scroll_layout.setSpacing(5)
+        scroll_layout.setSpacing(UI_SPACING)
         self.transaction_info_widget = TransactionInfoWidget(self, self.transfer_type)
         self.transactions_items_widget = TransactionsItemsWidget(
             self, self.transfer_type

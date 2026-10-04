@@ -10,6 +10,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
+    UI_SPACING,
 )
 from material_register.ui.inventory.inventory_widgets.inventory_actions_widget import (
     InventoryActionsWidget,
@@ -35,13 +37,13 @@ class InventoryWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(5)
-        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.inventory_actions_widget = InventoryActionsWidget(self)
         self.inventory_view = InventoryView(self)
         self.actions_group_box = QGroupBox()
         actions_layout = QHBoxLayout()
-        actions_layout.setContentsMargins(5, 5, 5, 5)
+        actions_layout.setContentsMargins(*UI_MARGINS_5)
         actions_layout.addWidget(self.inventory_actions_widget)
         self.actions_group_box.setLayout(actions_layout)
         self.count_group_box = QGroupBox()

@@ -6,6 +6,8 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_MARGINS_5,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 
@@ -21,8 +23,8 @@ class TransactionsActionsWidget(QWidget):
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(10)
-        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(UI_SPACING * 2)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         self.in_transaction_button = QPushButton()
         self.in_transaction_button.setObjectName("inTransactionButton")
         self.out_transaction_button = QPushButton()

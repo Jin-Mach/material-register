@@ -22,6 +22,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_settings import UiSettings
 from material_register.ui.setup.ui_texts import UiTexts
@@ -37,7 +38,6 @@ if TYPE_CHECKING:
 
 class BaseExportWidget(QWidget):
     WIDTH = 400
-    SPACING = 10
 
     def __init__(
         self,
@@ -60,7 +60,7 @@ class BaseExportWidget(QWidget):
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
         group_layout = QVBoxLayout()
-        group_layout.setSpacing(self.SPACING)
+        group_layout.setSpacing(UI_SPACING * 2)
         branch_group = self._create_branch_group()
         path_name_group = self._create_path_name_group()
         export_options_group = self._create_export_options_group()
@@ -81,7 +81,7 @@ class BaseExportWidget(QWidget):
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         form_layout = QFormLayout()
         self.branch_name_label = QLabel()
         self.branch_name_label.setObjectName("branchNameLabel")
@@ -100,7 +100,7 @@ class BaseExportWidget(QWidget):
         self.path_name_group_box = QGroupBox()
         self.path_name_group_box.setObjectName("pathNameGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         form_layout = QFormLayout()
         self.path_label = QLabel()
         self.path_label.setObjectName("pathLabel")
@@ -135,7 +135,7 @@ class BaseExportWidget(QWidget):
         self.export_options_group_box = QGroupBox()
         self.export_options_group_box.setObjectName("exportOptionsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.no_action_radio_button = QRadioButton()
         self.no_action_radio_button.setObjectName("noActionRadioButton")
         self.open_folder_radio_button = QRadioButton()
@@ -152,7 +152,7 @@ class BaseExportWidget(QWidget):
         self.other_settings_group_box = QGroupBox()
         self.other_settings_group_box.setObjectName("otherSettingsGroupBox")
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.use_last_options_checkbox = QCheckBox()
         self.use_last_options_checkbox.setObjectName("useLastOptionsCheckbox")
         self.save_last_opening_balance_checkbox = QCheckBox()
@@ -168,7 +168,7 @@ class BaseExportWidget(QWidget):
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(self.SPACING)
+        main_layout.setSpacing(UI_SPACING * 2)
         self.settings_info_label = QLabel()
         self.settings_info_label.setObjectName("settingsInfoLabel")
         self.restore_button = QPushButton()
