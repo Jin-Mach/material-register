@@ -27,6 +27,7 @@ from material_register.ui.setup.ui_widgets import (
     disable_context_menu,
     disable_spinbox_wheel,
 )
+from material_register.utils.formatting_utils import format_number_to_locale
 
 if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
@@ -84,6 +85,8 @@ class UpdateCommoditiesPriceDialog(QDialog):
         self._setup_labels()
 
     def _setup_texts(self) -> None:
+        ui_text = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.price_suffix = ui_text.get("priceSuffix", "N/A")
         if UiTexts.set_ui_texts(self, self.findChildren(QWidget)):
             return
         ErrorHandler.handle_error(
@@ -118,12 +121,14 @@ class UpdateCommoditiesPriceDialog(QDialog):
             font = QFont()
             font.setBold(True)
             name_label.setFont(font)
-            price_label = QLabel(str(commodity.default_price))
+            price_label = QLabel(
+                f"{format_number_to_locale(commodity.default_price)} {self.price_suffix}"
+            )
             price_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             value_spinbox = QDoubleSpinBox()
             value_spinbox.setValue(commodity.default_price)
             value_spinbox.setProperty("default_price", commodity.default_price)
-            value_spinbox.setSuffix(commodity.unit)
+            value_spinbox.setSuffix(f" {self.price_suffix}/{commodity.unit}")
             value_spinbox.setMinimum(COMMODITY_DIALOG_MIN_VALUE)
             value_spinbox.setMaximum(COMMODITY_DIALOG_MAX_PRICE_VALUE)
             value_spinbox.setDecimals(1)

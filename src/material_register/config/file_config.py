@@ -253,6 +253,7 @@ UI_KEYS = [
     ("UpdateCommoditiesPriceDialog", "commodityNameLabelText"),
     ("UpdateCommoditiesPriceDialog", "defaultPriceLabelText"),
     ("UpdateCommoditiesPriceDialog", "newPriceLabelText"),
+    ("UpdateCommoditiesPriceDialog", "priceSuffix"),
     ("UpdateCommoditiesPriceDialog", "saveButtonText"),
     ("UpdateCommoditiesPriceDialog", "saveButtonTooltipText"),
     ("UpdateCommoditiesPriceDialog", "cancelButtonText"),

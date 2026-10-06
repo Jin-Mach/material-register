@@ -248,6 +248,7 @@ DEFAULT_TEXTS = {
         "commodityNameLabelText": "Item",
         "defaultPriceLabelText": "Current Price",
         "newPriceLabelText": "New Price",
+        "priceSuffix": "£",
         "saveButtonText": "Save",
         "saveButtonTooltipText": "Save New Prices",
         "cancelButtonText": "Cancel",

@@ -264,6 +264,7 @@
     "commodityNameLabelText": "Položka",
     "defaultPriceLabelText": "Aktuální cena",
     "newPriceLabelText": "Nová cena",
+    "priceSuffix": "Kč",
     "saveButtonText": "Uložit",
     "saveButtonTooltipText": "Uložit nové ceny",
     "cancelButtonText": "Zrušit",
