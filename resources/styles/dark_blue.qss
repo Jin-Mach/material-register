@@ -151,17 +151,27 @@ QCalendarWidget QTableView::item:hover {
     background-color: #232528;
 }
 
-#qt_calendar_navigationbar QPushButton {
-    background-color: #3a3d41;
+QCalendarWidget QToolButton#qt_calendar_monthbutton {
+    background-color: #232528;
+    border: none;
     color: #d4d4d4;
-    border: 1px solid #4a4d52;
-    border-radius: 4px;
-    padding: 4px 8px;
 }
 
-#qt_calendar_navigationbar QPushButton:hover {
-    background-color: #45484d;
-    border-color: #5a5e64;
+QCalendarWidget QToolButton#qt_calendar_monthbutton::menu-indicator {
+    width: 6px;
+    height: 6px;
+}
+
+QCalendarWidget QToolButton#qt_calendar_yearbutton:disabled {
+    background-color: #232528;
+    border: none;
+    color: #d4d4d4;
+}
+
+QCalendarWidget QToolButton#qt_calendar_prevmonth,
+QCalendarWidget QToolButton#qt_calendar_nextmonth {
+    border: 1px solid #4b8cc9;
+    border-radius: 3px;
 }
 
 QPushButton {

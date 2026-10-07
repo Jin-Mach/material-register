@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QVBoxLayout,
     QWidget,
+    QToolButton,
 )
 
 from material_register.controllers.export_controllers.excel.transactions_export_controller import (
@@ -532,6 +533,8 @@ class TransactionsExportWidget(QWidget):
         for date_edit in date_edits:
             calendar = date_edit.calendarWidget()
             if calendar:
+                year_button = calendar.findChild(QToolButton, "qt_calendar_yearbutton")
+                year_button.setDisabled(True)
                 calendar.setMinimumWidth(250)
                 calendar.setMinimumHeight(200)
         today = QDate.currentDate()
