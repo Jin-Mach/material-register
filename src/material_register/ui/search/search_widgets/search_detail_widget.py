@@ -20,7 +20,9 @@ from material_register.ui.config.ui_constants import (
     LOGGER_UI,
     UI_SPACING,
 )
-from material_register.ui.search.search_widgets.search_detail_view import SearchDetailView
+from material_register.ui.search.search_widgets.search_detail_view import (
+    SearchDetailView,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:

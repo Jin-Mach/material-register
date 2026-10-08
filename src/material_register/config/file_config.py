@@ -459,6 +459,8 @@ UI_KEYS = [
     ("SearchDetailWidget", "notesGroupBoxText"),
     ("SearchDetailWidget", "itemsGroupBoxText"),
     ("SearchDetailWidget", "priceSuffix"),
+    ("SearchTabWidget", "transactionsTabTitleText"),
+    ("SearchTabWidget", "materialTabTitleText"),
 ]
 
 HEADERS_KEYS = [

@@ -1,4 +1,11 @@
+from typing import TYPE_CHECKING
+
 from PySide6.QtWidgets import QHeaderView, QTableView
+
+if TYPE_CHECKING:
+    from material_register.ui.search.search_widgets.search_detail_widget import (
+        SearchDetailWidget,
+    )
 
 
 class SearchDetailView(QTableView):

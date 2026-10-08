@@ -522,5 +522,9 @@
     "notesGroupBoxText": "Notes",
     "itemsGroupBoxText": "Items",
     "priceSuffix": "£"
+  },
+  "SearchTabWidget": {
+    "transactionsTabTitleText": "Transactions",
+    "materialTabTitleText": "Material"
   }
 }

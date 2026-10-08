@@ -488,6 +488,10 @@ DEFAULT_TEXTS = {
         "addressLabelText": "Address:",
         "notesGroupBoxText": "Notes",
         "itemsGroupBoxText": "Items",
-        "priceSuffix": "£"
-  }
+        "priceSuffix": "£",
+    },
+    "SearchTabWidget": {
+        "transactionsTabTitleText": "Transactions",
+        "materialTabTitleText": "Material",
+    },
 }
