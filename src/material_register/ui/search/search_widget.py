@@ -12,6 +12,7 @@ from material_register.ui.config.ui_constants import (
     UI_MARGINS_5,
     UI_SPACING,
 )
+from material_register.ui.search.search_widgets.search_detail_widget import SearchDetailWidget
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.formatting_utils import format_number_to_locale
 
@@ -30,6 +31,7 @@ class SearchWidget(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(*UI_MARGINS_5)
+        self.search_detail_widget = SearchDetailWidget(self)
         self.actions_group_box = QGroupBox()
         self.actions_group_box.setObjectName("actionsGroupBox")
         action_layout = QHBoxLayout()
@@ -40,6 +42,7 @@ class SearchWidget(QWidget):
         self.detail_group_box.setObjectName("detailGroupBox")
         detail_group_layout = QVBoxLayout()
         detail_group_layout.setContentsMargins(*UI_MARGINS_5)
+        detail_group_layout.addWidget(self.search_detail_widget)
         self.detail_group_box.setLayout(detail_group_layout)
         self.transactions_group_box = QGroupBox()
         self.transactions_group_box.setObjectName("transactionsGroupBox")

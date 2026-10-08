@@ -506,5 +506,19 @@
     "CASH": "Hotovost",
     "TRANSFER": "Převod na účet",
     "tooltipNotesText": "Poznámky:"
+  },
+  "SearchDetailWidget": {
+    "infoTabText": "Info",
+    "itemsTabText": "Položky",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod na účet",
+    "isInvoicedCheckBoxText": "Faktura",
+    "customerGroupBoxText": "Zákazník",
+    "customerNameLabelText": "Jméno:",
+    "documentNumberLabelText": "Doklad:",
+    "addressLabelText": "Adresa:",
+    "notesGroupBoxText": "Poznámky",
+    "itemsGroupBoxText": "Položky",
+    "priceSuffix": "Kč"
   }
 }

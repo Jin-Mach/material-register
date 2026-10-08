@@ -447,6 +447,18 @@ UI_KEYS = [
     ("DocumentPreviewDialog", "zoomOutButtonTooltipText"),
     ("DocumentPreviewDialog", "closeButtonText"),
     ("DocumentPreviewDialog", "closeButtonTooltipText"),
+    ("SearchDetailWidget", "infoTabText"),
+    ("SearchDetailWidget", "itemsTabText"),
+    ("SearchDetailWidget", "CASH"),
+    ("SearchDetailWidget", "TRANSFER"),
+    ("SearchDetailWidget", "isInvoicedCheckBoxText"),
+    ("SearchDetailWidget", "customerGroupBoxText"),
+    ("SearchDetailWidget", "customerNameLabelText"),
+    ("SearchDetailWidget", "documentNumberLabelText"),
+    ("SearchDetailWidget", "addressLabelText"),
+    ("SearchDetailWidget", "notesGroupBoxText"),
+    ("SearchDetailWidget", "itemsGroupBoxText"),
+    ("SearchDetailWidget", "priceSuffix"),
 ]
 
 HEADERS_KEYS = [

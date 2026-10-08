@@ -476,4 +476,18 @@ DEFAULT_TEXTS = {
         "closeButtonText": "Close",
         "closeButtonTooltipText": "Close dialog",
     },
+    "SearchDetailWidget": {
+        "infoTabText": "Info",
+        "itemsTabText": "Items",
+        "CASH": "Cash",
+        "TRANSFER": "Bank transfer",
+        "isInvoicedCheckBoxText": "Invoice",
+        "customerGroupBoxText": "Customer",
+        "customerNameLabelText": "Name:",
+        "documentNumberLabelText": "Document:",
+        "addressLabelText": "Address:",
+        "notesGroupBoxText": "Notes",
+        "itemsGroupBoxText": "Items",
+        "priceSuffix": "£"
+  }
 }
