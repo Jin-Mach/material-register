@@ -60,6 +60,8 @@ UI_KEYS = [
     ("SidePanel", "catalogButtonTooltipText"),
     ("SidePanel", "inventoryButtonText"),
     ("SidePanel", "inventoryButtonTooltipText"),
+    ("SidePanel", "searchButtonText"),
+    ("SidePanel", "searchButtonTooltipText"),
     ("SidePanel", "settingsButtonText"),
     ("SidePanel", "settingsButtonTooltipText"),
     ("TransactionsWidget", "detailGroupBoxText"),

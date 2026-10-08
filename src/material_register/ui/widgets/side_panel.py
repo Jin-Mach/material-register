@@ -39,6 +39,8 @@ class SidePanel(QWidget):
         self.customers_button.setObjectName("customersButton")
         self.catalog_button = QPushButton()
         self.catalog_button.setObjectName("catalogButton")
+        self.search_button = QPushButton()
+        self.search_button.setObjectName("searchButton")
         self.settings_button = QPushButton()
         self.settings_button.setObjectName("settingsButton")
         self.button_group = QButtonGroup(self)
@@ -48,12 +50,14 @@ class SidePanel(QWidget):
         self.button_group.addButton(self.export_button)
         self.button_group.addButton(self.customers_button)
         self.button_group.addButton(self.catalog_button)
+        self.button_group.addButton(self.search_button)
         self.button_group.addButton(self.settings_button)
         group_box_layout.addWidget(self.transactions_button)
         group_box_layout.addWidget(self.inventory_button)
         group_box_layout.addWidget(self.export_button)
         group_box_layout.addWidget(self.customers_button)
         group_box_layout.addWidget(self.catalog_button)
+        group_box_layout.addWidget(self.search_button)
         group_box_layout.addStretch()
         group_box_layout.addWidget(self.settings_button)
         group_box.setLayout(group_box_layout)
@@ -71,6 +75,7 @@ class SidePanel(QWidget):
             self.export_button,
             self.customers_button,
             self.catalog_button,
+            self.search_button,
             self.settings_button,
         ]
         if UiTexts.set_ui_texts(self, widgets):
@@ -89,6 +94,7 @@ class SidePanel(QWidget):
             self.inventory_button,
             self.export_button,
             self.customers_button,
+            self.search_button,
             self.catalog_button,
         ]
         for widget in widgets:

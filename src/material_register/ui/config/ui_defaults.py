@@ -12,6 +12,8 @@ DEFAULT_TEXTS = {
         "catalogButtonTooltipText": "Displays item catalog",
         "inventoryButtonText": "Inventory",
         "inventoryButtonTooltipText": "Displays stock status",
+        "searchButtonText": "Search",
+        "searchButtonTooltipText": "Displays advanced search options",
         "settingsButtonText": "Settings",
         "settingsButtonTooltipText": "Displays application settings",
     },

@@ -19,9 +19,9 @@ from PySide6.QtWidgets import (
     QRadioButton,
     QScrollArea,
     QSizePolicy,
+    QToolButton,
     QVBoxLayout,
     QWidget,
-    QToolButton,
 )
 
 from material_register.controllers.export_controllers.excel.summary_export_controller import (

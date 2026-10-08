@@ -6,6 +6,7 @@ from material_register.ui.catalog.catalog_widget import CatalogWidget
 from material_register.ui.customers.customers_widget import CustomersWidget
 from material_register.ui.export.export_widget import ExportWidget
 from material_register.ui.inventory.inventory_widget import InventoryWidget
+from material_register.ui.search.search_widget import SearchWidget
 from material_register.ui.transactions.transactions_widget import TransactionsWidget
 
 if TYPE_CHECKING:
@@ -20,6 +21,7 @@ class StackedWidget(QStackedWidget):
         self.export_widget = ExportWidget(self)
         self.customers_widget = CustomersWidget(self)
         self.catalog_widget = CatalogWidget(self)
+        self.search_widget = SearchWidget(self)
         self._init_setup()
 
     def _init_setup(self) -> None:
@@ -29,6 +31,7 @@ class StackedWidget(QStackedWidget):
             self.export_widget,
             self.customers_widget,
             self.catalog_widget,
+            self.search_widget,
         ]
         for widget in widgets:
             self.addWidget(widget)

@@ -7,7 +7,7 @@
   },
   "SidePanel": {
     "transactionsButtonText": "Transakce",
-    "transactionsButtonTooltipText": "Zobrazí seznam transkací",
+    "transactionsButtonTooltipText": "Zobrazí seznam transakcí",
     "customersButtonText": "Zákazníci",
     "customersButtonTooltipText": "Zobrazí seznam zákazníků",
     "exportButtonText": "Export",
@@ -16,6 +16,8 @@
     "catalogButtonTooltipText": "Zobrazí katalog položek",
     "inventoryButtonText": "Sklad",
     "inventoryButtonTooltipText": "Zobrazí stav zásob ve skladu",
+    "searchButtonText": "Vyhledávání",
+    "searchButtonTooltipText": "Zobrazí možnosti pokročilého vyhledávání",
     "settingsButtonText": "Nastavení",
     "settingsButtonTooltipText": "Zobrazí nastavení aplikace"
   },
@@ -491,5 +493,18 @@
     "zoomOutButtonTooltipText": "Oddálit",
     "closeButtonText": "Zavřít",
     "closeButtonTooltipText": "Zavře dialog"
+  },
+  "SearchWidget": {
+    "detailGroupBoxText": "Detail transakce",
+    "transactionsGroupBoxText": "Seznam transakcí",
+    "itemsCountLabelText": "Zobrazeno:",
+    "pricePrefix": "Výkup celkem:",
+    "priceSuffix": "Kč",
+    "tooltipCustomerText": "Zákazník:",
+    "tooltipAddressText": "Adresa:",
+    "tooltipPaymentText": "Platba:",
+    "CASH": "Hotovost",
+    "TRANSFER": "Převod na účet",
+    "tooltipNotesText": "Poznámky:"
   }
 }
