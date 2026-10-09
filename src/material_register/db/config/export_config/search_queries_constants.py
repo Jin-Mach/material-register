@@ -1,0 +1,44 @@
+SEARCH_QUERY_START = """
+            SELECT
+                    trans.id AS transaction_id,
+                    trans.type AS transaction_type,
+                    trans.created_at AS transaction_created_at,
+                    trans.payment_type AS transaction_payment_type,
+                    trans.is_invoiced AS transaction_is_invoiced,
+                    trans.notes AS transaction_notes,
+                
+                    cust.id AS customer_id,
+                    cust.document_number AS customer_document_number,
+                    cust.address AS customer_address,
+                
+                    CASE
+                        WHEN cust.company IS NOT NULL AND cust.company != ''
+                            THEN cust.company
+                        ELSE TRIM(cust.first_name || ' ' || cust.last_name)
+                    END AS customer_name,
+                
+                    ROUND(
+                        SUM(
+                            CASE
+                                WHEN trans.type = 'IN'
+                                    THEN items.unit_count * items.price_per_unit
+                                ELSE items.unit_count
+                            END
+                        ), 1) AS total,
+                        
+                    CASE
+                        WHEN trans.type = 'OUT' THEN con.unit
+                        ELSE NULL
+                    END AS suffix
+                
+                FROM transactions trans
+                
+                LEFT JOIN customers cust ON cust.id = trans.customer_id
+                LEFT JOIN transaction_items items ON items.transaction_id = trans.id
+                LEFT JOIN commodities con ON con.id = items.commodity_id
+"""
+
+SEARCH_QUERY_END = """
+            GROUP BY trans.id
+            ORDER BY trans.created_at DESC, trans.id DESC;
+"""

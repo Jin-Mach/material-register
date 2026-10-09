@@ -35,7 +35,7 @@ TRANSACTIONS_QUERY_IN = """
                 
                 GROUP BY trans.id
                 ORDER BY trans.created_at DESC, trans.id DESC;
-            """
+"""
 
 TRANSACTIONS_QUERY_OUT = """
             SELECT
@@ -77,7 +77,7 @@ TRANSACTIONS_QUERY_OUT = """
                 
                 GROUP BY trans.id
                 ORDER BY trans.created_at DESC, trans.id DESC;
-            """
+"""
 
 TRANSACTIONS_BASIC_FILTER_QUERY = """
             SELECT
@@ -128,7 +128,7 @@ TRANSACTIONS_BASIC_FILTER_QUERY = """
 
                 GROUP BY trans.id
                 ORDER BY trans.created_at DESC, trans.id DESC;
-            """
+"""
 
 SELECTED_TRANSACTION_DATA = """
             SELECT
