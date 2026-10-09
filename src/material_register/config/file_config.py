@@ -461,6 +461,13 @@ UI_KEYS = [
     ("SearchDetailWidget", "priceSuffix"),
     ("SearchTabWidget", "transactionsTabTitleText"),
     ("SearchTabWidget", "materialTabTitleText"),
+    ("SearchActionsWidget", "invisibleInButtonText"),
+    ("SearchActionsWidget", "invisibleOutButtonText"),
+    ("SearchActionsWidget", "baseFilterComboboxItems"),
+    ("SearchActionsWidget", "searchLineEditPlaceholderText"),
+    ("SearchActionsWidget", "searchButtonText"),
+    ("SearchActionsWidget", "resetFilterButtonText"),
+    ("SearchActionsWidget", "createFilterButtonText"),
 ]
 
 HEADERS_KEYS = [

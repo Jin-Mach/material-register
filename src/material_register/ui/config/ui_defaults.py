@@ -494,4 +494,19 @@ DEFAULT_TEXTS = {
         "transactionsTabTitleText": "Transactions",
         "materialTabTitleText": "Material",
     },
+    "SearchActionsWidget": {
+        "invisibleInButtonText": "Add purchase",
+        "invisibleOutButtonText": "Add sale",
+        "baseFilterComboboxItems": [
+            "All",
+            "Today",
+            "This week",
+            "This month",
+            "This year",
+        ],
+        "searchLineEditPlaceholderText": "Enter text to search...",
+        "searchButtonText": "Search",
+        "resetFilterButtonText": "Reset",
+        "createFilterButtonText": "Create filter",
+    },
 }

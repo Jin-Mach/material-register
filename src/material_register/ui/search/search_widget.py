@@ -12,6 +12,9 @@ from material_register.ui.config.ui_constants import (
     UI_MARGINS_5,
     UI_SPACING,
 )
+from material_register.ui.search.search_widgets.search_actions_widget import (
+    SearchActionsWidget,
+)
 from material_register.ui.search.search_widgets.search_detail_widget import (
     SearchDetailWidget,
 )
@@ -34,6 +37,7 @@ class SearchWidget(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(*UI_MARGINS_5)
+        self.search_actions_widget = SearchActionsWidget(self)
         self.search_detail_widget = SearchDetailWidget(self)
         self.search_tab_widget = SearchTabWidget(self)
         self.actions_group_box = QGroupBox()
@@ -41,6 +45,7 @@ class SearchWidget(QWidget):
         action_layout = QHBoxLayout()
         action_layout.setContentsMargins(*UI_MARGINS_5)
         action_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        action_layout.addWidget(self.search_actions_widget)
         self.actions_group_box.setLayout(action_layout)
         self.detail_group_box = QGroupBox()
         self.detail_group_box.setObjectName("detailGroupBox")

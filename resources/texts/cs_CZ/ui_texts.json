@@ -524,5 +524,14 @@
   "SearchTabWidget": {
     "transactionsTabTitleText": "Transakce",
     "materialTabTitleText": "Materiál"
+  },
+  "SearchActionsWidget": {
+    "invisibleInButtonText": "Přidat výkup",
+    "invisibleOutButtonText": "Přidat vývoz",
+    "baseFilterComboboxItems": ["Vše", "Dnes", "Tento týden", "Tento měsíc", "Tento rok"],
+    "searchLineEditPlaceholderText": "Zadej text pro vyhledávání...",
+    "searchButtonText": "Hledat",
+    "resetFilterButtonText": "Reset",
+    "createFilterButtonText": "Vytvořit filtr"
   }
 }

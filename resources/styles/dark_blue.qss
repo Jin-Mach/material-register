@@ -755,3 +755,10 @@ QFrame#transactionDetailFrame {
     border: 1px solid #45484d;
     border-radius: 4px;
 }
+
+QPushButton#invisibleInButton,
+QPushButton#invisibleOutButton {
+    background-color: transparent;
+    color: transparent;
+    border-color: transparent;
+}
