@@ -5,7 +5,6 @@ from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
 from material_register.domain.search_dataclass import (
-    SearchDataclass,
     SearchResultsDataclass,
 )
 from material_register.services.error_handler import ErrorHandler
@@ -44,7 +43,7 @@ class SearchController(QObject):
 
     def _search_ok(self, results: SearchResultsDataclass) -> None:
         self._clean_thread()
-        QTimer.singleShot(1000, lambda: self._finish_search(results.transactions))
+        QTimer.singleShot(1000, lambda: self._finish_search(results=results))
 
     def _clean_thread(self) -> None:
         if self.worker and self.worker.db_connection:
@@ -63,7 +62,7 @@ class SearchController(QObject):
 
     def _finish_search(
         self,
-        transactions: list[SearchDataclass] | None = None,
+        results: SearchResultsDataclass | None = None,
         error: str | None = None,
     ) -> None:
         self._reset_variables()
@@ -72,9 +71,21 @@ class SearchController(QObject):
                 error, f"{self.__class__.__name__}._search_error", self.search_widget
             )
             return
+        if results is None:
+            SearchController._handle_search_error(
+                "SearchResultsDataclass is None",
+                f"{self.__class__.__name__}._search_error",
+                self.search_widget,
+            )
+            return
+        transactions = results.transactions
+        transactions_count = results.transactions_count
+        transactions_amount = results.transactions_total_amount
         if transactions is None:
             transactions = []
         self.search_widget.search_transactions_model.load_data(transactions)
+        self.search_widget.set_count_text(len(transactions), transactions_count)
+        self.search_widget.set_price_text(transactions_amount)
 
     @staticmethod
     def _handle_search_error(

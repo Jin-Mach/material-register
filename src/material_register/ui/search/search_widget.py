@@ -89,6 +89,7 @@ class SearchWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_style()
         self._setup_model()
 
     def _load_data(self) -> None:
@@ -101,6 +102,9 @@ class SearchWidget(QWidget):
         self.price_prefix = ui_texts.get("pricePrefix", "")
         self.price_sufix = ui_texts.get("priceSuffix", "")
         self.tooltip_texts = {
+            "type_text": ui_texts.get("tooltipTypeText", "Type:"),
+            "IN": ui_texts.get("IN", "In:"),
+            "OUT": ui_texts.get("OUT", "Out:"),
             "customer_text": ui_texts.get("tooltipCustomerText", "Customer:"),
             "address_text": ui_texts.get("tooltipAddressText", "Address:"),
             "payment_text": ui_texts.get("tooltipPaymentText", "Payment:"),
@@ -129,6 +133,11 @@ class SearchWidget(QWidget):
 
     def _setup_transactions_model(self) -> None:
         self.search_tab_widget.transactions_tab.setModel(self.search_transactions_model)
+        self.search_transactions_model.set_suffix(self.price_sufix)
+        self.search_transactions_model.set_tooltip_texts(self.tooltip_texts)
+        self.search_transactions_model.set_transaction_type_texts(
+            self.tooltip_texts.get("IN", "In"), self.tooltip_texts.get("OUT", "Out")
+        )
         self.search_tab_widget.transactions_tab.setup_ui()
 
     def set_count_text(self, filtered: int, total: int) -> None:

@@ -62,6 +62,7 @@ def test_get_columns_map() -> None:
 def test_display_transaction_data(
     model: SearchTransactionsModel, transaction_in: SearchDataclass
 ) -> None:
+    model.set_transaction_type_texts("IN", "OUT")
     model.load_data([transaction_in])
     index_id = model.index(0, SEARCH_MODEL_COLUMNS_MAP["transaction_id"])
     assert model.data(index_id, Qt.ItemDataRole.DisplayRole) == 1
@@ -80,7 +81,7 @@ def test_display_transaction_data(
 def test_display_total_in(
     model: SearchTransactionsModel, transaction_in: SearchDataclass
 ) -> None:
-    model.suffix = "£"
+    model.set_suffix("£")
     model.load_data([transaction_in])
     index = model.index(0, SEARCH_MODEL_COLUMNS_MAP["total"])
     assert model.data(index, Qt.ItemDataRole.DisplayRole) == "100,0 £"

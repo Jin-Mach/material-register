@@ -28,7 +28,19 @@ class SearchWorker(QObject):
             if not ok:
                 self.error.emit("Transactions search query failed")
                 return
-            results_dataclass = SearchResultsDataclass(transactions=transactions)
+            ok, count = SearchQueries.get_transactions_count(self.db_connection)
+            if not ok:
+                self.error.emit("Transactions count query failed")
+                return
+            ok, amount = SearchQueries.get_total_amount(self.db_connection)
+            if not ok:
+                self.error.emit("Total amount query failed")
+                return
+            results_dataclass = SearchResultsDataclass(
+                transactions=transactions,
+                transactions_count=count,
+                transactions_total_amount=amount,
+            )
             self.finished.emit(results_dataclass)
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_ERROR)
