@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 class DatabaseBackupController(QObject):
-    def __init__(self, database_backup_widget: "DatabaseBackupWidget", /) -> None:
+    def __init__(self, database_backup_widget: "DatabaseBackupWidget") -> None:
         super().__init__()
         self._database_backup_widget = database_backup_widget
         self._main_window = (

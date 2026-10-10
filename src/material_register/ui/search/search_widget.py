@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
+from material_register.controllers.search_controller import SearchController
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import PRICE_STYLE
 from material_register.ui.config.ui_constants import (
@@ -30,8 +31,10 @@ class SearchWidget(QWidget):
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__()
         self.stacked_widget = stacked_widget
+        self.search_controller = SearchController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._load_data()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -82,6 +85,9 @@ class SearchWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+
+    def _load_data(self) -> None:
+        self.search_controller.start_thread()
 
     def _setup_texts(self) -> None:
         widgets = [self.detail_group_box, self.transactions_group_box]

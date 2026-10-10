@@ -13,6 +13,7 @@
   "BACKUP_ERROR": "Failed to complete the data backup.",
   "RESTORE_ERROR": "Failed to restore data from the backup.",
   "PATH_ERROR": "Error while setting the file path.",
+  "SEARCH_ERROR": "Failed to load search results.",
   "CRITICAL_FAILURE": "A critical error occurred.",
   "UNKNOWN_ERROR": "An unexpected error occurred.",
   "CONNECTION_ERROR": "Unable to establish an internet connection.",

@@ -13,6 +13,7 @@
   "BACKUP_ERROR": "Nepodařilo se dokončit zálohu dat.",
   "RESTORE_ERROR": "Nepodařilo se obnovit data ze zálohy.",
   "PATH_ERROR": "Chyba při nastavení cesty souboru.",
+  "SEARCH_ERROR": "Nepodařilo se načíst výsledky vyhledávání.",
   "CRITICAL_FAILURE": "Došlo ke kritické chybě.",
   "UNKNOWN_ERROR": "Došlo k neočekávané chybě.",
   "CONNECTION_ERROR": "Nelze navázat připojení k internetu.",
