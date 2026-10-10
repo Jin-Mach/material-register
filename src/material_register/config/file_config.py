@@ -493,6 +493,7 @@ HEADERS_KEYS = [
     ("TransactionDetailView", "unitCount"),
     ("TransactionDetailView", "pricePerUnit"),
     ("TransactionDetailView", "totalPrice"),
+    ("SearchTransactionsView", "headers_texts"),
 ]
 
 ERROR_KEYS = [

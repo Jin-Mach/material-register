@@ -13,11 +13,17 @@ from material_register.ui.config.ui_constants import (
 
 if TYPE_CHECKING:
     from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
+    from material_register.db.models.search_transactions_model import (
+        SearchTransactionsModel,
+    )
     from material_register.db.models.transactions_load_model_in import (
         TransactionsLoadModelIn,
     )
     from material_register.db.models.transactions_load_model_out import (
         TransactionsLoadModelOut,
+    )
+    from material_register.ui.search.search_widgets.search_transactions_view import (
+        SearchTransactionsView,
     )
 
 
@@ -87,6 +93,27 @@ class HeadersTexts:
                 return False
             for index, text in headers_texts.items():
                 model.setHeaderData(int(index), Qt.Orientation.Horizontal, text)
+            return True
+        except Exception as e:
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
+            return False
+
+    @classmethod
+    def set_search_headers_text(
+        cls, view: "SearchTransactionsView", model: "SearchTransactionsModel"
+    ) -> bool:
+        try:
+            headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {}).get(
+                "headers_texts", {}
+            )
+            if not headers_texts:
+                return False
+            for index, text in headers_texts.items():
+                model.headers[int(index)] = text
+            model.layoutChanged.emit()
+            model.headerDataChanged.emit(
+                Qt.Orientation.Horizontal, 0, model.columnCount() - 1
+            )
             return True
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)

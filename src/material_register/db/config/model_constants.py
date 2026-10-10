@@ -70,3 +70,25 @@ INVENTORY_COLUMNS_MAP = {
 }
 
 INVENTORY_VIEW_HIDDEN_COLUMNS = ["commodity_unit"]
+
+SEARCH_MODEL_COLUMNS = [
+    "transaction_id",
+    "transaction_type",
+    "transaction_created_at",
+    "customer_name",
+    "customer_document_number",
+    "customer_address",
+    "total",
+]
+
+SEARCH_MODEL_COLUMNS_MAP = {
+    "transaction_id": 0,
+    "transaction_type": 1,
+    "transaction_created_at": 2,
+    "customer_name": 3,
+    "customer_document_number": 4,
+    "customer_address": 5,
+    "total": 6,
+}
+
+SEARCH_VIEW_HIDDEN_COLUMNS = ["transaction_id"]

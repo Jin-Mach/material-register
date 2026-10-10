@@ -36,5 +36,16 @@
     "unitCount": "Quantity",
     "pricePerUnit": "Price",
     "totalPrice": "Total amount"
+  },
+  "SearchTransactionsView": {
+    "headers_texts": {
+      "0": "ID",
+      "1": "Type",
+      "2": "Date",
+      "3": "Customer",
+      "4": "Document",
+      "5": "Address",
+      "6": "Total"
+    }
   }
 }

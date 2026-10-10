@@ -5,6 +5,9 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.search_controller import SearchController
+from material_register.db.models.search_transactions_model import (
+    SearchTransactionsModel,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import PRICE_STYLE
 from material_register.ui.config.ui_constants import (
@@ -32,6 +35,7 @@ class SearchWidget(QWidget):
         super().__init__()
         self.stacked_widget = stacked_widget
         self.search_controller = SearchController(self)
+        self.search_transactions_model = SearchTransactionsModel()
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._load_data()
@@ -85,6 +89,7 @@ class SearchWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_model()
 
     def _load_data(self) -> None:
         self.search_controller.start_thread()
@@ -118,6 +123,13 @@ class SearchWidget(QWidget):
         font.setBold(True)
         self.price_count_value.setStyleSheet(PRICE_STYLE)
         self.price_count_value.setFont(font)
+
+    def _setup_model(self) -> None:
+        self._setup_transactions_model()
+
+    def _setup_transactions_model(self) -> None:
+        self.search_tab_widget.transactions_tab.setModel(self.search_transactions_model)
+        self.search_tab_widget.transactions_tab.setup_ui()
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.items_count_label.setText(f"{self.items_count_text} {filtered}/{total}")

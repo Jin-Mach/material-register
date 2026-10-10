@@ -36,5 +36,16 @@
     "unitCount": "Množství",
     "pricePerUnit": "Cena",
     "totalPrice": "Celková částka"
+  },
+  "SearchTransactionsView": {
+    "headers_texts": {
+      "0": "ID",
+      "1": "Typ",
+      "2": "Datum",
+      "3": "Zákazník",
+      "4": "Doklad",
+      "5": "Adresa",
+      "6": "Celkem"
+    }
   }
 }
