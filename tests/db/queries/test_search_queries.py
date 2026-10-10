@@ -121,3 +121,52 @@ def test_load_transactions_query_error(connection: QSqlDatabase) -> None:
     success, results = SearchQueries.load_transactions(connection)
     assert success is False
     assert results == []
+
+
+def test_get_transactions_count(connection: QSqlDatabase, schema) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transactions (id, type)
+        VALUES
+            (1, 'IN'),
+            (2, 'OUT'),
+            (3, 'IN')
+    """)
+    success, transactions_count = SearchQueries.get_transactions_count(connection)
+    assert success is True
+    assert transactions_count == 3
+
+
+def test_get_transactions_count_query_error(connection: QSqlDatabase) -> None:
+    success, transactions_count = SearchQueries.get_transactions_count(connection)
+    assert success is False
+    assert transactions_count == 0
+
+
+def test_get_total_amount(connection: QSqlDatabase, schema) -> None:
+    query = QSqlQuery(connection)
+    query.exec("INSERT INTO commodities VALUES (1, 'kg')")
+    query.exec("""
+        INSERT INTO transactions (id, type)
+        VALUES
+            (1, 'IN'),
+            (2, 'OUT'),
+            (3, 'IN')
+    """)
+    query.exec("""
+        INSERT INTO transaction_items
+            (id, transaction_id, commodity_id, unit_count, price_per_unit)
+        VALUES
+            (1, 1, 1, 10, 20),
+            (2, 2, 1, 10, 50),
+            (3, 3, 1, 5, 30)
+    """)
+    success, total_amount = SearchQueries.get_total_amount(connection)
+    assert success is True
+    assert total_amount == 350.0
+
+
+def test_get_total_amount_query_error(connection: QSqlDatabase) -> None:
+    success, total_amount = SearchQueries.get_total_amount(connection)
+    assert success is False
+    assert total_amount == 0.0

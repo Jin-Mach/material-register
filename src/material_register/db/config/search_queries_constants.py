@@ -42,3 +42,22 @@ SEARCH_QUERY_END = """
             GROUP BY trans.id
             ORDER BY trans.created_at DESC, trans.id DESC;
 """
+
+SEARCH_COUNT_QUERY = "SELECT COUNT(*) FROM transactions"
+
+SEARCH_TRANSACTIONS_AMOUNT_QUERY_START = """
+            SELECT
+                
+            ROUND(
+                SUM(
+                    CASE
+                        WHEN trans.type = 'IN'
+                            THEN items.unit_count * items.price_per_unit
+                        ELSE 0
+                    END
+                ), 1) AS transactions_amount
+                
+            FROM transactions trans
+            
+            LEFT JOIN transaction_items items ON items.transaction_id = trans.id
+"""

@@ -4,7 +4,10 @@ from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
-from material_register.domain.search_dataclass import SearchResultsDataclass
+from material_register.domain.search_dataclass import (
+    SearchDataclass,
+    SearchResultsDataclass,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -36,14 +39,12 @@ class SearchController(QObject):
         self.thread.start()
 
     def _search_error(self, error: str) -> None:
-        print("error: ", error)
         self._clean_thread()
         QTimer.singleShot(1000, lambda: self._finish_search(error=error))
 
     def _search_ok(self, results: SearchResultsDataclass) -> None:
-        print("results: ", results)
         self._clean_thread()
-        QTimer.singleShot(1000, self._finish_search)
+        QTimer.singleShot(1000, lambda: self._finish_search(results.transactions))
 
     def _clean_thread(self) -> None:
         if self.worker and self.worker.db_connection:
@@ -60,14 +61,20 @@ class SearchController(QObject):
         self.worker = None
         self.thread = None
 
-    def _finish_search(self, error: str | None = None) -> None:
+    def _finish_search(
+        self,
+        transactions: list[SearchDataclass] | None = None,
+        error: str | None = None,
+    ) -> None:
         self._reset_variables()
         if error is not None:
             SearchController._handle_search_error(
                 error, f"{self.__class__.__name__}._search_error", self.search_widget
             )
             return
-        print("search OK")
+        if transactions is None:
+            transactions = []
+        self.search_widget.search_transactions_model.load_data(transactions)
 
     @staticmethod
     def _handle_search_error(

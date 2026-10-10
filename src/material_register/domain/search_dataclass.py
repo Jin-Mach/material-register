@@ -20,3 +20,5 @@ class SearchDataclass:
 @dataclass(frozen=True)
 class SearchResultsDataclass:
     transactions: list[SearchDataclass] | None = None
+    transactions_count: int = 0
+    transactions_total_amount: float = 0.0

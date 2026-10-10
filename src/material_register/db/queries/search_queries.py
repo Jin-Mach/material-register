@@ -1,8 +1,10 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.export_config.search_queries_constants import (
+from material_register.db.config.search_queries_constants import (
+    SEARCH_COUNT_QUERY,
     SEARCH_QUERY_END,
     SEARCH_QUERY_START,
+    SEARCH_TRANSACTIONS_AMOUNT_QUERY_START,
 )
 from material_register.domain.search_dataclass import SearchDataclass
 from material_register.services.error_handler import ErrorHandler
@@ -15,7 +17,7 @@ class SearchQueries:
         db_connection: QSqlDatabase,
     ) -> tuple[bool, list[SearchDataclass]]:
         query = QSqlQuery(db_connection)
-        final_query = SearchQueries._get_final_query()
+        final_query = SearchQueries._get_final_search_query()
         if not query.exec(final_query):
             ErrorHandler.handle_error(
                 query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
@@ -42,5 +44,36 @@ class SearchQueries:
         return True, results
 
     @staticmethod
-    def _get_final_query() -> str:
+    def get_transactions_count(db_connection: QSqlDatabase) -> tuple[bool, int]:
+        query = QSqlQuery(db_connection)
+        if not query.exec(SEARCH_COUNT_QUERY):
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
+            return False, 0
+        transactions_count = 0
+        if query.next():
+            transactions_count = query.value(0)
+        return True, transactions_count
+
+    @staticmethod
+    def get_total_amount(db_connection: QSqlDatabase) -> tuple[bool, float]:
+        query = QSqlQuery(db_connection)
+        final_query = SearchQueries._get_final_amount_query()
+        if not query.exec(final_query):
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
+            return False, 0.0
+        total_amount = 0.0
+        if query.next():
+            total_amount = query.value(0)
+        return True, total_amount
+
+    @staticmethod
+    def _get_final_search_query() -> str:
         return f"{SEARCH_QUERY_START}\n{SEARCH_QUERY_END}"
+
+    @staticmethod
+    def _get_final_amount_query() -> str:
+        return SEARCH_TRANSACTIONS_AMOUNT_QUERY_START
