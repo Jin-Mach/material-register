@@ -15,3 +15,8 @@ class SearchDataclass:
     transaction_notes: str | None = None
     total: float | None = None
     suffix: str | None = None
+
+
+@dataclass(frozen=True)
+class SearchResultsDataclass:
+    transactions: list[SearchDataclass] | None = None
