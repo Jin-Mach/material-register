@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QShowEvent
 from PySide6.QtWidgets import (
     QCheckBox,
     QFormLayout,
@@ -13,11 +13,24 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.db.models.transaction_items_model_in import (
+    TransactionItemsModelIn,
+)
+from material_register.db.models.transaction_items_model_out import (
+    TransactionItemsModelOut,
+)
+from material_register.domain.transaction_item_detail_dataclass import (
+    TransactionItemDetail,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import WARNING_STYLE
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    PAYMENT_CASH,
+    PAYMENT_TRANSFER,
+    TRANSFER_IN,
+    TRANSFER_OUT,
     UI_SPACING,
 )
 from material_register.ui.search.search_widgets.search_detail_view import (
@@ -143,6 +156,9 @@ class SearchDetailWidget(QWidget):
         ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         self.info_tab_text = ui_texts.get("infoTabText", "")
         self.items_tab_text = ui_texts.get("itemsTabText", "")
+        self.cash_payment = ui_texts.get("CASH", "CASH")
+        self.transfer_payment = ui_texts.get("TRANSFER", "TRANSFER")
+        self.price_suffix = ui_texts.get("priceSuffix", "")
         self.tab_widget.setTabText(0, self.info_tab_text)
         self.tab_widget.setTabText(1, self.items_tab_text)
         if UiTexts.set_ui_texts(self, widgets):
@@ -164,3 +180,74 @@ class SearchDetailWidget(QWidget):
         font.setBold(True)
         self.payment_info.setFont(font)
         self.payment_info.setStyleSheet(WARNING_STYLE)
+
+    def _apply_payment_data(self, create_data: dict[str, str | int]) -> None:
+        self.payment_info.show()
+        payment_type = create_data.get("paymentType", "N/A")
+        if payment_type == PAYMENT_CASH:
+            self.payment_info.setText(self.cash_payment)
+            self.is_invoiced_checkbox.hide()
+        elif payment_type == PAYMENT_TRANSFER:
+            self.payment_info.setText(self.transfer_payment)
+            self.is_invoiced_checkbox.show()
+        else:
+            self.payment_info.clear()
+            self.is_invoiced_checkbox.hide()
+        self.is_invoiced_checkbox.setChecked(bool(create_data.get("isInvoiced", False)))
+
+    def _setup_customer_data(
+        self,
+        create_data: dict[str, str | int | bool],
+    ) -> None:
+        self.customer_name.setText(str(create_data.get("customer", "")))
+        self.customer_document.setText(str(create_data.get("documentNumber", "")))
+        self.address_label.setText(str(create_data.get("address", "")))
+        self.notes_label.setText(str(create_data.get("notes", "")))
+        self.customer_group_box.layout().activate()
+
+    def update_data(
+        self,
+        create_data: dict[str, str | int | bool],
+        items_data: list[TransactionItemDetail],
+        transaction_type: str,
+    ) -> None:
+        if transaction_type == TRANSFER_IN:
+            self.items_model = TransactionItemsModelIn(self.price_suffix)
+        elif transaction_type == TRANSFER_OUT:
+            self.items_model = TransactionItemsModelOut()
+        else:
+            return
+        self.detail_view.setModel(self.items_model)
+        self.detail_view.setup_ui()
+        for item in items_data:
+            self.items_model.add_item(
+                {
+                    "category": item.category_name,
+                    "commodity": item.commodity_name,
+                    "commoditySuffix": item.commodity_suffix,
+                    "commodityId": item.commodity_id,
+                    "unitCount": item.unit_count,
+                    "pricePerUnit": item.price_per_unit,
+                }
+            )
+        self._setup_customer_data(create_data)
+        if transaction_type == TRANSFER_OUT:
+            self.payment_info.clear()
+            self.is_invoiced_checkbox.hide()
+        else:
+            self._apply_payment_data(create_data)
+
+    def reset_data(self) -> None:
+        self.detail_view.setModel(None)
+        self.customer_name.clear()
+        self.customer_document.clear()
+        self.address_label.clear()
+        self.notes_label.clear()
+        self.payment_info.clear()
+        self.is_invoiced_checkbox.setChecked(False)
+        self.payment_info.hide()
+        self.is_invoiced_checkbox.hide()
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        self.setFixedHeight(self.height())

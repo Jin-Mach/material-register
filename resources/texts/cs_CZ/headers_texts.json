@@ -47,5 +47,13 @@
       "5": "Adresa",
       "6": "Celkem"
     }
+  },
+  "SearchDetailView": {
+    "category": "Kategorie",
+    "commodity": "Položka",
+    "commodityId": "Id položky",
+    "unitCount": "Množství",
+    "pricePerUnit": "Cena",
+    "totalPrice": "Celková částka"
   }
 }

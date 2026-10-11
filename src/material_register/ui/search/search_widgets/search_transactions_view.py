@@ -25,6 +25,8 @@ class SearchTransactionsView(QTableView):
 
     def setup_ui(self) -> None:
         model = self.model()
+        if hasattr(model, "sourceModel"):
+            model = model.sourceModel()
         if not isinstance(model, SearchTransactionsModel):
             ErrorHandler.handle_error(
                 f"Invalid model instance: {self.__class__.__name__}",

@@ -61,6 +61,11 @@ class SearchTransactionsModel(QAbstractTableModel):
                 if tooltip:
                     return tooltip
             return None
+        if role == Qt.ItemDataRole.UserRole:
+            if column == "transaction_created_at":
+                return transaction.transaction_created_at
+            if column == "total":
+                return transaction.total
         return None
 
     def headerData(

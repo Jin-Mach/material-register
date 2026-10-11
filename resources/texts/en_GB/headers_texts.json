@@ -47,5 +47,13 @@
       "5": "Address",
       "6": "Total"
     }
+  },
+  "SearchDetailView": {
+    "category": "Category",
+    "commodity": "Item",
+    "commodityId": "Item ID",
+    "unitCount": "Quantity",
+    "pricePerUnit": "Price",
+    "totalPrice": "Total Amount"
   }
 }

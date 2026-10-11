@@ -1,12 +1,17 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QObject, QThread, QTimer
+from PySide6.QtCore import QModelIndex, QObject, QThread, QTimer
 from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
+from material_register.db.queries.transaction_items_queries import (
+    TransactionItemsQueries,
+)
 from material_register.domain.search_dataclass import (
     SearchResultsDataclass,
 )
+from material_register.domain.transaction_dataclass import Transaction
+from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -86,6 +91,45 @@ class SearchController(QObject):
         self.search_widget.search_transactions_model.load_data(transactions)
         self.search_widget.set_count_text(len(transactions), transactions_count)
         self.search_widget.set_price_text(transactions_amount)
+
+    def update_transaction_detail_widget(self, proxy_index: QModelIndex) -> None:
+        model_index = self.search_widget.search_proxy_model.mapToSource(proxy_index)
+        if not model_index.isValid():
+            return
+        transaction = self.search_widget.search_transactions_model.transaction_data[
+            model_index.row()
+        ]
+        if transaction.transaction_id is None:
+            return
+        items_data = TransactionItemsQueries.get_transaction_items(
+            DbInit.db_connection, transaction.transaction_id
+        )
+        if items_data is None:
+            SearchController._handle_search_error(
+                "Transaction items could not be loaded",
+                f"{self.__class__.__name__}.update_transaction_detail_widget",
+                self.search_widget,
+                "DATABASE_ERROR",
+            )
+            return
+        create_data = self._transaction_to_dict(transaction)
+        self.search_widget.search_detail_widget.update_data(
+            create_data,
+            items_data,
+            transaction.transaction_type,
+        )
+
+    @staticmethod
+    def _transaction_to_dict(transaction: Transaction) -> dict[str, str | int | bool]:
+        return {
+            "paymentType": transaction.payment_type,
+            "isInvoiced": transaction.is_invoiced,
+            "customerId": transaction.customer_id,
+            "customer": transaction.customer_name,
+            "documentNumber": transaction.customer_document_number,
+            "address": transaction.customer_address,
+            "notes": transaction.transaction_notes,
+        }
 
     @staticmethod
     def _handle_search_error(

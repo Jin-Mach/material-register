@@ -5,6 +5,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.search_controller import SearchController
+from material_register.db.models.search_proxy_model import SearchProxyModel
 from material_register.db.models.search_transactions_model import (
     SearchTransactionsModel,
 )
@@ -38,6 +39,7 @@ class SearchWidget(QWidget):
         self.search_transactions_model = SearchTransactionsModel()
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._create_connection()
         self._load_data()
 
     def _create_ui(self) -> QVBoxLayout:
@@ -131,13 +133,20 @@ class SearchWidget(QWidget):
     def _setup_model(self) -> None:
         self._setup_transactions_model()
 
+    def _create_connection(self) -> None:
+        self.search_tab_widget.transactions_tab.selectionModel().currentChanged.connect(
+            self.search_controller.update_transaction_detail_widget
+        )
+
     def _setup_transactions_model(self) -> None:
-        self.search_tab_widget.transactions_tab.setModel(self.search_transactions_model)
         self.search_transactions_model.set_suffix(self.price_sufix)
         self.search_transactions_model.set_tooltip_texts(self.tooltip_texts)
         self.search_transactions_model.set_transaction_type_texts(
             self.tooltip_texts.get("IN", "In"), self.tooltip_texts.get("OUT", "Out")
         )
+        self.search_proxy_model = SearchProxyModel()
+        self.search_proxy_model.setSourceModel(self.search_transactions_model)
+        self.search_tab_widget.transactions_tab.setModel(self.search_proxy_model)
         self.search_tab_widget.transactions_tab.setup_ui()
 
     def set_count_text(self, filtered: int, total: int) -> None:
