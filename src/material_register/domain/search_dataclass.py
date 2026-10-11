@@ -18,7 +18,16 @@ class SearchDataclass:
 
 
 @dataclass(frozen=True)
+class MaterialDataclass:
+    category_name: str | None = None
+    commodity_name: str | None = None
+    commodity_unit: str | None = None
+    total: float | None = None
+
+
+@dataclass(frozen=True)
 class SearchResultsDataclass:
     transactions: list[SearchDataclass] | None = None
     transactions_count: int = 0
     transactions_total_amount: float = 0.0
+    materials: list[MaterialDataclass] | None = None

@@ -48,14 +48,16 @@ def schema(connection: QSqlDatabase) -> None:
     query.exec("""
         CREATE TABLE commodities (
             id INTEGER PRIMARY KEY,
-            unit TEXT
+            name TEXT,
+            unit TEXT,
+            category_id INTEGER
         )
     """)
 
 
 def test_load_transactions(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
-    query.exec("INSERT INTO commodities VALUES (1, 'kg')")
+    query.exec("INSERT INTO commodities VALUES (1, 'Steel', 'kg', 1)")
     query.exec("""
         INSERT INTO customers
         VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars')
@@ -95,7 +97,7 @@ def test_load_transactions_includes_older_transactions(
     connection: QSqlDatabase, schema
 ) -> None:
     query = QSqlQuery(connection)
-    query.exec("INSERT INTO commodities VALUES (1, 'kg')")
+    query.exec("INSERT INTO commodities VALUES (1, 'Steel', 'kg', 1)")
     query.exec("""
         INSERT INTO customers
         VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars')
@@ -145,7 +147,7 @@ def test_get_transactions_count_query_error(connection: QSqlDatabase) -> None:
 
 def test_get_total_amount(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
-    query.exec("INSERT INTO commodities VALUES (1, 'kg')")
+    query.exec("INSERT INTO commodities VALUES (1, 'Steel', 'kg', 1)")
     query.exec("""
         INSERT INTO transactions (id, type)
         VALUES
@@ -170,3 +172,62 @@ def test_get_total_amount_query_error(connection: QSqlDatabase) -> None:
     success, total_amount = SearchQueries.get_total_amount(connection)
     assert success is False
     assert total_amount == 0.0
+
+
+def test_load_material(connection: QSqlDatabase, schema) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        CREATE TABLE categories (
+            id INTEGER PRIMARY KEY,
+            name TEXT
+        )
+    """)
+    query.exec("""
+        INSERT INTO categories VALUES
+            (1, 'Metals'),
+            (2, 'Plastics')
+    """)
+    query.exec("""
+        INSERT INTO commodities VALUES
+            (1, 'Steel', 'kg', 1),
+            (2, 'Copper', 'kg', 1),
+            (3, 'PVC', 'm', 2)
+    """)
+    query.exec("""
+        INSERT INTO transactions (id, type)
+        VALUES
+            (1, 'IN'),
+            (2, 'OUT'),
+            (3, 'IN')
+    """)
+    query.exec("""
+        INSERT INTO transaction_items
+            (id, transaction_id, commodity_id, unit_count, price_per_unit)
+        VALUES
+            (1, 1, 1, 100, 20),
+            (2, 2, 1, 30, 25),
+            (3, 1, 2, 50, 40),
+            (4, 3, 2, 20, 45),
+            (5, 2, 3, 10, 15)
+    """)
+    success, results = SearchQueries.load_material(connection)
+    assert success is True
+    assert len(results) == 3
+    assert results[0].category_name == "Metals"
+    assert results[0].commodity_name == "Copper"
+    assert results[0].commodity_unit == "kg"
+    assert results[0].total == 70.0
+    assert results[1].category_name == "Metals"
+    assert results[1].commodity_name == "Steel"
+    assert results[1].commodity_unit == "kg"
+    assert results[1].total == 70.0
+    assert results[2].category_name == "Plastics"
+    assert results[2].commodity_name == "PVC"
+    assert results[2].commodity_unit == "m"
+    assert results[2].total == -10.0
+
+
+def test_load_material_query_error(connection: QSqlDatabase) -> None:
+    success, results = SearchQueries.load_material(connection)
+    assert success is False
+    assert results == []

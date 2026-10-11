@@ -1,12 +1,14 @@
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.config.search_queries_constants import (
+    MATERIAL_QUERY_END,
+    MATERIAL_QUERY_START,
     SEARCH_COUNT_QUERY,
     SEARCH_QUERY_END,
     SEARCH_QUERY_START,
     SEARCH_TRANSACTIONS_AMOUNT_QUERY_START,
 )
-from material_register.domain.search_dataclass import SearchDataclass
+from material_register.domain.search_dataclass import MaterialDataclass, SearchDataclass
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 
@@ -71,9 +73,36 @@ class SearchQueries:
         return True, total_amount
 
     @staticmethod
+    def load_material(
+        db_connection: QSqlDatabase,
+    ) -> tuple[bool, list[MaterialDataclass]]:
+        query = QSqlQuery(db_connection)
+        final_query = SearchQueries._get_final_material_query()
+        if not query.exec(final_query):
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
+            return False, []
+        results = []
+        while query.next():
+            results.append(
+                MaterialDataclass(
+                    query.value(0),
+                    query.value(1),
+                    query.value(2),
+                    query.value(3),
+                )
+            )
+        return True, results
+
+    @staticmethod
     def _get_final_search_query() -> str:
         return f"{SEARCH_QUERY_START}\n{SEARCH_QUERY_END}"
 
     @staticmethod
     def _get_final_amount_query() -> str:
         return SEARCH_TRANSACTIONS_AMOUNT_QUERY_START
+
+    @staticmethod
+    def _get_final_material_query() -> str:
+        return f"{MATERIAL_QUERY_START}\n{MATERIAL_QUERY_END}"

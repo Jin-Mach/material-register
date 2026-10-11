@@ -61,3 +61,39 @@ SEARCH_TRANSACTIONS_AMOUNT_QUERY_START = """
             
             LEFT JOIN transaction_items items ON items.transaction_id = trans.id
 """
+
+MATERIAL_QUERY_START = """
+            SELECT
+                categories.name AS category_name,
+                commodities.name AS commodity_name,
+                commodities.unit AS commodity_unit,
+        
+                SUM(
+                    CASE
+                        WHEN transactions.type = 'IN'
+                            THEN transaction_items.unit_count
+                        WHEN transactions.type = 'OUT'
+                            THEN -transaction_items.unit_count
+                    END
+                ) AS total
+        
+            FROM transaction_items
+        
+            LEFT JOIN transactions
+                ON transactions.id = transaction_items.transaction_id
+            LEFT JOIN commodities
+                ON commodities.id = transaction_items.commodity_id
+            LEFT JOIN categories
+                ON categories.id = commodities.category_id
+"""
+
+MATERIAL_QUERY_END = """
+            GROUP BY
+                commodities.id,
+                categories.name,
+                commodities.name,
+                commodities.unit
+            ORDER BY
+                categories.name ASC,
+                commodities.name ASC;
+"""
