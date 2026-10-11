@@ -32,6 +32,8 @@ class TransactionItemsModelOut(QStandardItemModel):
                 return f"{format_number_to_locale(value)} {commodity_suffix}"
             return super().data(index, role)
         if role == Qt.ItemDataRole.TextAlignmentRole:
+            if column == unit_column:
+                return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             return Qt.AlignmentFlag.AlignCenter
         return super().data(index, role)
 
