@@ -4,7 +4,9 @@ from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.inventory_controller import InventoryController
-from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
+from material_register.db.models.inventory_models.inventory_proxy_model import (
+    InventoryProxyModel,
+)
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
@@ -83,11 +85,11 @@ class InventoryWidget(QWidget):
         )
 
     def _setup_model(self) -> None:
-        self.inventory_proxy_filter = InventoryProxyFilter()
-        self.inventory_proxy_filter.setSourceModel(self.inventory_model)
+        self.inventory_proxy_model = InventoryProxyModel()
+        self.inventory_proxy_model.setSourceModel(self.inventory_model)
         self.inventory_model.load_inventory_data()
-        self.inventory_view.setModel(self.inventory_proxy_filter)
-        self.active_proxy = self.inventory_proxy_filter
+        self.inventory_view.setModel(self.inventory_proxy_model)
+        self.active_proxy = self.inventory_proxy_model
         self.inventory_controller.update_counts()
 
     def _on_text_changed(self) -> None:

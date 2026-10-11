@@ -3,7 +3,7 @@ import uuid
 from PySide6.QtCore import Qt
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.models.customers_model import CustomersModel
+from material_register.db.models.customers_models.customers_model import CustomersModel
 from material_register.domain.customers_dataclass import Customer
 
 

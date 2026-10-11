@@ -7,7 +7,9 @@ from material_register.db.config.model_constants import (
     INVENTORY_COLUMNS_MAP,
     INVENTORY_VIEW_HIDDEN_COLUMNS,
 )
-from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
+from material_register.db.models.inventory_models.inventory_proxy_model import (
+    InventoryProxyModel,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     INVENTORY_HORIZONTAL_PADDING,
@@ -28,7 +30,7 @@ class InventoryView(QTableView):
     def setup_ui(self) -> None:
         model = self.model()
         error = "TEXTS_LOAD_FAILED"
-        if not isinstance(model, InventoryProxyFilter):
+        if not isinstance(model, InventoryProxyModel):
             return
         if not HeadersTexts.set_inventory_headers_text(self, model):
             ErrorHandler.handle_error(
@@ -47,7 +49,7 @@ class InventoryView(QTableView):
             if column_index is not None:
                 self.setColumnHidden(column_index, True)
 
-    def _setup_headers(self, model: InventoryProxyFilter) -> None:
+    def _setup_headers(self, model: InventoryProxyModel) -> None:
         header = self.horizontalHeader()
         active_column = INVENTORY_COLUMNS_MAP["commodity_active"]
         for col in range(model.columnCount()):

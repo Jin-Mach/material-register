@@ -4,7 +4,9 @@ from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.utils.normalizer import normalize_text
 
 if TYPE_CHECKING:
-    from material_register.db.models.inventory_model import InventoryModel
+    from material_register.db.models.inventory_models.inventory_model import (
+        InventoryModel,
+    )
     from material_register.ui.inventory.inventory_widget import InventoryWidget
 
 

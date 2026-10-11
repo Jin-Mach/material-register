@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.config.model_constants import INVENTORY_COLUMNS_MAP
-from material_register.db.models.inventory_model import InventoryModel
+from material_register.db.models.inventory_models.inventory_model import InventoryModel
 from material_register.ui.setup.ui_icons import UiIcons
 
 

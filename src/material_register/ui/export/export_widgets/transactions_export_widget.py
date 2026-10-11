@@ -33,7 +33,7 @@ from PySide6.QtWidgets import (
 from material_register.controllers.export_controllers.excel.transactions_export_controller import (
     TransactionsExportController,
 )
-from material_register.db.models.customers_completer_model import (
+from material_register.db.models.customers_models.customers_completer_model import (
     CustomersCompleterModel,
 )
 from material_register.services.db_cache import DbCache

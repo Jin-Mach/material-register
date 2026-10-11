@@ -1,12 +1,12 @@
-from material_register.db.models.customers_completer_model import (
+from material_register.db.models.customers_models.customers_completer_model import (
     CustomersCompleterModel,
 )
-from material_register.db.models.customers_model import CustomersModel
-from material_register.db.models.inventory_model import InventoryModel
-from material_register.db.models.transactions_load_model_in import (
+from material_register.db.models.customers_models.customers_model import CustomersModel
+from material_register.db.models.inventory_models.inventory_model import InventoryModel
+from material_register.db.models.transactions_models.transactions_load_model_in import (
     TransactionsLoadModelIn,
 )
-from material_register.db.models.transactions_load_model_out import (
+from material_register.db.models.transactions_models.transactions_load_model_out import (
     TransactionsLoadModelOut,
 )
 from material_register.init.db_init import DbInit

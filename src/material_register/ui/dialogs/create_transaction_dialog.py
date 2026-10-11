@@ -31,7 +31,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu
 
 if TYPE_CHECKING:
-    from material_register.db.models.customers_completer_model import (
+    from material_register.db.models.customers_models.customers_completer_model import (
         CustomersCompleterModel,
     )
     from material_register.ui.transactions.transactions_widget import TransactionsWidget

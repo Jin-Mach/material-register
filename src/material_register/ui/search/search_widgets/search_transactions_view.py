@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QHeaderView, QSizePolicy, QTableView
 
 from material_register.db.config.model_constants import SEARCH_VIEW_HIDDEN_COLUMNS
-from material_register.db.models.search_transactions_model import (
+from material_register.db.models.search_models.search_transactions_model import (
     SearchTransactionsModel,
 )
 from material_register.services.error_handler import ErrorHandler

@@ -12,14 +12,16 @@ from material_register.ui.config.ui_constants import (
 )
 
 if TYPE_CHECKING:
-    from material_register.db.models.inventory_proxy_filter import InventoryProxyFilter
-    from material_register.db.models.search_transactions_model import (
+    from material_register.db.models.inventory_models.inventory_proxy_model import (
+        InventoryProxyModel,
+    )
+    from material_register.db.models.search_models.search_transactions_model import (
         SearchTransactionsModel,
     )
-    from material_register.db.models.transactions_load_model_in import (
+    from material_register.db.models.transactions_models.transactions_load_model_in import (
         TransactionsLoadModelIn,
     )
-    from material_register.db.models.transactions_load_model_out import (
+    from material_register.db.models.transactions_models.transactions_load_model_out import (
         TransactionsLoadModelOut,
     )
     from material_register.ui.search.search_widgets.search_transactions_view import (
@@ -85,7 +87,7 @@ class HeadersTexts:
 
     @classmethod
     def set_inventory_headers_text(
-        cls, view: QTableView, model: "InventoryProxyFilter"
+        cls, view: QTableView, model: "InventoryProxyModel"
     ) -> bool:
         try:
             headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {})

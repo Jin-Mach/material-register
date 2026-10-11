@@ -5,8 +5,10 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.search_controller import SearchController
-from material_register.db.models.search_proxy_model import SearchProxyModel
-from material_register.db.models.search_transactions_model import (
+from material_register.db.models.search_models.search_proxy_model import (
+    SearchProxyModel,
+)
+from material_register.db.models.search_models.search_transactions_model import (
     SearchTransactionsModel,
 )
 from material_register.services.error_handler import ErrorHandler

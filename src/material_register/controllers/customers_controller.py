@@ -23,7 +23,9 @@ from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.utils.normalizer import normalize_text, normalize_whitespace
 
 if TYPE_CHECKING:
-    from material_register.db.models.customers_model import CustomersModel
+    from material_register.db.models.customers_models.customers_model import (
+        CustomersModel,
+    )
     from material_register.ui.customers.customers_widget import CustomersWidget
 
 

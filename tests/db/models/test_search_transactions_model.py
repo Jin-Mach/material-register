@@ -5,7 +5,7 @@ from material_register.db.config.model_constants import (
     SEARCH_MODEL_COLUMNS,
     SEARCH_MODEL_COLUMNS_MAP,
 )
-from material_register.db.models.search_transactions_model import (
+from material_register.db.models.search_models.search_transactions_model import (
     SearchTransactionsModel,
 )
 from material_register.domain.search_dataclass import SearchDataclass

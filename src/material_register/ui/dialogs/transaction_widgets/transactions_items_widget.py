@@ -12,10 +12,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.db.models.transaction_items_model_in import (
+from material_register.db.models.transactions_models.transaction_items_model_in import (
     TransactionItemsModelIn,
 )
-from material_register.db.models.transaction_items_model_out import (
+from material_register.db.models.transactions_models.transaction_items_model_out import (
     TransactionItemsModelOut,
 )
 from material_register.services.error_handler import ErrorHandler

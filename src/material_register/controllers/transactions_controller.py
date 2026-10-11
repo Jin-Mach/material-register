@@ -7,10 +7,10 @@ from material_register.controllers.tools_controllers.cash_balance_controller imp
     CashBalanceController,
 )
 from material_register.core.app_context import AppContext
-from material_register.db.models.transaction_items_model_in import (
+from material_register.db.models.transactions_models.transaction_items_model_in import (
     TransactionItemsModelIn,
 )
-from material_register.db.models.transaction_items_model_out import (
+from material_register.db.models.transactions_models.transaction_items_model_out import (
     TransactionItemsModelOut,
 )
 from material_register.db.queries.category_queries import CategoryQueries
@@ -54,10 +54,10 @@ from material_register.utils.date_filters import get_filter_range
 from material_register.utils.normalizer import normalize_text
 
 if TYPE_CHECKING:
-    from material_register.db.models.transactions_load_model_in import (
+    from material_register.db.models.transactions_models.transactions_load_model_in import (
         TransactionsLoadModelIn,
     )
-    from material_register.db.models.transactions_load_model_out import (
+    from material_register.db.models.transactions_models.transactions_load_model_out import (
         TransactionsLoadModelOut,
     )
     from material_register.ui.transactions.transactions_widget import TransactionsWidget
@@ -416,8 +416,8 @@ class TransactionsController:
             return
         model.set_basic_filter(filtered_data)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
-        self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
-        self.transactions_widget.transactions_proxy_filter_out.set_filtered_text("")
+        self.transactions_widget.transactions_proxy_model_in.set_filtered_text("")
+        self.transactions_widget.transactions_proxy_model_out.set_filtered_text("")
         self._update_counts()
         self.update_total_price()
 
@@ -450,8 +450,8 @@ class TransactionsController:
                 return
             model.set_basic_filter(filtered_data)
         self.transactions_widget.transactions_actions_widget.search_line_edit.clear()
-        self.transactions_widget.transactions_proxy_filter_in.set_filtered_text("")
-        self.transactions_widget.transactions_proxy_filter_out.set_filtered_text("")
+        self.transactions_widget.transactions_proxy_model_in.set_filtered_text("")
+        self.transactions_widget.transactions_proxy_model_out.set_filtered_text("")
         self._update_counts()
         self.update_total_price()
 
@@ -488,10 +488,10 @@ class TransactionsController:
     def _update_counts(self) -> None:
         current_tab = self.transactions_widget.transactions_tab_widget.currentIndex()
         if current_tab == 0:
-            proxy = self.transactions_widget.transactions_proxy_filter_in
+            proxy = self.transactions_widget.transactions_proxy_model_in
             model = self.transactions_model_in
         else:
-            proxy = self.transactions_widget.transactions_proxy_filter_out
+            proxy = self.transactions_widget.transactions_proxy_model_out
             model = self.transactions_model_out
         self.transactions_widget.set_count_text(proxy.rowCount(), model.rowCount())
 

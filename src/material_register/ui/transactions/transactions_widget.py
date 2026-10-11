@@ -8,8 +8,8 @@ from material_register.controllers.export_controllers.pdf.transaction_document_c
     TransactionDocumentController,
 )
 from material_register.controllers.transactions_controller import TransactionsController
-from material_register.db.models.transactions_proxy_filter import (
-    TransactionsProxyFilter,
+from material_register.db.models.transactions_models.transactions_proxy_model import (
+    TransactionsProxyModel,
 )
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
@@ -146,7 +146,7 @@ class TransactionsWidget(QWidget):
     def _setup_model(self) -> None:
         self._setup_in_model()
         self._setup_out_model()
-        self.active_proxy = self.transactions_proxy_filter_in
+        self.active_proxy = self.transactions_proxy_model_in
 
     def _create_connection(self) -> None:
         self.transactions_actions_widget.in_transaction_button.clicked.connect(
@@ -173,12 +173,10 @@ class TransactionsWidget(QWidget):
         )
 
     def _setup_in_model(self) -> None:
-        self.transactions_proxy_filter_in = TransactionsProxyFilter()
-        self.transactions_proxy_filter_in.setSourceModel(
-            self.transactions_load_model_in
-        )
+        self.transactions_proxy_model_in = TransactionsProxyModel()
+        self.transactions_proxy_model_in.setSourceModel(self.transactions_load_model_in)
         self.transactions_tab_widget.transaction_in_view.setModel(
-            self.transactions_proxy_filter_in
+            self.transactions_proxy_model_in
         )
         self.transactions_tab_widget.transaction_in_view.setup_texts()
         self.transactions_load_model_in.set_suffix(self.model_in_suffix)
@@ -189,12 +187,12 @@ class TransactionsWidget(QWidget):
         )
 
     def _setup_out_model(self) -> None:
-        self.transactions_proxy_filter_out = TransactionsProxyFilter()
-        self.transactions_proxy_filter_out.setSourceModel(
+        self.transactions_proxy_model_out = TransactionsProxyModel()
+        self.transactions_proxy_model_out.setSourceModel(
             self.transactions_load_model_out
         )
         self.transactions_tab_widget.transactions_out_view.setModel(
-            self.transactions_proxy_filter_out
+            self.transactions_proxy_model_out
         )
         self.transactions_tab_widget.transactions_out_view.setup_texts()
         self.transactions_load_model_out.set_tooltip_texts(self.tooltip_texts)
@@ -205,9 +203,9 @@ class TransactionsWidget(QWidget):
 
     def _on_tab_changed(self, index: int) -> None:
         if index == 0:
-            self.active_proxy = self.transactions_proxy_filter_in
+            self.active_proxy = self.transactions_proxy_model_in
         else:
-            self.active_proxy = self.transactions_proxy_filter_out
+            self.active_proxy = self.transactions_proxy_model_out
 
     def _on_index_changed(self) -> None:
         key = self.transactions_actions_widget.get_filter_key()

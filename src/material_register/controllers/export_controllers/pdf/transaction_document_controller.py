@@ -28,10 +28,10 @@ from material_register.workers.export_workers.pdf.documents.transaction_document
 )
 
 if TYPE_CHECKING:
-    from material_register.db.models.transactions_load_model_in import (
+    from material_register.db.models.transactions_models.transactions_load_model_in import (
         TransactionsLoadModelIn,
     )
-    from material_register.db.models.transactions_load_model_out import (
+    from material_register.db.models.transactions_models.transactions_load_model_out import (
         TransactionsLoadModelOut,
     )
     from material_register.ui.transactions.transactions_widget import TransactionsWidget

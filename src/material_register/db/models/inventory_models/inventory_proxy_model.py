@@ -3,7 +3,7 @@ from PySide6.QtCore import QModelIndex, QSortFilterProxyModel, Qt
 from material_register.utils.normalizer import normalize_text
 
 
-class InventoryProxyFilter(QSortFilterProxyModel):
+class InventoryProxyModel(QSortFilterProxyModel):
     def __init__(self) -> None:
         super().__init__()
         self._text = ""

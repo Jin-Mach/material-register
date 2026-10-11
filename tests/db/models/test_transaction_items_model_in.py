@@ -2,7 +2,7 @@ import pytest
 from PySide6.QtCore import Qt
 
 from material_register.db.config.model_constants import ITEM_MODEL_IN_COLUMNS
-from material_register.db.models.transaction_items_model_in import (
+from material_register.db.models.transactions_models.transaction_items_model_in import (
     TransactionItemsModelIn,
 )
 

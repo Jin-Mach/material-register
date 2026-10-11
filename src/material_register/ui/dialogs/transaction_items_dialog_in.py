@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from material_register.controllers.transactions_controller import (
         TransactionsController,
     )
-    from material_register.db.models.transaction_items_model_in import (
+    from material_register.db.models.transactions_models.transaction_items_model_in import (
         TransactionItemsModelIn,
     )
     from material_register.ui.transactions.transactions_widget import TransactionsWidget

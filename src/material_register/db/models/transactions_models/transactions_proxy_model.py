@@ -1,7 +1,7 @@
 from PySide6.QtCore import QModelIndex, QSortFilterProxyModel, Qt
 
 
-class TransactionsProxyFilter(QSortFilterProxyModel):
+class TransactionsProxyModel(QSortFilterProxyModel):
     def __init__(self) -> None:
         super().__init__()
         self._text = ""
