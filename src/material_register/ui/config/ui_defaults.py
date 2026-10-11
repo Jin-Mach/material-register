@@ -525,4 +525,5 @@ DEFAULT_TEXTS = {
         "resetFilterButtonText": "Reset",
         "createFilterButtonText": "Create filter",
     },
+    "SearchTransactionsView": {"showTransactionDocumentActionText": "View document"},
 }

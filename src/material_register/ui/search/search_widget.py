@@ -154,6 +154,9 @@ class SearchWidget(QWidget):
         self.search_proxy_model.setSourceModel(self.search_transactions_model)
         self.search_tab_widget.transactions_tab.setModel(self.search_proxy_model)
         self.search_tab_widget.transactions_tab.setup_ui()
+        self.search_tab_widget.transactions_tab.customContextMenuRequested.connect(
+            self.search_tab_widget.transactions_tab.open_context_menu
+        )
 
     def _setup_materials_model(self) -> None:
         self.search_material_model = SearchMaterialModel()

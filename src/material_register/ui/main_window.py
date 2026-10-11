@@ -59,7 +59,11 @@ class MainWindow(QMainWindow):
         self._setup_splitter()
         disable_context_menu(
             self.findChildren(QWidget),
-            ignored_widgets=("transactionsView", "customersView"),
+            ignored_widgets=(
+                "transactionsView",
+                "customersView",
+                "searchTransactionsView",
+            ),
         )
 
     def _setup_texts(self) -> None:

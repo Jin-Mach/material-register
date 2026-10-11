@@ -482,6 +482,7 @@ UI_KEYS = [
     ("SearchActionsWidget", "searchButtonText"),
     ("SearchActionsWidget", "resetFilterButtonText"),
     ("SearchActionsWidget", "createFilterButtonText"),
+    ("SearchTransactionsView", "showTransactionDocumentActionText"),
 ]
 
 HEADERS_KEYS = [

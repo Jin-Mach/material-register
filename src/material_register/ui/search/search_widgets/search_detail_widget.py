@@ -47,6 +47,7 @@ class SearchDetailWidget(QWidget):
         super().__init__(search_widget)
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self.items_model = None
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()

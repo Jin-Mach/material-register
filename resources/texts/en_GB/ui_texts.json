@@ -551,5 +551,8 @@
     "searchButtonText": "Search",
     "resetFilterButtonText": "Reset",
     "createFilterButtonText": "Create filter"
+  },
+  "SearchTransactionsView": {
+    "showTransactionDocumentActionText": "View document"
   }
 }

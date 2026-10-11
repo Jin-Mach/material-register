@@ -536,5 +536,8 @@
     "searchButtonText": "Hledat",
     "resetFilterButtonText": "Reset",
     "createFilterButtonText": "Vytvořit filtr"
+  },
+  "SearchTransactionsView": {
+    "showTransactionDocumentActionText": "Zobrazit doklad"
   }
 }
