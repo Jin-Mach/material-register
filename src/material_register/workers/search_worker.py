@@ -36,10 +36,15 @@ class SearchWorker(QObject):
             if not ok:
                 self.error.emit("Total amount query failed")
                 return
+            ok, materials = SearchQueries.load_material(self.db_connection)
+            if not ok:
+                self.error.emit("Material query failed")
+                return
             results_dataclass = SearchResultsDataclass(
                 transactions=transactions,
                 transactions_count=count,
                 transactions_total_amount=amount,
+                materials=materials,
             )
             self.finished.emit(results_dataclass)
         except Exception as e:

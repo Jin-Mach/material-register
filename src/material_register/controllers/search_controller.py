@@ -86,11 +86,15 @@ class SearchController(QObject):
         transactions = results.transactions
         transactions_count = results.transactions_count
         transactions_amount = results.transactions_total_amount
+        materials = results.materials
         if transactions is None:
             transactions = []
+        if materials is None:
+            materials = []
         self.search_widget.search_transactions_model.load_data(transactions)
         self.search_widget.set_count_text(len(transactions), transactions_count)
         self.search_widget.set_price_text(transactions_amount)
+        self.search_widget.search_material_model.load_data(materials)
 
     def update_transaction_detail_widget(self, proxy_index: QModelIndex) -> None:
         model_index = self.search_widget.search_proxy_model.mapToSource(proxy_index)

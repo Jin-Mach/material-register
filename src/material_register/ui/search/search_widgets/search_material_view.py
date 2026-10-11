@@ -11,7 +11,9 @@ from material_register.ui.config.ui_constants import LOG_LEVEL_WARNING, LOGGER_U
 from material_register.ui.setup.headers_texts import HeadersTexts
 
 if TYPE_CHECKING:
-    from material_register.ui.search.search_widgets.search_tab_widget import SearchTabWidget
+    from material_register.ui.search.search_widgets.search_tab_widget import (
+        SearchTabWidget,
+    )
 
 
 class SearchMaterialView(QTableView):
