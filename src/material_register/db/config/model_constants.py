@@ -61,6 +61,15 @@ CUSTOMERS_HIDDEN_COLUMNS = [
 TRANSACTION_VIEW_HIDDEN_COLUMNS = ["commodityId"]
 
 INVENTORY_COLUMNS = ["category", "commodity", "inventory_stock", "commodity_active"]
+
+INVENTORY_MODEL_COLUMNS = [
+    "category_name",
+    "commodity_name",
+    "commodity_unit",
+    "inventory_stock",
+    "commodity_active",
+]
+
 INVENTORY_COLUMNS_MAP = {
     "category_name": 0,
     "commodity_name": 1,

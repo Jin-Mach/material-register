@@ -53,6 +53,11 @@ class InventoryModel(QSqlQueryModel):
                     return UiIcons.ACTIVE_ICON
                 else:
                     return UiIcons.INACTIVE_ICON
+        if role == Qt.ItemDataRole.UserRole:
+            if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
+                return super().data(index, Qt.ItemDataRole.DisplayRole)
+            if column == INVENTORY_COLUMNS_MAP["commodity_active"]:
+                return super().data(index, Qt.ItemDataRole.DisplayRole)
         return super().data(index, role)
 
     def load_inventory_data(self) -> tuple[bool, str]:
