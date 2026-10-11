@@ -6,7 +6,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 
 class FakeCatalogWidget(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.catalog_controller = FakeCatalogController()
 
@@ -22,7 +22,7 @@ class FakeCatalogController:
 
 # noinspection PyTypeChecker
 @pytest.fixture
-def dialog(qtbot):
+def dialog(qtbot) -> CommodityDialog:
     UiTexts.UI_TEXTS = {
         "CommodityDialog": {
             "categoryLabelText": "Category",
@@ -43,7 +43,7 @@ def dialog(qtbot):
     return dialog
 
 
-def test_commodity_valid(dialog):
+def test_commodity_valid(dialog: CommodityDialog) -> None:
     dialog.name_input.setText("Steel")
     dialog.unit_input.setCurrentText("kg")
     dialog.price_input.setValue(10.5)
@@ -59,7 +59,7 @@ def test_commodity_valid(dialog):
     assert data.active == 1
 
 
-def test_commodity_invalid_missing_fields(dialog):
+def test_commodity_invalid_missing_fields(dialog: CommodityDialog) -> None:
     dialog.name_input.setText("")
     assert dialog._is_input_valid() is False
     assert dialog.get_commodity_data() is None

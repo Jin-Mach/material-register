@@ -6,13 +6,13 @@ import requests
 from material_register.providers.download_provider import DownloadProvider
 
 
-def _fake_response_text(*args, **kwargs) -> SimpleNamespace:
+def _fake_response_text(*args: object, **kwargs: object) -> SimpleNamespace:
     return SimpleNamespace(
         text='{"ok": true}', content=b"", raise_for_status=lambda: None
     )
 
 
-def _fake_response_binary(*args, **kwargs) -> SimpleNamespace:
+def _fake_response_binary(*args: object, **kwargs: object) -> SimpleNamespace:
     return SimpleNamespace(
         text="", content=b"binary-data", raise_for_status=lambda: None
     )

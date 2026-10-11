@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from functools import partial
 
 import pytest
@@ -35,7 +36,7 @@ def schema(connection: QSqlDatabase) -> None:
 
 
 @pytest.fixture(autouse=True)
-def restore_migrations_map():
+def restore_migrations_map() -> Generator[None]:
     original_map = DatabaseMigration.MIGRATIONS_MAP.copy()
     original_version = DatabaseMigration.DB_VERSION
     yield

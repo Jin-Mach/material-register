@@ -1,3 +1,5 @@
+from collections.abc import Generator
+
 import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItemModel
@@ -8,7 +10,7 @@ from material_register.ui.setup.headers_texts import HeadersTexts
 
 
 @pytest.fixture(autouse=True)
-def reset_headers():
+def reset_headers() -> Generator[None]:
     HeadersTexts.HEADERS_TEXTS = {}
     yield
     HeadersTexts.HEADERS_TEXTS = {}
@@ -63,7 +65,7 @@ def test_set_headers_text_invalid_key(qtbot, sql_model: QSqlTableModel) -> None:
     assert result is True
 
 
-def test_set_headers_text_standard_item_model(qtbot):
+def test_set_headers_text_standard_item_model(qtbot) -> None:
     view = QTableView()
     qtbot.addWidget(view)
     model = QStandardItemModel()

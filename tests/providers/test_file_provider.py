@@ -82,7 +82,7 @@ def create_valid_notification() -> dict:
 
 
 @pytest.fixture(autouse=True)
-def patch_file_config(monkeypatch):
+def patch_file_config(monkeypatch) -> None:
     monkeypatch.setattr(
         "material_register.providers.file_provider.REQUIRED_JSON_FILES",
         FAKE_JSON_FILES,

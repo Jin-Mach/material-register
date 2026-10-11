@@ -1,23 +1,29 @@
+from pathlib import Path
+
 from material_register.init import db_init
 
 FAKE_CONNECTION = object()
 
 
-def fake_create_connection_failed(base, name, conn_name):
+def fake_create_connection_failed(
+    base: Path | None, name: str, conn_name: str
+) -> object | None:
     return None
 
 
-def fake_create_connection_success(base, name, conn_name):
+def fake_create_connection_success(
+    base: Path | None, name: str, conn_name: str
+) -> object | None:
     return FAKE_CONNECTION
 
 
-def test_init_db_create_connection_failed(monkeypatch):
+def test_init_db_create_connection_failed(monkeypatch) -> None:
     monkeypatch.setattr(db_init, "create_connection", fake_create_connection_failed)
     result = db_init.DbInit.init_db()
     assert result == (False, "DATABASE_FAILED")
 
 
-def test_init_db_success_sets_db_connection(monkeypatch):
+def test_init_db_success_sets_db_connection(monkeypatch) -> None:
     monkeypatch.setattr(db_init, "create_connection", fake_create_connection_success)
     db_init.DbInit.db_connection = None
     result = db_init.DbInit.init_db()

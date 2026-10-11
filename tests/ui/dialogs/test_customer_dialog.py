@@ -6,7 +6,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 
 class FakeCustomersWidget(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.customers_model = FakeCustomersModel()
 
@@ -19,7 +19,7 @@ class FakeCustomersModel:
 
 # noinspection PyTypeChecker
 @pytest.fixture
-def dialog(qtbot):
+def dialog(qtbot) -> CustomerDialog:
     UiTexts.UI_TEXTS = {
         "CustomerDialog": {
             "titleText": "Test",
@@ -31,7 +31,7 @@ def dialog(qtbot):
     return dialog
 
 
-def test_person_customer_valid(dialog):
+def test_person_customer_valid(dialog: CustomerDialog) -> None:
     dialog.subject_type.setCurrentIndex(0)  # person
     dialog.first_name_input.setText("John")
     dialog.last_name_input.setText("Doe")
@@ -46,7 +46,7 @@ def test_person_customer_valid(dialog):
     assert customer.address == "Hell"
 
 
-def test_person_customer_invalid_missing_name(dialog):
+def test_person_customer_invalid_missing_name(dialog: CustomerDialog) -> None:
     dialog.subject_type.setCurrentIndex(0)
     dialog.first_name_input.setText("")
     dialog.last_name_input.setText("")
@@ -56,7 +56,7 @@ def test_person_customer_invalid_missing_name(dialog):
     assert dialog.get_customer_data() is None
 
 
-def test_company_customer_valid(dialog):
+def test_company_customer_valid(dialog: CustomerDialog) -> None:
     dialog.subject_type.setCurrentIndex(1)
     dialog.company_input.setText("ACME s.r.o.")
     dialog.document_type_input.setText("123")

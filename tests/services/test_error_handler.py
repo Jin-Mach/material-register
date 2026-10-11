@@ -7,13 +7,13 @@ class FakeLogger:
     def __init__(self) -> None:
         self.calls = []
 
-    def warning(self, msg, exc_info=None) -> None:
+    def warning(self, msg: str, exc_info: bool | None = None) -> None:
         self.calls.append(("warning", msg, bool(exc_info)))
 
-    def error(self, msg, exc_info=None) -> None:
+    def error(self, msg: str, exc_info: bool | None = None) -> None:
         self.calls.append(("error", msg, bool(exc_info)))
 
-    def critical(self, msg, exc_info=None) -> None:
+    def critical(self, msg: str, exc_info: bool | None = None) -> None:
         self.calls.append(("critical", msg, bool(exc_info)))
 
 

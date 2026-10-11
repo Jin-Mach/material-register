@@ -15,7 +15,11 @@ from material_register.ui.tools.right_toolbar_widgets.cash_balance_widget import
     ids=["positive balance", "negative balance", "decimals"],
 )
 def test_calculate_balance(
-    opening_balance, transactions_cash, income, expense, result
+    opening_balance: float,
+    transactions_cash: float,
+    income: float,
+    expense: float,
+    result: float,
 ) -> None:
     assert (
         CashBalanceWidget._calculate_balance(

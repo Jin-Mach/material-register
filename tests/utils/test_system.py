@@ -3,7 +3,7 @@ from pathlib import Path
 from material_register.utils.system import is_disk_writable
 
 
-def _fake_write_text(*args, **kwargs) -> None:
+def _fake_write_text(*args: object, **kwargs: object) -> None:
     raise OSError
 
 

@@ -1,3 +1,5 @@
+from collections.abc import Generator
+
 import pytest
 from PySide6.QtWidgets import QPushButton, QWidget
 
@@ -5,7 +7,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 
 @pytest.fixture(autouse=True)
-def reset_ui_texts():
+def reset_ui_texts() -> Generator[None]:
     UiTexts.UI_TEXTS = {}
     yield
     UiTexts.UI_TEXTS = {}
