@@ -12,9 +12,9 @@ from material_register.ui.config.ui_constants import (
 
 
 class SettingsProvider:
-    DEFAULT_SETTINGS_PATH = None
-    SETTINGS_PATH = None
-    SETTINGS = {}
+    DEFAULT_SETTINGS_PATH: Path | None = None
+    SETTINGS_PATH: Path | None = None
+    SETTINGS: dict[str, Any] = {}
 
     @classmethod
     def provider_init(cls, resources_path: Path, config_path: Path) -> None:

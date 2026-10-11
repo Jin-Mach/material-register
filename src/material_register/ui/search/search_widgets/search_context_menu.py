@@ -23,7 +23,7 @@ class SearchContextMenu(QMenu):
         self.search_document_controller = search_document_controller
         self._create_ui()
         self._create_connection()
-        self.transaction_index = None
+        self.transaction_index: QModelIndex | None = None
 
     def _create_ui(self) -> None:
         self.show_transaction_document_action = QAction("Show transactions", self)

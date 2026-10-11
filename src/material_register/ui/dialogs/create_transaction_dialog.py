@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.domain.customers_dataclass import Customer
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.config.ui_constants import (
@@ -50,7 +51,7 @@ class CreateTransactionDialog(QDialog):
         self.completer_model = completer_model
         self.transfer_type = transfer_type
         self.update = update_transaction
-        self.selected_customer = None
+        self.selected_customer: Customer | None = None
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._setup_completer(self.completer_model)

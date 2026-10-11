@@ -6,21 +6,21 @@ from PySide6.QtWidgets import QTreeWidgetItem, QWidget
 
 
 class UiIcons:
-    IMAGES_PATH = None
-    APPLICATION_ICON = None
-    ACTIVE_ICON = None
-    INACTIVE_ICON = None
-    COPY_ICON = None
-    DELETE_ICON = None
-    OPEN_FOLDER_ICON = None
-    CLOSE_FOLDER_ICON = None
-    DATABASE_ICON = None
-    ITEM_ICON = None
-    PRINT_ICON = None
-    SAVE_ICON = None
-    ZOOM_IN_ICON = None
-    ZOOM_OUT_ICON = None
-    ZOOM_RESET_ICON = None
+    IMAGES_PATH: Path | None = None
+    APPLICATION_ICON: QIcon | None = None
+    ACTIVE_ICON: QIcon | None = None
+    INACTIVE_ICON: QIcon | None = None
+    COPY_ICON: QIcon | None = None
+    DELETE_ICON: QIcon | None = None
+    OPEN_FOLDER_ICON: QIcon | None = None
+    CLOSE_FOLDER_ICON: QIcon | None = None
+    DATABASE_ICON: QIcon | None = None
+    ITEM_ICON: QIcon | None = None
+    PRINT_ICON: QIcon | None = None
+    SAVE_ICON: QIcon | None = None
+    ZOOM_IN_ICON: QIcon | None = None
+    ZOOM_OUT_ICON: QIcon | None = None
+    ZOOM_RESET_ICON: QIcon | None = None
 
     # icons color: #FFE066
     @classmethod

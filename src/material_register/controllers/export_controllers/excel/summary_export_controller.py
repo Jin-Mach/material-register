@@ -38,11 +38,11 @@ class SummaryExportController(QObject):
     def __init__(self, summary_export_widget: "SummaryExportWidget") -> None:
         super().__init__()
         self.summary_export_widget = summary_export_widget
-        self.export_path = None
-        self.progress_dialog = None
+        self.export_path: Path | None = None
+        self.progress_dialog: ProgressDialog | None = None
         self.export_settings = {}
-        self.thread = None
-        self.worker = None
+        self.thread: QThread | None = None
+        self.worker: SummaryExportWorker | None = None
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("EXPORT", None)
         self.ui_texts = UiTexts.UI_TEXTS
         self.export_texts = TextsProvider.EXPORT_TEXTS

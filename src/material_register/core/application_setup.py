@@ -9,7 +9,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 
 class ApplicationSetup:
-    APPLICATION = None
+    APPLICATION: QApplication | None = None
 
     @classmethod
     def setup_init(cls, application: QApplication) -> None:

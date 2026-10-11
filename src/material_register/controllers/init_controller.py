@@ -21,9 +21,9 @@ class InitController(QObject):
         super().__init__()
         self.splash_screen = SplashScreen(resources_path)
         StyleProvider.provider_init(application, resources_path)
-        self.main_window = None
-        self.thread = None
-        self.worker = None
+        self.main_window: MainWindow | None = None
+        self.thread: QThread | None = None
+        self.worker: InitWorker | None = None
 
     def start_thread(self) -> None:
         self.splash_screen.show_splash()

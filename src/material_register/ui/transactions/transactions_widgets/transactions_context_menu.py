@@ -28,7 +28,7 @@ class TransactionsContextMenu(QMenu):
         self.transaction_document_controller = transaction_document_controller
         self._create_ui()
         self._create_connection()
-        self.transaction_index = None
+        self.transaction_index: QModelIndex | None = None
 
     def _create_ui(self) -> None:
         self.update_transaction_action = QAction(self)

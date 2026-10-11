@@ -21,7 +21,7 @@ class CustomersContextMenu(QMenu):
         self.customers_controller = customers_controller
         self._create_ui()
         self._create_connection()
-        self.customer_index = None
+        self.customer_index: QModelIndex | None = None
 
     def _create_ui(self) -> None:
         self.update_customer_action = QAction(self)

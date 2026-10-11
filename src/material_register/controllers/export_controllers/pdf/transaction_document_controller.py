@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex, QObject, QThread, QTimer
+from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
 from material_register.db.queries.transaction_items_queries import (
@@ -46,12 +47,12 @@ class TransactionDocumentController(QObject):
     ) -> None:
         super().__init__()
         self.transactions_widget = transactions_widget
-        self.db_connection = DbInit.db_connection
+        self.db_connection: QSqlDatabase | None = DbInit.db_connection
         self.transactions_model_in = transactions_model_in
         self.transactions_model_out = transactions_model_out
-        self.thread = None
-        self.worker = None
-        self.transaction_id = None
+        self.thread: QThread | None = None
+        self.worker: TransactionDocumentWorker | None = None
+        self.transaction_id: int | None = None
         self.export_texts = TextsProvider.EXPORT_TEXTS
         self._models_map = {
             0: (self.transactions_model_in, TRANSFER_IN),

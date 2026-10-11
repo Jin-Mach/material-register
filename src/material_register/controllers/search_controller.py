@@ -25,8 +25,8 @@ class SearchController(QObject):
     def __init__(self, search_widget: "SearchWidget") -> None:
         super().__init__()
         self.search_widget = search_widget
-        self.worker = None
-        self.thread = None
+        self.worker: SearchWorker | None = None
+        self.thread: QThread | None = None
 
     def start_thread(self) -> None:
         if self.thread is not None or self.worker is not None:

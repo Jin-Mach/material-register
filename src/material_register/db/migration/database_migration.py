@@ -11,7 +11,7 @@ from material_register.ui.config.ui_constants import (
 
 
 class DatabaseMigration:
-    DB_VERSION = None
+    DB_VERSION: int | None = None
     MIGRATIONS_MAP = {
         1: [
             partial(

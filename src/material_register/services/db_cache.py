@@ -9,12 +9,12 @@ from material_register.domain.customers_dataclass import Customer
 
 
 class DbCache:
-    db_connection = None
-    customers = []
-    active_customers = []
-    inactive_customers = []
-    categories = []
-    commodities = []
+    db_connection: QSqlDatabase | None = None
+    customers: list[Customer] = []
+    active_customers: list[Customer] = []
+    inactive_customers: list[Customer] = []
+    categories: list[Category] = []
+    commodities: list[Commodity] = []
 
     @classmethod
     def setup_init(cls, db_connection: QSqlDatabase) -> None:

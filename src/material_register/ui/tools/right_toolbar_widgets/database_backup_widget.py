@@ -51,7 +51,7 @@ class DatabaseBackupWidget(QWidget):
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
-        self.restore_path = None
+        self.restore_path: Path | None = None
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()

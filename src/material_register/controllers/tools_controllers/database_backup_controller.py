@@ -29,8 +29,8 @@ class DatabaseBackupController(QObject):
         self._database_folder = PathsProvider.database
         self._database_path = (self._database_folder / DATABASE_NAME).with_suffix(".db")
         self._backup_path = self._database_folder / "backup"
-        self._thread = None
-        self._worker = None
+        self._thread: QThread | None = None
+        self._worker: DatabaseBackupWorker | None = None
 
     def setup_database_info_group(self) -> tuple[str, str, str, str]:
         database_stat = self._database_path.stat()

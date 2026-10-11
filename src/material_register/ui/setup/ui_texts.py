@@ -10,7 +10,7 @@ from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 
 # noinspection PyBroadException
 class UiTexts:
-    UI_TEXTS = {}
+    UI_TEXTS: dict[str, dict[str, str]] = {}
 
     @classmethod
     def setup_init(cls, ui_texts: dict[str, dict[str, str]]) -> None:

@@ -1,4 +1,5 @@
 from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.queries.search_queries import SearchQueries
 from material_register.domain.search_dataclass import SearchResultsDataclass
@@ -13,7 +14,7 @@ class SearchWorker(QObject):
 
     def __init__(self) -> None:
         super().__init__()
-        self.db_connection = None
+        self.db_connection: QSqlDatabase | None = None
 
     @Slot()
     def run(self) -> None:

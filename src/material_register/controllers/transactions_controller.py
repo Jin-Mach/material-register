@@ -79,8 +79,10 @@ class TransactionsController:
         self._notification_text = TextsProvider.NOTIFICATION_TEXTS.get(
             "TRANSACTIONS", None
         )
-        self._active_commodity_unit = None
-        self._items_dialog = None
+        self._active_commodity_unit: str | None = None
+        self._items_dialog: (
+            TransactionItemsDialogIn | TransactionItemsDialogOut | None
+        ) = None
         self._models_map = {
             0: (self.transactions_model_in, TRANSFER_IN),
             1: (self.transactions_model_out, TRANSFER_OUT),

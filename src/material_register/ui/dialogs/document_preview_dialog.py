@@ -39,8 +39,8 @@ class DocumentPreviewDialog(QDialog):
         self._create_connection()
         self.settings = SettingsProvider.SETTINGS.get("export", {}).get("documents", {})
         self._current_zoom = 1.0
-        self._pdf_bytes = None
-        self._pdf_file_name = None
+        self._pdf_bytes: bytes | None = None
+        self._pdf_file_name: str | None = None
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()

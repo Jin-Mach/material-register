@@ -5,8 +5,8 @@ from PySide6.QtWidgets import QApplication
 
 
 class StyleProvider:
-    APPLICATION_INSTANCE = None
-    STYLE_PATH = None
+    APPLICATION_INSTANCE: QApplication | None = None
+    STYLE_PATH: Path | None = None
     DARK_BLUE = "dark_blue"
 
     @classmethod

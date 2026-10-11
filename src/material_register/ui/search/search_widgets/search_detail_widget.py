@@ -47,7 +47,9 @@ class SearchDetailWidget(QWidget):
         super().__init__(search_widget)
         self.setLayout(self._create_ui())
         self._setup_ui()
-        self.items_model = None
+        self.items_model: TransactionItemsModelIn | TransactionItemsModelOut | None = (
+            None
+        )
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()

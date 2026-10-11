@@ -5,9 +5,15 @@ from pathlib import Path
 
 
 class LoggerProvider:
-    LOGS_PATH = None
-    LOG_STRUCTURE = {}
-    FORMATTER = None
+    LOGS_PATH: Path | None = None
+    LOG_STRUCTURE: dict[str, tuple[str, str]] = {}
+    FORMATTER: logging.Formatter | None = None
+    app: logging.Logger
+    ui: logging.Logger
+    db: logging.Logger
+    export: logging.Logger
+    settings: logging.Logger
+    error: logging.Logger
 
     @classmethod
     def init_loggers(

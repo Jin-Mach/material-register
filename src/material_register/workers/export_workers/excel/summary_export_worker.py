@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.queries.export_queries.summary_export_queries import (
     SummaryExportQueries,
@@ -31,7 +32,7 @@ class SummaryExportWorker(QObject):
         super().__init__()
         self.export_settings = export_settings
         self.export_texts = export_texts
-        self.db_connection = None
+        self.db_connection: QSqlDatabase | None = None
 
     @Slot()
     def run(self) -> None:

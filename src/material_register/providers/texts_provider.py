@@ -9,15 +9,15 @@ from material_register.ui.config.ui_constants import (
 
 
 class TextsProvider:
-    CURRENT_LANGUAGE = None
-    RESOURCES_PATH = None
-    UI_TEXTS = {}
-    HEADERS_TEXTS = {}
-    CONFIRM_TEXTS = {}
-    NOTIFICATION_TEXTS = {}
-    ERROR_TEXTS = {}
-    STATUS_TEXTS = {}
-    EXPORT_TEXTS = {}
+    CURRENT_LANGUAGE: str | None = None
+    RESOURCES_PATH: Path | None = None
+    UI_TEXTS: dict[str, dict[str, str]] = {}
+    HEADERS_TEXTS: dict[str, dict[str, str]] = {}
+    CONFIRM_TEXTS: dict[str, dict[str, str]] = {}
+    NOTIFICATION_TEXTS: dict[str, dict[str, str]] = {}
+    ERROR_TEXTS: dict[str, dict[str, str]] = {}
+    STATUS_TEXTS: dict[str, dict[str, str]] = {}
+    EXPORT_TEXTS: dict[str, dict[str, str]] = {}
 
     @classmethod
     def provider_init(cls, language_code: str, resources_path: Path) -> None:

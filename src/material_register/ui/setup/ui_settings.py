@@ -13,7 +13,7 @@ from material_register.domain.branch_dataclass import BranchDataclass
 
 
 class UiSettings:
-    SETTINGS = {}
+    SETTINGS: dict[str, Any] = {}
 
     @classmethod
     def setup_init(cls, settings: dict[str, Any]) -> None:

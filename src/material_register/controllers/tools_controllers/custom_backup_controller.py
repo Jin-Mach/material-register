@@ -34,9 +34,9 @@ class CustomBackupController(QObject):
         self._database_path = (self._database_folder / DATABASE_NAME).with_suffix(".db")
         self._ui_texts = UiTexts.UI_TEXTS
         self._notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("BACKUP", None)
-        self._thread = None
-        self._worker = None
-        self._progress_dialog = None
+        self._thread: QThread | None = None
+        self._worker: CustomBackupWorker | None = None
+        self._progress_dialog: ProgressDialog | None = None
 
     def start_backup_thread(self) -> None:
         if not DatabaseBackupQueries.has_data(DbInit.db_connection):

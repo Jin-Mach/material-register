@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex, QObject, QThread, QTimer
+from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
 from material_register.db.queries.transaction_items_queries import (
@@ -34,10 +35,10 @@ class SearchDocumentController(QObject):
     def __init__(self, search_widget: "SearchWidget") -> None:
         super().__init__()
         self.search_widget = search_widget
-        self.db_connection = DbInit.db_connection
-        self.thread = None
-        self.worker = None
-        self.transaction_id = None
+        self.db_connection: QSqlDatabase | None = DbInit.db_connection
+        self.thread: QThread | None = None
+        self.worker: TransactionDocumentWorker | None = None
+        self.transaction_id: int | None = None
         self.export_texts = TextsProvider.EXPORT_TEXTS
 
     def create_pdf_document(self, proxy_index: QModelIndex) -> None:

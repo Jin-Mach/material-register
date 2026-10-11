@@ -39,11 +39,11 @@ class TransactionsExportController(QObject):
     def __init__(self, transactions_export_widget: "TransactionsExportWidget") -> None:
         super().__init__()
         self.transactions_export_widget = transactions_export_widget
-        self.export_path = None
-        self.progress_dialog = None
+        self.export_path: Path | None = None
+        self.progress_dialog: ProgressDialog | None = None
         self.export_settings = {}
-        self.thread = None
-        self.worker = None
+        self.thread: QThread | None = None
+        self.worker: TransactionsExportWorker | None = None
         self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("EXPORT", None)
         self.ui_texts = UiTexts.UI_TEXTS
         self.export_texts = TextsProvider.EXPORT_TEXTS

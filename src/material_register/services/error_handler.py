@@ -1,3 +1,4 @@
+import logging
 from typing import TYPE_CHECKING
 
 from material_register.ui.config.ui_constants import (
@@ -22,7 +23,7 @@ class ErrorHandler:
         LOG_LEVEL_ERROR,
         LOG_LEVEL_CRITICAL,
     }
-    loggers_map = {}
+    loggers_map: dict[str, logging.Logger] = {}
     ui_texts_error = ""
 
     @classmethod

@@ -4,10 +4,10 @@ from material_register.ui.dialogs.messagebox_dialog import MessageBoxDialog
 
 
 class MessageBoxes:
-    CONFIRM_TEXTS = {}
+    CONFIRM_TEXTS: dict[str, dict[str, str]] = {}
 
     @classmethod
-    def setup_init(cls, confirm_texts: dict[str, str]) -> None:
+    def setup_init(cls, confirm_texts: dict[str, dict[str, str]]) -> None:
         cls.CONFIRM_TEXTS = confirm_texts
 
     @classmethod

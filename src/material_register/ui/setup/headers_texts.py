@@ -31,7 +31,7 @@ if TYPE_CHECKING:
 
 # noinspection PyBroadException, PyUnresolvedReferences
 class HeadersTexts:
-    HEADERS_TEXTS = {}
+    HEADERS_TEXTS: dict[str, dict[str, str]] = {}
 
     @classmethod
     def setup_init(cls, headers_texts: dict[str, dict[str, str]]) -> None:

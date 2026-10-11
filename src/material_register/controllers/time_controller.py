@@ -9,7 +9,7 @@ class TimeController(QObject):
 
     def __init__(self) -> None:
         super().__init__()
-        self._hour_timer = None
+        self._hour_timer: QTimer | None = None
 
     def init_controller(self) -> None:
         self.hour_interval()

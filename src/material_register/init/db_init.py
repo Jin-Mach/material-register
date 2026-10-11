@@ -14,7 +14,7 @@ from material_register.ui.config.ui_constants import (
 
 class DbInit:
     DATABASE_NAME = f"{DATABASE_NAME}.db"
-    db_connection = None
+    db_connection: QSqlDatabase | None = None
 
     @classmethod
     def init_db(cls) -> tuple[bool, str]:

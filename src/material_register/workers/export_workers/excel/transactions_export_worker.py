@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.queries.export_queries.transactions_export_queries import (
     TransactionsExportQueries,
@@ -39,7 +40,7 @@ class TransactionsExportWorker(QObject):
         self.export_path = self.export_settings["export_path"]
         self.export_texts = export_texts
         self.transactions_texts = self.export_texts.get("TransactionsSheet", {})
-        self.db_connection = None
+        self.db_connection: QSqlDatabase | None = None
 
     @Slot()
     def run(self) -> None:

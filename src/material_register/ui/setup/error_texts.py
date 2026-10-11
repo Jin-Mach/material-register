@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QLabel
 
 
 class ErrorTexts:
-    ERROR_TEXTS = {}
+    ERROR_TEXTS: dict[str, str] = {}
 
     @classmethod
     def setup_init(cls, error_texts: dict[str, str]) -> None:

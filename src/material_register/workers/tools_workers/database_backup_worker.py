@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.db.queries.tools_queries.database_backup_queries import (
@@ -23,7 +24,7 @@ class DatabaseBackupWorker(QObject):
         self.database_path = Path(self.database_folder / DATABASE_NAME).with_suffix(
             ".db"
         )
-        self.db_connection = None
+        self.db_connection: QSqlDatabase | None = None
 
     @Slot()
     def run(self) -> None:

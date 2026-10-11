@@ -24,7 +24,7 @@ class TransactionsTabWidget(QTabWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._setup_ui()
         self._create_connection()
-        self.transaction_index = None
+        self.transaction_index: QModelIndex | None = None
 
     def _setup_ui(self) -> None:
         self._setup_texts()

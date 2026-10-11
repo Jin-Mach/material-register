@@ -12,12 +12,12 @@ from material_register.ui.config.ui_constants import (
 
 
 class PathsProvider:
-    root = None
-    resources = None
-    config = None
-    database = None
-    logs = None
-    documents = None
+    root: Path | None = None
+    resources: Path | None = None
+    config: Path | None = None
+    database: Path | None = None
+    logs: Path | None = None
+    documents: Path | None = None
 
     @classmethod
     def paths_init(cls, log_structure: dict[str, tuple[str, str]]) -> None:

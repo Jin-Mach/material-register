@@ -34,9 +34,9 @@ class DatabaseRestoreController(QObject):
         self._database_folder = PathsProvider.database
         self._database_path = (self._database_folder / DATABASE_NAME).with_suffix(".db")
         self._ui_texts = UiTexts.UI_TEXTS
-        self._thread = None
-        self._worker = None
-        self._progress_dialog = None
+        self._thread: QThread | None = None
+        self._worker: DatabaseRestoreWorker | None = None
+        self._progress_dialog: ProgressDialog | None = None
 
     def start_restore_thread(self) -> None:
         restore_path = self._database_backup_widget.restore_path
