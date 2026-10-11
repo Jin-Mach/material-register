@@ -101,3 +101,14 @@ SEARCH_MODEL_COLUMNS_MAP = {
 }
 
 SEARCH_VIEW_HIDDEN_COLUMNS = ["transaction_id"]
+
+MATERIAL_MODELS_COLUMNS = ["category_name", "commodity_name", "commodity_unit", "total"]
+
+MATERIAL_MODEL_COLUMNS_MAP = {
+    "category_name": 0,
+    "commodity_name": 1,
+    "commodity_unit": 2,
+    "total": 3,
+}
+
+MATERIAL_VIEW_HIDDEN_COLUMNS = ["commodity_unit"]
