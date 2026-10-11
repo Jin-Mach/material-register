@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QHeaderView, QSizePolicy, QTableView
 
+from material_register.db.models.transactions_models.transactions_load_model_in import TransactionsLoadModelIn
+from material_register.db.models.transactions_models.transactions_load_model_out import TransactionsLoadModelOut
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
@@ -39,16 +41,23 @@ class TransactionsView(QTableView):
         self.transactions_controller = transactions_controller
         self.transaction_document_controller = transaction_document_controller
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self._setup_ui()
 
-    def _setup_ui(self) -> None:
-        self._setup_behavior()
-
-    def setup_texts(self) -> None:
+    def setup_ui(self) -> None:
         model = self.model()
-        error = "TEXTS_LOAD_FAILED"
         if hasattr(model, "sourceModel"):
             model = model.sourceModel()
+        if not isinstance(model, TransactionsLoadModelIn | TransactionsLoadModelOut):
+            ErrorHandler.handle_error(
+                f"Invalid model instance: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
+            return
+        self._setup_texts(model)
+        self._setup_behavior()
+
+    def _setup_texts(self, model: TransactionsLoadModelIn | TransactionsLoadModelOut) -> None:
         if not HeadersTexts.set_transactions_headers_text(self, model):
             ErrorHandler.handle_error(
                 f"Headers text load failed: {self.__class__.__name__}",
@@ -63,7 +72,7 @@ class TransactionsView(QTableView):
                 LOGGER_UI,
                 LOG_LEVEL_WARNING,
             )
-            ErrorHandler.ui_texts_error = error
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
 
     def _setup_behavior(self) -> None:

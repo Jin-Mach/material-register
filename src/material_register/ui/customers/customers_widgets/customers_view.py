@@ -31,6 +31,12 @@ class CustomersView(QTableView):
     def setModel(self, model: QAbstractItemModel | None) -> None:
         super().setModel(model)
         if not isinstance(model, CustomersModel):
+            ErrorHandler.handle_error(
+                f"Invalid model instance: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
             return
         model.rowsInserted.connect(self._refresh_headers)
         model.rowsRemoved.connect(self._refresh_headers)

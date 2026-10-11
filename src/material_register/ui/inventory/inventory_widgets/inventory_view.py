@@ -31,6 +31,12 @@ class InventoryView(QTableView):
         model = self.model()
         error = "TEXTS_LOAD_FAILED"
         if not isinstance(model, InventoryProxyModel):
+            ErrorHandler.handle_error(
+                f"Invalid model instance: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
             return
         if not HeadersTexts.set_inventory_headers_text(self, model):
             ErrorHandler.handle_error(
