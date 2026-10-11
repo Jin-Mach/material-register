@@ -4,7 +4,7 @@ from typing import Any
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PySide6.QtSql import QSqlDatabase
 
-from material_register.db.config.model_constants import LOAD_MODEL_IN_COLUMNS
+from material_register.db.config.model_constants import LOAD_MODEL_COLUMNS
 from material_register.db.queries.transactions_load_queries import (
     TransactionsLoadQueries,
 )
@@ -31,7 +31,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         if not index.isValid():
             return None
         transaction = self.transaction_data[index.row()]
-        column = LOAD_MODEL_IN_COLUMNS[index.column()]
+        column = LOAD_MODEL_COLUMNS[index.column()]
         if role == Qt.ItemDataRole.DisplayRole:
             if column == "transaction_created_at":
                 return format_datetime_to_locale(transaction.transaction_created_at)
@@ -52,7 +52,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
             return None
         if role == Qt.ItemDataRole.UserRole:
             if column == "transaction_created_at":
-                return format_datetime_to_locale(transaction.transaction_created_at)
+                return transaction.transaction_created_at
             if column == "total":
                 return float(transaction.total)
             parts_list = []
@@ -80,7 +80,7 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         return len(self.transaction_data)
 
     def columnCount(self, parent=None) -> int:
-        return len(LOAD_MODEL_IN_COLUMNS)
+        return len(LOAD_MODEL_COLUMNS)
 
     def removeRows(self, row: int, count: int = 1, parent=None) -> bool:
         if parent is None:

@@ -38,7 +38,7 @@ ITEM_MODEL_OUT_COLUMNS_MAP = {
     "unitCount": 3,
 }
 
-LOAD_MODEL_IN_COLUMNS = [
+LOAD_MODEL_COLUMNS = [
     "transaction_created_at",
     "customer_name",
     "customer_document_number",
