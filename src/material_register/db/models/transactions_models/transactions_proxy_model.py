@@ -1,4 +1,4 @@
-from PySide6.QtCore import QModelIndex, QSortFilterProxyModel, Qt, QCollator
+from PySide6.QtCore import QCollator, QModelIndex, QSortFilterProxyModel, Qt
 
 from material_register.db.config.model_constants import LOAD_MODEL_COLUMNS
 

@@ -67,6 +67,6 @@ class TransactionDetailView(QTableView):
         self.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
         self.setEditTriggers(QTableView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QTableView.SelectionMode.NoSelection)
-        self.setSortingEnabled(True)
+        self.setSortingEnabled(False)
         self.setCornerButtonEnabled(False)
         self.setAlternatingRowColors(True)

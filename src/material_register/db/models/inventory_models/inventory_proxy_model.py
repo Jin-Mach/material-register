@@ -1,4 +1,4 @@
-from PySide6.QtCore import QModelIndex, QSortFilterProxyModel, Qt, QCollator
+from PySide6.QtCore import QCollator, QModelIndex, QSortFilterProxyModel, Qt
 
 from material_register.db.config.model_constants import INVENTORY_MODEL_COLUMNS
 from material_register.utils.normalizer import normalize_text
