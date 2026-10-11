@@ -1,7 +1,7 @@
 from dataclasses import fields
 from typing import Any
 
-from PySide6.QtCore import QModelIndex, Qt
+from PySide6.QtCore import QModelIndex, QObject, Qt
 from PySide6.QtSql import QSqlDatabase, QSqlQuery, QSqlRecord, QSqlTableModel
 
 from material_register.db.models.base_sql_table_model import BaseSqlTableModel
@@ -10,7 +10,7 @@ from material_register.ui.setup.ui_icons import UiIcons
 
 
 class CustomersModel(BaseSqlTableModel):
-    def __init__(self, database: QSqlDatabase, parent=None) -> None:
+    def __init__(self, database: QSqlDatabase, parent: QObject | None = None) -> None:
         super().__init__(database, parent)
         self._database = database
         self._sort_column = -1

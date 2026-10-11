@@ -47,7 +47,7 @@ class TransactionsItemsWidget(QWidget):
         self,
         transaction_items_dialog: "TransactionItemsDialogIn | TransactionItemsDialogOut",
         transfer_type: str,
-    ):
+    ) -> None:
         super().__init__(transaction_items_dialog)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.transaction_items_dialog = transaction_items_dialog

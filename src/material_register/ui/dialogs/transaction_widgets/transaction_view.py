@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 
 class TransactionView(QTableView):
-    def __init__(self, transaction_items_widget: "TransactionsItemsWidget"):
+    def __init__(self, transaction_items_widget: "TransactionsItemsWidget") -> None:
         super().__init__(transaction_items_widget)
         self.setMinimumHeight(200)
 

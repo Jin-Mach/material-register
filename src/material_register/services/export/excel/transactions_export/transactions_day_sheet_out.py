@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from openpyxl.cell import Cell
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
@@ -675,7 +676,7 @@ class TransactionsDaySheetOut:
 
     @staticmethod
     def _cell_alignment(
-        cell,
+        cell: Cell,
         horizontal: str = "center",
         vertical: str = "center",
     ) -> None:
@@ -683,7 +684,7 @@ class TransactionsDaySheetOut:
 
     @staticmethod
     def _cell_font(
-        cell,
+        cell: Cell,
         font_size: int | None = None,
         bold: bool = False,
     ) -> None:

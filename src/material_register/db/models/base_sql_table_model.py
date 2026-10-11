@@ -1,8 +1,9 @@
+from PySide6.QtCore import QObject
 from PySide6.QtSql import QSqlDatabase, QSqlTableModel
 
 
 class BaseSqlTableModel(QSqlTableModel):
-    def __init__(self, db: QSqlDatabase, parent=None) -> None:
+    def __init__(self, db: QSqlDatabase, parent: QObject | None = None) -> None:
         super().__init__(parent, db)
 
     def _find_row_by_id(self, customer_id: int) -> int:

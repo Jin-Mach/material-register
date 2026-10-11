@@ -629,7 +629,7 @@ class TransactionsDaySheetIn:
 
     @staticmethod
     def _cell_alignment(
-        cell, horizontal: str = "center", vertical: str = "center"
+        cell: Cell, horizontal: str = "center", vertical: str = "center"
     ) -> None:
         cell_alignment(cell, horizontal=horizontal, vertical=vertical)
 

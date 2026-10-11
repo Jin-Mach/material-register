@@ -834,7 +834,7 @@ class SummarySheet:
 
     @staticmethod
     def _cell_alignment(
-        cell, horizontal: str = "center", vertical: str = "center"
+        cell: Cell, horizontal: str = "center", vertical: str = "center"
     ) -> None:
         cell_alignment(cell, horizontal=horizontal, vertical=vertical)
 
@@ -851,7 +851,7 @@ class SummarySheet:
 
     @staticmethod
     def _set_background_color(
-        cell,
+        cell: Cell,
         background_color: str | None = None,
     ) -> None:
         set_background_color(

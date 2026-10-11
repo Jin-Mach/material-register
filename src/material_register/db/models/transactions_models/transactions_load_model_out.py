@@ -70,7 +70,12 @@ class TransactionsLoadModelOut(QAbstractTableModel):
             return " ".join(parts_list).lower()
         return None
 
-    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole) -> Any:
+    def headerData(
+        self,
+        section: int,
+        orientation: Qt.Orientation,
+        role: Qt.ItemDataRole = Qt.ItemDataRole.DisplayRole,
+    ) -> Any:
         if (
             orientation == Qt.Orientation.Horizontal
             and role == Qt.ItemDataRole.DisplayRole
@@ -78,13 +83,15 @@ class TransactionsLoadModelOut(QAbstractTableModel):
             return self.headers.get(section)
         return super().headerData(section, orientation, role)
 
-    def rowCount(self, parent=None) -> int:
+    def rowCount(self, parent: QModelIndex | None = None) -> int:
         return len(self.transaction_data)
 
-    def columnCount(self, parent=None) -> int:
+    def columnCount(self, parent: QModelIndex | None = None) -> int:
         return len(LOAD_MODEL_COLUMNS)
 
-    def removeRows(self, row: int, count: int = 1, parent=None) -> bool:
+    def removeRows(
+        self, row: int, count: int = 1, parent: QModelIndex | None = None
+    ) -> bool:
         if parent is None:
             parent = QModelIndex()
         self.beginRemoveRows(parent, row, row + count - 1)

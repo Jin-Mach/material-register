@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from PySide6.QtWidgets import QHeaderView, QTableView
 
 from material_register.db.config.model_constants import TRANSACTION_VIEW_HIDDEN_COLUMNS
@@ -11,9 +13,14 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_WARNING, LOGGER_UI
 from material_register.ui.setup.headers_texts import HeadersTexts
 
+if TYPE_CHECKING:
+    from material_register.ui.search.search_widgets.search_detail_widget import (
+        SearchDetailWidget,
+    )
+
 
 class SearchDetailView(QTableView):
-    def __init__(self, search_detail_widget):
+    def __init__(self, search_detail_widget: "SearchDetailWidget") -> None:
         super().__init__(search_detail_widget)
 
     def setup_ui(self) -> None:

@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 
 class TransactionDetailView(QTableView):
-    def __init__(self, transaction_detail_widget: "TransactionDetailWidget"):
+    def __init__(self, transaction_detail_widget: "TransactionDetailWidget") -> None:
         super().__init__(transaction_detail_widget)
 
     def setup_ui(self) -> None:
