@@ -3,8 +3,12 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QHeaderView, QSizePolicy, QTableView
 
-from material_register.db.models.transactions_models.transactions_load_model_in import TransactionsLoadModelIn
-from material_register.db.models.transactions_models.transactions_load_model_out import TransactionsLoadModelOut
+from material_register.db.models.transactions_models.transactions_load_model_in import (
+    TransactionsLoadModelIn,
+)
+from material_register.db.models.transactions_models.transactions_load_model_out import (
+    TransactionsLoadModelOut,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
@@ -57,14 +61,16 @@ class TransactionsView(QTableView):
         self._setup_texts(model)
         self._setup_behavior()
 
-    def _setup_texts(self, model: TransactionsLoadModelIn | TransactionsLoadModelOut) -> None:
+    def _setup_texts(
+        self, model: TransactionsLoadModelIn | TransactionsLoadModelOut
+    ) -> None:
         if not HeadersTexts.set_transactions_headers_text(self, model):
             ErrorHandler.handle_error(
                 f"Headers text load failed: {self.__class__.__name__}",
                 LOGGER_UI,
                 LOG_LEVEL_WARNING,
             )
-            ErrorHandler.ui_texts_error = error
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         self.menu_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
         if not self.menu_texts:
             ErrorHandler.handle_error(
