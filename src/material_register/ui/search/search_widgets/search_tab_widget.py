@@ -46,7 +46,9 @@ class SearchTabWidget(QTabWidget):
         self.material_tab_title = ui_texts.get("materialTabTitleText", "Material")
 
     def _setup_tabs(self) -> None:
-        self.transactions_tab = SearchTransactionsView(self)
+        self.transactions_tab = SearchTransactionsView(
+            self, self.search_widget.search_document_controller
+        )
         self.material_tab = SearchMaterialView(self)
         self.addTab(self.transactions_tab, self.transactions_tab_title)
         self.addTab(self.material_tab, self.material_tab_title)

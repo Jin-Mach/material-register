@@ -19,11 +19,20 @@ from material_register.ui.setup.ui_texts import UiTexts
 if TYPE_CHECKING:
     from material_register.ui.search.search_tab_widget import SearchTabWidget
 
+    from material_register.controllers.export_controllers.pdf.search_document_controller import (
+        SearchDocumentController,
+    )
+
 
 class SearchTransactionsView(QTableView):
-    def __init__(self, search_tab_widget: "SearchTabWidget") -> None:
+    def __init__(
+        self,
+        search_tab_widget: "SearchTabWidget",
+        search_document_controller: "SearchDocumentController",
+    ) -> None:
         super().__init__(search_tab_widget)
         self.setObjectName("searchTransactionsView")
+        self.search_document_controller = search_document_controller
         self.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding,
@@ -89,7 +98,7 @@ class SearchTransactionsView(QTableView):
         index = self.indexAt(position)
         if not index.isValid():
             return
-        menu = SearchContextMenu(self)
+        menu = SearchContextMenu(self, self.search_document_controller)
         menu.set_customer_index(index)
         if not self.menu_texts:
             ErrorHandler.handle_error(
