@@ -11,7 +11,7 @@ from material_register.domain.search_dataclass import MaterialDataclass
 from material_register.ui.config.styles_constants import INVENTORY_STOCK_STYLE
 
 
-class SearchMaterialModelm(QAbstractTableModel):
+class SearchMaterialModel(QAbstractTableModel):
     def __init__(self) -> None:
         super().__init__()
         self.material_data = []

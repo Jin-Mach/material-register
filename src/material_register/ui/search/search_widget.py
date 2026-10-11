@@ -5,6 +5,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.search_controller import SearchController
+from material_register.db.models.search_models.search_material_model import SearchMaterialModel
 from material_register.db.models.search_models.search_proxy_model import (
     SearchProxyModel,
 )
@@ -134,6 +135,7 @@ class SearchWidget(QWidget):
 
     def _setup_model(self) -> None:
         self._setup_transactions_model()
+        self._setup_materials_model()
 
     def _create_connection(self) -> None:
         self.search_tab_widget.transactions_tab.selectionModel().currentChanged.connect(
@@ -150,6 +152,11 @@ class SearchWidget(QWidget):
         self.search_proxy_model.setSourceModel(self.search_transactions_model)
         self.search_tab_widget.transactions_tab.setModel(self.search_proxy_model)
         self.search_tab_widget.transactions_tab.setup_ui()
+
+    def _setup_materials_model(self) -> None:
+        self.search_material_model = SearchMaterialModel()
+        self.search_tab_widget.material_tab.setModel(self.search_material_model)
+        self.search_tab_widget.material_tab.setup_ui()
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.items_count_label.setText(f"{self.items_count_text} {filtered}/{total}")

@@ -514,6 +514,7 @@ HEADERS_KEYS = [
     ("SearchDetailView", "unitCount"),
     ("SearchDetailView", "pricePerUnit"),
     ("SearchDetailView", "totalPrice"),
+    ("SearchMaterialView", "headers_texts"),
 ]
 
 ERROR_KEYS = [

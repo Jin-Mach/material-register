@@ -55,5 +55,13 @@
     "unitCount": "Quantity",
     "pricePerUnit": "Price",
     "totalPrice": "Total Amount"
+  },
+  "SearchMaterialView": {
+    "headers_texts": {
+      "0": "Category",
+      "1": "Item",
+      "2": "Unit",
+      "3": "Net Movement"
+    }
   }
 }

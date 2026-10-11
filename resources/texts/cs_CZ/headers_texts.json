@@ -55,5 +55,13 @@
     "unitCount": "Množství",
     "pricePerUnit": "Cena",
     "totalPrice": "Celková částka"
+  },
+  "SearchMaterialView": {
+    "headers_texts": {
+      "0": "Kategorie",
+      "1": "Položka",
+      "2": "Jednotka",
+      "3": "Celkový pohyb"
+    }
   }
 }

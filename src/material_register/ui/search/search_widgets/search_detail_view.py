@@ -26,7 +26,6 @@ class SearchDetailView(QTableView):
             )
             ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
             return
-
         self._setup_texts(model)
         self._setup_columns(model)
         self._setup_behavior()
