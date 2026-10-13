@@ -97,3 +97,15 @@ MATERIAL_QUERY_END = """
                 categories.name ASC,
                 commodities.name ASC;
 """
+
+SEARCH_PERIOD_QUERY = "created_at BETWEEN ? AND ?"
+
+SEARCH_VALUE_QUERY = """
+            (
+                document_number LIKE ?
+                OR company_normalized LIKE ?
+                OR first_name_normalized LIKE ?
+                OR last_name_normalized LIKE ?
+                OR address_normalized LIKE ?
+            )
+"""
