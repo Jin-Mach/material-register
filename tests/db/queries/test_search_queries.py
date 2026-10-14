@@ -22,7 +22,11 @@ def schema(connection: QSqlDatabase) -> None:
             first_name TEXT,
             last_name TEXT,
             document_number TEXT,
-            address TEXT
+            address TEXT,
+            company_normalized TEXT,
+            first_name_normalized TEXT,
+            last_name_normalized TEXT,
+            address_normalized TEXT
         )
     """)
     query.exec("""
@@ -59,7 +63,9 @@ def test_load_transactions(connection: QSqlDatabase, schema) -> None:
     query = QSqlQuery(connection)
     query.exec("INSERT INTO commodities VALUES (1, 'Steel', 'kg', 1)")
     query.exec("""
-        INSERT INTO customers
+        INSERT INTO customers (
+            id, company, first_name, last_name, document_number, address
+        )
         VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars')
     """)
     query.exec("""
@@ -99,7 +105,9 @@ def test_load_transactions_includes_older_transactions(
     query = QSqlQuery(connection)
     query.exec("INSERT INTO commodities VALUES (1, 'Steel', 'kg', 1)")
     query.exec("""
-        INSERT INTO customers
+        INSERT INTO customers (
+            id, company, first_name, last_name, document_number, address
+        )
         VALUES (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars')
     """)
     query.exec("""
@@ -231,3 +239,72 @@ def test_load_material_query_error(connection: QSqlDatabase) -> None:
     success, results = SearchQueries.load_material(connection, "", [])
     assert success is False
     assert results == []
+
+
+@pytest.mark.parametrize(
+    ("column", "value", "expected_ids"),
+    [
+        ("document_number", "ICO123", [2, 1]),
+        ("company_normalized", "fake company", [2, 1]),
+        ("address_normalized", "mars", [2, 1]),
+        ("document_number", "ID456", [3]),
+        ("first_name_normalized", "john", [3]),
+        ("last_name_normalized", "doe", [3]),
+        ("address_normalized", "venus", [3]),
+        ("document_number", "ICO789", [4]),
+        ("company_normalized", "other company", [4]),
+        ("address_normalized", "jupiter", [4]),
+    ],
+    ids=[
+        "document_number_ICO123",
+        "company_fake_company",
+        "address_mars",
+        "document_number_ID456",
+        "first_name_john",
+        "last_name_doe",
+        "address_venus",
+        "document_number_ICO789",
+        "company_other_company",
+        "address_jupiter",
+    ],
+)
+def test_load_transactions_by_customer_data(
+    connection: QSqlDatabase,
+    schema,
+    column: str,
+    value: str,
+    expected_ids: list[int],
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO customers (
+            id, company, first_name, last_name, document_number, address,
+            company_normalized, first_name_normalized,
+            last_name_normalized, address_normalized
+        )
+        VALUES
+            (1, 'Fake company', NULL, NULL, 'ICO123', 'Mars',
+             'fake company', NULL, NULL, 'mars'),
+            (2, NULL, 'John', 'Doe', 'ID456', 'Venus',
+             NULL, 'john', 'doe', 'venus'),
+            (3, 'Other company', NULL, NULL, 'ICO789', 'Jupiter',
+             'other company', NULL, NULL, 'jupiter')
+    """)
+    query.exec("""
+        INSERT INTO transactions
+            (id, type, customer_id, created_at, payment_type, is_invoiced, notes)
+        VALUES
+            (1, 'IN', 1, '2020-01-01 10:00:00', 'TRANSFER', 0, NULL),
+            (2, 'OUT', 1, '2020-01-02 10:00:00', NULL, 1, NULL),
+            (3, 'IN', 2, '2020-01-03 10:00:00', 'TRANSFER', 0, NULL),
+            (4, 'OUT', 3, '2020-01-04 10:00:00', NULL, 1, NULL)
+    """)
+    where = f"WHERE {column} LIKE ?"
+    params = [f"%{value}%"]
+    success, results = SearchQueries.load_transactions(connection, where, params)
+    assert success is True
+    assert len(results) == len(expected_ids)
+    actual_ids = []
+    for transaction in results:
+        actual_ids.append(transaction.transaction_id)
+    assert actual_ids == expected_ids
