@@ -13,6 +13,7 @@ from material_register.domain.search_dataclass import (
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.filter_builder import FilterBuilder
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.workers.search_worker import SearchWorker
@@ -28,14 +29,18 @@ class SearchController(QObject):
         self.worker: SearchWorker | None = None
         self.thread: QThread | None = None
 
-    def start_thread(self) -> None:
+    def start_basic_filter(self, period_key: str | None, value: str) -> None:
+        where, params = FilterBuilder.create_basic_filter(period_key, value)
+        self._start_worker(where, params)
+
+    def start_thread(self, where: str, params: list[str]) -> None:
         if self.thread is not None or self.worker is not None:
             return
-        self._start_worker()
+        self._start_worker(where, params)
 
-    def _start_worker(self) -> None:
+    def _start_worker(self, where: str, params: list[str]) -> None:
         self.thread = QThread()
-        self.worker = SearchWorker()
+        self.worker = SearchWorker(where, params)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._search_error)
@@ -44,11 +49,11 @@ class SearchController(QObject):
 
     def _search_error(self, error: str) -> None:
         self._clean_thread()
-        QTimer.singleShot(1000, lambda: self._finish_search(error=error))
+        QTimer.singleShot(100, lambda: self._finish_search(error=error))
 
     def _search_ok(self, results: SearchResultsDataclass) -> None:
         self._clean_thread()
-        QTimer.singleShot(1000, lambda: self._finish_search(results=results))
+        QTimer.singleShot(100, lambda: self._finish_search(results=results))
 
     def _clean_thread(self) -> None:
         if self.worker and self.worker.db_connection:

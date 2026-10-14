@@ -17,10 +17,15 @@ class SearchQueries:
     @staticmethod
     def load_transactions(
         db_connection: QSqlDatabase,
+        where: str,
+        params: list[str],
     ) -> tuple[bool, list[SearchDataclass]]:
         query = QSqlQuery(db_connection)
-        final_query = SearchQueries._get_final_search_query()
-        if not query.exec(final_query):
+        final_query = SearchQueries._get_final_search_query(where)
+        query.prepare(final_query)
+        for param in params:
+            query.addBindValue(param)
+        if not query.exec():
             ErrorHandler.handle_error(
                 query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
             )
@@ -59,26 +64,38 @@ class SearchQueries:
         return True, transactions_count
 
     @staticmethod
-    def get_total_amount(db_connection: QSqlDatabase) -> tuple[bool, float]:
+    def get_total_amount(
+        db_connection: QSqlDatabase,
+        where: str,
+        params: list[str],
+    ) -> tuple[bool, float]:
         query = QSqlQuery(db_connection)
-        final_query = SearchQueries._get_final_amount_query()
-        if not query.exec(final_query):
+        final_query = SearchQueries._get_final_amount_query(where)
+        query.prepare(final_query)
+        for param in params:
+            query.addBindValue(param)
+        if not query.exec():
             ErrorHandler.handle_error(
                 query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
             )
             return False, 0.0
         total_amount = 0.0
         if query.next():
-            total_amount = query.value(0)
+            total_amount = query.value(0) or 0.0
         return True, total_amount
 
     @staticmethod
     def load_material(
         db_connection: QSqlDatabase,
+        where: str,
+        params: list[str],
     ) -> tuple[bool, list[MaterialDataclass]]:
         query = QSqlQuery(db_connection)
-        final_query = SearchQueries._get_final_material_query()
-        if not query.exec(final_query):
+        final_query = SearchQueries._get_final_material_query(where)
+        query.prepare(final_query)
+        for param in params:
+            query.addBindValue(param)
+        if not query.exec():
             ErrorHandler.handle_error(
                 query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
             )
@@ -96,13 +113,13 @@ class SearchQueries:
         return True, results
 
     @staticmethod
-    def _get_final_search_query() -> str:
-        return f"{SEARCH_QUERY_START}\n{SEARCH_QUERY_END}"
+    def _get_final_search_query(where: str) -> str:
+        return SEARCH_QUERY_START + where + SEARCH_QUERY_END
 
     @staticmethod
-    def _get_final_amount_query() -> str:
-        return SEARCH_TRANSACTIONS_AMOUNT_QUERY_START
+    def _get_final_amount_query(where: str) -> str:
+        return SEARCH_TRANSACTIONS_AMOUNT_QUERY_START + where
 
     @staticmethod
-    def _get_final_material_query() -> str:
-        return f"{MATERIAL_QUERY_START}\n{MATERIAL_QUERY_END}"
+    def _get_final_material_query(where: str) -> str:
+        return MATERIAL_QUERY_START + where + MATERIAL_QUERY_END

@@ -76,7 +76,7 @@ def test_load_transactions(connection: QSqlDatabase, schema) -> None:
             (1, 1, 1, 10, 20),
             (2, 2, 1, 10, 20)
     """)
-    success, results = SearchQueries.load_transactions(connection)
+    success, results = SearchQueries.load_transactions(connection, "", [])
     assert success is True
     assert len(results) == 2
     transaction_in = None
@@ -113,14 +113,14 @@ def test_load_transactions_includes_older_transactions(
             (id, transaction_id, commodity_id, unit_count, price_per_unit)
         VALUES (1, 1, 1, 10, 20)
     """)
-    success, results = SearchQueries.load_transactions(connection)
+    success, results = SearchQueries.load_transactions(connection, "", [])
     assert success is True
     assert len(results) == 1
     assert results[0].transaction_id == 1
 
 
 def test_load_transactions_query_error(connection: QSqlDatabase) -> None:
-    success, results = SearchQueries.load_transactions(connection)
+    success, results = SearchQueries.load_transactions(connection, "", [])
     assert success is False
     assert results == []
 
@@ -163,13 +163,13 @@ def test_get_total_amount(connection: QSqlDatabase, schema) -> None:
             (2, 2, 1, 10, 50),
             (3, 3, 1, 5, 30)
     """)
-    success, total_amount = SearchQueries.get_total_amount(connection)
+    success, total_amount = SearchQueries.get_total_amount(connection, "", [])
     assert success is True
     assert total_amount == 350.0
 
 
 def test_get_total_amount_query_error(connection: QSqlDatabase) -> None:
-    success, total_amount = SearchQueries.get_total_amount(connection)
+    success, total_amount = SearchQueries.get_total_amount(connection, "", [])
     assert success is False
     assert total_amount == 0.0
 
@@ -210,7 +210,7 @@ def test_load_material(connection: QSqlDatabase, schema) -> None:
             (4, 3, 2, 20, 45),
             (5, 2, 3, 10, 15)
     """)
-    success, results = SearchQueries.load_material(connection)
+    success, results = SearchQueries.load_material(connection, "", [])
     assert success is True
     assert len(results) == 3
     assert results[0].category_name == "Metals"
@@ -228,6 +228,6 @@ def test_load_material(connection: QSqlDatabase, schema) -> None:
 
 
 def test_load_material_query_error(connection: QSqlDatabase) -> None:
-    success, results = SearchQueries.load_material(connection)
+    success, results = SearchQueries.load_material(connection, "", [])
     assert success is False
     assert results == []

@@ -35,3 +35,9 @@ from material_register.services.filter_builder import FilterBuilder
 def test_create_basic_filter(period_key: str | None, value: str, expected: str) -> None:
     query, _ = FilterBuilder.create_basic_filter(period_key, value)
     assert query == expected
+
+
+def test_create_basic_filter_without_filters() -> None:
+    where, params = FilterBuilder.create_basic_filter(None, "")
+    assert where == ""
+    assert params == []

@@ -12,8 +12,10 @@ class SearchWorker(QObject):
     finished = Signal(SearchResultsDataclass)
     error = Signal(str)
 
-    def __init__(self) -> None:
+    def __init__(self, where: str, params: list[str]) -> None:
         super().__init__()
+        self.where = where
+        self.params = params
         self.db_connection: QSqlDatabase | None = None
 
     @Slot()
@@ -25,7 +27,9 @@ class SearchWorker(QObject):
             if not ok:
                 self.error.emit(error)
                 return
-            ok, transactions = SearchQueries.load_transactions(self.db_connection)
+            ok, transactions = SearchQueries.load_transactions(
+                self.db_connection, self.where, self.params
+            )
             if not ok:
                 self.error.emit("Transactions search query failed")
                 return
@@ -33,11 +37,15 @@ class SearchWorker(QObject):
             if not ok:
                 self.error.emit("Transactions count query failed")
                 return
-            ok, amount = SearchQueries.get_total_amount(self.db_connection)
+            ok, amount = SearchQueries.get_total_amount(
+                self.db_connection, self.where, self.params
+            )
             if not ok:
                 self.error.emit("Total amount query failed")
                 return
-            ok, materials = SearchQueries.load_material(self.db_connection)
+            ok, materials = SearchQueries.load_material(
+                self.db_connection, self.where, self.params
+            )
             if not ok:
                 self.error.emit("Material query failed")
                 return

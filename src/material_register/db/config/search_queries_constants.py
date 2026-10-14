@@ -60,6 +60,7 @@ SEARCH_TRANSACTIONS_AMOUNT_QUERY_START = """
             FROM transactions trans
             
             LEFT JOIN transaction_items items ON items.transaction_id = trans.id
+            LEFT JOIN customers cust ON cust.id = trans.customer_id
 """
 
 MATERIAL_QUERY_START = """
@@ -67,20 +68,22 @@ MATERIAL_QUERY_START = """
                 categories.name AS category_name,
                 commodities.name AS commodity_name,
                 commodities.unit AS commodity_unit,
-        
+
                 SUM(
                     CASE
-                        WHEN transactions.type = 'IN'
+                        WHEN trans.type = 'IN'
                             THEN transaction_items.unit_count
-                        WHEN transactions.type = 'OUT'
+                        WHEN trans.type = 'OUT'
                             THEN -transaction_items.unit_count
                     END
                 ) AS total
-        
+
             FROM transaction_items
-        
-            LEFT JOIN transactions
-                ON transactions.id = transaction_items.transaction_id
+
+            LEFT JOIN transactions AS trans
+                ON trans.id = transaction_items.transaction_id
+            LEFT JOIN customers
+                ON customers.id = trans.customer_id
             LEFT JOIN commodities
                 ON commodities.id = transaction_items.commodity_id
             LEFT JOIN categories
@@ -98,7 +101,7 @@ MATERIAL_QUERY_END = """
                 commodities.name ASC;
 """
 
-SEARCH_PERIOD_QUERY = "created_at BETWEEN ? AND ?"
+SEARCH_PERIOD_QUERY = "trans.created_at BETWEEN ? AND ?"
 
 SEARCH_VALUE_QUERY = """
             (

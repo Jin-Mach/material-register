@@ -35,5 +35,8 @@ class FilterBuilder:
                 query += " AND " + value_query
             else:
                 query += value_query
-        where = "WHERE " + query
+        if query:
+            where = "WHERE " + query
+        else:
+            where = ""
         return where, params

@@ -18,8 +18,10 @@ if TYPE_CHECKING:
 class SearchActionsWidget(QWidget):
     def __init__(self, search_widget: "SearchWidget") -> None:
         super().__init__(search_widget)
+        self.search_widget = search_widget
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._create_connection()
 
     def _create_ui(self) -> QHBoxLayout:
         main_layout = QHBoxLayout()
@@ -78,9 +80,23 @@ class SearchActionsWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
-    def get_filter_key(self) -> str:
+    def _create_connection(self) -> None:
+        self.search_button.clicked.connect(self._start_basic_filter)
+        self.reset_filter_button.clicked.connect(self._reset_filter)
+
+    def _start_basic_filter(self) -> None:
+        period_key = self._get_filter_key()
+        value = self.search_line_edit.text().strip()
+        self.search_widget.search_controller.start_basic_filter(period_key, value)
+
+    def _reset_filter(self) -> None:
+        self.search_widget.search_controller.start_basic_filter(None, [])
+        self.base_filter_combobox.setCurrentIndex(0)
+        self.search_line_edit.clear()
+
+    def _get_filter_key(self) -> str | None:
         filter_map = {
-            0: "all",
+            0: None,
             1: "today",
             2: "week",
             3: "month",
