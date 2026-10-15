@@ -253,7 +253,6 @@ class SummarySheet:
         for current_row in range(row, row + SummarySheet._NOTES_ROWS):
             sheet.row_dimensions[current_row].height = SummarySheet._DEFAULT_ROW_HEIGHT
         row += 1
-        opening_balance_row = row
         opening_balance = export_settings.get("openingBalanceSpinbox", 0.0)
         cell = sheet.cell(
             row=row,
@@ -328,7 +327,6 @@ class SummarySheet:
         SummarySheet._cell_alignment(cell, horizontal="right")
         SummarySheet._cell_font(cell, bold=True)
         row += 1
-        expense_row = row
         expense = export_settings.get("expense", 0.0) * -1
         cell = sheet.cell(
             row=row,
@@ -368,11 +366,12 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="left")
         SummarySheet._cell_font(cell, bold=True)
-        column_letter = get_column_letter(financial_value_column)
-        balance_value = (
-            f"=SUM({column_letter}{opening_balance_row}:{column_letter}{expense_row})"
+        balance_value = round(opening_balance + income - cash_value + expense, 1)
+        cell = sheet.cell(
+            row=row,
+            column=financial_value_column,
+            value=balance_value,
         )
-        cell = sheet.cell(row=row, column=financial_value_column, value=balance_value)
         cell.number_format = cell_format
         sheet.merge_cells(
             start_row=row,
@@ -464,11 +463,11 @@ class SummarySheet:
         )
         SummarySheet._cell_alignment(cell, horizontal="left")
         SummarySheet._cell_font(cell, bold=True)
-        total_transfer_value = (
-            f"=SUM({column_letter}{row - 2}:{column_letter}{row - 1})"
-        )
+        total_transfer_value = -normal_transfer_value - invoiced_transfer_value
         cell = sheet.cell(
-            row=row, column=financial_value_column, value=total_transfer_value
+            row=row,
+            column=financial_value_column,
+            value=total_transfer_value,
         )
         cell.number_format = cell_format
         sheet.merge_cells(

@@ -466,23 +466,14 @@ class TransactionsDaySheetOut:
                 customer_row
             ].height = TransactionsDaySheetOut._DEFAULT_ROW_HEIGHT
         items_row = row
-        item_quantity_cells = []
         if transaction.transaction_items:
             for item in transaction.transaction_items:
-                item_row = items_row
                 items_row = TransactionsDaySheetOut._create_item(
                     sheet,
                     items_row,
                     item,
                     items_start_column,
                 )
-                if item.unit_count is not None:
-                    item_quantity_cells.append(
-                        sheet.cell(
-                            row=item_row,
-                            column=items_start_column + 2,
-                        )
-                    )
         customer_last_row = customer_data_start_row + len(customer_lines) - 1
         total_row = max(
             items_row,
@@ -525,13 +516,11 @@ class TransactionsDaySheetOut:
             row=total_row,
             column=items_end_column,
         )
-        if item_quantity_cells:
-            cell_coordinates = []
-            for cell in item_quantity_cells:
-                cell_coordinates.append(cell.coordinate)
-            transaction_total_cell.value = f"=SUM({','.join(cell_coordinates)})"
-        else:
-            transaction_total_cell.value = "=0"
+        total_quantity = 0
+        for item in transaction.transaction_items or []:
+            if item.unit_count is not None:
+                total_quantity += item.unit_count
+        transaction_total_cell.value = total_quantity
         TransactionsDaySheetOut._cell_alignment(
             transaction_total_cell,
             horizontal="right",
@@ -713,8 +702,6 @@ class TransactionsDaySheetOut:
             column_letter = get_column_letter(column_cells[0].column)
             for cell in column_cells:
                 if cell.value is not None:
-                    if isinstance(cell.value, str) and cell.value.startswith("="):
-                        continue
                     length = len(str(cell.value))
                     max_length = max(max_length, length)
             sheet.column_dimensions[column_letter].width = max_length + 3

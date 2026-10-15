@@ -59,7 +59,7 @@ class TransactionsDaySheetIn:
                 sheet, row, TransactionsDaySheetIn._LAST_COLUMN, export_texts, day_data
             )
         )
-        TransactionsDaySheetIn._set_financial_formulas(
+        TransactionsDaySheetIn._set_financial_total_values(
             cash_cell, transfer_cell, total_cell, transaction_total_cells
         )
         TransactionsDaySheetIn._auto_size_columns(sheet)
@@ -316,29 +316,22 @@ class TransactionsDaySheetIn:
         return cash_cell, transfer_cell, total_cell, row + 1
 
     @staticmethod
-    def _set_financial_formulas(
+    def _set_financial_total_values(
         cash_cell: Cell,
         transfer_cell: Cell,
         total_cell: Cell,
         transaction_total_cells: list[tuple[str, Cell]],
     ) -> None:
-        cash_cells = []
+        cash_total = 0
+        transfer_total = 0
         for payment_type, cell in transaction_total_cells:
             if payment_type == PAYMENT_CASH:
-                cash_cells.append(cell.coordinate)
-        transfer_cells = []
-        for payment_type, cell in transaction_total_cells:
-            if payment_type == PAYMENT_TRANSFER:
-                transfer_cells.append(cell.coordinate)
-        if cash_cells:
-            cash_cell.value = f"=SUM({','.join(cash_cells)})"
-        else:
-            cash_cell.value = "=0"
-        if transfer_cells:
-            transfer_cell.value = f"=SUM({','.join(transfer_cells)})"
-        else:
-            transfer_cell.value = "=0"
-        total_cell.value = f"=SUM({cash_cell.coordinate},{transfer_cell.coordinate})"
+                cash_total += cell.value
+            elif payment_type == PAYMENT_TRANSFER:
+                transfer_total += cell.value
+        cash_cell.value = cash_total
+        transfer_cell.value = transfer_total
+        total_cell.value = cash_total + transfer_total
 
     @staticmethod
     def _create_transactions_section(
@@ -437,10 +430,8 @@ class TransactionsDaySheetIn:
                 customer_row
             ].height = TransactionsDaySheetIn._DEFAULT_ROW_HEIGHT
         items_row = row
-        item_total_cells = []
         if transaction.transaction_items:
             for item in transaction.transaction_items:
-                item_row = items_row
                 items_row = TransactionsDaySheetIn._create_item(
                     sheet,
                     items_row,
@@ -448,10 +439,6 @@ class TransactionsDaySheetIn:
                     item,
                     items_start_column,
                 )
-                if item.unit_count is not None and item.price_per_unit is not None:
-                    item_total_cells.append(
-                        sheet.cell(row=item_row, column=items_end_column)
-                    )
         customer_last_row = customer_data_start_row + len(customer_lines) - 1
         total_row = max(
             items_row,
@@ -493,13 +480,11 @@ class TransactionsDaySheetIn:
             row=total_row,
             column=items_end_column,
         )
-        if item_total_cells:
-            cell_coordinates = []
-            for cell in item_total_cells:
-                cell_coordinates.append(cell.coordinate)
-            transaction_total_cell.value = f"=SUM({','.join(cell_coordinates)})"
-        else:
-            transaction_total_cell.value = "=0"
+        total_price = 0
+        for item in transaction.transaction_items:
+            if item.unit_count is not None and item.price_per_unit is not None:
+                total_price += item.unit_count * item.price_per_unit
+        transaction_total_cell.value = total_price
         transaction_total_cell.number_format = (
             f'#,##0.0 "{currency_suffix}";[Red]#,##0.0 "{currency_suffix}"'
         )
@@ -662,8 +647,6 @@ class TransactionsDaySheetIn:
             column_letter = get_column_letter(column_cells[0].column)
             for cell in column_cells:
                 if cell.value is not None:
-                    if isinstance(cell.value, str) and cell.value.startswith("="):
-                        continue
                     length = len(str(cell.value))
                     max_length = max(max_length, length)
             sheet.column_dimensions[column_letter].width = max_length + 3
