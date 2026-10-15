@@ -235,7 +235,7 @@ class SearchDetailWidget(QWidget):
             )
         self._setup_customer_data(create_data)
         if transaction_type == TRANSFER_OUT:
-            self.payment_info.clear()
+            self.payment_info.setText("")
             self.is_invoiced_checkbox.hide()
         else:
             self._apply_payment_data(create_data)
@@ -248,7 +248,6 @@ class SearchDetailWidget(QWidget):
         self.notes_label.clear()
         self.payment_info.clear()
         self.is_invoiced_checkbox.setChecked(False)
-        self.payment_info.hide()
         self.is_invoiced_checkbox.hide()
 
     def showEvent(self, event: QShowEvent) -> None:

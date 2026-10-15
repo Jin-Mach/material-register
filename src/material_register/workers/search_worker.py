@@ -9,13 +9,14 @@ from material_register.ui.config.ui_constants import LOG_LEVEL_ERROR, LOGGER_DB
 
 
 class SearchWorker(QObject):
-    finished = Signal(SearchResultsDataclass)
+    finished = Signal(SearchResultsDataclass, bool)
     error = Signal(str)
 
-    def __init__(self, where: str, params: list[str]) -> None:
+    def __init__(self, where: str, params: list[str], init: bool = False) -> None:
         super().__init__()
         self.where = where
         self.params = params
+        self.init = init
         self.db_connection: QSqlDatabase | None = None
 
     @Slot()
@@ -55,7 +56,7 @@ class SearchWorker(QObject):
                 transactions_total_amount=amount,
                 materials=materials,
             )
-            self.finished.emit(results_dataclass)
+            self.finished.emit(results_dataclass, self.init)
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_ERROR)
             self.error.emit(f"Search failed: {e}")

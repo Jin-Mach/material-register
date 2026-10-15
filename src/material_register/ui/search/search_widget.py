@@ -104,7 +104,7 @@ class SearchWidget(QWidget):
         self._setup_model()
 
     def _load_data(self) -> None:
-        self.search_controller.start_basic_filter(None, [])
+        self.search_controller.start_basic_filter(None, [], True)
 
     def _setup_texts(self) -> None:
         widgets = [self.detail_group_box, self.transactions_group_box]

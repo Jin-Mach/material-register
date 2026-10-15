@@ -16,6 +16,7 @@ from material_register.services.error_handler import ErrorHandler
 from material_register.services.filter_builder import FilterBuilder
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.workers.search_worker import SearchWorker
 
 if TYPE_CHECKING:
@@ -29,18 +30,20 @@ class SearchController(QObject):
         self.worker: SearchWorker | None = None
         self.thread: QThread | None = None
 
-    def start_basic_filter(self, period_key: str | None, value: str) -> None:
+    def start_basic_filter(
+        self, period_key: str | None, value: str, init: bool = False
+    ) -> None:
         where, params = FilterBuilder.create_basic_filter(period_key, value)
-        self._start_worker(where, params)
+        self._start_worker(where, params, init)
 
-    def start_thread(self, where: str, params: list[str]) -> None:
+    def start_thread(self, where: str, params: list[str], init: bool = False) -> None:
         if self.thread is not None or self.worker is not None:
             return
-        self._start_worker(where, params)
+        self._start_worker(where, params, init)
 
-    def _start_worker(self, where: str, params: list[str]) -> None:
+    def _start_worker(self, where: str, params: list[str], init: bool = False) -> None:
         self.thread = QThread()
-        self.worker = SearchWorker(where, params)
+        self.worker = SearchWorker(where, params, init)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._search_error)
@@ -51,9 +54,9 @@ class SearchController(QObject):
         self._clean_thread()
         QTimer.singleShot(100, lambda: self._finish_search(error=error))
 
-    def _search_ok(self, results: SearchResultsDataclass) -> None:
+    def _search_ok(self, results: SearchResultsDataclass, init: bool) -> None:
         self._clean_thread()
-        QTimer.singleShot(100, lambda: self._finish_search(results=results))
+        QTimer.singleShot(100, lambda: self._finish_search(results=results, init=init))
 
     def _clean_thread(self) -> None:
         if self.worker and self.worker.db_connection:
@@ -74,6 +77,7 @@ class SearchController(QObject):
         self,
         results: SearchResultsDataclass | None = None,
         error: str | None = None,
+        init: bool = False,
     ) -> None:
         self._reset_variables()
         if error is not None:
@@ -88,14 +92,18 @@ class SearchController(QObject):
                 self.search_widget,
             )
             return
+        if not init and len(results.transactions) == 0:
+            self.search_widget.search_actions_widget.search_line_edit.selectAll()
+            self.search_widget.search_actions_widget.search_line_edit.setFocus()
+            MessageBoxes.show_error(self.search_widget, "NO_RESULTS", "WARNING")
+            return
+        self.search_widget.search_detail_widget.reset_data()
+        self.search_widget.search_detail_widget.tab_widget.setCurrentIndex(0)
+        self.search_widget.search_tab_widget.setCurrentIndex(0)
         transactions = results.transactions
         transactions_count = results.transactions_count
         transactions_amount = results.transactions_total_amount
         materials = results.materials
-        if transactions is None:
-            transactions = []
-        if materials is None:
-            materials = []
         self.search_widget.search_transactions_model.load_data(transactions)
         self.search_widget.set_count_text(len(transactions), transactions_count)
         self.search_widget.set_price_text(transactions_amount)
