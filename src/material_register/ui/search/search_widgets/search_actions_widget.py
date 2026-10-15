@@ -81,6 +81,7 @@ class SearchActionsWidget(QWidget):
         UiTexts.set_default_texts(self, widgets)
 
     def _create_connection(self) -> None:
+        self.search_line_edit.returnPressed.connect(self._start_basic_filter)
         self.search_button.clicked.connect(self._start_basic_filter)
         self.reset_filter_button.clicked.connect(self._reset_filter)
 

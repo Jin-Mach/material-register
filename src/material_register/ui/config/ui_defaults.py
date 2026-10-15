@@ -522,8 +522,11 @@ DEFAULT_TEXTS = {
         ],
         "searchLineEditPlaceholderText": "Enter text to search...",
         "searchButtonText": "Search",
+        "searchButtonTooltipText": "Search using the selected criteria",
         "resetFilterButtonText": "Reset",
+        "resetFilterButtonTooltipText": "Clear the filters and restore the default view",
         "createFilterButtonText": "Create filter",
+        "createFilterButtonTooltipText": "Open advanced search options",
     },
     "SearchTransactionsView": {"showTransactionDocumentActionText": "View document"},
 }

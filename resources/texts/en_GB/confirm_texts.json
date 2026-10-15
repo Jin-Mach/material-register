@@ -6,7 +6,7 @@
     "NO": "Cancel"
   },
   "NO_RESULTS": {
-    "TITLE": "Error",
+    "TITLE": "Search",
     "TEXT": "No records match the search term",
     "CLOSE": "Close"
   },
@@ -26,7 +26,7 @@
     "CLOSE": "Close"
   },
   "NO_DATA": {
-    "TITLE": "Error",
+    "TITLE": "No Results",
     "TEXT": "No records match the selected settings.\nPlease adjust the settings and try again.",
     "CLOSE": "Close"
   },

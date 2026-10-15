@@ -534,8 +534,11 @@
     "baseFilterComboboxItems": ["Vše", "Dnes", "Tento týden", "Tento měsíc", "Tento rok"],
     "searchLineEditPlaceholderText": "Zadej text pro vyhledávání...",
     "searchButtonText": "Hledat",
+    "searchButtonTooltipText": "Vyhledat podle nastavených kritérií",
     "resetFilterButtonText": "Reset",
-    "createFilterButtonText": "Vytvořit filtr"
+    "resetFilterButtonTooltipText": "Zrušit nastavené filtry a obnovit zobrazení",
+    "createFilterButtonText": "Vytvořit filtr",
+    "createFilterButtonTooltipText": "Otevřít možnosti pokročilého vyhledávání"
   },
   "SearchTransactionsView": {
     "showTransactionDocumentActionText": "Zobrazit doklad"

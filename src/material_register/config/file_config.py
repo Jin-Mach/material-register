@@ -480,8 +480,11 @@ UI_KEYS = [
     ("SearchActionsWidget", "baseFilterComboboxItems"),
     ("SearchActionsWidget", "searchLineEditPlaceholderText"),
     ("SearchActionsWidget", "searchButtonText"),
+    ("SearchActionsWidget", "searchButtonTooltipText"),
     ("SearchActionsWidget", "resetFilterButtonText"),
+    ("SearchActionsWidget", "resetFilterButtonTooltipText"),
     ("SearchActionsWidget", "createFilterButtonText"),
+    ("SearchActionsWidget", "createFilterButtonTooltipText"),
     ("SearchTransactionsView", "showTransactionDocumentActionText"),
 ]
 
