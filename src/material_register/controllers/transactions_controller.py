@@ -431,6 +431,8 @@ class TransactionsController:
         proxy_model.set_filtered_text(text)
         if proxy_model.rowCount() == 0:
             self.transactions_widget.transactions_actions_widget.search_line_edit.selectAll()
+            self.transactions_widget.transaction_detail_widget.tab_widget.setCurrentIndex(0)
+            self.transactions_widget.transaction_detail_widget.reset_data()
             MessageBoxes.show_error(self.transactions_widget, "NO_RESULTS", "WARNING")
             proxy_model.set_filtered_text("")
             return

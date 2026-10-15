@@ -89,9 +89,9 @@ class MainWindow(QMainWindow):
     def _create_connection(self) -> None:
         buttons_map = {
             self.side_panel.transactions_button: 0,
-            self.side_panel.inventory_button: 1,
+            self.side_panel.customers_button: 1,
             self.side_panel.export_button: 2,
-            self.side_panel.customers_button: 3,
+            self.side_panel.inventory_button: 3,
             self.side_panel.catalog_button: 4,
             self.side_panel.search_button: 5,
         }

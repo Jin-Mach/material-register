@@ -17,9 +17,9 @@ class StackedWidget(QStackedWidget):
     def __init__(self, main_window: "MainWindow") -> None:
         super().__init__(main_window)
         self.transactions_widget = TransactionsWidget(self)
-        self.inventory_widget = InventoryWidget(self)
-        self.export_widget = ExportWidget(self)
         self.customers_widget = CustomersWidget(self)
+        self.export_widget = ExportWidget(self)
+        self.inventory_widget = InventoryWidget(self)
         self.catalog_widget = CatalogWidget(self)
         self.search_widget = SearchWidget(self)
         self._init_setup()
@@ -27,9 +27,9 @@ class StackedWidget(QStackedWidget):
     def _init_setup(self) -> None:
         widgets = [
             self.transactions_widget,
-            self.inventory_widget,
-            self.export_widget,
             self.customers_widget,
+            self.export_widget,
+            self.inventory_widget,
             self.catalog_widget,
             self.search_widget,
         ]
