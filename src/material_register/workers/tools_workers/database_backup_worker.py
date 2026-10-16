@@ -28,37 +28,45 @@ class DatabaseBackupWorker(QObject):
 
     @Slot()
     def run(self) -> None:
-        ok, _, self.db_connection = DbInit.thread_connection(
-            "database_backup_connection"
-        )
-        if not ok:
-            self.error.emit("BACKUP_FAILED")
-            self.finished.emit()
-            return
-        if not DatabaseBackupQueries.has_data(self.db_connection):
-            self.finished.emit()
-            return
-        self.backup_folder.mkdir(parents=True, exist_ok=True)
-        year, month = DatabaseBackupWorker._find_missing_backup(
-            self.backup_folder, datetime.now(UTC)
-        )
-        if year is None and month is None:
-            self.finished.emit()
-            return
-        if month is None:
-            if not DatabaseBackupService.create_year_backup(self.database_path, year):
+        try:
+            ok, _, self.db_connection = DbInit.thread_connection(
+                "database_backup_connection"
+            )
+            if not ok:
                 self.error.emit("BACKUP_FAILED")
-                self.finished.emit()
                 return
-        else:
-            if not DatabaseBackupService.create_month_backup(
-                self.database_path, month, year
-            ):
-                self.error.emit("BACKUP_FAILED")
-                self.finished.emit()
+            if not DatabaseBackupQueries.has_data(self.db_connection):
                 return
-        self.backup_created.emit("BACKUP_CREATED")
-        self.finished.emit()
+            self.backup_folder.mkdir(parents=True, exist_ok=True)
+            year, month = DatabaseBackupWorker._find_missing_backup(
+                self.backup_folder, datetime.now(UTC)
+            )
+            if year is None and month is None:
+                return
+            if month is None:
+                if not DatabaseBackupService.create_year_backup(
+                    self.database_path, year
+                ):
+                    self.error.emit("BACKUP_FAILED")
+                    return
+            else:
+                if not DatabaseBackupService.create_month_backup(
+                    self.database_path, month, year
+                ):
+                    self.error.emit("BACKUP_FAILED")
+                    return
+            self.backup_created.emit("BACKUP_CREATED")
+        finally:
+            self._clean_db_connection()
+            self.finished.emit()
+
+    def _clean_db_connection(self) -> None:
+        if self.db_connection is None:
+            return
+        connection_name = self.db_connection.connectionName()
+        self.db_connection.close()
+        self.db_connection = None
+        QSqlDatabase.removeDatabase(connection_name)
 
     @staticmethod
     def _find_missing_backup(
