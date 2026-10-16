@@ -21,6 +21,7 @@ class SearchWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        results_dataclass = None
         try:
             ok, error, self.db_connection = DbInit.thread_connection(
                 "search_connection"
@@ -56,7 +57,18 @@ class SearchWorker(QObject):
                 transactions_total_amount=amount,
                 materials=materials,
             )
-            self.finished.emit(results_dataclass, self.init)
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_ERROR)
             self.error.emit(f"Search failed: {e}")
+        finally:
+            self._clean_db_connection()
+        if results_dataclass is not None:
+            self.finished.emit(results_dataclass, self.init)
+
+    def _clean_db_connection(self) -> None:
+        if self.db_connection is None:
+            return
+        connection = self.db_connection.connectionName()
+        self.db_connection.close()
+        self.db_connection = None
+        QSqlDatabase.removeDatabase(connection)

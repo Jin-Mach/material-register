@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QModelIndex, QObject, QThread, QTimer
-from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
 from material_register.db.queries.transaction_items_queries import (
@@ -59,11 +58,6 @@ class SearchController(QObject):
         QTimer.singleShot(100, lambda: self._finish_search(results=results, init=init))
 
     def _clean_thread(self) -> None:
-        if self.worker and self.worker.db_connection:
-            connection_name = self.worker.db_connection.connectionName()
-            self.worker.db_connection.close()
-            self.worker.db_connection = None
-            QSqlDatabase.removeDatabase(connection_name)
         self.thread.quit()
         self.thread.wait()
         self.worker.deleteLater()
