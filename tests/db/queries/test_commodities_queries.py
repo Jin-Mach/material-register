@@ -95,7 +95,9 @@ def test_change_active(connection, schema) -> None:
 def test_get_commodities(connection: QSqlDatabase, schema) -> None:
     CommoditiesQueries.create_commodity(connection, "A", 1, "kg", 10.0, "n1", 1)
     CommoditiesQueries.create_commodity(connection, "B", 2, "pcs", 20.0, "n2", 0)
-    data = CommoditiesQueries.get_commodities(connection)
+    ok, error, data = CommoditiesQueries.get_commodities(connection)
+    assert ok is True
+    assert error == ""
     assert len(data) == 2
     assert data == [
         Commodity(
@@ -117,6 +119,24 @@ def test_get_commodities(connection: QSqlDatabase, schema) -> None:
             active=0,
         ),
     ]
+
+
+def test_get_commodities_returns_empty_results_on_success(
+    connection: QSqlDatabase, schema
+) -> None:
+    ok, error, data = CommoditiesQueries.get_commodities(connection)
+    assert ok is True
+    assert error == ""
+    assert data == []
+
+
+def test_get_commodities_returns_error_on_query_failure(
+    connection: QSqlDatabase,
+) -> None:
+    ok, error, data = CommoditiesQueries.get_commodities(connection)
+    assert ok is False
+    assert error
+    assert data == []
 
 
 def test_update_commodity_price(connection: QSqlDatabase, schema) -> None:

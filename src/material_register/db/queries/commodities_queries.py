@@ -82,14 +82,16 @@ class CommoditiesQueries:
         return ok, error
 
     @staticmethod
-    def get_commodities(connection: QSqlDatabase) -> list[Commodity]:
+    def get_commodities(
+        connection: QSqlDatabase,
+    ) -> tuple[bool, str, list[Commodity]]:
         query = QSqlQuery(connection)
         if not query.exec("""
             SELECT 
                 id, name, category_id, unit, default_price, notes, active
             FROM commodities ORDER BY name
             """):
-            return []
+            return False, query.lastError().text(), []
         results = []
         while query.next():
             results.append(
@@ -103,7 +105,7 @@ class CommoditiesQueries:
                     active=query.value(6),
                 )
             )
-        return results
+        return True, "", results
 
     @staticmethod
     def update_commodity_price(

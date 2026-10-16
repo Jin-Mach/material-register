@@ -11,10 +11,12 @@ class CustomersQueries:
             """
 
     @staticmethod
-    def get_customers(db_connection: QSqlDatabase) -> list[Customer]:
+    def get_customers(
+        db_connection: QSqlDatabase,
+    ) -> tuple[bool, str, list[Customer]]:
         query = QSqlQuery(db_connection)
         if not query.exec(CustomersQueries.BASE_QUERY):
-            return []
+            return False, query.lastError().text(), []
         results = []
         while query.next():
             results.append(
@@ -34,4 +36,4 @@ class CustomersQueries:
                     address_normalized=query.value(12),
                 )
             )
-        return results
+        return True, "", results

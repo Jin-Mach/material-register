@@ -53,7 +53,14 @@ class CatalogController:
                 )
                 return
             category_data.id = category_id
-            CatalogController._refresh_cache()
+            ok, error = CatalogController._refresh_cache()
+            if not ok:
+                CatalogController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.add_category",
+                    self.catalog_widget,
+                )
+                return
             self.reload_catalog_tree()
             self.catalog_widget.details_widget.refresh_category_data(category_data)
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
@@ -100,7 +107,14 @@ class CatalogController:
                 return
             self.catalog_widget.tree_widget.setCurrentItem(item)
             parent_item.setExpanded(True)
-            CatalogController._refresh_cache()
+            ok, error = CatalogController._refresh_cache()
+            if not ok:
+                CatalogController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.add_commodity",
+                    self.catalog_widget,
+                )
+                return
             self.setup_details_widget()
             self.inventory_model.load_inventory_data()
             CatalogController._update_inventory_count()
@@ -131,7 +145,14 @@ class CatalogController:
                     self.catalog_widget,
                 )
                 return
-            CatalogController._refresh_cache()
+            ok, error = CatalogController._refresh_cache()
+            if not ok:
+                CatalogController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.update_category",
+                    self.catalog_widget,
+                )
+                return
             self.reload_catalog_tree()
             self.catalog_widget.details_widget.refresh_category_data(category_data)
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
@@ -177,7 +198,14 @@ class CatalogController:
                     self.catalog_widget,
                 )
                 return
-            CatalogController._refresh_cache()
+            ok, error = CatalogController._refresh_cache()
+            if not ok:
+                CatalogController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.update_commodity",
+                    self.catalog_widget,
+                )
+                return
             self.reload_catalog_tree()
             self.setup_details_widget()
             item = self.catalog_widget.tree_widget.find_item_by_id(category.id)
@@ -208,7 +236,14 @@ class CatalogController:
                             self.catalog_widget,
                         )
                         return
-            CatalogController._refresh_cache()
+            ok, error = CatalogController._refresh_cache()
+            if not ok:
+                CatalogController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.update_commodities_price",
+                    self.catalog_widget,
+                )
+                return
             self.setup_details_widget()
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CatalogController._notification_handler(
@@ -235,8 +270,8 @@ class CatalogController:
         self.catalog_widget.details_widget.show_category_details(category, commodities)
 
     @staticmethod
-    def _refresh_cache() -> None:
-        DbCache.refresh_catalog_data()
+    def _refresh_cache() -> tuple[bool, str]:
+        return DbCache.refresh_catalog_data()
 
     @staticmethod
     def _get_commodities_for_category(category_id: int) -> list[Commodity]:

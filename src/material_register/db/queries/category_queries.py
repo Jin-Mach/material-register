@@ -37,10 +37,12 @@ class CategoryQueries:
         return ok, error
 
     @staticmethod
-    def get_categories(connection: QSqlDatabase) -> list[Category]:
+    def get_categories(
+        connection: QSqlDatabase,
+    ) -> tuple[bool, str, list[Category]]:
         query = QSqlQuery(connection)
         if not query.exec("SELECT id, name, notes FROM categories ORDER BY name"):
-            return []
+            return False, query.lastError().text(), []
         results = []
         while query.next():
             results.append(
@@ -50,7 +52,7 @@ class CategoryQueries:
                     notes=query.value(2),
                 )
             )
-        return results
+        return True, "", results
 
     @staticmethod
     def category_exists(

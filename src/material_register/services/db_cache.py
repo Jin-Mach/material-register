@@ -17,24 +17,39 @@ class DbCache:
     commodities: list[Commodity] = []
 
     @classmethod
-    def setup_init(cls, db_connection: QSqlDatabase) -> None:
+    def setup_init(cls, db_connection: QSqlDatabase) -> tuple[bool, str]:
         cls.db_connection = db_connection
-        cls.refresh_customers_data()
-        cls.refresh_catalog_data()
+        ok, error = cls.refresh_customers_data()
+        if not ok:
+            return False, error
+        return cls.refresh_catalog_data()
 
     @classmethod
-    def refresh_customers_data(cls) -> None:
-        cls.customers = cls._get_customers(cls.db_connection)
+    def refresh_customers_data(cls) -> tuple[bool, str]:
+        ok, error, customers = cls._get_customers(cls.db_connection)
+        if not ok:
+            return False, error
+        cls.customers = customers
         cls.active_customers = cls._filter_active_customers()
         cls.inactive_customers = cls._filter_inactive_customers()
+        return True, ""
 
     @classmethod
-    def refresh_catalog_data(cls) -> None:
-        cls.categories = cls._get_categories(cls.db_connection)
-        cls.commodities = cls._get_commodities(cls.db_connection)
+    def refresh_catalog_data(cls) -> tuple[bool, str]:
+        ok, error, categories = cls._get_categories(cls.db_connection)
+        if not ok:
+            return False, error
+        ok, error, commodities = cls._get_commodities(cls.db_connection)
+        if not ok:
+            return False, error
+        cls.categories = categories
+        cls.commodities = commodities
+        return True, ""
 
     @classmethod
-    def _get_customers(cls, db_connection: QSqlDatabase) -> list[Customer]:
+    def _get_customers(
+        cls, db_connection: QSqlDatabase
+    ) -> tuple[bool, str, list[Customer]]:
         return CustomersQueries.get_customers(db_connection)
 
     @classmethod
@@ -54,9 +69,13 @@ class DbCache:
         return inactive
 
     @classmethod
-    def _get_categories(cls, db_connection: QSqlDatabase) -> list[Category]:
+    def _get_categories(
+        cls, db_connection: QSqlDatabase
+    ) -> tuple[bool, str, list[Category]]:
         return CategoryQueries.get_categories(db_connection)
 
     @classmethod
-    def _get_commodities(cls, db_connection: QSqlDatabase) -> list[Commodity]:
+    def _get_commodities(
+        cls, db_connection: QSqlDatabase
+    ) -> tuple[bool, str, list[Commodity]]:
         return CommoditiesQueries.get_commodities(db_connection)

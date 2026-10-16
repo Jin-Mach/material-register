@@ -61,12 +61,32 @@ def test_update_category(connection: QSqlDatabase, schema) -> None:
 def test_get_categories(connection: QSqlDatabase, schema) -> None:
     CategoryQueries.create_category(connection, "A", "n1")
     CategoryQueries.create_category(connection, "B", "n2")
-    data = CategoryQueries.get_categories(connection)
+    ok, error, data = CategoryQueries.get_categories(connection)
+    assert ok is True
+    assert error == ""
     assert len(data) == 2
     assert data == [
         Category(id=1, name="A", notes="n1"),
         Category(id=2, name="B", notes="n2"),
     ]
+
+
+def test_get_categories_returns_empty_results_on_success(
+    connection: QSqlDatabase, schema
+) -> None:
+    ok, error, data = CategoryQueries.get_categories(connection)
+    assert ok is True
+    assert error == ""
+    assert data == []
+
+
+def test_get_categories_returns_error_on_query_failure(
+    connection: QSqlDatabase,
+) -> None:
+    ok, error, data = CategoryQueries.get_categories(connection)
+    assert ok is False
+    assert error
+    assert data == []
 
 
 def test_category_exists(connection: QSqlDatabase, schema) -> None:

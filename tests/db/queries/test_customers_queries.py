@@ -42,7 +42,9 @@ def test_get_customers(connection: QSqlDatabase, schema) -> None:
         (company, first_name, last_name, document_number, address, active)
         VALUES ('A', 'Joe', 'Doe', '123', 'Earth', 1)
     """)
-    data = CustomersQueries.get_customers(connection)
+    ok, error, data = CustomersQueries.get_customers(connection)
+    assert ok is True
+    assert error == ""
     assert len(data) == 1
     assert data[0].company == "A"
     assert data[0].first_name == "Joe"
@@ -50,3 +52,21 @@ def test_get_customers(connection: QSqlDatabase, schema) -> None:
     assert data[0].document_number == "123"
     assert data[0].address == "Earth"
     assert data[0].active == 1
+
+
+def test_get_customers_returns_empty_results_on_success(
+    connection: QSqlDatabase, schema
+) -> None:
+    ok, error, data = CustomersQueries.get_customers(connection)
+    assert ok is True
+    assert error == ""
+    assert data == []
+
+
+def test_get_customers_returns_error_on_query_failure(
+    connection: QSqlDatabase,
+) -> None:
+    ok, error, data = CustomersQueries.get_customers(connection)
+    assert ok is False
+    assert error
+    assert data == []

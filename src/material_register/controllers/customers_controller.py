@@ -55,7 +55,14 @@ class CustomersController:
                     self.customers_widget,
                 )
                 return
-            CustomersController._refresh_cache()
+            ok, error = CustomersController._refresh_cache()
+            if not ok:
+                CustomersController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.add_customer",
+                    self.customers_widget,
+                )
+                return
             self.update_counts()
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CustomersController._notification_handler(
@@ -89,7 +96,14 @@ class CustomersController:
                 )
                 return
             self._refresh_transactions_data()
-            CustomersController._refresh_cache()
+            ok, error = CustomersController._refresh_cache()
+            if not ok:
+                CustomersController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.update_customer",
+                    self.customers_widget,
+                )
+                return
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CustomersController._notification_handler(
                 self.notification_texts, "UPDATE_CUSTOMER", "Record updated"
@@ -114,7 +128,14 @@ class CustomersController:
                     self.customers_widget,
                 )
                 return
-            CustomersController._refresh_cache()
+            ok, error = CustomersController._refresh_cache()
+            if not ok:
+                CustomersController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.change_customer_active",
+                    self.customers_widget,
+                )
+                return
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             CustomersController._notification_handler(
                 self.notification_texts, "CHANGE_ACTIVE", "Status changed"
@@ -141,9 +162,12 @@ class CustomersController:
         transaction_controller.refresh_models_data()
 
     @staticmethod
-    def _refresh_cache() -> None:
-        DbCache.refresh_customers_data()
+    def _refresh_cache() -> tuple[bool, str]:
+        ok, error = DbCache.refresh_customers_data()
+        if not ok:
+            return False, error
         DataInit.customers_completer_model.reload_customers(DbCache.active_customers)
+        return True, ""
 
     @staticmethod
     def _normalize_customer(customer: Customer) -> None:
@@ -165,8 +189,13 @@ class CustomersController:
         return customer_id
 
     @staticmethod
-    def _handle_db_error(model: "CustomersModel", method: str, parent: QWidget) -> None:
-        error = model.lastError().text()
+    def _handle_db_error(
+        model: "CustomersModel | str", method: str, parent: QWidget
+    ) -> None:
+        if isinstance(model, str):
+            error = model
+        else:
+            error = model.lastError().text()
         if not error:
             error = f"Unknown database error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", LOGGER_DB, LOG_LEVEL_CRITICAL)

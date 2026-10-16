@@ -29,7 +29,10 @@ class DataInit:
     def init_data(cls) -> tuple[bool, str]:
         try:
             cls.customers_model = CustomersModel(DbInit.db_connection)
-            DbCache.setup_init(DbInit.db_connection)
+            ok, error = DbCache.setup_init(DbInit.db_connection)
+            if not ok:
+                ErrorHandler.handle_error(error, LOGGER_DB, LOG_LEVEL_CRITICAL)
+                return False, "DATABASE_FAILED"
             cls.customers_completer_model = CustomersCompleterModel(
                 DbCache.active_customers
             )
