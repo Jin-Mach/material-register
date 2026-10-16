@@ -5,22 +5,16 @@ from material_register.db.config.transactions_queries_constants import (
     TRANSACTIONS_QUERY_OUT,
 )
 from material_register.domain.transaction_dataclass import Transaction
-from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.ui_constants import (
-    LOG_LEVEL_CRITICAL,
-    LOGGER_DB,
-)
 
 
 class TransactionsLoadQueries:
     @staticmethod
-    def load_transaction_in(db_connection: QSqlDatabase) -> list[Transaction]:
+    def load_transaction_in(
+        db_connection: QSqlDatabase,
+    ) -> tuple[bool, str, list[Transaction]]:
         query = QSqlQuery(db_connection)
         if not query.exec(TRANSACTIONS_QUERY_IN):
-            ErrorHandler.handle_error(
-                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
-            )
-            return []
+            return False, query.lastError().text(), []
         results = []
         while query.next():
             results.append(
@@ -43,16 +37,17 @@ class TransactionsLoadQueries:
                     address_normalized=query.value("address_normalized"),
                 )
             )
-        return results
+        if query.lastError().isValid():
+            return False, query.lastError().text(), []
+        return True, "", results
 
     @staticmethod
-    def load_transactions_out(db_connection: QSqlDatabase) -> list[Transaction]:
+    def load_transactions_out(
+        db_connection: QSqlDatabase,
+    ) -> tuple[bool, str, list[Transaction]]:
         query = QSqlQuery(db_connection)
         if not query.exec(TRANSACTIONS_QUERY_OUT):
-            ErrorHandler.handle_error(
-                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
-            )
-            return []
+            return False, query.lastError().text(), []
         results = []
         while query.next():
             results.append(
@@ -74,4 +69,6 @@ class TransactionsLoadQueries:
                     address_normalized=query.value("address_normalized"),
                 )
             )
-        return results
+        if query.lastError().isValid():
+            return False, query.lastError().text(), []
+        return True, "", results

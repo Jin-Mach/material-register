@@ -97,14 +97,17 @@ class TransactionsLoadModelIn(QAbstractTableModel):
         self.endRemoveRows()
         return True
 
-    def load_transactions_data(self) -> list[Transaction]:
-        self.beginResetModel()
-        self.transaction_data = TransactionsLoadQueries.load_transaction_in(
+    def load_transactions_data(self) -> tuple[bool, str]:
+        ok, error, results = TransactionsLoadQueries.load_transaction_in(
             self._db_connection
         )
+        if not ok:
+            return False, error
+        self.beginResetModel()
+        self.transaction_data = results
         self.endResetModel()
         self.total_count = len(self.transaction_data)
-        return self.transaction_data
+        return True, ""
 
     def set_basic_filter(self, filtered_data: list[Transaction]) -> None:
         self.beginResetModel()

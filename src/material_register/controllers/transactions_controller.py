@@ -440,6 +440,16 @@ class TransactionsController:
             return
         self._update_counts()
 
+    def load_transactions(self) -> None:
+        for model in (self.transactions_model_in, self.transactions_model_out):
+            ok, error = model.load_transactions_data()
+            if not ok:
+                TransactionsController._handle_db_error(
+                    error,
+                    f"{self.__class__.__name__}.load_transactions",
+                    self.transactions_widget,
+                )
+
     def reset_model_data(self) -> None:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
         from_date, to_date = get_filter_range(key)

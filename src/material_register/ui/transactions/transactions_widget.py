@@ -106,6 +106,7 @@ class TransactionsWidget(QWidget):
         self._setup_texts()
         self._setup_style()
         self._setup_model()
+        self.transactions_controller.load_transactions()
         self.set_count_text(
             self.transactions_load_model_in.rowCount(),
             self.transactions_load_model_in.total_count,
@@ -181,7 +182,6 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transaction_in_view.setup_ui()
         self.transactions_load_model_in.set_suffix(self.model_in_suffix)
         self.transactions_load_model_in.set_tooltip_texts(self.tooltip_texts)
-        self.transactions_load_model_in.load_transactions_data()
         self.transactions_tab_widget.transaction_in_view.customContextMenuRequested.connect(
             self.transactions_tab_widget.transaction_in_view.open_context_menu
         )
@@ -196,7 +196,6 @@ class TransactionsWidget(QWidget):
         )
         self.transactions_tab_widget.transactions_out_view.setup_ui()
         self.transactions_load_model_out.set_tooltip_texts(self.tooltip_texts)
-        self.transactions_load_model_out.load_transactions_data()
         self.transactions_tab_widget.transactions_out_view.customContextMenuRequested.connect(
             self.transactions_tab_widget.transactions_out_view.open_context_menu
         )

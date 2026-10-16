@@ -85,9 +85,29 @@ def test_load_transaction_in(connection: QSqlDatabase, schema) -> None:
     query.addBindValue(0)
     query.exec()
     query.exec("INSERT INTO transaction_items VALUES (1, 1, 1, 10, 20)")
-    results = TransactionsLoadQueries.load_transaction_in(connection)
+    ok, error, results = TransactionsLoadQueries.load_transaction_in(connection)
+    assert ok is True
+    assert error == ""
     assert len(results) > 0, "No results returned"
     assert results[0].total == 200, f"Expected 200, got {results[0].total}"
+
+
+def test_load_transaction_in_returns_empty_results_on_success(
+    connection: QSqlDatabase, schema
+) -> None:
+    ok, error, results = TransactionsLoadQueries.load_transaction_in(connection)
+    assert ok is True
+    assert error == ""
+    assert results == []
+
+
+def test_load_transaction_in_returns_error_on_query_failure(
+    connection: QSqlDatabase,
+) -> None:
+    ok, error, results = TransactionsLoadQueries.load_transaction_in(connection)
+    assert ok is False
+    assert error
+    assert results == []
 
 
 def test_load_transaction_out(connection: QSqlDatabase, schema) -> None:
@@ -110,9 +130,29 @@ def test_load_transaction_out(connection: QSqlDatabase, schema) -> None:
     query.addBindValue(0)
     query.exec()
     query.exec("INSERT INTO transaction_items VALUES (1, 1, 1, 10, 20)")
-    results = TransactionsLoadQueries.load_transactions_out(connection)
+    ok, error, results = TransactionsLoadQueries.load_transactions_out(connection)
+    assert ok is True
+    assert error == ""
     assert len(results) > 0, "No results returned"
     assert results[0].total == 10.0, f"Expected 10.0, got {results[0].total}"
+
+
+def test_load_transactions_out_returns_empty_results_on_success(
+    connection: QSqlDatabase, schema
+) -> None:
+    ok, error, results = TransactionsLoadQueries.load_transactions_out(connection)
+    assert ok is True
+    assert error == ""
+    assert results == []
+
+
+def test_load_transactions_out_returns_error_on_query_failure(
+    connection: QSqlDatabase,
+) -> None:
+    ok, error, results = TransactionsLoadQueries.load_transactions_out(connection)
+    assert ok is False
+    assert error
+    assert results == []
 
 
 def test_load_transaction_in_respects_local_day_boundary(
@@ -159,7 +199,9 @@ def test_load_transaction_in_respects_local_day_boundary(
             (3, 3, 1, 10, 20),
             (4, 4, 1, 10, 20)
     """)
-    results = TransactionsLoadQueries.load_transaction_in(connection)
+    ok, error, results = TransactionsLoadQueries.load_transaction_in(connection)
+    assert ok is True
+    assert error == ""
     transaction_ids = set()
     for transaction in results:
         transaction_ids.add(transaction.transaction_id)
@@ -209,7 +251,9 @@ def test_load_transaction_out_respects_local_day_boundary(
             (3, 3, 1, 10, 20),
             (4, 4, 1, 10, 20)
     """)
-    results = TransactionsLoadQueries.load_transactions_out(connection)
+    ok, error, results = TransactionsLoadQueries.load_transactions_out(connection)
+    assert ok is True
+    assert error == ""
     transaction_ids = set()
     for transaction in results:
         transaction_ids.add(transaction.transaction_id)
