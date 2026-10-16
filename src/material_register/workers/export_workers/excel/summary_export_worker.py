@@ -73,3 +73,13 @@ class SummaryExportWorker(QObject):
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_EXPORT, LOG_LEVEL_ERROR)
             self.error.emit(f"Export failed: {e}")
+        finally:
+            self._clean_db_connection()
+
+    def _clean_db_connection(self) -> None:
+        if self.db_connection is None:
+            return
+        connection = self.db_connection.connectionName()
+        self.db_connection.close()
+        self.db_connection = None
+        QSqlDatabase.removeDatabase(connection)

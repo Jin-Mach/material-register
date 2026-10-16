@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QObject, QThread, QTimer
-from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QWidget
 
 from material_register.core.app_context import AppContext
@@ -120,11 +119,6 @@ class TransactionsExportController(QObject):
         QTimer.singleShot(1000, self._finish_export)
 
     def _clean_thread(self) -> None:
-        if self.worker and self.worker.db_connection:
-            connection_name = self.worker.db_connection.connectionName()
-            self.worker.db_connection.close()
-            self.worker.db_connection = None
-            QSqlDatabase.removeDatabase(connection_name)
         self.thread.quit()
         self.thread.wait()
         self.worker.deleteLater()

@@ -91,6 +91,8 @@ class TransactionsExportWorker(QObject):
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_EXPORT, LOG_LEVEL_ERROR)
             self.error.emit(f"Export failed: {e}")
+        finally:
+            self._clean_db_connection()
 
     def _create_non_split_exports(
         self,
@@ -157,6 +159,14 @@ class TransactionsExportWorker(QObject):
                     return False, export_path
                 workbook.save(export_path)
         return True, export_path
+
+    def _clean_db_connection(self) -> None:
+        if self.db_connection is None:
+            return
+        connection = self.db_connection.connectionName()
+        self.db_connection.close()
+        self.db_connection = None
+        QSqlDatabase.removeDatabase(connection)
 
     @staticmethod
     def _split_data_by_month(data: list[TransactionsExportDay]) -> dict:
