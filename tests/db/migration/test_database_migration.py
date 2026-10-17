@@ -1,3 +1,4 @@
+import uuid
 from collections.abc import Generator
 from functools import partial
 
@@ -18,7 +19,8 @@ from material_register.services.database_backup_service import DatabaseBackupSer
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase("QSQLITE", "migration_test")
+    connection_name = f"test_database_migration_{uuid.uuid4().hex}"
+    conn = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     conn.setDatabaseName(":memory:")
     conn.open()
     return conn
@@ -75,7 +77,8 @@ def test_migrate_real_database() -> None:
         )
         assert result is True
         assert database_test_path.exists()
-        connection = QSqlDatabase.addDatabase("QSQLITE", "migration_real_test")
+        connection_name = f"test_migration_real_{uuid.uuid4().hex}"
+        connection = QSqlDatabase.addDatabase("QSQLITE", connection_name)
         connection.setDatabaseName(str(database_test_path))
         assert connection.open() is True
         query = QSqlQuery(connection)

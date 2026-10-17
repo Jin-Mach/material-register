@@ -9,8 +9,8 @@ from material_register.ui.setup.ui_icons import UiIcons
 
 
 def _create_memory_db() -> QSqlDatabase:
-    name = f"inv_test_{uuid.uuid4()}"
-    db = QSqlDatabase.addDatabase("QSQLITE", name)
+    connection_name = f"test_inventory_{uuid.uuid4().hex}"
+    db = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     db.setDatabaseName(":memory:")
     db.open()
     return db

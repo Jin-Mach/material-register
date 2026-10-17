@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
@@ -7,7 +9,8 @@ from material_register.services.transactions_service import TransactionsService
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase("QSQLITE")
+    connection_name = f"test_transactions_service_{uuid.uuid4().hex}"
+    conn = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     conn.setDatabaseName(":memory:")
     conn.open()
     query = QSqlQuery(conn)

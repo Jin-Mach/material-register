@@ -1,3 +1,4 @@
+import uuid
 from datetime import UTC, datetime
 
 import pytest
@@ -10,7 +11,8 @@ from material_register.db.queries.transactions_load_queries import (
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase("QSQLITE", "load_test")
+    connection_name = f"test_transactions_load_queries_{uuid.uuid4().hex}"
+    conn = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     conn.setDatabaseName(":memory:")
     conn.open()
     return conn

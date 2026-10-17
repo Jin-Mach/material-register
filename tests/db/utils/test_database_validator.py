@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
@@ -11,7 +13,8 @@ from material_register.db.utils.database_validator import (
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase("QSQLITE", "schema_test")
+    connection_name = f"test_database_validator_schema_{uuid.uuid4().hex}"
+    conn = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     conn.setDatabaseName(":memory:")
     conn.open()
     create_db_tables(conn)
@@ -20,7 +23,8 @@ def connection() -> QSqlDatabase:
 
 @pytest.fixture
 def empty_connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase("QSQLITE", "empty_schema_test")
+    connection_name = f"test_database_validator_empty_schema_{uuid.uuid4().hex}"
+    conn = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     conn.setDatabaseName(":memory:")
     conn.open()
     return conn

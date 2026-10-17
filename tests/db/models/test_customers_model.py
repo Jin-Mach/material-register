@@ -8,7 +8,8 @@ from material_register.domain.customers_dataclass import Customer
 
 
 def _create_test_db() -> QSqlDatabase:
-    db = QSqlDatabase.addDatabase("QSQLITE", f"test_connection{uuid.uuid4()}")
+    connection_name = f"test_customers_{uuid.uuid4().hex}"
+    db = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     db.setDatabaseName(":memory:")
     db.open()
     query = QSqlQuery(db)

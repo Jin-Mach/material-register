@@ -17,8 +17,8 @@ from material_register.domain.transaction_dataclass import Transaction
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    name = f"transactions_model_test_{uuid.uuid4().hex}"
-    db = QSqlDatabase.addDatabase("QSQLITE", name)
+    connection_name = f"test_transactions_load_model_{uuid.uuid4().hex}"
+    db = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     db.setDatabaseName(":memory:")
     db.open()
     return db

@@ -1,3 +1,4 @@
+import uuid
 from collections.abc import Generator
 
 import pytest
@@ -18,7 +19,8 @@ def reset_headers() -> Generator[None]:
 
 @pytest.fixture
 def sql_model(qtbot) -> QSqlTableModel:
-    db = QSqlDatabase.addDatabase("QSQLITE", "test_conn")
+    connection_name = f"test_ui_headers_texts_{uuid.uuid4().hex}"
+    db = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     db.setDatabaseName(":memory:")
     db.open()
     query = QSqlQuery(db)

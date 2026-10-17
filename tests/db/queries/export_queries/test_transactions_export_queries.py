@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
@@ -9,7 +11,8 @@ from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    conn = QSqlDatabase.addDatabase("QSQLITE", "transactions_export_test")
+    connection_name = f"test_transactions_export_queries_{uuid.uuid4().hex}"
+    conn = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     conn.setDatabaseName(":memory:")
     conn.open()
     return conn

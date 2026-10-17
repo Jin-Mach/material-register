@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
@@ -8,7 +10,8 @@ from material_register.db.queries.tools_queries.database_backup_queries import (
 
 @pytest.fixture
 def connection() -> QSqlDatabase:
-    connection = QSqlDatabase.addDatabase("QSQLITE", "backup_queries_test")
+    connection_name = f"test_database_backup_queries_{uuid.uuid4().hex}"
+    connection = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     connection.setDatabaseName(":memory:")
     connection.open()
     query = QSqlQuery(connection)

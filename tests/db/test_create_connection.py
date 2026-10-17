@@ -1,3 +1,4 @@
+import uuid
 from pathlib import Path
 
 from PySide6.QtSql import QSqlQuery
@@ -6,20 +7,26 @@ from material_register.db.create_connection import create_connection
 
 
 def test_db_is_none() -> None:
-    db = create_connection(None, "test.db", "test_connection")
+    db = create_connection(
+        None, "test.db", f"test_create_connection_{uuid.uuid4().hex}"
+    )
     assert db is None
 
 
 def test_create_connection_invalid_path(tmp_path: Path) -> None:
     invalid_dir = tmp_path / "invalid_dir" / "invalid_dir_2"
-    db = create_connection(invalid_dir, "test.db", "test_connection")
+    db = create_connection(
+        invalid_dir, "test.db", f"test_create_connection_{uuid.uuid4().hex}"
+    )
     assert db is None
 
 
 def test_create_connection_success(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
-    db = create_connection(db_dir, "test.db", "test_connection")
+    db = create_connection(
+        db_dir, "test.db", f"test_create_connection_{uuid.uuid4().hex}"
+    )
     assert db is not None
     assert (db_dir / "test.db").exists()
 
@@ -27,7 +34,9 @@ def test_create_connection_success(tmp_path: Path) -> None:
 def test_tables_created(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
-    db = create_connection(db_dir, "test.db", "test_connection")
+    db = create_connection(
+        db_dir, "test.db", f"test_create_connection_{uuid.uuid4().hex}"
+    )
     assert db is not None
     query = QSqlQuery(db)
     query.exec("SELECT name FROM sqlite_master WHERE type='table'")
@@ -48,7 +57,9 @@ def test_tables_created(tmp_path: Path) -> None:
 def test_trigger_new_commodity(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
-    db = create_connection(db_dir, "test.db", "test_connection")
+    db = create_connection(
+        db_dir, "test.db", f"test_create_connection_{uuid.uuid4().hex}"
+    )
     assert db is not None
     query = QSqlQuery(db)
     query.exec("INSERT INTO categories (name) VALUES ('Fe')")
@@ -64,8 +75,12 @@ def test_trigger_new_commodity(tmp_path: Path) -> None:
 def test_create_connection_twice(tmp_path: Path) -> None:
     db_dir = tmp_path / "db"
     db_dir.mkdir()
-    db = create_connection(db_dir, "test.db", "test_connection")
+    db = create_connection(
+        db_dir, "test.db", f"test_create_connection_{uuid.uuid4().hex}"
+    )
     assert db is not None
     db.close()
-    db = create_connection(db_dir, "test.db", "test_connection_2")
+    db = create_connection(
+        db_dir, "test.db", f"test_create_connection_{uuid.uuid4().hex}"
+    )
     assert db is not None
