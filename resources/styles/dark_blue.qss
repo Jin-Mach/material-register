@@ -699,7 +699,13 @@ QLabel#savePathLabel,
 QLabel#settingsInfoLabel,
 QLabel#paymentInfo,
 QLabel#notesCountLabel,
-QCheckBox#isInvoicedCheckBox {
+QCheckBox#transactionNumberCheckbox,
+QCheckBox#createdAtCheckbox,
+QCheckBox#transactionTypeCheckBox,
+QCheckBox#paymentTypeCheckbox,
+QCheckBox#isInvoicedCheckbox,
+QCheckBox#transactionPriceCheckbox,
+QCheckBox#notesCheckbox {
     background-color: transparent;
 }
 

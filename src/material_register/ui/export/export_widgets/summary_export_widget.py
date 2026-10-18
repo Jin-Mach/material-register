@@ -394,6 +394,7 @@ class SummaryExportWidget(QWidget):
             minimum = SUMMARY_EXPORT_PRICE_MIN_VALUE
             if spinbox == self.opening_balance_spinbox:
                 minimum = SUMMARY_BALANCE_PRICE_MIN_VALUE
+            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
             spinbox.setMinimum(minimum)
             spinbox.setMaximum(SUMMARY_EXPORT_PRICE_MAX_VALUE)
             spinbox.setDecimals(1)

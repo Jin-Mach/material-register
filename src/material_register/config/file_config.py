@@ -493,6 +493,23 @@ UI_KEYS = [
     ("AdvancedSearchDialog", "searchButtonTooltipText"),
     ("AdvancedSearchDialog", "cancelButtonText"),
     ("AdvancedSearchDialog", "cancelButtonTooltipText"),
+    ("TransactionsSearchWidget", "transactionNumberCheckboxText"),
+    ("TransactionsSearchWidget", "createdAtCheckboxText"),
+    ("TransactionsSearchWidget", "fromDateLabelText"),
+    ("TransactionsSearchWidget", "toDateLabelText"),
+    ("TransactionsSearchWidget", "transactionTypeCheckBoxText"),
+    ("TransactionsSearchWidget", "transactionTypeComboBoxItems"),
+    ("TransactionsSearchWidget", "paymentTypeCheckboxText"),
+    ("TransactionsSearchWidget", "paymentTypeComboBoxItems"),
+    ("TransactionsSearchWidget", "isInvoicedCheckboxText"),
+    ("TransactionsSearchWidget", "isInvoicedComboBoxItems"),
+    ("TransactionsSearchWidget", "transactionPriceCheckboxText"),
+    ("TransactionsSearchWidget", "transactionPriceOperatorItems"),
+    ("TransactionsSearchWidget", "notesCheckboxText"),
+    ("TransactionsSearchWidget", "notesEditPlaceholderText"),
+    ("TransactionsSearchWidget", "priceSuffix"),
+    ("TransactionsSearchWidget", "resetButtonText"),
+    ("TransactionsSearchWidget", "resetButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [

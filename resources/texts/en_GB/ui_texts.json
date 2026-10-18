@@ -566,5 +566,24 @@
     "searchButtonTooltipText": "Search transactions using the specified criteria",
     "cancelButtonText": "Cancel",
     "cancelButtonTooltipText": "Close the dialog"
+  },
+  "TransactionsSearchWidget": {
+    "transactionNumberCheckboxText": "Filter by document number:",
+    "createdAtCheckboxText": "Filter by date:",
+    "fromDateLabelText": "from:",
+    "toDateLabelText": "to:",
+    "transactionTypeCheckBoxText": "Filter by transaction type:",
+    "transactionTypeComboBoxItems": ["Purchase", "Sale"],
+    "paymentTypeCheckboxText": "Filter by payment method:",
+    "paymentTypeComboBoxItems": ["Cash", "Bank transfer"],
+    "isInvoicedCheckboxText": "Invoice:",
+    "isInvoicedComboBoxItems": ["Yes", "No"],
+    "transactionPriceCheckboxText": "Filter by price:",
+    "transactionPriceOperatorItems": ["Less than", "Equal to", "Greater than"],
+    "notesCheckboxText": "Filter by notes:",
+    "notesEditPlaceholderText": "Enter text to search...",
+    "priceSuffix": "CZK",
+    "resetButtonText": "Clear filters",
+    "resetButtonTooltipText": "Clears all filters for the current tab"
   }
 }

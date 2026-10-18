@@ -551,5 +551,24 @@
     "searchButtonTooltipText": "Vyhledá transakce dle zadaných parametrů",
     "cancelButtonText": "Zrušit",
     "cancelButtonTooltipText": "Zavře dialog"
+  },
+  "TransactionsSearchWidget": {
+    "transactionNumberCheckboxText": "Filtrovat dle čísla dokladu:",
+    "createdAtCheckboxText": "Filtrovat dle data:",
+    "fromDateLabelText": "od:",
+    "toDateLabelText": "do:",
+    "transactionTypeCheckBoxText": "Filtrovat dle typu:",
+    "transactionTypeComboBoxItems": ["Výkup", "Vývoz"],
+    "paymentTypeCheckboxText": "Filtrovat dle platby:",
+    "paymentTypeComboBoxItems": ["Hotovost", "Převod na účet"],
+    "isInvoicedCheckboxText": "Faktura:",
+    "isInvoicedComboBoxItems": ["Ano", "Ne"],
+    "transactionPriceCheckboxText": "Filtrovat dle ceny:",
+    "transactionPriceOperatorItems": ["Menší než", "Rovná se", "Větší než"],
+    "notesCheckboxText": "Filtrovat dle poznámek:",
+    "notesEditPlaceholderText": "Zadej hledaný text...",
+    "priceSuffix": "Kč",
+    "resetButtonText": "Smazat filtry",
+    "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
   }
 }
