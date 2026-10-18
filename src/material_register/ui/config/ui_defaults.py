@@ -529,4 +529,13 @@ DEFAULT_TEXTS = {
         "createFilterButtonTooltipText": "Open advanced search options",
     },
     "SearchTransactionsView": {"showTransactionDocumentActionText": "View document"},
+    "AdvancedSearchDialog": {
+        "titleText": "Advanced Search",
+        "transacationsTabTitleText": "Transactions",
+        "customersTabTitleText": "Customer",
+        "searchButtonText": "Search",
+        "searchButtonTooltipText": "Search transactions using the specified criteria",
+        "cancelButtonText": "Cancel",
+        "cancelButtonTooltipText": "Close the dialog",
+    },
 }

@@ -542,5 +542,14 @@
   },
   "SearchTransactionsView": {
     "showTransactionDocumentActionText": "Zobrazit doklad"
+  },
+  "AdvancedSearchDialog": {
+    "titleText": "Pokročilý filtr",
+    "transacationsTabTitleText": "Transakce",
+    "customersTabTitleText": "Zákazník",
+    "searchButtonText": "Vyhledat",
+    "searchButtonTooltipText": "Vyhledá transakce dle zadaných parametrů",
+    "cancelButtonText": "Zrušit",
+    "cancelButtonTooltipText": "Zavře dialog"
   }
 }

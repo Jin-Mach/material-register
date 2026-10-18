@@ -4,6 +4,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
+from material_register.controllers.advanced_search_controller import (
+    AdvancedSearchController,
+)
 from material_register.controllers.export_controllers.pdf.search_document_controller import (
     SearchDocumentController,
 )
@@ -44,6 +47,7 @@ class SearchWidget(QWidget):
         super().__init__()
         self.stacked_widget = stacked_widget
         self.search_controller = SearchController(self)
+        self.advanced_search_controller = AdvancedSearchController(self)
         self.search_transactions_model = SearchTransactionsModel()
         self.search_document_controller = SearchDocumentController(self)
         self.setLayout(self._create_ui())

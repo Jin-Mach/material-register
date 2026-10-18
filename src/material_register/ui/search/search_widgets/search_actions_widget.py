@@ -84,6 +84,9 @@ class SearchActionsWidget(QWidget):
         self.search_line_edit.returnPressed.connect(self._start_basic_filter)
         self.search_button.clicked.connect(self._start_basic_filter)
         self.reset_filter_button.clicked.connect(self._reset_filter)
+        self.create_filter_button.clicked.connect(
+            self.search_widget.advanced_search_controller.start_advanced_filter
+        )
 
     def _start_basic_filter(self) -> None:
         period_key = self._get_filter_key()

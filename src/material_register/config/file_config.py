@@ -486,6 +486,13 @@ UI_KEYS = [
     ("SearchActionsWidget", "createFilterButtonText"),
     ("SearchActionsWidget", "createFilterButtonTooltipText"),
     ("SearchTransactionsView", "showTransactionDocumentActionText"),
+    ("AdvancedSearchDialog", "titleText"),
+    ("AdvancedSearchDialog", "transacationsTabTitleText"),
+    ("AdvancedSearchDialog", "customersTabTitleText"),
+    ("AdvancedSearchDialog", "searchButtonText"),
+    ("AdvancedSearchDialog", "searchButtonTooltipText"),
+    ("AdvancedSearchDialog", "cancelButtonText"),
+    ("AdvancedSearchDialog", "cancelButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [
