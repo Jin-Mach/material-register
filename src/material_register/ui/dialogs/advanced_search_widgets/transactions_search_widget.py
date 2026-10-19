@@ -16,24 +16,42 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.db.config.advanced_search_queries_constants import (
+    ADVANCED_SEARCH_COLUMNS,
+    HAVING_CLAUSE,
+    WHERE_CLAUSE,
+)
+from material_register.domain.adavanced_search_dataclass import (
+    AdvancedSearchDataclass,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
+    PAYMENT_CASH,
+    PAYMENT_TRANSFER,
     SEARCH_TRANSACTION_MAX_PRICE_VALUE,
     SEARCH_TRANSACTION_MIN_PRICE_VALUE,
+    SEARCH_TRANSACTION_NOTES_LENGTH,
+    TRANSFER_IN,
+    TRANSFER_OUT,
     UI_MARGINS_5,
-    UI_SPACING, SEARCH_TRANSACTION_NOTES_LENGTH,
+    UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
+from material_register.utils.formatting_utils import format_date_to_utc
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
 
 
 class TransactionsSearchWidget(QWidget):
+    COLUMN_ROLE = 1
+    OPERATOR_ROLE = 2
+    VALUE_ROLE = 3
+
     def __init__(self, advanced_search_dialog: "AdvancedSearchDialog") -> None:
         super().__init__(advanced_search_dialog)
         self.setLayout(self._create_ui())
@@ -136,6 +154,8 @@ class TransactionsSearchWidget(QWidget):
         self._setup_comboboxes()
         self._setup_date_edits()
         self._setup_notes_edit()
+        self._setup_property()
+        self._setup_user_role()
         self._setup_default_states()
 
     def _setup_texts(self) -> None:
@@ -296,6 +316,42 @@ class TransactionsSearchWidget(QWidget):
     def _setup_notes_edit(self) -> None:
         self.notes_edit.setMaxLength(SEARCH_TRANSACTION_NOTES_LENGTH)
 
+    def _setup_property(self) -> None:
+        self.transaction_number_spinbox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_id"]
+        )
+        self.transaction_number_spinbox.setProperty("query", "= ?")
+        self.notes_edit.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_notes"]
+        )
+        self.notes_edit.setProperty("query", "LIKE ?")
+        self.transaction_type_combobox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_type"]
+        )
+        self.transaction_type_combobox.setProperty("query", "= ?")
+        self.payment_type_combobox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_payment_type"]
+        )
+        self.payment_type_combobox.setProperty("query", "= ?")
+        self.is_invoiced_combobox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_is_invoiced"]
+        )
+        self.is_invoiced_combobox.setProperty("query", "= ?")
+        self.transaction_price_spinbox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["total"]
+        )
+
+    def _setup_user_role(self) -> None:
+        user_role_map = {
+            self.transaction_type_combobox: [TRANSFER_IN, TRANSFER_OUT],
+            self.payment_type_combobox: [PAYMENT_CASH, PAYMENT_TRANSFER],
+            self.is_invoiced_combobox: [1, 0],
+            self.transaction_price_operator: ["< ?", "= ?", "> ?"],
+        }
+        for widget, user_roles in user_role_map.items():
+            for index, value in enumerate(user_roles):
+                widget.setItemData(index, value, Qt.ItemDataRole.UserRole)
+
     def _update_to_date_minimum(self, date: QDate) -> None:
         self.to_date_edit.setMinimumDate(date)
 
@@ -320,3 +376,90 @@ class TransactionsSearchWidget(QWidget):
             self.notes_edit.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             self.notes_edit.setStyleSheet("")
+
+    def _get_property_filters(self) -> list[AdvancedSearchDataclass]:
+        filters_map = {
+            self.transaction_number_checkbox: self.transaction_number_spinbox,
+            self.notes_checkbox: self.notes_edit,
+        }
+        property_filters = []
+        for state, widget in filters_map.items():
+            if state.isChecked():
+                if isinstance(widget, QSpinBox):
+                    property_filters.append(
+                        AdvancedSearchDataclass(
+                            clause=WHERE_CLAUSE,
+                            column_name=widget.property("column"),
+                            query=widget.property("query"),
+                            value=widget.value(),
+                        )
+                    )
+                if isinstance(widget, QLineEdit):
+                    property_filters.append(
+                        AdvancedSearchDataclass(
+                            clause=WHERE_CLAUSE,
+                            column_name=widget.property("column"),
+                            query=widget.property("query"),
+                            value=f"%{widget.text().strip()}%",
+                        )
+                    )
+        return property_filters
+
+    def _get_date_filters(self) -> list[AdvancedSearchDataclass]:
+        date_filters = []
+        from_date = format_date_to_utc(self.from_date_edit.date())
+        to_date = format_date_to_utc(self.to_date_edit.date(), end_of_day=True)
+        if self.created_at_checkbox.isChecked():
+            date_filters.append(
+                AdvancedSearchDataclass(
+                    clause=WHERE_CLAUSE,
+                    column_name=ADVANCED_SEARCH_COLUMNS["transaction_created_at"],
+                    query="BETWEEN ? AND ?",
+                    value=(from_date, to_date),
+                )
+            )
+        return date_filters
+
+    def _get_user_role_filters(self) -> list[AdvancedSearchDataclass]:
+        user_role_map = {
+            self.transaction_type_checkbox: self.transaction_type_combobox,
+            self.payment_type_checkbox: self.payment_type_combobox,
+            self.is_invoiced_checkbox: self.is_invoiced_combobox,
+            self.transaction_price_checkbox: self.transaction_price_spinbox,
+        }
+        user_role_filters = []
+        for state, widget in user_role_map.items():
+            if state.isChecked():
+                if isinstance(widget, QComboBox):
+                    user_role_filters.append(
+                        AdvancedSearchDataclass(
+                            clause=WHERE_CLAUSE,
+                            column_name=widget.property("column"),
+                            query=widget.property("query"),
+                            value=widget.currentData(Qt.ItemDataRole.UserRole),
+                        )
+                    )
+                if isinstance(widget, QDoubleSpinBox):
+                    user_role_filters.append(
+                        AdvancedSearchDataclass(
+                            clause=HAVING_CLAUSE,
+                            column_name=widget.property("column"),
+                            query=self.transaction_price_operator.currentData(
+                                Qt.ItemDataRole.UserRole
+                            ),
+                            value=widget.value(),
+                        )
+                    )
+        return user_role_filters
+
+    def get_filters_data(self) -> list[AdvancedSearchDataclass]:
+        filters_data = []
+        filters = [
+            self._get_property_filters(),
+            self._get_date_filters(),
+            self._get_user_role_filters(),
+        ]
+        for section_filters in filters:
+            if section_filters:
+                filters_data.extend(section_filters)
+        return filters_data

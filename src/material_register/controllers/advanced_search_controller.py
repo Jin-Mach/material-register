@@ -17,4 +17,8 @@ class AdvancedSearchController(QObject):
     def start_advanced_filter(self) -> None:
         dialog = AdvancedSearchDialog(self.search_widget)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            print("OK")
+            filters = dialog.get_advanced_filters()
+            if not filters:
+                print("No filters")
+                return
+            print("filters:", filters)
