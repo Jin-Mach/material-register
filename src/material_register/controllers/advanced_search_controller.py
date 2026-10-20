@@ -1,14 +1,19 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QObject, QThread, QTimer, QModelIndex
+from PySide6.QtCore import QModelIndex, QObject, QThread, QTimer
 from PySide6.QtWidgets import QDialog, QWidget
 
+from material_register.db.queries.transaction_items_queries import (
+    TransactionItemsQueries,
+)
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.domain.transaction_dataclass import Transaction
+from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
-from material_register.ui.config.ui_constants import LOGGER_DB, LOG_LEVEL_CRITICAL
+from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.workers.advanced_search_worker import AdvancedSearchWorker
 
 if TYPE_CHECKING:
@@ -32,7 +37,9 @@ class AdvancedSearchController(QObject):
             where, having, params = "", "", []
             self._start_worker(where, having, params)
 
-    def _start_worker(self, where: str, having: str, params: list[str | int | float]) ->None:
+    def _start_worker(
+        self, where: str, having: str, params: list[str | int | float]
+    ) -> None:
         self.search_widget.search_actions_widget.set_search_buttons_state(True)
         self.thread = QThread()
         self.worker = AdvancedSearchWorker(where, having, params)
@@ -72,13 +79,13 @@ class AdvancedSearchController(QObject):
                 error, f"{self.__class__.__name__}._search_error", self.search_widget
             )
             return
-        #if results is None:
-            #AdvancedSearchController._handle_search_error(
-                #"SearchResultsDataclass is None",
-                #f"{self.__class__.__name__}._search_error",
-                #self.search_widget,
-            #)
-            #return
+        # if results is None:
+        # AdvancedSearchController._handle_search_error(
+        # "SearchResultsDataclass is None",
+        # f"{self.__class__.__name__}._search_error",
+        # self.search_widget,
+        # )
+        # return
         print("results:", results)
         return
         if len(results.transactions) == 0:
