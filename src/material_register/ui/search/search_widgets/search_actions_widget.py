@@ -98,6 +98,11 @@ class SearchActionsWidget(QWidget):
         self.base_filter_combobox.setCurrentIndex(0)
         self.search_line_edit.clear()
 
+    def set_search_buttons_state(self, disabled: bool) -> None:
+        self.search_button.setDisabled(disabled)
+        self.reset_filter_button.setDisabled(disabled)
+        self.create_filter_button.setDisabled(disabled)
+
     def _get_filter_key(self) -> str | None:
         filter_map = {
             0: None,

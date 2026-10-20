@@ -41,6 +41,7 @@ class SearchController(QObject):
         self._start_worker(where, params, init)
 
     def _start_worker(self, where: str, params: list[str], init: bool = False) -> None:
+        self.search_widget.search_actions_widget.set_search_buttons_state(True)
         self.thread = QThread()
         self.worker = SearchWorker(where, params, init)
         self.worker.moveToThread(self.thread)
@@ -74,6 +75,7 @@ class SearchController(QObject):
         init: bool = False,
     ) -> None:
         self._reset_variables()
+        self.search_widget.search_actions_widget.set_search_buttons_state(False)
         if error is not None:
             SearchController._handle_search_error(
                 error, f"{self.__class__.__name__}._search_error", self.search_widget
