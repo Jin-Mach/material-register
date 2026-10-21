@@ -210,6 +210,11 @@ class TransactionsSearchWidget(QWidget):
             )
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+        self.transaction_type_checkbox.stateChanged.connect(self._update_transaction_type_state)
+        self.transaction_type_combobox.currentIndexChanged.connect(
+            self._update_transaction_type_state
+        )
+        self.transaction_price_checkbox.stateChanged.connect(self._update_transaction_type_state)
         self.payment_type_checkbox.stateChanged.connect(self._update_invoiced_state)
         self.payment_type_combobox.currentIndexChanged.connect(
             self._update_invoiced_state
@@ -368,6 +373,21 @@ class TransactionsSearchWidget(QWidget):
         self.is_invoiced_checkbox.setDisabled(cash_selected)
         self.is_invoiced_combobox.setDisabled(
             cash_selected or not self.is_invoiced_checkbox.isChecked()
+        )
+
+    def _update_transaction_type_state(self) -> None:
+        transfer_selected = (
+            self.transaction_type_checkbox.isChecked()
+            and self.transaction_type_combobox.currentIndex() == 1
+        )
+        if transfer_selected:
+            self.transaction_price_checkbox.setChecked(False)
+        self.transaction_price_checkbox.setDisabled(transfer_selected)
+        self.transaction_price_operator.setDisabled(
+            transfer_selected or not self.transaction_price_checkbox.isChecked()
+        )
+        self.transaction_price_spinbox.setDisabled(
+            transfer_selected or not self.transaction_price_checkbox.isChecked()
         )
 
     def _set_notes_style(self) -> None:

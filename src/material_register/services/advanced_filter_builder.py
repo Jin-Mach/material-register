@@ -4,6 +4,7 @@ from material_register.db.config.advanced_search_queries_constants import (
     WHERE_CLAUSE,
 )
 from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
+from material_register.ui.config.ui_constants import TRANSFER_IN
 
 
 class AdvancedFilterBuilder:
@@ -61,7 +62,15 @@ class AdvancedFilterBuilder:
         having = []
         params = []
         for search_filter in filters:
-            query = f"{search_filter.column_name} {search_filter.query}"
-            having.append(query)
-            params.append(search_filter.value)
+            if search_filter.column_name == ADVANCED_SEARCH_COLUMNS["total"]:
+                trans_query = (
+                    f"{ADVANCED_SEARCH_COLUMNS['transaction_type']} = '{TRANSFER_IN}'"
+                )
+                query = f"{trans_query} AND {search_filter.column_name} {search_filter.query}"
+                having.append(query)
+                params.append(search_filter.value)
+            else:
+                query = f"{search_filter.column_name} {search_filter.query}"
+                having.append(query)
+                params.append(search_filter.value)
         return HAVING_CLAUSE + " " + " AND ".join(having), params

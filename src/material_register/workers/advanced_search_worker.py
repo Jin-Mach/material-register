@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtSql import QSqlDatabase
 
+from material_register.db.queries.advanced_search_queries import AdvancedSearchQueries
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
@@ -19,9 +20,6 @@ class AdvancedSearchWorker(QObject):
         self.having = having
         self.params = params
         self.db_connection = None
-        print("where:", self.where)
-        print("having:", self.having)
-        print("params:", self.params)
 
     @Slot()
     def run(self) -> None:
@@ -33,6 +31,13 @@ class AdvancedSearchWorker(QObject):
             if not ok:
                 self.error.emit(error)
                 return
+            ok, transactions = AdvancedSearchQueries.load_transactions(
+                self.db_connection, self.where, self.having, self.params
+            )
+            if not ok:
+                self.error.emit("Transactions advanced search query failed")
+                return
+            print("transactions:", transactions)
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_ERROR)
             self.error.emit(f"Advanced search failed: {e}")

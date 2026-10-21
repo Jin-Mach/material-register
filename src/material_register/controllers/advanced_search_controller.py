@@ -9,6 +9,7 @@ from material_register.db.queries.transaction_items_queries import (
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.init.db_init import DbInit
+from material_register.services.advanced_filter_builder import AdvancedFilterBuilder
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
@@ -34,7 +35,9 @@ class AdvancedSearchController(QObject):
             if not filters:
                 return
             print("filters:", filters)
-            where, having, params = "", "", []
+            where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+                filters
+            )
             self._start_worker(where, having, params)
 
     def _start_worker(
@@ -74,20 +77,19 @@ class AdvancedSearchController(QObject):
     ) -> None:
         self._reset_variables()
         self.search_widget.search_actions_widget.set_search_buttons_state(False)
+        return
         if error is not None:
             AdvancedSearchController._handle_search_error(
                 error, f"{self.__class__.__name__}._search_error", self.search_widget
             )
             return
-        # if results is None:
-        # AdvancedSearchController._handle_search_error(
-        # "SearchResultsDataclass is None",
-        # f"{self.__class__.__name__}._search_error",
-        # self.search_widget,
-        # )
-        # return
-        print("results:", results)
-        return
+        if results is None:
+            AdvancedSearchController._handle_search_error(
+                "SearchResultsDataclass is None",
+                f"{self.__class__.__name__}._search_error",
+                self.search_widget,
+            )
+            return
         if len(results.transactions) == 0:
             self.search_widget.search_actions_widget.search_line_edit.selectAll()
             self.search_widget.search_actions_widget.search_line_edit.setFocus()

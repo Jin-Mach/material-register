@@ -83,7 +83,7 @@ def test_create_where_query_with_date_range() -> None:
     assert params == ["2026-10-01 22:00:00", "2026-10-20 21:59:59"]
 
 
-def test_create_having_query_with_single_filter() -> None:
+def test_create_having_query_with_total_filter() -> None:
     filters = [
         AdvancedSearchDataclass(
             clause=HAVING_CLAUSE,
@@ -94,5 +94,5 @@ def test_create_having_query_with_single_filter() -> None:
     ]
     where, having, params = AdvancedFilterBuilder.create_advanced_filter(filters)
     assert where == ""
-    assert having == "HAVING total < ?"
+    assert having == "HAVING trans.type = 'IN' AND total < ?"
     assert params == [555.0]
