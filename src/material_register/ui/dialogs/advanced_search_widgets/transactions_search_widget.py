@@ -210,11 +210,15 @@ class TransactionsSearchWidget(QWidget):
             )
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
-        self.transaction_type_checkbox.stateChanged.connect(self._update_transaction_type_state)
+        self.transaction_type_checkbox.stateChanged.connect(
+            self._update_transaction_type_state
+        )
         self.transaction_type_combobox.currentIndexChanged.connect(
             self._update_transaction_type_state
         )
-        self.transaction_price_checkbox.stateChanged.connect(self._update_transaction_type_state)
+        self.transaction_price_checkbox.stateChanged.connect(
+            self._update_transaction_type_state
+        )
         self.payment_type_checkbox.stateChanged.connect(self._update_invoiced_state)
         self.payment_type_combobox.currentIndexChanged.connect(
             self._update_invoiced_state

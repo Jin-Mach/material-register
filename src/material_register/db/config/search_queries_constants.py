@@ -43,8 +43,6 @@ SEARCH_QUERY_END = """
             ORDER BY trans.created_at DESC, trans.id DESC;
 """
 
-SEARCH_COUNT_QUERY = "SELECT COUNT(*) FROM transactions"
-
 SEARCH_TRANSACTIONS_AMOUNT_QUERY_START = """
             SELECT
                 

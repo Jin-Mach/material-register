@@ -3,7 +3,6 @@ from PySide6.QtSql import QSqlDatabase, QSqlQuery
 from material_register.db.config.search_queries_constants import (
     MATERIAL_QUERY_END,
     MATERIAL_QUERY_START,
-    SEARCH_COUNT_QUERY,
     SEARCH_QUERY_END,
     SEARCH_QUERY_START,
     SEARCH_TRANSACTIONS_AMOUNT_QUERY_START,
@@ -49,19 +48,6 @@ class SearchQueries:
                 )
             )
         return True, results
-
-    @staticmethod
-    def get_transactions_count(db_connection: QSqlDatabase) -> tuple[bool, int]:
-        query = QSqlQuery(db_connection)
-        if not query.exec(SEARCH_COUNT_QUERY):
-            ErrorHandler.handle_error(
-                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
-            )
-            return False, 0
-        transactions_count = 0
-        if query.next():
-            transactions_count = query.value(0)
-        return True, transactions_count
 
     @staticmethod
     def get_total_amount(

@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtSql import QSqlDatabase
 
+from material_register.db.queries.basic_database_queries import BasicDatabaseQueries
 from material_register.db.queries.search_queries import SearchQueries
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.init.db_init import DbInit
@@ -35,7 +36,7 @@ class SearchWorker(QObject):
             if not ok:
                 self.error.emit("Transactions search query failed")
                 return
-            ok, count = SearchQueries.get_transactions_count(self.db_connection)
+            ok, count = BasicDatabaseQueries.get_transactions_count(self.db_connection)
             if not ok:
                 self.error.emit("Transactions count query failed")
                 return
