@@ -380,18 +380,18 @@ class TransactionsSearchWidget(QWidget):
         )
 
     def _update_transaction_type_state(self) -> None:
-        transfer_selected = (
+        out_selected = (
             self.transaction_type_checkbox.isChecked()
             and self.transaction_type_combobox.currentIndex() == 1
         )
-        if transfer_selected:
+        if out_selected:
             self.transaction_price_checkbox.setChecked(False)
-        self.transaction_price_checkbox.setDisabled(transfer_selected)
+        self.transaction_price_checkbox.setDisabled(out_selected)
         self.transaction_price_operator.setDisabled(
-            transfer_selected or not self.transaction_price_checkbox.isChecked()
+            out_selected or not self.transaction_price_checkbox.isChecked()
         )
         self.transaction_price_spinbox.setDisabled(
-            transfer_selected or not self.transaction_price_checkbox.isChecked()
+            out_selected or not self.transaction_price_checkbox.isChecked()
         )
 
     def _set_notes_style(self) -> None:

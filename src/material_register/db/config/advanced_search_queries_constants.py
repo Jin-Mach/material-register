@@ -70,11 +70,27 @@ ADVANCED_SEARCH_TRANSACTIONS_AMOUNT_QUERY_START = """
 
             FROM transactions trans
 
-            LEFT JOIN transaction_items items ON items.transaction_id = trans.id
             LEFT JOIN customers cust ON cust.id = trans.customer_id
+            LEFT JOIN transaction_items items ON items.transaction_id = trans.id
+            LEFT JOIN commodities con ON con.id = items.commodity_id
+            LEFT JOIN categories cat ON cat.id = con.category_id
 
             WHERE trans.id IN (
                 SELECT trans.id
-
+            
                 FROM transactions trans
+            
+                LEFT JOIN transaction_items items
+                    ON items.transaction_id = trans.id
+"""
+
+ADVANCED_SEARCH_AMOUNT_EXPRESSION = """
+    ROUND(
+        SUM(
+            CASE
+                WHEN trans.type = 'IN'
+                    THEN items.unit_count * items.price_per_unit
+                ELSE items.unit_count
+            END
+        ), 1)
 """

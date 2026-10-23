@@ -4,6 +4,7 @@ from material_register.db.config.advanced_search_queries_constants import (
     ADVANCED_SEARCH_QUERY_GROUP_BY,
     ADVANCED_SEARCH_QUERY_ORDER_BY,
     ADVANCED_SEARCH_QUERY_START,
+    ADVANCED_SEARCH_TRANSACTIONS_AMOUNT_QUERY_START,
 )
 from material_register.domain.search_dataclass import SearchDataclass
 from material_register.services.error_handler import ErrorHandler
@@ -49,6 +50,28 @@ class AdvancedSearchQueries:
         return True, results
 
     @staticmethod
+    def get_total_amount(
+        db_connection: QSqlDatabase,
+        where: str,
+        having: str,
+        params: list[str | int | float],
+    ) -> tuple[bool, float]:
+        query = QSqlQuery(db_connection)
+        final_query = AdvancedSearchQueries._get_final_amount_query(where, having)
+        query.prepare(final_query)
+        for param in params:
+            query.addBindValue(param)
+        if not query.exec():
+            ErrorHandler.handle_error(
+                query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
+            )
+            return False, 0.0
+        total_amount = 0.0
+        if query.next():
+            total_amount = query.value(0) or 0.0
+        return True, total_amount
+
+    @staticmethod
     def _get_final_search_query(where: str, having: str) -> str:
         queries = [ADVANCED_SEARCH_QUERY_START]
         if where:
@@ -57,4 +80,14 @@ class AdvancedSearchQueries:
         if having:
             queries.append(having)
         queries.append(ADVANCED_SEARCH_QUERY_ORDER_BY)
+        return " ".join(queries)
+
+    @staticmethod
+    def _get_final_amount_query(where: str, having: str) -> str:
+        queries = [ADVANCED_SEARCH_TRANSACTIONS_AMOUNT_QUERY_START]
+        if where:
+            queries.append(where)
+        if having:
+            queries.append(having)
+        queries.append(")")
         return " ".join(queries)

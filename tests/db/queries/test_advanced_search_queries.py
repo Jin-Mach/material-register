@@ -3,6 +3,9 @@ import uuid
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
+from material_register.db.config.advanced_search_queries_constants import (
+    ADVANCED_SEARCH_AMOUNT_EXPRESSION,
+)
 from material_register.db.queries.advanced_search_queries import (
     AdvancedSearchQueries,
 )
@@ -20,8 +23,7 @@ def connection() -> QSqlDatabase:
 @pytest.fixture
 def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
-    (
-        query.exec("""
+    query.exec("""
         CREATE TABLE customers (
             id INTEGER PRIMARY KEY,
             company TEXT,
@@ -33,11 +35,9 @@ def schema(connection: QSqlDatabase) -> None:
             first_name_normalized TEXT,
             last_name_normalized TEXT,
             address_normalized TEXT
-            )
-        """),
-    )
-    (
-        query.exec("""
+        )
+    """)
+    query.exec("""
         CREATE TABLE transactions (
             id INTEGER PRIMARY KEY,
             type TEXT,
@@ -46,36 +46,31 @@ def schema(connection: QSqlDatabase) -> None:
             payment_type TEXT,
             is_invoiced INTEGER,
             notes TEXT
-            )
-        """),
-    )
-    (
-        query.exec("""
+        )
+    """)
+    query.exec("""
         CREATE TABLE transaction_items (
             id INTEGER PRIMARY KEY,
             transaction_id INTEGER,
             commodity_id INTEGER,
             unit_count REAL,
             price_per_unit REAL
-            )
-        """),
-    )
-    (
-        query.exec("""
+        )
+    """)
+    query.exec("""
         CREATE TABLE commodities (
             id INTEGER PRIMARY KEY,
             name TEXT,
             unit TEXT,
             category_id INTEGER
-            )
-        """),
-    )
+        )
+    """)
     query.exec("""
         CREATE TABLE categories (
             id INTEGER PRIMARY KEY,
             name TEXT
-            )
-        """)
+        )
+    """)
 
 
 @pytest.fixture
@@ -205,3 +200,98 @@ def test_load_transactions_query_error(
     success, results = AdvancedSearchQueries.load_transactions(connection, "", "", [])
     assert success is False
     assert results == []
+
+
+def test_get_total_amount(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    success, total_amount = AdvancedSearchQueries.get_total_amount(
+        connection, "", "", []
+    )
+    assert success is True
+    assert total_amount == 350.0
+
+
+def test_get_total_amount_where_filter(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    where = "WHERE trans.id = ?"
+    params = [1]
+    success, total_amount = AdvancedSearchQueries.get_total_amount(
+        connection, where, "", params
+    )
+    assert success is True
+    assert total_amount == 200.0
+
+
+def test_get_total_amount_having_filter(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    having = "GROUP BY trans.id HAVING " + ADVANCED_SEARCH_AMOUNT_EXPRESSION + " > ?"
+    params = [175.0]
+    success, total_amount = AdvancedSearchQueries.get_total_amount(
+        connection, "", having, params
+    )
+    assert success is True
+    assert total_amount == 200.0
+
+
+def test_get_total_amount_where_and_having_filters(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    where = "WHERE trans.type = ?"
+    having = "GROUP BY trans.id HAVING " + ADVANCED_SEARCH_AMOUNT_EXPRESSION + " > ?"
+    params = ["IN", 175.0]
+    success, total_amount = AdvancedSearchQueries.get_total_amount(
+        connection, where, having, params
+    )
+    assert success is True
+    assert total_amount == 200.0
+
+
+def test_get_total_amount_multiple_items(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transaction_items (
+            id, transaction_id, commodity_id, unit_count, price_per_unit
+        )
+        VALUES
+            (4, 1, 1, 2, 15),
+            (5, 1, 1, 3, 10),
+            (6, 1, 1, 4, 5)
+    """)
+    success, total_amount = AdvancedSearchQueries.get_total_amount(
+        connection, "", "", []
+    )
+    assert success is True
+    assert total_amount == 430.0
+
+
+def test_get_total_amount_no_matching_transactions(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    where = "WHERE trans.type = ?"
+    params = ["UNKNOWN"]
+    success, total_amount = AdvancedSearchQueries.get_total_amount(
+        connection, where, "", params
+    )
+    assert success is True
+    assert total_amount == 0.0
+
+
+def test_get_total_amount_query_error(
+    connection: QSqlDatabase,
+) -> None:
+    success, total_amount = AdvancedSearchQueries.get_total_amount(
+        connection, "", "", []
+    )
+    assert success is False
+    assert total_amount == 0.0

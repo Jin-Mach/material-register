@@ -6,10 +6,10 @@ from PySide6.QtWidgets import QDialog, QWidget
 from material_register.db.queries.transaction_items_queries import (
     TransactionItemsQueries,
 )
+from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.init.db_init import DbInit
-from material_register.services.advanced_filter_builder import AdvancedFilterBuilder
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
@@ -35,17 +35,12 @@ class AdvancedSearchController(QObject):
             if not filters:
                 return
             print("filters:", filters)
-            where, having, params = AdvancedFilterBuilder.create_advanced_filter(
-                filters
-            )
-            self._start_worker(where, having, params)
+            self._start_worker(filters)
 
-    def _start_worker(
-        self, where: str, having: str, params: list[str | int | float]
-    ) -> None:
+    def _start_worker(self, filters: list[AdvancedSearchDataclass]) -> None:
         self.search_widget.search_actions_widget.set_search_buttons_state(True)
         self.thread = QThread()
-        self.worker = AdvancedSearchWorker(where, having, params)
+        self.worker = AdvancedSearchWorker(filters)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._search_error)
