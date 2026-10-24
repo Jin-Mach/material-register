@@ -14,6 +14,7 @@ class AdvancedFilterBuilder:
     def create_advanced_filter(
         filters: list[AdvancedSearchDataclass],
         amount_having: bool = False,
+        material_having: bool = False,
     ) -> tuple[str, str, list[str | int | float]]:
         params = []
         where_filters = []
@@ -34,6 +35,10 @@ class AdvancedFilterBuilder:
             if amount_having:
                 having, having_params = (
                     AdvancedFilterBuilder._create_amount_having_query(having_filters)
+                )
+            elif material_having:
+                having, having_params = (
+                    AdvancedFilterBuilder._create_material_having_query(having_filters)
                 )
             else:
                 having, having_params = AdvancedFilterBuilder._create_having_query(
@@ -92,6 +97,32 @@ class AdvancedFilterBuilder:
         for search_filter in filters:
             if search_filter.column_name == ADVANCED_SEARCH_COLUMNS["total"]:
                 query = ADVANCED_SEARCH_AMOUNT_EXPRESSION + " " + search_filter.query
+            else:
+                query = f"{search_filter.column_name} {search_filter.query}"
+            having.append(query)
+            params.append(search_filter.value)
+        return (
+            ADVANCED_SEARCH_QUERY_GROUP_BY
+            + " "
+            + HAVING_CLAUSE
+            + " "
+            + " AND ".join(having),
+            params,
+        )
+
+    @staticmethod
+    def _create_material_having_query(
+        filters: list[AdvancedSearchDataclass],
+    ) -> tuple[str, list[str | int | float]]:
+        having = []
+        params = []
+        for search_filter in filters:
+            if search_filter.column_name == ADVANCED_SEARCH_COLUMNS["total"]:
+                query = (
+                    f"{ADVANCED_SEARCH_COLUMNS['transaction_type']} = '{TRANSFER_IN}'"
+                    f" AND {ADVANCED_SEARCH_AMOUNT_EXPRESSION} "
+                    f"{search_filter.query}"
+                )
             else:
                 query = f"{search_filter.column_name} {search_filter.query}"
             having.append(query)

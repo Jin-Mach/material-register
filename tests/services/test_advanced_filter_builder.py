@@ -167,3 +167,77 @@ def test_create_amount_having_query_with_where_and_having_filters() -> None:
     assert having.startswith("GROUP BY trans.id HAVING")
     assert ADVANCED_SEARCH_AMOUNT_EXPRESSION.strip() in having
     assert params == [TRANSFER_IN, 100.0]
+
+
+def test_create_material_having_query_with_total_filter() -> None:
+    filters = [
+        AdvancedSearchDataclass(
+            clause=HAVING_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["total"],
+            query="> ?",
+            value=100.0,
+        )
+    ]
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        filters,
+        material_having=True,
+    )
+    assert where == ""
+    assert having.startswith("GROUP BY trans.id HAVING")
+    assert "trans.type = 'IN'" in having
+    assert ADVANCED_SEARCH_AMOUNT_EXPRESSION.strip() in having
+    assert "> ?" in having
+    assert params == [100.0]
+
+
+def test_create_material_having_query_with_multiple_filters() -> None:
+    filters = [
+        AdvancedSearchDataclass(
+            clause=HAVING_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["total"],
+            query="> ?",
+            value=100.0,
+        ),
+        AdvancedSearchDataclass(
+            clause=HAVING_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["transaction_id"],
+            query="< ?",
+            value=50,
+        ),
+    ]
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        filters,
+        material_having=True,
+    )
+    assert where == ""
+    assert having.startswith("GROUP BY trans.id HAVING")
+    assert "trans.type = 'IN'" in having
+    assert ADVANCED_SEARCH_AMOUNT_EXPRESSION.strip() in having
+    assert "AND trans.id < ?" in having
+    assert params == [100.0, 50]
+
+
+def test_create_material_having_query_with_where_and_having_filters() -> None:
+    filters = [
+        AdvancedSearchDataclass(
+            clause=WHERE_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["transaction_type"],
+            query="= ?",
+            value=TRANSFER_IN,
+        ),
+        AdvancedSearchDataclass(
+            clause=HAVING_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["total"],
+            query="> ?",
+            value=100.0,
+        ),
+    ]
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        filters,
+        material_having=True,
+    )
+    assert where == "WHERE trans.type = ?"
+    assert having.startswith("GROUP BY trans.id HAVING")
+    assert "trans.type = 'IN'" in having
+    assert ADVANCED_SEARCH_AMOUNT_EXPRESSION.strip() in having
+    assert params == [TRANSFER_IN, 100.0]

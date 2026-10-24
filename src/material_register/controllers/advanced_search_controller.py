@@ -72,7 +72,6 @@ class AdvancedSearchController(QObject):
     ) -> None:
         self._reset_variables()
         self.search_widget.search_actions_widget.set_search_buttons_state(False)
-        return
         if error is not None:
             AdvancedSearchController._handle_search_error(
                 error, f"{self.__class__.__name__}._search_error", self.search_widget

@@ -57,16 +57,33 @@ class AdvancedSearchWorker(QObject):
             if not ok:
                 self.error.emit("Total amount query failed")
                 return
-            print("transactions:", transactions)
-            print("count:", count)
-            print("amount:", amount)
+            material_where, material_having, material_params = (
+                AdvancedFilterBuilder.create_advanced_filter(
+                    self.filters, material_having=True
+                )
+            )
+            ok, materials = AdvancedSearchQueries.load_material(
+                self.db_connection,
+                material_where,
+                material_having,
+                material_params,
+            )
+            if not ok:
+                self.error.emit("Material query failed")
+                return
+            results_dataclass = SearchResultsDataclass(
+                transactions=transactions,
+                transactions_count=count,
+                transactions_total_amount=amount,
+                materials=materials,
+            )
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_ERROR)
             self.error.emit(f"Advanced search failed: {e}")
         finally:
             self._clean_db_connection()
-        # if results_dataclass is not None:
-        self.finished.emit(results_dataclass)
+        if results_dataclass is not None:
+            self.finished.emit(results_dataclass)
 
     def _clean_db_connection(self) -> None:
         if self.db_connection is None:

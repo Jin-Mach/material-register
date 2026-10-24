@@ -5,10 +5,14 @@ from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from material_register.db.config.advanced_search_queries_constants import (
     ADVANCED_SEARCH_AMOUNT_EXPRESSION,
+    ADVANCED_SEARCH_COLUMNS,
+    HAVING_CLAUSE,
 )
 from material_register.db.queries.advanced_search_queries import (
     AdvancedSearchQueries,
 )
+from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
+from material_register.services.advanced_filter_builder import AdvancedFilterBuilder
 
 
 @pytest.fixture
@@ -295,3 +299,189 @@ def test_get_total_amount_query_error(
     )
     assert success is False
     assert total_amount == 0.0
+
+
+def test_load_material(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    success, results = AdvancedSearchQueries.load_material(connection, "", "", [])
+    assert success is True
+    assert len(results) == 1
+    assert results[0].category_name == "Metals"
+    assert results[0].commodity_name == "Steel"
+    assert results[0].commodity_unit == "kg"
+    assert results[0].total == 5.0
+
+
+def test_load_material_where_filter(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    where = "WHERE trans.type = ?"
+    params = ["IN"]
+    success, results = AdvancedSearchQueries.load_material(
+        connection, where, "", params
+    )
+    assert success is True
+    assert len(results) == 1
+    assert results[0].category_name == "Metals"
+    assert results[0].commodity_name == "Steel"
+    assert results[0].commodity_unit == "kg"
+    assert results[0].total == 15.0
+
+
+def test_load_material_having_amount_filter(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    having = (
+        "GROUP BY trans.id HAVING trans.type = 'IN' AND "
+        + ADVANCED_SEARCH_AMOUNT_EXPRESSION
+        + " > ?"
+    )
+    params = [100.0]
+    success, results = AdvancedSearchQueries.load_material(
+        connection, "", having, params
+    )
+    assert success is True
+    assert len(results) == 1
+    assert results[0].category_name == "Metals"
+    assert results[0].commodity_name == "Steel"
+    assert results[0].commodity_unit == "kg"
+    assert results[0].total == 15.0
+
+
+def test_load_material_where_and_having_amount_filters(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    where = "WHERE trans.type = ?"
+    having = (
+        "GROUP BY trans.id HAVING trans.type = 'IN' AND "
+        + ADVANCED_SEARCH_AMOUNT_EXPRESSION
+        + " > ?"
+    )
+    params = ["IN", 100.0]
+    success, results = AdvancedSearchQueries.load_material(
+        connection, where, having, params
+    )
+    assert success is True
+    assert len(results) == 1
+    assert results[0].category_name == "Metals"
+    assert results[0].commodity_name == "Steel"
+    assert results[0].commodity_unit == "kg"
+    assert results[0].total == 15.0
+
+
+def test_load_material_no_matching_transactions(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    where = "WHERE trans.type = ?"
+    params = ["UNKNOWN"]
+    success, results = AdvancedSearchQueries.load_material(
+        connection, where, "", params
+    )
+    assert success is True
+    assert results == []
+
+
+def test_load_material_query_error(
+    connection: QSqlDatabase,
+) -> None:
+    success, results = AdvancedSearchQueries.load_material(connection, "", "", [])
+    assert success is False
+    assert results == []
+
+
+def test_load_material_with_builder_amount_filter(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    filters = [
+        AdvancedSearchDataclass(
+            clause=HAVING_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["total"],
+            query="> ?",
+            value=175.0,
+        )
+    ]
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        filters,
+        material_having=True,
+    )
+    success, results = AdvancedSearchQueries.load_material(
+        connection,
+        where,
+        having,
+        params,
+    )
+    assert success is True
+    assert len(results) == 1
+    assert results[0].category_name == "Metals"
+    assert results[0].commodity_name == "Steel"
+    assert results[0].commodity_unit == "kg"
+    assert results[0].total == 10.0
+
+
+def test_load_material_out_filter(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    where = "WHERE trans.type = ?"
+    params = ["OUT"]
+    success, results = AdvancedSearchQueries.load_material(
+        connection, where, "", params
+    )
+    assert success is True
+    assert len(results) == 1
+    assert results[0].category_name == "Metals"
+    assert results[0].commodity_name == "Steel"
+    assert results[0].commodity_unit == "kg"
+    assert results[0].total == -10.0
+
+
+def test_load_material_with_builder_amount_filter_excludes_out_quantity(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transactions (
+            id, type, customer_id, created_at,
+            payment_type, is_invoiced, notes
+        )
+        VALUES (
+            4, 'OUT', 1, '2026-10-21 10:00:00',
+            NULL, 0, 'Large material issue'
+        )
+    """)
+    query.exec("""
+        INSERT INTO transaction_items (
+            id, transaction_id, commodity_id, unit_count, price_per_unit
+        )
+        VALUES (4, 4, 1, 150, 20)
+    """)
+    filters = [
+        AdvancedSearchDataclass(
+            clause=HAVING_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["total"],
+            query="> ?",
+            value=100.0,
+        )
+    ]
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        filters,
+        material_having=True,
+    )
+    success, results = AdvancedSearchQueries.load_material(
+        connection,
+        where,
+        having,
+        params,
+    )
+    assert success is True
+    assert len(results) == 1
+    assert results[0].commodity_name == "Steel"
+    assert results[0].total == 15.0

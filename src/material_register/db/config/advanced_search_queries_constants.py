@@ -94,3 +94,50 @@ ADVANCED_SEARCH_AMOUNT_EXPRESSION = """
             END
         ), 1)
 """
+
+ADVANCED_SEARCH_MATERIAL_QUERY_START = """
+            SELECT
+                categories.name AS category_name,
+                commodities.name AS commodity_name,
+                commodities.unit AS commodity_unit,
+
+                SUM(
+                    CASE
+                        WHEN trans.type = 'IN'
+                            THEN transaction_items.unit_count
+                        WHEN trans.type = 'OUT'
+                            THEN -transaction_items.unit_count
+                    END
+                ) AS total
+
+            FROM transaction_items
+
+            LEFT JOIN transactions AS trans
+                ON trans.id = transaction_items.transaction_id
+            LEFT JOIN customers
+                ON customers.id = trans.customer_id
+            LEFT JOIN commodities
+                ON commodities.id = transaction_items.commodity_id
+            LEFT JOIN categories
+                ON categories.id = commodities.category_id
+
+            WHERE trans.id IN (
+                SELECT trans.id
+                FROM transactions trans
+                LEFT JOIN transaction_items items
+                    ON items.transaction_id = trans.id
+"""
+
+ADVANCED_SEARCH_MATERIAL_QUERY_GROUP_BY = """
+            GROUP BY
+                commodities.id,
+                categories.name,
+                commodities.name,
+                commodities.unit
+"""
+
+ADVANCED_SEARCH_MATERIAL_QUERY_ORDER_BY = """
+            ORDER BY
+                categories.name ASC,
+                commodities.name ASC;
+"""
