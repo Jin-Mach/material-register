@@ -95,6 +95,9 @@ class SearchActionsWidget(QWidget):
 
     def _reset_filter(self) -> None:
         self.search_widget.search_controller.start_basic_filter(None, [])
+        self.reset_filters_widgets()
+
+    def reset_filters_widgets(self) -> None:
         self.base_filter_combobox.setCurrentIndex(0)
         self.search_line_edit.clear()
 

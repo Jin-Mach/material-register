@@ -89,6 +89,7 @@ class AdvancedSearchController(QObject):
             self.search_widget.search_actions_widget.search_line_edit.setFocus()
             MessageBoxes.show_error(self.search_widget, "NO_RESULTS", "WARNING")
             return
+        self.search_widget.search_actions_widget.reset_filters_widgets()
         self.search_widget.search_detail_widget.reset_data()
         self.search_widget.search_detail_widget.tab_widget.setCurrentIndex(0)
         self.search_widget.search_tab_widget.setCurrentIndex(0)
