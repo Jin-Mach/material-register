@@ -179,3 +179,8 @@ class SearchWidget(QWidget):
         self.price_count_value.setText(
             f"{format_number_to_locale(total_price)} {self.price_sufix}"
         )
+
+    def shut_down(self) -> None:
+        controllers = [self.search_controller, self.advanced_search_controller]
+        for controller in controllers:
+            controller.shut_down()

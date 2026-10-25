@@ -119,6 +119,7 @@ class MainWindow(QMainWindow):
         self.right_toolbar_widget.database_backup_widget.database_backup_controller.start_thread()
 
     def _before_close(self) -> None:
+        self.stacked_widget.search_widget.shut_down()
         ToolsSettingsController.save_tools(self.tools_width, self.right_toolbar_widget)
         SettingsProvider.save_settings()
 

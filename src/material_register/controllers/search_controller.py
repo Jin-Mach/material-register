@@ -162,6 +162,12 @@ class SearchController(QObject):
             transaction.transaction_type,
         )
 
+    def shut_down(self) -> None:
+        if self.thread is None:
+            return
+        self.thread.quit()
+        self.thread.wait()
+
     @staticmethod
     def _transaction_to_dict(transaction: Transaction) -> dict[str, str | int | bool]:
         return {
