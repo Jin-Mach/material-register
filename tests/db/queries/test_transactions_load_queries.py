@@ -183,12 +183,12 @@ def test_load_transaction_in_respects_local_day_boundary(
             ),
             (
                 3, 'IN', 1,
-                datetime('now', 'localtime', 'start of day', 'utc', '+1 day', '-1 second'),
+                datetime('now', 'localtime', 'start of day', '+1 day', 'utc', '-1 second'),
                 'TRANSFER', 0
             ),
             (
                 4, 'IN', 1,
-                datetime('now', 'localtime', 'start of day', 'utc', '+1 day'),
+                datetime('now', 'localtime', 'start of day', '+1 day', 'utc'),
                 'TRANSFER', 0
             )
     """)
@@ -235,12 +235,12 @@ def test_load_transaction_out_respects_local_day_boundary(
             ),
             (
                 3, 'OUT', 1,
-                datetime('now', 'localtime', 'start of day', 'utc', '+1 day', '-1 second'),
+                datetime('now', 'localtime', 'start of day', '+1 day', 'utc', '-1 second'),
                 NULL, 0
             ),
             (
                 4, 'OUT', 1,
-                datetime('now', 'localtime', 'start of day', 'utc', '+1 day'),
+                datetime('now', 'localtime', 'start of day', '+1 day', 'utc'),
                 NULL, 0
             )
     """)

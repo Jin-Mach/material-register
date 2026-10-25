@@ -15,6 +15,7 @@ from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_
 from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
+from material_register.ui.helpers.border_animation import BorderAnimation
 from material_register.workers.advanced_search_worker import AdvancedSearchWorker
 
 if TYPE_CHECKING:
@@ -27,6 +28,8 @@ class AdvancedSearchController(QObject):
         self.search_widget = search_widget
         self.worker = None
         self.thread = None
+        self.search_finished = True
+        self.border_animation = None
 
     def start_advanced_filter(self) -> None:
         dialog = AdvancedSearchDialog(self.search_widget)
@@ -34,11 +37,15 @@ class AdvancedSearchController(QObject):
             filters = dialog.get_advanced_filters()
             if not filters:
                 return
-            print("filters:", filters)
+            self.search_widget.search_actions_widget.set_search_buttons_state(True)
+            self.border_animation = BorderAnimation(
+                self.search_widget.transactions_group_box
+            )
+            self.border_animation.start_animation()
+            self.search_finished = False
             self._start_worker(filters)
 
     def _start_worker(self, filters: list[AdvancedSearchDataclass]) -> None:
-        self.search_widget.search_actions_widget.set_search_buttons_state(True)
         self.thread = QThread()
         self.worker = AdvancedSearchWorker(filters)
         self.worker.moveToThread(self.thread)
@@ -55,6 +62,23 @@ class AdvancedSearchController(QObject):
         self._clean_thread()
         QTimer.singleShot(100, lambda: self._finish_search(results=results))
 
+    def _check_finish(self) -> None:
+        if self.border_animation is None:
+            return
+        self.border_animation.search_finished = True
+        if self.border_animation.progress >= self.border_animation.width():
+            self._cleanup_border_animation()
+        else:
+            self.border_animation.finished.connect(self._cleanup_border_animation)
+
+    def _cleanup_border_animation(self) -> None:
+        if self.border_animation is None:
+            return
+        self.border_animation.stop_animation()
+        self.border_animation.deleteLater()
+        self.border_animation = None
+        self.search_widget.search_actions_widget.set_search_buttons_state(False)
+
     def _clean_thread(self) -> None:
         self.thread.quit()
         self.thread.wait()
@@ -64,14 +88,16 @@ class AdvancedSearchController(QObject):
     def _reset_variables(self) -> None:
         self.worker = None
         self.thread = None
+        self.search_finished = True
 
     def _finish_search(
         self,
         results: SearchResultsDataclass | None = None,
         error: str | None = None,
     ) -> None:
+        self.search_finished = True
+        self._check_finish()
         self._reset_variables()
-        self.search_widget.search_actions_widget.set_search_buttons_state(False)
         if error is not None:
             AdvancedSearchController._handle_search_error(
                 error, f"{self.__class__.__name__}._search_error", self.search_widget

@@ -86,7 +86,6 @@ class AdvancedSearchQueries:
         query.prepare(final_query)
         for param in params:
             query.addBindValue(param)
-        print("material query:", final_query)
         if not query.exec():
             ErrorHandler.handle_error(
                 query.lastError().text(), LOGGER_DB, LOG_LEVEL_CRITICAL
