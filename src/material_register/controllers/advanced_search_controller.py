@@ -32,6 +32,8 @@ class AdvancedSearchController(QObject):
         self.border_animation = None
 
     def start_advanced_filter(self) -> None:
+        if self.thread is not None or self.worker is not None:
+            return
         dialog = AdvancedSearchDialog(self.search_widget)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             filters = dialog.get_advanced_filters()

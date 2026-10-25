@@ -35,6 +35,8 @@ class SearchController(QObject):
     def start_basic_filter(
         self, period_key: str | None, value: str, init: bool = False
     ) -> None:
+        if self.thread is not None or self.worker is not None:
+            return
         where, params = FilterBuilder.create_basic_filter(period_key, value)
         if not init:
             self.search_widget.search_actions_widget.set_search_buttons_state(True)

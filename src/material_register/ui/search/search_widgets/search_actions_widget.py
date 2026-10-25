@@ -102,6 +102,7 @@ class SearchActionsWidget(QWidget):
         self.search_line_edit.clear()
 
     def set_search_buttons_state(self, disabled: bool) -> None:
+        self.search_line_edit.setDisabled(disabled)
         self.search_button.setDisabled(disabled)
         self.reset_filter_button.setDisabled(disabled)
         self.create_filter_button.setDisabled(disabled)
