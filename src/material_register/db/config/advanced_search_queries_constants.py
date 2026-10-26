@@ -101,13 +101,15 @@ ADVANCED_SEARCH_MATERIAL_QUERY_START = """
                 commodities.name AS commodity_name,
                 commodities.unit AS commodity_unit,
 
-                SUM(
-                    CASE
-                        WHEN trans.type = 'IN'
-                            THEN transaction_items.unit_count
-                        WHEN trans.type = 'OUT'
-                            THEN -transaction_items.unit_count
-                    END
+                ROUND(
+                    SUM(
+                        CASE
+                            WHEN trans.type = 'IN'
+                                THEN transaction_items.unit_count
+                            WHEN trans.type = 'OUT'
+                                THEN -transaction_items.unit_count
+                        END
+                    ), 1
                 ) AS total
 
             FROM transaction_items
