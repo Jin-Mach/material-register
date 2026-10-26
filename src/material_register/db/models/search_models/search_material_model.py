@@ -9,6 +9,7 @@ from material_register.db.config.model_constants import (
 )
 from material_register.domain.search_dataclass import MaterialDataclass
 from material_register.ui.config.styles_constants import INVENTORY_STOCK_STYLE
+from material_register.utils.formatting_utils import format_number_to_locale
 
 
 class SearchMaterialModel(QAbstractTableModel):
@@ -32,7 +33,7 @@ class SearchMaterialModel(QAbstractTableModel):
             if column == "commodity_unit":
                 return material.commodity_unit
             if column == "total":
-                return f"{material.total} {material.commodity_unit}"
+                return f"{format_number_to_locale(material.total)} {material.commodity_unit}"
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == "total":
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
