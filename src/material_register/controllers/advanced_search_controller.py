@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QDialog, QWidget
 from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.search_manager import SearchManager
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -23,26 +24,36 @@ class AdvancedSearchController(QObject):
         self.search_widget = search_widget
         self.worker = None
         self.thread = None
-        self.search_finished = True
+        self._is_thread_running = False
         self.border_animation = None
+        self._filters = None
+        self._last_filters = []
+        self._refresh = False
+        self._refresh_exists = False
 
-    def start_advanced_filter(self) -> None:
+    def start_advanced_filter(self, refresh: bool = False) -> None:
         if self.thread is not None or self.worker is not None:
+            if refresh:
+                self._refresh_exists = True
             return
-        dialog = AdvancedSearchDialog(self.search_widget)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            filters = dialog.get_advanced_filters()
-            if not filters:
-                return
-            self.search_widget.search_actions_widget.set_search_buttons_state(True)
-            self.border_animation = BorderAnimation(
-                self.search_widget.transactions_group_box
-            )
-            self.border_animation.start_animation()
-            self.search_finished = False
-            self._start_worker(filters)
+        self._refresh = refresh
+        filters = self._last_filters
+        if not self._refresh:
+            dialog = AdvancedSearchDialog(self.search_widget)
+            if dialog.exec() == QDialog.DialogCode.Accepted:
+                filters = dialog.get_advanced_filters()
+                if not filters:
+                    return
+        self.search_widget.search_actions_widget.set_search_buttons_state(True)
+        self.border_animation = BorderAnimation(
+            self.search_widget.transactions_group_box
+        )
+        self.border_animation.start_animation()
+        self._filters = filters
+        self._start_worker(filters)
 
     def _start_worker(self, filters: list[AdvancedSearchDataclass]) -> None:
+        self._is_thread_running = True
         self.thread = QThread()
         self.worker = AdvancedSearchWorker(filters)
         self.worker.moveToThread(self.thread)
@@ -85,45 +96,67 @@ class AdvancedSearchController(QObject):
     def _reset_variables(self) -> None:
         self.worker = None
         self.thread = None
-        self.search_finished = True
+        self._is_thread_running = False
 
     def _finish_search(
         self,
         results: SearchResultsDataclass | None = None,
         error: str | None = None,
     ) -> None:
-        self.search_finished = True
         self._check_finish()
         self._reset_variables()
-        if error is not None:
-            AdvancedSearchController._handle_search_error(
-                error, f"{self.__class__.__name__}._search_error", self.search_widget
-            )
+        try:
+            if error is not None:
+                AdvancedSearchController._handle_search_error(
+                    error,
+                    f"{self.__class__.__name__}._search_error",
+                    self.search_widget,
+                )
+                return
+            if results is None:
+                AdvancedSearchController._handle_search_error(
+                    "SearchResultsDataclass is None",
+                    f"{self.__class__.__name__}._search_error",
+                    self.search_widget,
+                )
+                return
+            if len(results.transactions) == 0 and not self._refresh:
+                self.search_widget.search_actions_widget.search_line_edit.selectAll()
+                self.search_widget.search_actions_widget.search_line_edit.setFocus()
+                MessageBoxes.show_error(self.search_widget, "NO_RESULTS", "WARNING")
+                return
+            if len(results.transactions) == 0 and self._refresh:
+                self.search_widget.search_transactions_model.load_data([])
+                self.search_widget.search_material_model.load_data([])
+                self.search_widget.set_count_text(0, results.transactions_count)
+                self.search_widget.set_price_text(results.transactions_total_amount)
+                self.search_widget.search_detail_widget.reset_data()
+                return
+            self._last_filters = self._filters
+            self._filters = None
+            SearchManager.setup_last_controller(self.__class__.__name__)
+            self.search_widget.search_actions_widget.reset_filters_widgets()
+            self.search_widget.search_detail_widget.reset_data()
+            self.search_widget.search_detail_widget.tab_widget.setCurrentIndex(0)
+            self.search_widget.search_tab_widget.setCurrentIndex(0)
+            transactions = results.transactions
+            transactions_count = results.transactions_count
+            transactions_amount = results.transactions_total_amount
+            materials = results.materials
+            self.search_widget.search_transactions_model.load_data(transactions)
+            self.search_widget.set_count_text(len(transactions), transactions_count)
+            self.search_widget.set_price_text(transactions_amount)
+            self.search_widget.search_material_model.load_data(materials)
+        finally:
+            if self._refresh_exists:
+                self._refresh_exists = False
+                QTimer.singleShot(0, self.refresh_filters_data)
+
+    def refresh_filters_data(self) -> None:
+        if self._is_thread_running:
+            self._refresh_exists = True
             return
-        if results is None:
-            AdvancedSearchController._handle_search_error(
-                "SearchResultsDataclass is None",
-                f"{self.__class__.__name__}._search_error",
-                self.search_widget,
-            )
-            return
-        if len(results.transactions) == 0:
-            self.search_widget.search_actions_widget.search_line_edit.selectAll()
-            self.search_widget.search_actions_widget.search_line_edit.setFocus()
-            MessageBoxes.show_error(self.search_widget, "NO_RESULTS", "WARNING")
-            return
-        self.search_widget.search_actions_widget.reset_filters_widgets()
-        self.search_widget.search_detail_widget.reset_data()
-        self.search_widget.search_detail_widget.tab_widget.setCurrentIndex(0)
-        self.search_widget.search_tab_widget.setCurrentIndex(0)
-        transactions = results.transactions
-        transactions_count = results.transactions_count
-        transactions_amount = results.transactions_total_amount
-        materials = results.materials
-        self.search_widget.search_transactions_model.load_data(transactions)
-        self.search_widget.set_count_text(len(transactions), transactions_count)
-        self.search_widget.set_price_text(transactions_amount)
-        self.search_widget.search_material_model.load_data(materials)
+        self.start_advanced_filter(refresh=True)
 
     def shut_down(self) -> None:
         if self.thread is None:

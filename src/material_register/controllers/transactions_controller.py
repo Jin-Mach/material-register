@@ -27,6 +27,7 @@ from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.search_manager import SearchManager
 from material_register.services.transactions_service import TransactionsService
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_CRITICAL,
@@ -129,6 +130,7 @@ class TransactionsController:
             self.inventory_model.load_inventory_data()
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             self._items_dialog = None
+            SearchManager.refresh_filters_data()
             TransactionsController._notification_handler(
                 self._notification_text, "ADD_TRANSACTION", "Transaction added"
             )
@@ -208,6 +210,7 @@ class TransactionsController:
                 transaction_id, transaction_type
             )
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
+            SearchManager.refresh_filters_data()
             TransactionsController._notification_handler(
                 self._notification_text, "UPDATE_TRANSACTION", "Transaction updated"
             )
@@ -243,6 +246,7 @@ class TransactionsController:
             self._update_cash_balance_value()
             self._reset_detail_widget_data(model)
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
+            SearchManager.refresh_filters_data()
             TransactionsController._notification_handler(
                 self._notification_text, "DELETE_TRANSACTION", "Transaction deleted"
             )

@@ -13,6 +13,7 @@ from material_register.db.models.transactions_models.transactions_proxy_model im
 )
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.search_manager import SearchManager
 from material_register.ui.config.styles_constants import PRICE_STYLE
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
@@ -49,6 +50,9 @@ class TransactionsWidget(QWidget):
         )
         self.transaction_document_controller = TransactionDocumentController(
             self, self.transactions_load_model_in, self.transactions_load_model_out
+        )
+        SearchManager.setup_controllers(
+            transactions_controller=self.transactions_controller
         )
         self.setLayout(self._create_ui())
         self._setup_ui()
