@@ -11,6 +11,7 @@ from material_register.controllers.export_controllers.pdf.search_document_contro
     SearchDocumentController,
 )
 from material_register.controllers.search_controller import SearchController
+from material_register.db.config.model_constants import SEARCH_MODEL_COLUMNS
 from material_register.db.models.search_models.search_material_model import (
     SearchMaterialModel,
 )
@@ -167,6 +168,10 @@ class SearchWidget(QWidget):
         self.search_proxy_model.setSourceModel(self.search_transactions_model)
         self.search_tab_widget.transactions_tab.setModel(self.search_proxy_model)
         self.search_tab_widget.transactions_tab.setup_ui()
+        self.search_proxy_model.sort(
+            SEARCH_MODEL_COLUMNS.index("transaction_created_at"),
+            Qt.SortOrder.DescendingOrder,
+        )
         self.search_tab_widget.transactions_tab.customContextMenuRequested.connect(
             self.search_tab_widget.transactions_tab.open_context_menu
         )
