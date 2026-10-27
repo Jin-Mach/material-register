@@ -40,10 +40,11 @@ class AdvancedSearchController(QObject):
         filters = self._last_filters
         if not self._refresh:
             dialog = AdvancedSearchDialog(self.search_widget)
-            if dialog.exec() == QDialog.DialogCode.Accepted:
-                filters = dialog.get_advanced_filters()
-                if not filters:
-                    return
+            if dialog.exec() != QDialog.DialogCode.Accepted:
+                return
+            filters = dialog.get_advanced_filters()
+            if not filters:
+                return
         self.search_widget.search_actions_widget.set_search_buttons_state(True)
         self.border_animation = BorderAnimation(
             self.search_widget.transactions_group_box

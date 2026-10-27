@@ -11,6 +11,7 @@ from material_register.db.models.search_models.search_material_model import (
 )
 from material_register.domain.search_dataclass import MaterialDataclass
 from material_register.ui.config.styles_constants import INVENTORY_STOCK_STYLE
+from material_register.utils.formatting_utils import format_number_to_locale
 
 
 @pytest.fixture
@@ -63,7 +64,10 @@ def test_display_material_data(
     index_unit = model.index(0, MATERIAL_MODEL_COLUMNS_MAP["commodity_unit"])
     assert model.data(index_unit, Qt.ItemDataRole.DisplayRole) == "kg"
     index_total = model.index(0, MATERIAL_MODEL_COLUMNS_MAP["total"])
-    assert model.data(index_total, Qt.ItemDataRole.DisplayRole) == "70.0 kg"
+    assert (
+        model.data(index_total, Qt.ItemDataRole.DisplayRole)
+        == f"{format_number_to_locale(material_positive.total)} kg"
+    )
 
 
 def test_display_negative_total(
@@ -71,7 +75,10 @@ def test_display_negative_total(
 ) -> None:
     model.load_data([material_negative])
     index = model.index(0, MATERIAL_MODEL_COLUMNS_MAP["total"])
-    assert model.data(index, Qt.ItemDataRole.DisplayRole) == "-10.0 m"
+    assert (
+        model.data(index, Qt.ItemDataRole.DisplayRole)
+        == f"{format_number_to_locale(material_negative.total)} m"
+    )
 
 
 def test_negative_total_color(
