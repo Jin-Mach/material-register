@@ -11,6 +11,9 @@ from material_register.ui.config.ui_constants import (
     UI_MARGINS_10,
     UI_SPACING,
 )
+from material_register.ui.dialogs.advanced_search_widgets.customers_search_widget import (
+    CustomersSearchWidget,
+)
 from material_register.ui.dialogs.advanced_search_widgets.transactions_search_widget import (
     TransactionsSearchWidget,
 )
@@ -76,9 +79,11 @@ class AdvancedSearchDialog(QDialog):
 
     def _setup_tabs(self) -> None:
         self.transactions_search_widget = TransactionsSearchWidget(self)
+        self.customers_search_widget = CustomersSearchWidget(self)
         self.tab_widget.addTab(
             self.transactions_search_widget, self.transactions_tab_title
         )
+        self.tab_widget.addTab(self.customers_search_widget, self.customers_tab_title)
 
     def get_advanced_filters(self) -> list[AdvancedSearchDataclass]:
         advanced_filters = []

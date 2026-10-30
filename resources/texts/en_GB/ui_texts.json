@@ -585,5 +585,30 @@
     "priceSuffix": "CZK",
     "resetButtonText": "Clear filters",
     "resetButtonTooltipText": "Clears all filters for the current tab"
+  },
+  "CustomersSearchWidget": {
+    "subjectTypeCheckBoxText": "Filter by customer type:",
+    "subjectTypeComboBoxItems": ["Individual", "Company"],
+    "companyNameCheckBoxText": "Filter by company name:",
+    "companyNameOperatorItems": ["Starts with...", "Contains", "...Ends with"],
+    "companyNameEditPlaceholderText": "Enter search text...",
+    "firstNameCheckBoxText": "Filter by first name:",
+    "firstNameOperatorItems": ["Starts with...", "Contains", "...Ends with"],
+    "firstNameEditPlaceholderText": "Enter search text...",
+    "lastNameCheckBoxText": "Filter by last name:",
+    "lastNameOperatorItems": ["Starts with...", "Contains", "...Ends with"],
+    "lastNameEditPlaceholderText": "Enter search text...",
+    "documentCheckboxText": "Filter by document:",
+    "documentOperatorItems": ["Starts with...", "Contains", "...Ends with"],
+    "documentEditPlaceholderText": "Enter search text...",
+    "addressCheckboxText": "Filter by address:",
+    "addressOperatorItems": ["Starts with...", "Contains", "...Ends with"],
+    "addressEditPlaceholderText": "Enter search text...",
+    "activeCheckboxText": "Filter by activity:",
+    "activeComboBoxItems": ["Active", "Inactive"],
+    "notesCheckboxText": "Filter by notes:",
+    "notesEditPlaceholderText": "Enter search text...",
+    "resetButtonText": "Clear filters",
+    "resetButtonTooltipText": "Removes all filters for the current tab"
   }
 }

@@ -705,7 +705,13 @@ QCheckBox#transactionTypeCheckBox,
 QCheckBox#paymentTypeCheckbox,
 QCheckBox#isInvoicedCheckbox,
 QCheckBox#transactionPriceCheckbox,
-QCheckBox#notesCheckbox {
+QCheckBox#notesCheckbox,
+QCheckBox#subjectTypeCheckBox,
+QCheckBox#companyNameCheckBox,
+QCheckBox#firstNameCheckBox,
+QCheckBox#lastNameCheckBox,
+QCheckBox#documentCheckbox,
+QCheckBox#addressCheckbox {
     background-color: transparent;
 }
 

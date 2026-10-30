@@ -570,5 +570,30 @@
     "priceSuffix": "Kč",
     "resetButtonText": "Smazat filtry",
     "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
+  },
+  "CustomersSearchWidget": {
+    "subjectTypeCheckBoxText": "Filtrovat dle typu zákazníka:",
+    "subjectTypeComboBoxItems": ["Fyzická osoba", "Právnická osoba"],
+    "companyNameCheckBoxText": "Filtrovat dle názvu firmy:",
+    "companyNameOperatorItems": ["Začíná na...", "Obsahuje", "...Končí na"],
+    "companyNameEditPlaceholderText": "Zadej hledaný text...",
+    "firstNameCheckBoxText": "Filtrovat dle jména:",
+    "firstNameOperatorItems": ["Začíná na...", "Obsahuje", "...Končí na"],
+    "firstNameEditPlaceholderText": "Zadej hledaný text...",
+    "lastNameCheckBoxText": "Filtrovat dle příjmení:",
+    "lastNameOperatorItems": ["Začíná na...", "Obsahuje", "...Končí na"],
+    "lastNameEditPlaceholderText": "Zadej hledaný text...",
+    "documentCheckboxText": "Filtrovat dle čísla dokladu:",
+    "documentOperatorItems": ["Začíná na...", "Obsahuje", "...Končí na"],
+    "documentEditPlaceholderText": "Zadej hledaný text...",
+    "addressCheckboxText": "Filtrovat dle adresy:",
+    "addressOperatorItems": ["Začíná na...", "Obsahuje", "...Končí na"],
+    "addressEditPlaceholderText": "Zadej hledaný text...",
+    "activeCheckboxText": "Filtrovat dle aktivity:",
+    "activeComboBoxItems": ["Aktivní", "Neaktivní"],
+    "notesCheckboxText": "Filtrovat dle poznámek:",
+    "notesEditPlaceholderText": "Zadej hledaný text...",
+    "resetButtonText": "Smazat filtry",
+    "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
   }
 }
