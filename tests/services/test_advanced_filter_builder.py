@@ -241,3 +241,28 @@ def test_create_material_having_query_with_where_and_having_filters() -> None:
     assert "trans.type = 'IN'" in having
     assert ADVANCED_SEARCH_AMOUNT_EXPRESSION.strip() in having
     assert params == [TRANSFER_IN, 100.0]
+
+
+@pytest.mark.parametrize(
+    ("query", "expected"),
+    [
+        ("IS NULL", "cust.company IS NULL"),
+        ("IS NOT NULL", "cust.company IS NOT NULL"),
+    ],
+    ids=["company", "individual"],
+)
+def test_create_where_query_with_customer_subject_type(
+    query: str, expected: str
+) -> None:
+    filters = [
+        AdvancedSearchDataclass(
+            clause=WHERE_CLAUSE,
+            column_name=ADVANCED_SEARCH_COLUMNS["customer_subject_type"],
+            query=query,
+            value="",
+        )
+    ]
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(filters)
+    assert where == f"WHERE {expected}"
+    assert having == ""
+    assert params == []
