@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QRegularExpression, Qt
+from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -12,6 +13,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.db.config.advanced_search_queries_constants import (
+    ADVANCED_SEARCH_COLUMNS,
+    WHERE_CLAUSE,
+)
+from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.styles_constants import INVALID_INPUT_STYLE
 from material_register.ui.config.ui_constants import (
@@ -22,6 +28,7 @@ from material_register.ui.config.ui_constants import (
     UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
+from material_register.utils.normalizer import normalize_text
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
@@ -131,7 +138,10 @@ class CustomersSearchWidget(QWidget):
         self._setup_texts()
         self._setup_comboboxes()
         self._setup_line_edits()
+        self._setup_property()
+        self._setup_user_role()
         self._setup_default_states()
+        self._set_validators()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
@@ -190,6 +200,7 @@ class CustomersSearchWidget(QWidget):
         self.company_name_checkbox.toggled.connect(self._update_customer_state)
         self.first_name_checkbox.toggled.connect(self._update_customer_state)
         self.last_name_checkbox.toggled.connect(self._update_customer_state)
+        self.notes_edit.textChanged.connect(self._set_notes_style)
         self.reset_button.clicked.connect(
             lambda: self._setup_default_states(reset_values=True)
         )
@@ -205,6 +216,25 @@ class CustomersSearchWidget(QWidget):
                 widget.setCurrentIndex(0)
             for widget in self.findChildren(QLineEdit):
                 widget.clear()
+
+    def _set_validators(self) -> None:
+        name_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}'\- ]{1,20}")
+        )
+        company_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}")
+        )
+        document_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .\-/]{1,30}")
+        )
+        address_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,:&'()\-\/]{1,50}")
+        )
+        self.company_name_edit.setValidator(company_validator)
+        self.first_name_edit.setValidator(name_validator)
+        self.last_name_edit.setValidator(name_validator)
+        self.document_edit.setValidator(document_validator)
+        self.address_edit.setValidator(address_validator)
 
     def _setup_comboboxes(self) -> None:
         self.subject_type_combo_box.addItems(self.subject_type_items)
@@ -229,7 +259,7 @@ class CustomersSearchWidget(QWidget):
             self.active_checkbox: self.active_combo_box,
             self.notes_checkbox: self.notes_edit,
         }
-        if not check_box in widgets_map:
+        if check_box not in widgets_map:
             return
         widgets = widgets_map[check_box]
         if not isinstance(widgets, list):
@@ -245,6 +275,32 @@ class CustomersSearchWidget(QWidget):
             if edit.objectName() != self.notes_edit.objectName():
                 edit.setFixedWidth(self.WIDTH)
             edit.setMaxLength(SEARCH_TRANSACTION_NOTES_LENGTH)
+
+    def _setup_property(self) -> None:
+        self.subject_type_combo_box.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["customer_subject_type"]
+        )
+        self.company_name_edit.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["customer_company_name"]
+        )
+        self.first_name_edit.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["customer_first_name"]
+        )
+        self.last_name_edit.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["customer_last_name"]
+        )
+        self.document_edit.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["customer_document"]
+        )
+        self.address_edit.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["customer_address"]
+        )
+        self.active_combo_box.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["customer_active"]
+        )
+        self.active_combo_box.setProperty("query", "= ?")
+        self.notes_edit.setProperty("query", "LIKE ?")
+        self.notes_edit.setProperty("column", ADVANCED_SEARCH_COLUMNS["customer_notes"])
 
     def _setup_user_role(self) -> None:
         like_operators = [self.PREFIX, self.CONTAINS, self.SUFFIX]
@@ -300,3 +356,98 @@ class CustomersSearchWidget(QWidget):
             self.notes_edit.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             self.notes_edit.setStyleSheet("")
+
+    def _get_property_filters(self) -> list[AdvancedSearchDataclass]:
+        property_map = {
+            self.notes_checkbox: self.notes_edit,
+        }
+        property_filters = []
+        for state, widget in property_map.items():
+            if state.isChecked() and isinstance(widget, QLineEdit):
+                property_filters.append(
+                    AdvancedSearchDataclass(
+                        clause=WHERE_CLAUSE,
+                        column_name=widget.property("column"),
+                        query=widget.property("query"),
+                        value=f"%{widget.text().strip()}%",
+                    )
+                )
+        return property_filters
+
+    def _get_user_role_filters(self) -> list[AdvancedSearchDataclass]:
+        user_role_map = {
+            self.subject_type_checkbox: self.subject_type_combo_box,
+            self.company_name_checkbox: [
+                self.company_name_operator,
+                self.company_name_edit,
+            ],
+            self.first_name_checkbox: [self.first_name_operator, self.first_name_edit],
+            self.last_name_checkbox: [self.last_name_operator, self.last_name_edit],
+            self.document_checkbox: [self.document_operator, self.document_edit],
+            self.address_checkbox: [self.address_operator, self.address_edit],
+            self.active_checkbox: self.active_combo_box,
+        }
+        user_role_filters = []
+        for state, widgets in user_role_map.items():
+            if state.isChecked():
+                if isinstance(widgets, QComboBox):
+                    value = self._get_combo_box_value(widgets)
+                    query = widgets.property("query")
+                    if widgets is self.subject_type_combo_box:
+                        query = value
+                        value = ""
+                    user_role_filters.append(
+                        AdvancedSearchDataclass(
+                            clause=WHERE_CLAUSE,
+                            column_name=widgets.property("column"),
+                            query=query,
+                            value=value,
+                        )
+                    )
+                if isinstance(widgets, list):
+                    operator, edit = widgets
+                    operator_value = operator.currentData(Qt.ItemDataRole.UserRole)
+                    normalize = state != self.document_checkbox
+                    value = self._get_line_edit_value(
+                        operator_value,
+                        edit.text().strip(),
+                        normalize=normalize,
+                    )
+                    user_role_filters.append(
+                        AdvancedSearchDataclass(
+                            clause=WHERE_CLAUSE,
+                            column_name=edit.property("column"),
+                            query="LIKE ?",
+                            value=value,
+                        )
+                    )
+        return user_role_filters
+
+    def _get_combo_box_value(self, combobox: QComboBox) -> int | str:
+        if combobox.objectName() == self.subject_type_combo_box.objectName():
+            if combobox.currentIndex() == 0:
+                return "IS NULL"
+            return "IS NOT NULL"
+        return combobox.currentData(Qt.ItemDataRole.UserRole)
+
+    def _get_line_edit_value(
+        self, operator: str, text: str, normalize: bool = True
+    ) -> str:
+        if normalize:
+            text = normalize_text(text)
+        if operator == self.PREFIX:
+            return f"{text}%"
+        if operator == self.SUFFIX:
+            return f"%{text}"
+        return f"%{text}%"
+
+    def get_filters_data(self) -> list[AdvancedSearchDataclass]:
+        filters_data = []
+        filters = [
+            self._get_property_filters(),
+            self._get_user_role_filters(),
+        ]
+        for section_filters in filters:
+            if section_filters:
+                filters_data.extend(section_filters)
+        return filters_data

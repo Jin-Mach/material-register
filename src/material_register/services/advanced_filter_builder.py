@@ -62,6 +62,12 @@ class AdvancedFilterBuilder:
                 where.append(query)
                 params.append(search_filter.value[0])
                 params.append(search_filter.value[1])
+            elif (
+                search_filter.column_name
+                == ADVANCED_SEARCH_COLUMNS["customer_subject_type"]
+            ):
+                query = f"{search_filter.column_name} {search_filter.query}"
+                where.append(query)
             else:
                 query = f"{search_filter.column_name} {search_filter.query}"
                 where.append(query)

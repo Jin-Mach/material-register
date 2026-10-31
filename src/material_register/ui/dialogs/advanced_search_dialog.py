@@ -87,7 +87,10 @@ class AdvancedSearchDialog(QDialog):
 
     def get_advanced_filters(self) -> list[AdvancedSearchDataclass]:
         advanced_filters = []
-        filters = [self.transactions_search_widget.get_filters_data()]
+        filters = [
+            self.transactions_search_widget.get_filters_data(),
+            self.customers_search_widget.get_filters_data(),
+        ]
         for section_filters in filters:
             if section_filters:
                 advanced_filters.extend(section_filters)
