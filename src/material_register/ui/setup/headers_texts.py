@@ -15,6 +15,9 @@ if TYPE_CHECKING:
     from material_register.db.models.inventory_models.inventory_proxy_model import (
         InventoryProxyModel,
     )
+    from material_register.db.models.search_models.search_material_model import (
+        SearchMaterialModel,
+    )
     from material_register.db.models.search_models.search_transactions_model import (
         SearchTransactionsModel,
     )
@@ -113,6 +116,26 @@ class HeadersTexts:
             for index, text in headers_texts.items():
                 model.headers[int(index)] = text
             model.layoutChanged.emit()
+            model.headerDataChanged.emit(
+                Qt.Orientation.Horizontal, 0, model.columnCount() - 1
+            )
+            return True
+        except Exception as e:
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
+            return False
+
+    @classmethod
+    def set_material_headers_text(
+        cls, view: QTableView, model: "SearchMaterialModel"
+    ) -> bool:
+        try:
+            headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {}).get(
+                "headers_texts", {}
+            )
+            if not headers_texts:
+                return False
+            for index, text in headers_texts.items():
+                model.headers[int(index)] = text
             model.headerDataChanged.emit(
                 Qt.Orientation.Horizontal, 0, model.columnCount() - 1
             )

@@ -36,7 +36,7 @@ class SearchMaterialView(QTableView):
         self._setup_behavior()
 
     def _setup_texts(self, model: SearchMaterialModel) -> None:
-        if not HeadersTexts.set_headers_text(self, model):
+        if not HeadersTexts.set_material_headers_text(self, model):
             ErrorHandler.handle_error(
                 f"Headers text load failed: {self.__class__.__name__}",
                 LOGGER_UI,
