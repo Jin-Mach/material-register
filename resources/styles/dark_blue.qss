@@ -714,7 +714,12 @@ QCheckBox#documentCheckbox,
 QCheckBox#addressCheckbox,
 QCheckBox#isInvoicedCheckBox,
 QRadioButton#andOperatorRadioButton,
-QRadioButton#orOperatorRadioButton {
+QRadioButton#orOperatorRadioButton,
+QCheckBox#categoryCheckBox,
+QCheckBox#commodityCheckBox,
+QCheckBox#materialAmountCheckBox,
+QCheckBox#materialPricePerUnitCheckBox,
+QCheckBox#materialTotalPricePerUnitCheckBox {
     background-color: transparent;
 }
 

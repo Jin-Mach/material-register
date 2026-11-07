@@ -543,6 +543,20 @@ UI_KEYS = [
     ("MaterialSearchWidget", "orOperatorRadioButtonText"),
     ("MaterialSearchWidget", "resetButtonText"),
     ("MaterialSearchWidget", "resetButtonTooltipText"),
+    ("MaterialFilterDialog", "titleText"),
+    ("MaterialFilterDialog", "categoryCheckBoxText"),
+    ("MaterialFilterDialog", "commodityCheckBoxText"),
+    ("MaterialFilterDialog", "materialAmountCheckBoxText"),
+    ("MaterialFilterDialog", "materialAmountOperatorItems"),
+    ("MaterialFilterDialog", "materialPricePerUnitCheckBoxText"),
+    ("MaterialFilterDialog", "materialPricePerUnitOperatorItems"),
+    ("MaterialFilterDialog", "materialTotalPricePerUnitCheckBoxText"),
+    ("MaterialFilterDialog", "materialTotalPricePerUnitOperatorItems"),
+    ("MaterialFilterDialog", "priceSuffix"),
+    ("MaterialFilterDialog", "addFilterButtonText"),
+    ("MaterialFilterDialog", "addFilterButtonTooltipText"),
+    ("MaterialFilterDialog", "cancelButtonText"),
+    ("MaterialFilterDialog", "cancelButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [

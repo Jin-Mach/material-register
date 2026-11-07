@@ -3,6 +3,9 @@ from typing import TYPE_CHECKING
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QTabWidget, QVBoxLayout
 
+from material_register.controllers.material_filter_controller import (
+    MaterialFilterController,
+)
 from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
@@ -84,7 +87,10 @@ class AdvancedSearchDialog(QDialog):
     def _setup_tabs(self) -> None:
         self.transactions_search_widget = TransactionsSearchWidget(self)
         self.customers_search_widget = CustomersSearchWidget(self)
-        self.material_search_widget = MaterialSearchWidget(self)
+        self.material_filter_controller = MaterialFilterController(self)
+        self.material_search_widget = MaterialSearchWidget(
+            self.material_filter_controller, self
+        )
         self.tab_widget.addTab(
             self.transactions_search_widget, self.transactions_tab_title
         )

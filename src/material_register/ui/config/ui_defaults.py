@@ -594,4 +594,20 @@ DEFAULT_TEXTS = {
         "resetButtonText": "Clear filters",
         "resetButtonTooltipText": "Removes all filters for the current tab",
     },
+    "MaterialFilterDialog": {
+        "titleText": "Material filter",
+        "categoryCheckBoxText": "Filter by category:",
+        "commodityCheckBoxText": "Filter by commodity:",
+        "materialAmountCheckBoxText": "Filter by commodity quantity:",
+        "materialAmountOperatorItems": ["Less than", "Equal to", "Greater than"],
+        "materialPricePerUnitCheckBoxText": "Filter by unit price:",
+        "materialPricePerUnitOperatorItems": ["Less than", "Equal to", "Greater than"],
+        "materialTotalPricePerUnitCheckBoxText": "Filter by total commodity price:",
+        "materialTotalPricePerUnitOperatorItems": ["Less than", "Equal to", "Greater than"],
+        "priceSuffix": "£",
+        "addFilterButtonText": "Add filter",
+        "addFilterButtonTooltipText": "Adds the configured filter to the list",
+        "cancelButtonText": "Cancel",
+        "cancelButtonTooltipText": "Closes the dialog"
+    }
 }

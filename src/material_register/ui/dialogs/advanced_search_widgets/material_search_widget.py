@@ -22,14 +22,23 @@ from material_register.ui.config.ui_constants import (
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
+    from material_register.controllers.material_filter_controller import (
+        MaterialFilterController,
+    )
     from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
 
 
 class MaterialSearchWidget(QWidget):
-    def __init__(self, advanced_search_dialog: "AdvancedSearchDialog") -> None:
+    def __init__(
+        self,
+        material_filter_controller: "MaterialFilterController",
+        advanced_search_dialog: "AdvancedSearchDialog",
+    ) -> None:
         super().__init__(advanced_search_dialog)
+        self.material_filter_controller = material_filter_controller
         self.setLayout(self._create_ui())
         self._setup_ui()
+        self._create_connection()
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -82,6 +91,11 @@ class MaterialSearchWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
+    def _create_connection(self) -> None:
+        self.add_filter_button.clicked.connect(
+            self.material_filter_controller.add_filter
+        )
+
     def _setup_radio_buttons(self) -> None:
         self.and_operator_radio_button.setChecked(True)
 
@@ -89,3 +103,6 @@ class MaterialSearchWidget(QWidget):
         self.filters_list_view.setSelectionMode(QListView.SelectionMode.SingleSelection)
         self.material_filter_model = MaterialFilterModel()
         self.filters_list_view.setModel(self.material_filter_model)
+        self.material_filter_controller.set_material_filter_model(
+            self.material_filter_model
+        )

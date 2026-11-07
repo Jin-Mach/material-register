@@ -608,5 +608,21 @@
     "orOperatorRadioButtonText": "Alespoň jedna podmínka",
     "resetButtonText": "Smazat filtry",
     "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
+  },
+  "MaterialFilterDialog": {
+    "titleText": "Filtr materiálu",
+    "categoryCheckBoxText": "Filtrovat dle kategorie:",
+    "commodityCheckBoxText": "Filtrovat dle položky:",
+    "materialAmountCheckBoxText": "Filtrovat dle množství položky:",
+    "materialAmountOperatorItems": ["Menší než", "Rovná se", "Větší než"],
+    "materialPricePerUnitCheckBoxText": "Filtrovat dle ceny za jednotku:",
+    "materialPricePerUnitOperatorItems": ["Menší než", "Rovná se", "Větší než"],
+    "materialTotalPricePerUnitCheckBoxText": "Filtrovat dle celkové ceny za položku:",
+    "materialTotalPricePerUnitOperatorItems": ["Menší než", "Rovná se", "Větší než"],
+    "priceSuffix": "Kč",
+    "addFilterButtonText": "Přidat filtr",
+    "addFilterButtonTooltipText": "Přidá nastavený filtr do seznamu",
+    "cancelButtonText": "Zrušit",
+    "cancelButtonTooltipText": "Zavře dialog"
   }
 }
