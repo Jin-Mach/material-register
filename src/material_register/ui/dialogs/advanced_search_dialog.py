@@ -14,6 +14,9 @@ from material_register.ui.config.ui_constants import (
 from material_register.ui.dialogs.advanced_search_widgets.customers_search_widget import (
     CustomersSearchWidget,
 )
+from material_register.ui.dialogs.advanced_search_widgets.material_search_widget import (
+    MaterialSearchWidget,
+)
 from material_register.ui.dialogs.advanced_search_widgets.transactions_search_widget import (
     TransactionsSearchWidget,
 )
@@ -63,6 +66,7 @@ class AdvancedSearchDialog(QDialog):
             return
         self.transactions_tab_title = ui_texts.get("transacationsTabTitleText", "")
         self.customers_tab_title = ui_texts.get("customersTabTitleText", "")
+        self.material_tab_title = ui_texts.get("materialTabTitleText", "")
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
@@ -80,10 +84,12 @@ class AdvancedSearchDialog(QDialog):
     def _setup_tabs(self) -> None:
         self.transactions_search_widget = TransactionsSearchWidget(self)
         self.customers_search_widget = CustomersSearchWidget(self)
+        self.material_search_widget = MaterialSearchWidget(self)
         self.tab_widget.addTab(
             self.transactions_search_widget, self.transactions_tab_title
         )
         self.tab_widget.addTab(self.customers_search_widget, self.customers_tab_title)
+        self.tab_widget.addTab(self.material_search_widget, self.material_tab_title)
 
     def get_advanced_filters(self) -> list[AdvancedSearchDataclass]:
         advanced_filters = []

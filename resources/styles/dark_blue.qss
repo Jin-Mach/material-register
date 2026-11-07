@@ -711,7 +711,10 @@ QCheckBox#companyNameCheckBox,
 QCheckBox#firstNameCheckBox,
 QCheckBox#lastNameCheckBox,
 QCheckBox#documentCheckbox,
-QCheckBox#addressCheckbox {
+QCheckBox#addressCheckbox,
+QCheckBox#isInvoicedCheckBox,
+QRadioButton#andOperatorRadioButton,
+QRadioButton#orOperatorRadioButton {
     background-color: transparent;
 }
 

@@ -547,6 +547,7 @@
     "titleText": "Pokročilý filtr",
     "transacationsTabTitleText": "Transakce",
     "customersTabTitleText": "Zákazník",
+    "materialTabTitleText": "Materiál",
     "searchButtonText": "Vyhledat",
     "searchButtonTooltipText": "Vyhledá transakce dle zadaných parametrů",
     "cancelButtonText": "Zrušit",
@@ -593,6 +594,18 @@
     "activeComboBoxItems": ["Aktivní", "Neaktivní"],
     "notesCheckboxText": "Filtrovat dle poznámek:",
     "notesEditPlaceholderText": "Zadej hledaný text...",
+    "resetButtonText": "Smazat filtry",
+    "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
+  },
+  "MaterialSearchWidget": {
+    "addFilterButtonText": "Nový filtr",
+    "addFilterButtonTooltipText": "Přidá nový filtr",
+    "updateFilterButtonText": "Upravit filtr",
+    "updateFilterButtonTooltipText": "Upraví označený filtr",
+    "deleteFilterButtonText": "Smazat filtr",
+    "deleteFilterButtonTooltipText": "Odstraní označený filtr",
+    "andOperatorRadioButtonText": "Všechny podmínky",
+    "orOperatorRadioButtonText": "Alespoň jedna podmínka",
     "resetButtonText": "Smazat filtry",
     "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
   }

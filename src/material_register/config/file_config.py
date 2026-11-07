@@ -533,6 +533,16 @@ UI_KEYS = [
     ("CustomersSearchWidget", "notesEditPlaceholderText"),
     ("CustomersSearchWidget", "resetButtonText"),
     ("CustomersSearchWidget", "resetButtonTooltipText"),
+    ("MaterialSearchWidget", "addFilterButtonText"),
+    ("MaterialSearchWidget", "addFilterButtonTooltipText"),
+    ("MaterialSearchWidget", "updateFilterButtonText"),
+    ("MaterialSearchWidget", "updateFilterButtonTooltipText"),
+    ("MaterialSearchWidget", "deleteFilterButtonText"),
+    ("MaterialSearchWidget", "deleteFilterButtonTooltipText"),
+    ("MaterialSearchWidget", "andOperatorRadioButtonText"),
+    ("MaterialSearchWidget", "orOperatorRadioButtonText"),
+    ("MaterialSearchWidget", "resetButtonText"),
+    ("MaterialSearchWidget", "resetButtonTooltipText"),
 ]
 
 HEADERS_KEYS = [

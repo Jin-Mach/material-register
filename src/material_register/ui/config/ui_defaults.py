@@ -582,4 +582,16 @@ DEFAULT_TEXTS = {
         "resetButtonText": "Clear filters",
         "resetButtonTooltipText": "Removes all filters for the current tab",
     },
+    "MaterialSearchWidget": {
+        "addFilterButtonText": "New filter",
+        "addFilterButtonTooltipText": "Adds a new filter",
+        "updateFilterButtonText": "Edit filter",
+        "updateFilterButtonTooltipText": "Edits the selected filter",
+        "deleteFilterButtonText": "Delete filter",
+        "deleteFilterButtonTooltipText": "Removes the selected filter",
+        "andOperatorRadioButtonText": "All conditions",
+        "orOperatorRadioButtonText": "At least one condition",
+        "resetButtonText": "Clear filters",
+        "resetButtonTooltipText": "Removes all filters for the current tab",
+    },
 }
