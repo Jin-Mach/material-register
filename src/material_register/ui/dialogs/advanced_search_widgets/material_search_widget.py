@@ -101,6 +101,11 @@ class MaterialSearchWidget(QWidget):
         self.delete_filter_button.clicked.connect(
             self.material_filter_controller.delete_filter
         )
+        self.reset_button.clicked.connect(self._setup_default_states)
+
+    def _setup_default_states(self) -> None:
+        self._setup_radio_buttons()
+        self.material_filter_model.clear()
 
     def _setup_radio_buttons(self) -> None:
         self.and_operator_radio_button.setChecked(True)
