@@ -95,6 +95,12 @@ class MaterialSearchWidget(QWidget):
         self.add_filter_button.clicked.connect(
             self.material_filter_controller.add_filter
         )
+        self.update_filter_button.clicked.connect(
+            self.material_filter_controller.update_filter
+        )
+        self.delete_filter_button.clicked.connect(
+            self.material_filter_controller.delete_filter
+        )
 
     def _setup_radio_buttons(self) -> None:
         self.and_operator_radio_button.setChecked(True)

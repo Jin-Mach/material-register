@@ -35,17 +35,19 @@ if TYPE_CHECKING:
 
 
 class MaterialFilterDialog(QDialog):
+    LESS_THAN = "<"
+    EQUAL_THAN = "="
+    MORE_THAN = ">"
+
     def __init__(
         self,
         categories: list[Category],
         commodities: list[Commodity],
         advanced_search_dialog: "AdvancedSearchDialog",
-        update: bool = False,
     ) -> None:
         super().__init__(advanced_search_dialog)
         self.categories = categories
         self.commodities = commodities
-        self.update = update
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -88,8 +90,8 @@ class MaterialFilterDialog(QDialog):
         self.material_price_per_unit_spinbox.setObjectName(
             "materialPricePerUnitSpinbox"
         )
-        self.material_total_price_per_unit_check_box = QCheckBox()
-        self.material_total_price_per_unit_check_box.setObjectName("materialTotalPriceCheckBox")
+        self.material_total_price_check_box = QCheckBox()
+        self.material_total_price_check_box.setObjectName("materialTotalPriceCheckBox")
         self.material_total_price_operator = QComboBox()
         self.material_total_price_operator.setObjectName("materialTotalPriceOperator")
         self.material_total_price_spinbox = QDoubleSpinBox()
@@ -111,7 +113,7 @@ class MaterialFilterDialog(QDialog):
         grid_layout.addWidget(self.material_price_per_unit_check_box, 3, 0)
         grid_layout.addWidget(self.material_price_per_unit_operator, 3, 1)
         grid_layout.addWidget(self.material_price_per_unit_spinbox, 3, 2)
-        grid_layout.addWidget(self.material_total_price_per_unit_check_box, 4, 0)
+        grid_layout.addWidget(self.material_total_price_check_box, 4, 0)
         grid_layout.addWidget(self.material_total_price_operator, 4, 1)
         grid_layout.addWidget(self.material_total_price_spinbox, 4, 2)
         main_layout.addLayout(grid_layout)
@@ -142,7 +144,7 @@ class MaterialFilterDialog(QDialog):
         self.material_price_per_unit_items = ui_texts.get(
             f"{self.material_price_per_unit_operator.objectName()}Items", []
         )
-        self.material_total_price_per_unit_items = ui_texts.get(
+        self.material_total_price_items = ui_texts.get(
             f"{self.material_total_price_operator.objectName()}Items", []
         )
         self.price_suffix = ui_texts.get("priceSuffix", "")
@@ -182,9 +184,15 @@ class MaterialFilterDialog(QDialog):
         self.material_price_per_unit_operator.addItems(
             self.material_price_per_unit_items
         )
-        self.material_total_price_operator.addItems(
-            self.material_total_price_per_unit_items
-        )
+        self.material_total_price_operator.addItems(self.material_total_price_items)
+        for combobox in [
+            self.material_amount_operator,
+            self.material_price_per_unit_operator,
+            self.material_total_price_operator,
+        ]:
+            combobox.setItemData(0, self.LESS_THAN)
+            combobox.setItemData(1, self.EQUAL_THAN)
+            combobox.setItemData(2, self.MORE_THAN)
 
     def _setup_spinboxes(self) -> None:
         spinboxes = [
@@ -203,6 +211,72 @@ class MaterialFilterDialog(QDialog):
         self.material_price_per_unit_spinbox.setSuffix(f" {self.price_suffix}")
         self.material_total_price_spinbox.setSuffix(f" {self.price_suffix}")
 
+    def update_filter(self, material_filter: MaterialSearchDataclass) -> None:
+        self._update_main_filters(
+            material_filter.category_id, material_filter.commodity_id
+        )
+        if material_filter.commodity_id is not None:
+            self._update_commodity_sub_filters(material_filter)
+
+    def _update_main_filters(
+        self, category_id: int | None, commodity_id: int | None
+    ) -> None:
+        if category_id is not None:
+            index = self.category_combo_box.findData(
+                category_id, Qt.ItemDataRole.UserRole
+            )
+            if index >= 0:
+                self.category_check_box.setChecked(True)
+                self.category_combo_box.setCurrentIndex(index)
+        if commodity_id is not None:
+            index = self.commodity_combo_box.findData(
+                commodity_id, Qt.ItemDataRole.UserRole
+            )
+            if index >= 0:
+                self.commodity_check_box.setChecked(True)
+                self.commodity_combo_box.setCurrentIndex(index)
+
+    def _update_commodity_sub_filters(
+        self, material_filter: MaterialSearchDataclass
+    ) -> None:
+        if (
+            material_filter.amount_operator is not None
+            and material_filter.amount_value is not None
+        ):
+            operator_index = self.material_amount_operator.findData(
+                material_filter.amount_operator, Qt.ItemDataRole.UserRole
+            )
+            if operator_index >= 0:
+                self.material_amount_check_box.setChecked(True)
+                self.material_amount_operator.setCurrentIndex(operator_index)
+                self.material_amount_spinbox.setValue(material_filter.amount_value)
+        if (
+            material_filter.price_per_unit_operator is not None
+            and material_filter.price_per_unit_value is not None
+        ):
+            index = self.material_price_per_unit_operator.findData(
+                material_filter.price_per_unit_operator, Qt.ItemDataRole.UserRole
+            )
+            if index >= 0:
+                self.material_price_per_unit_check_box.setChecked(True)
+                self.material_price_per_unit_operator.setCurrentIndex(index)
+                self.material_price_per_unit_spinbox.setValue(
+                    material_filter.price_per_unit_value
+                )
+        if (
+            material_filter.total_price_operator is not None
+            and material_filter.total_price_value is not None
+        ):
+            index = self.material_total_price_operator.findData(
+                material_filter.total_price_operator, Qt.ItemDataRole.UserRole
+            )
+            if index >= 0:
+                self.material_total_price_check_box.setChecked(True)
+                self.material_total_price_operator.setCurrentIndex(index)
+                self.material_total_price_spinbox.setValue(
+                    material_filter.total_price_value
+                )
+
     def _update_category_combobox_state(self, checked: bool) -> None:
         self.category_combo_box.setDisabled(not checked)
 
@@ -213,7 +287,7 @@ class MaterialFilterDialog(QDialog):
         check_boxes = [
             self.material_amount_check_box,
             self.material_price_per_unit_check_box,
-            self.material_total_price_per_unit_check_box,
+            self.material_total_price_check_box,
         ]
         operators = [
             self.material_amount_operator,
@@ -264,9 +338,10 @@ class MaterialFilterDialog(QDialog):
     def _get_commodity_sub_filters(
         self, filters_text: list, material_filters: MaterialSearchDataclass
     ) -> None:
-        operators_map = {0: "<", 1: "=", 2: ">"}
         if self.material_amount_check_box.isChecked():
-            operator = operators_map[self.material_amount_operator.currentIndex()]
+            operator = self.material_amount_operator.currentData(
+                Qt.ItemDataRole.UserRole
+            )
             material_filters.amount_operator = operator
             material_filters.amount_value = self.material_amount_spinbox.value()
             filters_text.append(
@@ -275,9 +350,9 @@ class MaterialFilterDialog(QDialog):
                 f"{self.material_amount_spinbox.suffix()}"
             )
         if self.material_price_per_unit_check_box.isChecked():
-            operator = operators_map[
-                self.material_price_per_unit_operator.currentIndex()
-            ]
+            operator = self.material_price_per_unit_operator.currentData(
+                Qt.ItemDataRole.UserRole
+            )
             material_filters.price_per_unit_operator = operator
             material_filters.price_per_unit_value = (
                 self.material_price_per_unit_spinbox.value()
@@ -287,8 +362,10 @@ class MaterialFilterDialog(QDialog):
                 f"{format_number_to_locale(self.material_price_per_unit_spinbox.value())}"
                 f"{self.material_price_per_unit_spinbox.suffix()}"
             )
-        if self.material_total_price_per_unit_check_box.isChecked():
-            operator = operators_map[self.material_total_price_operator.currentIndex()]
+        if self.material_total_price_check_box.isChecked():
+            operator = self.material_total_price_operator.currentData(
+                Qt.ItemDataRole.UserRole
+            )
             material_filters.total_price_operator = operator
             material_filters.total_price_value = (
                 self.material_total_price_spinbox.value()
