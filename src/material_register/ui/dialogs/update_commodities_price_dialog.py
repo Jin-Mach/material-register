@@ -126,6 +126,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
             )
             price_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             value_spinbox = QDoubleSpinBox()
+            value_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
             value_spinbox.setValue(commodity.default_price)
             value_spinbox.setProperty("default_price", commodity.default_price)
             value_spinbox.setSuffix(f" {self.price_suffix}/{commodity.unit}")

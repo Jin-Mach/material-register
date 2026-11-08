@@ -30,4 +30,6 @@ class MaterialFilterController(QObject):
             DbCache.categories, DbCache.commodities, self.advanced_search_dialog
         )
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            print("OK")
+            text, filters = dialog.get_filters_data()
+            print("text: ", text)
+            print("filters:", filters)
