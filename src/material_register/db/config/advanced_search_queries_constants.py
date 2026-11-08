@@ -157,6 +157,46 @@ ADVANCED_SEARCH_MATERIAL_QUERY_START = """
             ON items.transaction_id = trans.id
 """
 
+MATERIAL_FILTER_EXISTS_START = """
+    EXISTS (
+        SELECT 1
+        
+        FROM transaction_items AS material_item
+        
+        JOIN commodities AS material_commodity
+            ON material_commodity.id = material_item.commodity_id
+        JOIN categories AS material_category
+            ON material_category.id = material_commodity.category_id
+        WHERE material_item.transaction_id = trans.id
+"""
+
+MATERIAL_FILTER_CATEGORY = "AND material_category.id = ?"
+
+MATERIAL_FILTER_COMMODITY = "AND material_commodity.id = ?"
+
+MATERIAL_FILTER_GROUP_BY = """
+    GROUP BY material_item.transaction_id, material_commodity.id
+"""
+
+MATERIAL_FILTER_AMOUNT = "SUM(material_item.unit_count) {operator} ?"
+
+MATERIAL_FILTER_TOTAL_PRICE = """
+    SUM(material_item.unit_count * material_item.price_per_unit) {operator} ?
+"""
+
+MATERIAL_FILTER_PRICE_PER_UNIT = """
+    EXISTS (
+        SELECT 1
+        
+        FROM transaction_items AS price_item
+        
+        WHERE price_item.transaction_id = trans.id
+          AND price_item.commodity_id = material_commodity.id
+          AND price_item.price_per_unit {operator} ?
+    )
+"""
+
+MATERIAL_FILTER_EXISTS_END = ")"
 
 ADVANCED_SEARCH_MATERIAL_QUERY_GROUP_BY = """
     GROUP BY

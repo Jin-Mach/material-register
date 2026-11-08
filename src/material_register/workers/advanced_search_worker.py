@@ -26,7 +26,6 @@ class AdvancedSearchWorker(QObject):
         super().__init__()
         self.filters = filters
         self.material_filters = material_filters
-        print("material filters: ", self.material_filters)
         self.db_connection = None
 
     @Slot()
@@ -40,7 +39,9 @@ class AdvancedSearchWorker(QObject):
                 self.error.emit(error)
                 return
             transaction_where, transaction_having, transaction_count = (
-                AdvancedFilterBuilder.create_advanced_filter(self.filters)
+                AdvancedFilterBuilder.create_advanced_filter(
+                    self.filters, self.material_filters
+                )
             )
             ok, transactions = AdvancedSearchQueries.load_transactions(
                 self.db_connection,
@@ -57,7 +58,7 @@ class AdvancedSearchWorker(QObject):
                 return
             amount_where, amount_having, amount_count = (
                 AdvancedFilterBuilder.create_advanced_filter(
-                    self.filters, amount_having=True
+                    self.filters, self.material_filters, amount_having=True
                 )
             )
             ok, amount = AdvancedSearchQueries.get_total_amount(
@@ -68,7 +69,7 @@ class AdvancedSearchWorker(QObject):
                 return
             material_where, material_having, material_params = (
                 AdvancedFilterBuilder.create_advanced_filter(
-                    self.filters, material_having=True
+                    self.filters, self.material_filters, material_having=True
                 )
             )
             ok, materials = AdvancedSearchQueries.load_material(
