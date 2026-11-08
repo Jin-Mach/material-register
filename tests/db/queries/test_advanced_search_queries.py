@@ -11,8 +11,16 @@ from material_register.db.config.advanced_search_queries_constants import (
 from material_register.db.queries.advanced_search_queries import (
     AdvancedSearchQueries,
 )
-from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
+from material_register.domain.adavanced_search_dataclass import (
+    AdvancedSearchDataclass,
+    MaterialFiltersDataclass,
+    MaterialSearchDataclass,
+)
 from material_register.services.advanced_filter_builder import AdvancedFilterBuilder
+
+
+def _empty_material_filters() -> MaterialFiltersDataclass:
+    return MaterialFiltersDataclass(operator="AND", filters=[])
 
 
 @pytest.fixture
@@ -409,6 +417,7 @@ def test_load_material_with_builder_amount_filter(
     ]
     where, having, params = AdvancedFilterBuilder.create_advanced_filter(
         filters,
+        _empty_material_filters(),
         material_having=True,
     )
     success, results = AdvancedSearchQueries.load_material(
@@ -473,6 +482,7 @@ def test_load_material_with_builder_amount_filter_excludes_out_quantity(
     ]
     where, having, params = AdvancedFilterBuilder.create_advanced_filter(
         filters,
+        _empty_material_filters(),
         material_having=True,
     )
     success, results = AdvancedSearchQueries.load_material(
@@ -485,3 +495,94 @@ def test_load_material_with_builder_amount_filter_excludes_out_quantity(
     assert len(results) == 1
     assert results[0].commodity_name == "Steel"
     assert results[0].total == 15.0
+
+
+def test_load_transactions_with_material_amount_and_total_price_filters(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transaction_items (
+            id, transaction_id, commodity_id, unit_count, price_per_unit
+        )
+        VALUES (4, 1, 1, 2, 5)
+    """)
+    material_filters = MaterialFiltersDataclass(
+        operator="AND",
+        filters=[
+            MaterialSearchDataclass(
+                commodity_id=1,
+                amount_operator=">",
+                amount_value=10,
+                total_price_operator=">",
+                total_price_value=200,
+            )
+        ],
+    )
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        [], material_filters
+    )
+    success, results = AdvancedSearchQueries.load_transactions(
+        connection, where, having, params
+    )
+    assert success is True
+    transaction_ids = []
+    for transaction in results:
+        transaction_ids.append(transaction.transaction_id)
+    assert transaction_ids == [1]
+
+
+def test_load_transactions_with_material_price_per_unit_filter(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    query = QSqlQuery(connection)
+    query.exec("""
+        INSERT INTO transaction_items (
+            id, transaction_id, commodity_id, unit_count, price_per_unit
+        )
+        VALUES (4, 1, 1, 2, 123)
+    """)
+    material_filters = MaterialFiltersDataclass(
+        operator="AND",
+        filters=[
+            MaterialSearchDataclass(
+                commodity_id=1,
+                price_per_unit_operator=">",
+                price_per_unit_value=100,
+            )
+        ],
+    )
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        [], material_filters
+    )
+    success, results = AdvancedSearchQueries.load_transactions(
+        connection, where, having, params
+    )
+    assert success is True
+    transaction_ids = []
+    for transaction in results:
+        transaction_ids.append(transaction.transaction_id)
+    assert transaction_ids == [1]
+
+
+def test_load_transactions_with_material_category_and_commodity_filters(
+    connection: QSqlDatabase,
+    sample_data,
+) -> None:
+    material_filters = MaterialFiltersDataclass(
+        operator="AND",
+        filters=[MaterialSearchDataclass(category_id=1, commodity_id=1)],
+    )
+    where, having, params = AdvancedFilterBuilder.create_advanced_filter(
+        [], material_filters
+    )
+    success, results = AdvancedSearchQueries.load_transactions(
+        connection, where, having, params
+    )
+    assert success is True
+    transaction_ids = []
+    for transaction in results:
+        transaction_ids.append(transaction.transaction_id)
+    assert transaction_ids == [3, 2, 1]
