@@ -76,6 +76,7 @@ class MaterialSearchWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_push_buttons()
         self._setup_radio_buttons()
         self._setup_listview()
 
@@ -102,10 +103,18 @@ class MaterialSearchWidget(QWidget):
             self.material_filter_controller.delete_filter
         )
         self.reset_button.clicked.connect(self._setup_default_states)
+        self.filters_list_view.selectionModel().selectionChanged.connect(
+            self._update_buttons_state
+        )
 
     def _setup_default_states(self) -> None:
+        self._setup_push_buttons()
         self._setup_radio_buttons()
         self.material_filter_model.clear()
+
+    def _setup_push_buttons(self) -> None:
+        self.update_filter_button.setDisabled(True)
+        self.delete_filter_button.setDisabled(True)
 
     def _setup_radio_buttons(self) -> None:
         self.and_operator_radio_button.setChecked(True)
@@ -117,3 +126,8 @@ class MaterialSearchWidget(QWidget):
         self.material_filter_controller.set_material_filter_model(
             self.material_filter_model
         )
+
+    def _update_buttons_state(self) -> None:
+        selection = self.filters_list_view.currentIndex().isValid()
+        self.update_filter_button.setDisabled(not selection)
+        self.delete_filter_button.setDisabled(not selection)
