@@ -20,3 +20,9 @@ class MaterialSearchDataclass:
     price_per_unit_value: float | None = None
     total_price_operator: str | None = None
     total_price_value: float | None = None
+
+
+@dataclass(frozen=True)
+class MaterialFiltersDataclass:
+    operator: Literal["AND", "OR"]
+    filters: list[MaterialSearchDataclass]

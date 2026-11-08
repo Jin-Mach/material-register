@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QListView,
@@ -11,6 +12,10 @@ from PySide6.QtWidgets import (
 
 from material_register.db.models.search_models.material_filter_model import (
     MaterialFilterModel,
+)
+from material_register.domain.adavanced_search_dataclass import (
+    MaterialFiltersDataclass,
+    MaterialSearchDataclass,
 )
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
@@ -29,6 +34,9 @@ if TYPE_CHECKING:
 
 
 class MaterialSearchWidget(QWidget):
+    AND_OPERATOR = "AND"
+    OR_OPERATOR = "OR"
+
     def __init__(
         self,
         material_filter_controller: "MaterialFilterController",
@@ -79,6 +87,7 @@ class MaterialSearchWidget(QWidget):
         self._setup_push_buttons()
         self._setup_radio_buttons()
         self._setup_listview()
+        self._setup_property()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
@@ -127,7 +136,33 @@ class MaterialSearchWidget(QWidget):
             self.material_filter_model
         )
 
+    def _setup_property(self) -> None:
+        self.and_operator_radio_button.setProperty("operator", self.AND_OPERATOR)
+        self.or_operator_radio_button.setProperty("operator", self.OR_OPERATOR)
+
     def _update_buttons_state(self) -> None:
         selection = self.filters_list_view.currentIndex().isValid()
         self.update_filter_button.setDisabled(not selection)
         self.delete_filter_button.setDisabled(not selection)
+
+    def _get_operator(self) -> str:
+        for radiobutton in [
+            self.and_operator_radio_button,
+            self.or_operator_radio_button,
+        ]:
+            if radiobutton.isChecked():
+                return radiobutton.property("operator")
+        return self.AND_OPERATOR
+
+    def _get_model_filters(self) -> list[MaterialSearchDataclass]:
+        filters_data = []
+        for row in range(self.material_filter_model.rowCount()):
+            item = self.material_filter_model.item(row)
+            filters_data.append(item.data(Qt.ItemDataRole.UserRole))
+        return filters_data
+
+    def get_filters_data(self) -> MaterialFiltersDataclass:
+        return MaterialFiltersDataclass(
+            operator=self._get_operator(),
+            filters=self._get_model_filters(),
+        )

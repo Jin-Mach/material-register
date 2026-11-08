@@ -103,6 +103,8 @@ class AdvancedSearchDialog(QDialog):
             self.transactions_search_widget.get_filters_data(),
             self.customers_search_widget.get_filters_data(),
         ]
+        material_filters = self.material_search_widget.get_filters_data()
+        print("material filters:", material_filters)
         for section_filters in filters:
             if section_filters:
                 advanced_filters.extend(section_filters)
