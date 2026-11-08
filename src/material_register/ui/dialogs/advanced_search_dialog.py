@@ -6,7 +6,10 @@ from PySide6.QtWidgets import QDialog, QDialogButtonBox, QTabWidget, QVBoxLayout
 from material_register.controllers.material_filter_controller import (
     MaterialFilterController,
 )
-from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
+from material_register.domain.adavanced_search_dataclass import (
+    AdvancedSearchDataclass,
+    MaterialFiltersDataclass,
+)
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
@@ -97,18 +100,18 @@ class AdvancedSearchDialog(QDialog):
         self.tab_widget.addTab(self.customers_search_widget, self.customers_tab_title)
         self.tab_widget.addTab(self.material_search_widget, self.material_tab_title)
 
-    def get_advanced_filters(self) -> list[AdvancedSearchDataclass]:
+    def get_advanced_filters(
+        self,
+    ) -> tuple[list[AdvancedSearchDataclass], MaterialFiltersDataclass]:
         advanced_filters = []
         filters = [
             self.transactions_search_widget.get_filters_data(),
             self.customers_search_widget.get_filters_data(),
         ]
-        material_filters = self.material_search_widget.get_filters_data()
-        print("material filters:", material_filters)
         for section_filters in filters:
             if section_filters:
                 advanced_filters.extend(section_filters)
-        return advanced_filters
+        return advanced_filters, self.material_search_widget.get_filters_data()
 
     def showEvent(self, event: QShowEvent) -> None:
         self.adjustSize()

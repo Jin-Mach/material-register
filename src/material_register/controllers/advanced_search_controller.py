@@ -3,7 +3,10 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtWidgets import QDialog, QWidget
 
-from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
+from material_register.domain.adavanced_search_dataclass import (
+    AdvancedSearchDataclass,
+    MaterialFiltersDataclass,
+)
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.search_manager import SearchManager
@@ -27,7 +30,12 @@ class AdvancedSearchController(QObject):
         self._is_thread_running = False
         self.border_animation = None
         self._filters = None
+        self._material_filters = None
         self._last_filters = []
+        self._last_material_filters = MaterialFiltersDataclass(
+            operator="AND",
+            filters=[],
+        )
         self._refresh = False
         self._refresh_exists = False
 
@@ -38,12 +46,13 @@ class AdvancedSearchController(QObject):
             return
         self._refresh = refresh
         filters = self._last_filters
+        material_filters = self._last_material_filters
         if not self._refresh:
             dialog = AdvancedSearchDialog(self.search_widget)
             if dialog.exec() != QDialog.DialogCode.Accepted:
                 return
-            filters = dialog.get_advanced_filters()
-            if not filters:
+            filters, material_filters = dialog.get_advanced_filters()
+            if not filters and not material_filters.filters:
                 return
         self.search_widget.search_actions_widget.set_search_buttons_state(True)
         self.border_animation = BorderAnimation(
@@ -51,12 +60,17 @@ class AdvancedSearchController(QObject):
         )
         self.border_animation.start_animation()
         self._filters = filters
-        self._start_worker(filters)
+        self._material_filters = material_filters
+        self._start_worker(filters, material_filters)
 
-    def _start_worker(self, filters: list[AdvancedSearchDataclass]) -> None:
+    def _start_worker(
+        self,
+        filters: list[AdvancedSearchDataclass],
+        material_filters: MaterialFiltersDataclass,
+    ) -> None:
         self._is_thread_running = True
         self.thread = QThread()
-        self.worker = AdvancedSearchWorker(filters)
+        self.worker = AdvancedSearchWorker(filters, material_filters)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.error.connect(self._search_error)
@@ -134,7 +148,9 @@ class AdvancedSearchController(QObject):
                 self.search_widget.search_detail_widget.reset_data()
                 return
             self._last_filters = self._filters
+            self._last_material_filters = self._material_filters
             self._filters = None
+            self._material_filters = None
             SearchManager.setup_last_controller(self.__class__.__name__)
             self.search_widget.search_actions_widget.reset_filters_widgets()
             self.search_widget.search_detail_widget.reset_data()

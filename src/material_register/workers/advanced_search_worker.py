@@ -3,7 +3,10 @@ from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.queries.advanced_search_queries import AdvancedSearchQueries
 from material_register.db.queries.basic_database_queries import BasicDatabaseQueries
-from material_register.domain.adavanced_search_dataclass import AdvancedSearchDataclass
+from material_register.domain.adavanced_search_dataclass import (
+    AdvancedSearchDataclass,
+    MaterialFiltersDataclass,
+)
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.init.db_init import DbInit
 from material_register.services.advanced_filter_builder import AdvancedFilterBuilder
@@ -15,9 +18,15 @@ class AdvancedSearchWorker(QObject):
     finished = Signal(SearchResultsDataclass)
     error = Signal(str)
 
-    def __init__(self, filters: list[AdvancedSearchDataclass]) -> None:
+    def __init__(
+        self,
+        filters: list[AdvancedSearchDataclass],
+        material_filters: MaterialFiltersDataclass,
+    ) -> None:
         super().__init__()
         self.filters = filters
+        self.material_filters = material_filters
+        print("material filters: ", self.material_filters)
         self.db_connection = None
 
     @Slot()
