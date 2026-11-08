@@ -122,10 +122,20 @@ class MaterialFilterDialog(QDialog):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self.setup_add_button_state()
         self._setup_comboboxes()
         self._setup_spinboxes()
         self._update_amount_suffix()
         self._update_commodity_sub_filters_state(False)
+        for operator, spinbox in [
+            (self.material_amount_operator, self.material_amount_spinbox),
+            (
+                self.material_price_per_unit_operator,
+                self.material_price_per_unit_spinbox,
+            ),
+            (self.material_total_price_operator, self.material_total_price_spinbox),
+        ]:
+            MaterialFilterDialog._update_sub_filter_state(False, operator, spinbox)
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
@@ -170,6 +180,27 @@ class MaterialFilterDialog(QDialog):
         self.commodity_check_box.toggled.connect(
             self._update_commodity_sub_filters_state
         )
+        self.material_amount_check_box.toggled.connect(
+            lambda checked: MaterialFilterDialog._update_sub_filter_state(
+                checked,
+                self.material_amount_operator,
+                self.material_amount_spinbox,
+            )
+        )
+        self.material_price_per_unit_check_box.toggled.connect(
+            lambda checked: MaterialFilterDialog._update_sub_filter_state(
+                checked,
+                self.material_price_per_unit_operator,
+                self.material_price_per_unit_spinbox,
+            )
+        )
+        self.material_total_price_check_box.toggled.connect(
+            lambda checked: MaterialFilterDialog._update_sub_filter_state(
+                checked,
+                self.material_total_price_operator,
+                self.material_total_price_spinbox,
+            )
+        )
         self.add_filter_button.clicked.connect(self.accept)
         self.cancel_button.clicked.connect(self.reject)
 
@@ -211,12 +242,16 @@ class MaterialFilterDialog(QDialog):
         self.material_price_per_unit_spinbox.setSuffix(f" {self.price_suffix}")
         self.material_total_price_spinbox.setSuffix(f" {self.price_suffix}")
 
+    def setup_add_button_state(self, disabled: bool = True) -> None:
+        self.add_filter_button.setDisabled(disabled)
+
     def update_filter(self, material_filter: MaterialSearchDataclass) -> None:
         self._update_main_filters(
             material_filter.category_id, material_filter.commodity_id
         )
         if material_filter.commodity_id is not None:
             self._update_commodity_sub_filters(material_filter)
+        self.setup_add_button_state(False)
 
     def _update_main_filters(
         self, category_id: int | None, commodity_id: int | None
@@ -279,9 +314,11 @@ class MaterialFilterDialog(QDialog):
 
     def _update_category_combobox_state(self, checked: bool) -> None:
         self.category_combo_box.setDisabled(not checked)
+        self._update_add_button_state()
 
     def _update_commodity_combobox_state(self, checked: bool) -> None:
         self.commodity_combo_box.setDisabled(not checked)
+        self._update_add_button_state()
 
     def _update_commodity_sub_filters_state(self, checked: bool) -> None:
         check_boxes = [
@@ -289,22 +326,18 @@ class MaterialFilterDialog(QDialog):
             self.material_price_per_unit_check_box,
             self.material_total_price_check_box,
         ]
-        operators = [
-            self.material_amount_operator,
-            self.material_price_per_unit_operator,
-            self.material_total_price_operator,
-        ]
-        spinboxes = [
-            self.material_amount_spinbox,
-            self.material_price_per_unit_spinbox,
-            self.material_total_price_spinbox,
-        ]
-        widgets = check_boxes + operators + spinboxes
-        for widget in widgets:
-            widget.setDisabled(not checked)
+        for check_box in check_boxes:
+            check_box.setEnabled(checked)
         if not checked:
             for check_box in check_boxes:
-                check_box.setChecked(checked)
+                check_box.setChecked(False)
+
+    def _update_add_button_state(self) -> None:
+        self.add_filter_button.setDisabled(True)
+        for checkbox in [self.category_check_box, self.commodity_check_box]:
+            if checkbox.isChecked():
+                self.add_filter_button.setDisabled(False)
+                return
 
     def _update_amount_suffix(self) -> None:
         suffix = ""
@@ -384,6 +417,16 @@ class MaterialFilterDialog(QDialog):
         if self.commodity_check_box.isChecked():
             self._get_commodity_sub_filters(filters_text, material_filters)
         return " | ".join(filters_text), material_filters
+
+    @staticmethod
+    def _update_sub_filter_state(
+        checked: bool, operator: QComboBox, spinbox: QDoubleSpinBox
+    ) -> None:
+        operator.setEnabled(checked)
+        spinbox.setEnabled(checked)
+        if checked:
+            spinbox.selectAll()
+            spinbox.setFocus()
 
     def showEvent(self, event: QShowEvent) -> None:
         self.adjustSize()
