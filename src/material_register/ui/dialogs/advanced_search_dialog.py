@@ -1,7 +1,12 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtGui import QShowEvent
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QTabWidget, QVBoxLayout
+from PySide6.QtWidgets import (
+    QDialog,
+    QDialogButtonBox,
+    QTabWidget,
+    QVBoxLayout,
+)
 
 from material_register.controllers.material_filter_controller import (
     MaterialFilterController,
@@ -35,6 +40,9 @@ if TYPE_CHECKING:
 class AdvancedSearchDialog(QDialog):
     def __init__(self, search_widget: "SearchWidget") -> None:
         super().__init__(search_widget)
+        self.transactions_state = False
+        self.customers_state = False
+        self.material_state = False
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -58,6 +66,11 @@ class AdvancedSearchDialog(QDialog):
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_tabs()
+        self.update_search_button_state(
+            transactions_state=self.transactions_state,
+            customers_state=self.customers_state,
+            material_state=self.material_state,
+        )
 
     def _setup_texts(self) -> None:
         widgets = [self.search_button, self.cancel_button]
@@ -99,6 +112,23 @@ class AdvancedSearchDialog(QDialog):
         )
         self.tab_widget.addTab(self.customers_search_widget, self.customers_tab_title)
         self.tab_widget.addTab(self.material_search_widget, self.material_tab_title)
+
+    def update_search_button_state(
+        self,
+        transactions_state: bool | None = None,
+        customers_state: bool | None = None,
+        material_state: bool | None = None,
+    ) -> None:
+        if transactions_state is not None:
+            self.transactions_state = transactions_state
+        if customers_state is not None:
+            self.customers_state = customers_state
+        if material_state is not None:
+            self.material_state = material_state
+        has_filters = (
+            self.transactions_state or self.customers_state or self.material_state
+        )
+        self.search_button.setEnabled(has_filters)
 
     def get_advanced_filters(
         self,

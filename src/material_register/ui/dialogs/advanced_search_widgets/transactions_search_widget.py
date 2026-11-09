@@ -50,6 +50,7 @@ if TYPE_CHECKING:
 class TransactionsSearchWidget(QWidget):
     def __init__(self, advanced_search_dialog: "AdvancedSearchDialog") -> None:
         super().__init__(advanced_search_dialog)
+        self.advanced_search_dialog = advanced_search_dialog
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -149,6 +150,7 @@ class TransactionsSearchWidget(QWidget):
         self._setup_property()
         self._setup_user_role()
         self._setup_default_states()
+        self._update_reset_button_state()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
@@ -185,21 +187,14 @@ class TransactionsSearchWidget(QWidget):
         UiTexts.set_default_texts(self, widgets)
 
     def _create_connection(self) -> None:
-        check_boxes = [
-            self.transaction_number_checkbox,
-            self.created_at_checkbox,
-            self.transaction_type_checkbox,
-            self.payment_type_checkbox,
-            self.is_invoiced_checkbox,
-            self.transaction_price_checkbox,
-            self.notes_checkbox,
-        ]
+        check_boxes = self.findChildren(QCheckBox)
         for check_box in check_boxes:
             check_box.toggled.connect(
                 lambda _, selected_check_box=check_box: self._setup_checkboxes_state(
                     selected_check_box
                 )
             )
+            check_box.toggled.connect(self._update_reset_button_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
         self.transaction_type_checkbox.stateChanged.connect(
@@ -392,6 +387,26 @@ class TransactionsSearchWidget(QWidget):
             self.notes_edit.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             self.notes_edit.setStyleSheet("")
+
+    def _update_reset_button_state(self) -> None:
+        check_boxes = [
+            self.transaction_number_checkbox,
+            self.created_at_checkbox,
+            self.transaction_type_checkbox,
+            self.payment_type_checkbox,
+            self.is_invoiced_checkbox,
+            self.transaction_price_checkbox,
+            self.notes_checkbox,
+        ]
+        disabled = True
+        for checkbox in check_boxes:
+            if checkbox.isChecked():
+                disabled = False
+                break
+        self.reset_button.setDisabled(disabled)
+        self.advanced_search_dialog.update_search_button_state(
+            transactions_state=not disabled
+        )
 
     def _get_property_filters(self) -> list[AdvancedSearchDataclass]:
         filters_map = {

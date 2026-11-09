@@ -44,6 +44,7 @@ class MaterialSearchWidget(QWidget):
     ) -> None:
         super().__init__(advanced_search_dialog)
         self.material_filter_controller = material_filter_controller
+        self.advanced_search_dialog = advanced_search_dialog
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -89,6 +90,7 @@ class MaterialSearchWidget(QWidget):
         self._setup_radio_buttons()
         self._setup_listview()
         self._setup_property()
+        self._update_reset_button_state()
 
     def _setup_texts(self) -> None:
         widgets = self.findChildren(QWidget)
@@ -116,6 +118,9 @@ class MaterialSearchWidget(QWidget):
         self.filters_list_view.selectionModel().selectionChanged.connect(
             self._update_buttons_state
         )
+        self.material_filter_model.rowsInserted.connect(self._update_reset_button_state)
+        self.material_filter_model.rowsRemoved.connect(self._update_reset_button_state)
+        self.material_filter_model.modelReset.connect(self._update_reset_button_state)
 
     def _setup_default_states(self) -> None:
         self._setup_push_buttons()
@@ -145,6 +150,15 @@ class MaterialSearchWidget(QWidget):
         selection = self.filters_list_view.currentIndex().isValid()
         self.update_filter_button.setDisabled(not selection)
         self.delete_filter_button.setDisabled(not selection)
+
+    def _update_reset_button_state(self) -> None:
+        disabled = True
+        if self.material_filter_model.rowCount() > 0:
+            disabled = False
+        self.reset_button.setDisabled(disabled)
+        self.advanced_search_dialog.update_search_button_state(
+            material_state=not disabled
+        )
 
     def _get_operator(self) -> str:
         for radiobutton in [

@@ -42,6 +42,7 @@ class CustomersSearchWidget(QWidget):
 
     def __init__(self, advanced_search_dialog: "AdvancedSearchDialog") -> None:
         super().__init__(advanced_search_dialog)
+        self.advanced_search_dialog = advanced_search_dialog
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -141,6 +142,7 @@ class CustomersSearchWidget(QWidget):
         self._setup_property()
         self._setup_user_role()
         self._setup_default_states()
+        self._update_reset_button_state()
         self._set_validators()
 
     def _setup_texts(self) -> None:
@@ -193,6 +195,7 @@ class CustomersSearchWidget(QWidget):
                     selected_check_box
                 )
             )
+            check_box.toggled.connect(self._update_reset_button_state)
         self.subject_type_checkbox.toggled.connect(self._update_customer_state)
         self.subject_type_combo_box.currentIndexChanged.connect(
             self._update_customer_state
@@ -356,6 +359,27 @@ class CustomersSearchWidget(QWidget):
             self.notes_edit.setStyleSheet(INVALID_INPUT_STYLE)
         else:
             self.notes_edit.setStyleSheet("")
+
+    def _update_reset_button_state(self) -> None:
+        check_boxes = [
+            self.subject_type_checkbox,
+            self.company_name_checkbox,
+            self.first_name_checkbox,
+            self.last_name_checkbox,
+            self.document_checkbox,
+            self.address_checkbox,
+            self.active_checkbox,
+            self.notes_checkbox,
+        ]
+        disabled = True
+        for checkbox in check_boxes:
+            if checkbox.isChecked():
+                disabled = False
+                break
+        self.reset_button.setDisabled(disabled)
+        self.advanced_search_dialog.update_search_button_state(
+            customers_state=not disabled
+        )
 
     def _get_property_filters(self) -> list[AdvancedSearchDataclass]:
         property_map = {
