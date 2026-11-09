@@ -569,8 +569,8 @@
     "notesCheckboxText": "Filtrovat dle poznámek:",
     "notesEditPlaceholderText": "Zadej hledaný text...",
     "priceSuffix": "Kč",
-    "resetButtonText": "Smazat filtry",
-    "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
+    "resetButtonText": "Resetovat filtry",
+    "resetButtonTooltipText": "Obnoví výchozí nastavení filtrů na aktuální záložce"
   },
   "CustomersSearchWidget": {
     "subjectTypeCheckBoxText": "Filtrovat dle typu zákazníka:",
@@ -594,8 +594,8 @@
     "activeComboBoxItems": ["Aktivní", "Neaktivní"],
     "notesCheckboxText": "Filtrovat dle poznámek:",
     "notesEditPlaceholderText": "Zadej hledaný text...",
-    "resetButtonText": "Smazat filtry",
-    "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
+    "resetButtonText": "Resetovat filtry",
+    "resetButtonTooltipText": "Obnoví výchozí nastavení filtrů na aktuální záložce"
   },
   "MaterialSearchWidget": {
     "addFilterButtonText": "Nový filtr",
@@ -606,8 +606,8 @@
     "deleteFilterButtonTooltipText": "Odstraní označený filtr",
     "andOperatorRadioButtonText": "Všechny podmínky",
     "orOperatorRadioButtonText": "Alespoň jedna podmínka",
-    "resetButtonText": "Smazat filtry",
-    "resetButtonTooltipText": "Odstraní všechny filtry pro aktuální záložku"
+    "resetButtonText": "Resetovat filtry",
+    "resetButtonTooltipText": "Obnoví výchozí nastavení filtrů na aktuální záložce"
   },
   "MaterialFilterDialog": {
     "titleText": "Filtr materiálu",

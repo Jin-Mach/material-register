@@ -233,7 +233,7 @@
       "pcs"
     ],
     "warningLabelText": "The unit cannot be changed after creating the item",
-    "defaultPriceLabelText": "Unit price (CZK):",
+    "defaultPriceLabelText": "Unit price (£):",
     "activeLabelText": "Active",
     "notesLabelText": "Notes",
     "notesCountLabelText": "Character count:",
@@ -267,7 +267,7 @@
   },
   "CommodityCardWidget": {
     "unitLabelText": "Unit:",
-    "defaultPriceLabelText": "Unit price (CZK):",
+    "defaultPriceLabelText": "Unit price (£):",
     "activeLabelText": "Active:",
     "notesLabelText": "Notes",
     "updateCommodityButtonText": "Edit item",
@@ -350,7 +350,7 @@
     "commodityLabelText": "Item:",
     "commodityComboBoxPlaceholderText": "Select item...",
     "unitLabelText": "Total quantity:",
-    "priceLabelText": "Unit price (CZK):",
+    "priceLabelText": "Unit price (£):",
     "addButtonText": "Add item",
     "addButtonTooltipText": "Adds item to transaction",
     "updateButtonText": "Edit Item",
@@ -582,9 +582,9 @@
     "transactionPriceOperatorItems": ["Less than", "Equal to", "Greater than"],
     "notesCheckboxText": "Filter by notes:",
     "notesEditPlaceholderText": "Enter text to search...",
-    "priceSuffix": "CZK",
-    "resetButtonText": "Clear filters",
-    "resetButtonTooltipText": "Clears all filters for the current tab"
+    "priceSuffix": "£",
+    "resetButtonText": "Reset filters",
+    "resetButtonTooltipText": "Resets the filters on the current tab to their default settings"
   },
   "CustomersSearchWidget": {
     "subjectTypeCheckBoxText": "Filter by customer type:",
@@ -608,8 +608,8 @@
     "activeComboBoxItems": ["Active", "Inactive"],
     "notesCheckboxText": "Filter by notes:",
     "notesEditPlaceholderText": "Enter search text...",
-    "resetButtonText": "Clear filters",
-    "resetButtonTooltipText": "Removes all filters for the current tab"
+    "resetButtonText": "Reset filters",
+    "resetButtonTooltipText": "Resets the filters on the current tab to their default settings"
   },
   "MaterialSearchWidget": {
     "addFilterButtonText": "New filter",
@@ -620,8 +620,8 @@
     "deleteFilterButtonTooltipText": "Removes the selected filter",
     "andOperatorRadioButtonText": "All conditions",
     "orOperatorRadioButtonText": "At least one condition",
-    "resetButtonText": "Clear filters",
-    "resetButtonTooltipText": "Removes all filters for the current tab"
+    "resetButtonText": "Reset filters",
+    "resetButtonTooltipText": "Resets the filters on the current tab to their default settings"
   },
   "MaterialFilterDialog": {
     "titleText": "Material filter",

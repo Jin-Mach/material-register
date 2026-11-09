@@ -74,6 +74,7 @@ class MaterialSearchWidget(QWidget):
         filters_layout.addWidget(self.delete_filter_button)
         filters_layout.addStretch()
         filters_layout.addWidget(self.and_operator_radio_button)
+        filters_layout.addSpacing(UI_SPACING)
         filters_layout.addWidget(self.or_operator_radio_button)
         buttons_layout.addWidget(self.reset_button)
         buttons_layout.addStretch()
