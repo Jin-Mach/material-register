@@ -248,6 +248,7 @@ QCheckBox::indicator:checked:disabled {
 
 QTableView,
 QTreeView,
+QListView,
 QListWidget {
     background-color: #232528;
     border: 1px solid #45484d;
@@ -269,6 +270,7 @@ QHeaderView::section {
 
 QTableView::item,
 QTreeView::item,
+QListView::item,
 QListWidget::item {
     padding: 3px 4px;
 }

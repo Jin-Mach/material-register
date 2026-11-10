@@ -136,6 +136,10 @@ class MaterialSearchWidget(QWidget):
 
     def _setup_listview(self) -> None:
         self.filters_list_view.setSelectionMode(QListView.SelectionMode.SingleSelection)
+        self.filters_list_view.setVerticalScrollMode(
+            QListView.ScrollMode.ScrollPerPixel
+        )
+        self.filters_list_view.setAlternatingRowColors(True)
         self.material_filter_model = MaterialFilterModel()
         self.filters_list_view.setModel(self.material_filter_model)
         self.material_filter_controller.set_material_filter_model(
