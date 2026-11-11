@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QEvent, QObject, Qt, QTimer
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QDialog,
@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
     QDoubleSpinBox,
     QGridLayout,
     QLabel,
+    QLineEdit,
     QScrollArea,
     QVBoxLayout,
     QWidget,
@@ -37,6 +38,7 @@ class UpdateCommoditiesPriceDialog(QDialog):
     def __init__(self, catalog_widget: "CatalogWidget") -> None:
         super().__init__(catalog_widget)
         self.commodities_map = {}
+        self.spinboxes_line_edits = []
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -136,6 +138,9 @@ class UpdateCommoditiesPriceDialog(QDialog):
             value_spinbox.setSingleStep(0.1)
             value_spinbox.setGroupSeparatorShown(True)
             disable_spinbox_wheel(value_spinbox)
+            spinbox_line_edit = value_spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
             value_spinbox.valueChanged.connect(self._update_button_state)
             disable_context_menu([value_spinbox])
             self.commodities_layout.addWidget(name_label, row, 0)
@@ -158,3 +163,12 @@ class UpdateCommoditiesPriceDialog(QDialog):
                 self.save_button.setDisabled(False)
                 return
         self.save_button.setDisabled(True)
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            isinstance(watched, QLineEdit)
+            and watched in self.spinboxes_line_edits
+            and event.type() == QEvent.Type.MouseButtonPress
+        ):
+            QTimer.singleShot(0, watched.selectAll)
+        return super().eventFilter(watched, event)

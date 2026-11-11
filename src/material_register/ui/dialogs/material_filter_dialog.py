@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QEvent, QObject, Qt, QTimer
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QDialogButtonBox,
     QDoubleSpinBox,
     QGridLayout,
+    QLineEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -231,6 +232,7 @@ class MaterialFilterDialog(QDialog):
             self.material_total_price_spinbox,
             self.material_amount_spinbox,
         ]
+        self.spinboxes_line_edits = []
         for spinbox in spinboxes:
             spinbox.setMinimum(SEARCH_TRANSACTION_MIN_PRICE_VALUE)
             spinbox.setMaximum(SEARCH_TRANSACTION_MAX_PRICE_VALUE)
@@ -238,6 +240,9 @@ class MaterialFilterDialog(QDialog):
             spinbox.setSingleStep(0.1)
             spinbox.setGroupSeparatorShown(True)
             spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
             disable_spinbox_wheel(spinbox)
         self.material_price_per_unit_spinbox.setSuffix(f" {self.price_suffix}")
         self.material_total_price_spinbox.setSuffix(f" {self.price_suffix}")
@@ -427,6 +432,15 @@ class MaterialFilterDialog(QDialog):
         if checked:
             spinbox.selectAll()
             spinbox.setFocus()
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            isinstance(watched, QLineEdit)
+            and watched in self.spinboxes_line_edits
+            and event.type() == QEvent.Type.MouseButtonPress
+        ):
+            QTimer.singleShot(0, watched.selectAll)
+        return super().eventFilter(watched, event)
 
     def showEvent(self, event: QShowEvent) -> None:
         self.adjustSize()

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QRegularExpression
+from PySide6.QtCore import QEvent, QObject, QRegularExpression, Qt, QTimer
 from PySide6.QtGui import QFont, QRegularExpressionValidator, QShowEvent
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -46,7 +46,7 @@ if TYPE_CHECKING:
     from material_register.ui.catalog.catalog_widget import CatalogWidget
 
 
-# noinspection PyTypeChecker,PyMethodMayBeStatic
+# noinspection PyTypeChecker
 class CommodityDialog(QDialog):
     def __init__(
         self,
@@ -86,6 +86,9 @@ class CommodityDialog(QDialog):
         self.unit_label.setObjectName("unitLabel")
         self.unit_input = QComboBox()
         self.unit_input.setObjectName("unitInput")
+        self.unit_input.setEditable(True)
+        self.unit_input.lineEdit().setReadOnly(True)
+        self.unit_input.lineEdit().setAlignment(Qt.AlignmentFlag.AlignRight)
         self.warning_spacer_label = QLabel()
         self.warning_label = QLabel()
         self.warning_label.setObjectName("warningLabel")
@@ -180,8 +183,13 @@ class CommodityDialog(QDialog):
 
     def _setup_spinboxes(self) -> None:
         spinboxes = self.findChildren(QDoubleSpinBox)
+        self.spinboxes_line_edits = []
         for spinbox in spinboxes:
+            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
             disable_spinbox_wheel(spinbox)
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
 
     def _setup_context_menu(self) -> None:
         disable_context_menu(self.findChildren(QWidget))
@@ -281,6 +289,15 @@ class CommodityDialog(QDialog):
             notes=self.notes_edit.toPlainText().strip(),
             active=int(self.active_checkbox.isChecked()),
         )
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            isinstance(watched, QLineEdit)
+            and watched in self.spinboxes_line_edits
+            and event.type() == QEvent.Type.MouseButtonPress
+        ):
+            QTimer.singleShot(0, watched.selectAll)
+        return super().eventFilter(watched, event)
 
     def showEvent(self, event: QShowEvent) -> None:
         self.adjustSize()

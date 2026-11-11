@@ -1,7 +1,15 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QDate, QRegularExpression, QStandardPaths, Qt
+from PySide6.QtCore import (
+    QDate,
+    QEvent,
+    QObject,
+    QRegularExpression,
+    QStandardPaths,
+    Qt,
+    QTimer,
+)
 from PySide6.QtGui import QFontMetrics, QRegularExpressionValidator, QResizeEvent
 from PySide6.QtWidgets import (
     QButtonGroup,
@@ -390,6 +398,7 @@ class SummaryExportWidget(QWidget):
 
     def _setup_spinboxes(self) -> None:
         spinboxes = self.findChildren(QDoubleSpinBox)
+        self.spinboxes_line_edits = []
         for spinbox in spinboxes:
             minimum = SUMMARY_EXPORT_PRICE_MIN_VALUE
             if spinbox == self.opening_balance_spinbox:
@@ -403,6 +412,9 @@ class SummaryExportWidget(QWidget):
             if self.price_suffix:
                 spinbox.setSuffix(f" {self.price_suffix}")
             disable_spinbox_wheel(spinbox)
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(
@@ -551,6 +563,15 @@ class SummaryExportWidget(QWidget):
             "useLastOptionsCheckbox": self.use_last_options_checkbox.isChecked(),
             "saveLastOpeningBalanceCheckbox": self.save_last_opening_balance_checkbox.isChecked(),
         }
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            isinstance(watched, QLineEdit)
+            and watched in self.spinboxes_line_edits
+            and event.type() == QEvent.Type.MouseButtonPress
+        ):
+            QTimer.singleShot(0, watched.selectAll)
+        return super().eventFilter(watched, event)
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         super().resizeEvent(event)

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QEvent, QObject, Qt, QTimer
 from PySide6.QtGui import QFontMetrics, QShowEvent
 from PySide6.QtWidgets import (
     QComboBox,
@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QDoubleSpinBox,
     QFormLayout,
     QLabel,
+    QLineEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -115,13 +116,19 @@ class CategoryCommodityDialog(QDialog):
             self.price_spinbox.hide()
 
     def _setup_spinboxes(self) -> None:
+        self.spinboxes_line_edits = []
         self._setup_unit_spinbox()
         self._setup_price_spinbox()
+        for spinbox in (self.unit_spinbox, self.price_spinbox):
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
 
     def _setup_context_menu(self) -> None:
         disable_context_menu(self.findChildren(QWidget))
 
     def _setup_unit_spinbox(self) -> None:
+        self.unit_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.unit_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
         self.unit_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE)
         self.unit_spinbox.setDecimals(1)
@@ -130,6 +137,7 @@ class CategoryCommodityDialog(QDialog):
         disable_spinbox_wheel(self.unit_spinbox)
 
     def _setup_price_spinbox(self) -> None:
+        self.price_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.price_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
         self.price_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE)
         self.price_spinbox.setDecimals(1)
@@ -356,6 +364,15 @@ class CategoryCommodityDialog(QDialog):
             "unitCount": unit_count,
             "pricePerUnit": price_per_unit,
         }
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            isinstance(watched, QLineEdit)
+            and watched in self.spinboxes_line_edits
+            and event.type() == QEvent.Type.MouseButtonPress
+        ):
+            QTimer.singleShot(0, watched.selectAll)
+        return super().eventFilter(watched, event)
 
     def showEvent(self, event: QShowEvent) -> None:
         self.adjustSize()

@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QEvent, QObject, Qt, QTimer
 from PySide6.QtWidgets import (
     QDoubleSpinBox,
     QFormLayout,
     QGroupBox,
     QLabel,
+    QLineEdit,
     QScrollArea,
     QSpinBox,
     QTabWidget,
@@ -243,11 +244,19 @@ class CashBalanceWidget(QWidget):
         self.opening_balance_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
         self.balance_count_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
         for spinbox in self.findChildren(QSpinBox):
+            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
             spinbox.setGroupSeparatorShown(True)
             disable_spinbox_wheel(spinbox)
         for spinbox in self.findChildren(QDoubleSpinBox):
+            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
             spinbox.setGroupSeparatorShown(True)
             disable_spinbox_wheel(spinbox)
+        self.spinboxes_line_edits = []
+        spinboxes = self.findChildren(QSpinBox) + self.findChildren(QDoubleSpinBox)
+        for spinbox in spinboxes:
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
         for spinbox in decimal_spinboxes:
             spinbox.setSuffix(self.currency_suffix)
         for spinbox in self.values_spinboxes.values():
@@ -279,3 +288,12 @@ class CashBalanceWidget(QWidget):
             value = spinbox.value()
             values_map[key] = value
         return values_map
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            isinstance(watched, QLineEdit)
+            and watched in self.spinboxes_line_edits
+            and event.type() == QEvent.Type.MouseButtonPress
+        ):
+            QTimer.singleShot(0, watched.selectAll)
+        return super().eventFilter(watched, event)

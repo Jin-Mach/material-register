@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QDate, Qt
+from PySide6.QtCore import QDate, QEvent, QObject, Qt, QTimer
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -250,6 +250,7 @@ class TransactionsSearchWidget(QWidget):
 
     def _setup_spinboxes(self) -> None:
         spinboxes = [self.transaction_number_spinbox, self.transaction_price_spinbox]
+        self.spinboxes_line_edits = []
         for spinbox in spinboxes:
             if isinstance(spinbox, QSpinBox):
                 spinbox.setMinimum(int(SEARCH_TRANSACTION_MIN_PRICE_VALUE))
@@ -259,6 +260,9 @@ class TransactionsSearchWidget(QWidget):
                 spinbox.setMaximum(SEARCH_TRANSACTION_MAX_PRICE_VALUE)
             spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
             disable_spinbox_wheel(spinbox)
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
         self.transaction_price_spinbox.setDecimals(1)
         self.transaction_price_spinbox.setSingleStep(0.1)
         self.transaction_price_spinbox.setGroupSeparatorShown(True)
@@ -494,3 +498,12 @@ class TransactionsSearchWidget(QWidget):
             if section_filters:
                 filters_data.extend(section_filters)
         return filters_data
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            isinstance(watched, QLineEdit)
+            and watched in self.spinboxes_line_edits
+            and event.type() == QEvent.Type.MouseButtonPress
+        ):
+            QTimer.singleShot(0, watched.selectAll)
+        return super().eventFilter(watched, event)
