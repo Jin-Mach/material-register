@@ -24,7 +24,7 @@ from material_register.db.models.search_models.search_transactions_model import 
     SearchTransactionsModel,
 )
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.search_manager import SearchManager
+from material_register.services.search_service.search_manager import SearchManager
 from material_register.ui.config.styles_constants import PRICE_STYLE
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,

@@ -4,7 +4,7 @@ from material_register.db.config.search_queries_constants import (
     SEARCH_PERIOD_QUERY,
     SEARCH_VALUE_QUERY,
 )
-from material_register.services.filter_builder import FilterBuilder
+from material_register.services.search_service.filter_builder import FilterBuilder
 
 
 @pytest.mark.parametrize(

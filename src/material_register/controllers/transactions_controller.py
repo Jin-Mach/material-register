@@ -27,7 +27,7 @@ from material_register.init.db_init import DbInit
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.search_manager import SearchManager
+from material_register.services.search_service.search_manager import SearchManager
 from material_register.services.transactions_service import TransactionsService
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_CRITICAL,

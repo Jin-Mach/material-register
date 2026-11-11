@@ -9,7 +9,7 @@ from material_register.domain.advanced_search_dataclass import (
 )
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.search_manager import SearchManager
+from material_register.services.search_service.search_manager import SearchManager
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog
 from material_register.ui.dialogs.error_dialog import ErrorDialog

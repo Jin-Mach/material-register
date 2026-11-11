@@ -11,7 +11,9 @@ from material_register.domain.advanced_search_dataclass import (
     MaterialFiltersDataclass,
     MaterialSearchDataclass,
 )
-from material_register.services.advanced_filter_builder import AdvancedFilterBuilder
+from material_register.services.search_service.advanced_filter_builder import (
+    AdvancedFilterBuilder,
+)
 from material_register.ui.config.ui_constants import PAYMENT_CASH, TRANSFER_IN
 
 

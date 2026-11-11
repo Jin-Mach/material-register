@@ -9,8 +9,10 @@ from material_register.domain.advanced_search_dataclass import (
 )
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.init.db_init import DbInit
-from material_register.services.advanced_filter_builder import AdvancedFilterBuilder
 from material_register.services.error_handler import ErrorHandler
+from material_register.services.search_service.advanced_filter_builder import (
+    AdvancedFilterBuilder,
+)
 from material_register.ui.config.ui_constants import LOG_LEVEL_ERROR, LOGGER_DB
 
 
