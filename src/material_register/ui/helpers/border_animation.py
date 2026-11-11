@@ -1,5 +1,5 @@
-from PySide6.QtCore import QEvent, QObject, Qt, QTimer, Signal
-from PySide6.QtGui import QColor, QPainter, QPaintEvent, QPen
+from PySide6.QtCore import QEvent, QObject, QRectF, Qt, QTimer, Signal
+from PySide6.QtGui import QColor, QPainter, QPainterPath, QPaintEvent, QPen
 from PySide6.QtWidgets import QWidget
 
 
@@ -9,7 +9,7 @@ class BorderAnimation(QWidget):
     def __init__(
         self,
         widget: QWidget,
-        speed: int = 5,
+        speed: int = 8,
         interval: int = 16,
         color: QColor | str = "#FFE066",
         thickness: int = 2,
@@ -62,8 +62,41 @@ class BorderAnimation(QWidget):
         painter = QPainter(self)
         try:
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-            painter.setPen(QPen(self.color, self.thickness))
-            y_axis = int(self.thickness // 2)
-            painter.drawLine(0, y_axis, self.progress, y_axis)
+            border_rect = QRectF(self.rect()).adjusted(
+                self.thickness / 2,
+                self.thickness / 2,
+                -self.thickness / 2,
+                -self.thickness / 2,
+            )
+            border_path = QPainterPath()
+            border_path.addRoundedRect(border_rect, 4, 4)
+            border_length = border_path.length()
+            if self.width() == 0 or border_length == 0 or self.progress == 0:
+                return
+            head_distance = self.progress / self.width() * border_length
+            segment_length = min(150, border_length)
+            segment_start = max(0, head_distance - segment_length)
+            segment_steps = 12
+            points = []
+            for step in range(segment_steps + 1):
+                distance = segment_start + (
+                    (head_distance - segment_start) * step / segment_steps
+                )
+                path_position = border_path.percentAtLength(distance)
+                points.append(border_path.pointAtPercent(path_position))
+            for step in range(segment_steps):
+                fade = min((step + 1) / 3, (segment_steps - step) / 3, 1)
+                segment_color = QColor(self.color)
+                segment_color.setAlpha(round(self.color.alpha() * fade))
+                painter.setPen(
+                    QPen(
+                        segment_color,
+                        self.thickness,
+                        Qt.PenStyle.SolidLine,
+                        Qt.PenCapStyle.RoundCap,
+                        Qt.PenJoinStyle.RoundJoin,
+                    )
+                )
+                painter.drawLine(points[step], points[step + 1])
         finally:
             painter.end()
