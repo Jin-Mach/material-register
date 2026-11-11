@@ -37,6 +37,7 @@ class CommodityCardWidget(QTabWidget):
     def __init__(self, commodities_grid_widget: "CommoditiesGridWidget") -> None:
         super().__init__(commodities_grid_widget)
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.price_suffix = ""
         self.detail_widget = self._create_ui()
         self._setup_ui()
         self.addTab(self.detail_widget, "")
@@ -91,6 +92,7 @@ class CommodityCardWidget(QTabWidget):
         self._setup_text_edit()
 
     def setup_texts(self, ui_texts: dict[str, str]) -> None:
+        self.price_suffix = ui_texts.get("priceSuffix", "")
         widgets = [
             self.unit_label,
             self.default_price_label,
@@ -123,9 +125,8 @@ class CommodityCardWidget(QTabWidget):
         self.setTabText(0, commodity.name)
         self.setTabToolTip(0, commodity.name)
         self.unit_value.setText(commodity.unit)
-        self.default_price_value.setText(
-            format_number_to_locale(commodity.default_price)
-        )
+        price_text = format_number_to_locale(commodity.default_price)
+        self.default_price_value.setText(f"{price_text} {self.price_suffix}")
         self.active_value.setChecked(bool(commodity.active))
         self.notes_edit.setPlainText(commodity.notes)
 

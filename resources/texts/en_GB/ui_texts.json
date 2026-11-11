@@ -233,7 +233,8 @@
       "pcs"
     ],
     "warningLabelText": "The unit cannot be changed after creating the item",
-    "defaultPriceLabelText": "Unit price (£):",
+    "defaultPriceLabelText": "Unit price:",
+    "priceSuffix": "£",
     "activeLabelText": "Active",
     "notesLabelText": "Notes",
     "notesCountLabelText": "Character count:",
@@ -267,7 +268,8 @@
   },
   "CommodityCardWidget": {
     "unitLabelText": "Unit:",
-    "defaultPriceLabelText": "Unit price (£):",
+    "defaultPriceLabelText": "Unit price:",
+    "priceSuffix": "£",
     "activeLabelText": "Active:",
     "notesLabelText": "Notes",
     "updateCommodityButtonText": "Edit item",

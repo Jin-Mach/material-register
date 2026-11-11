@@ -167,6 +167,7 @@ class CommodityDialog(QDialog):
         self.notes_text = texts.get(
             f"{self.notes_count_label.objectName()}Text", "Count:"
         )
+        self.price_suffix = texts.get("priceSuffix", "")
         self.unit_input.addItems(self.units_items)
         if UiTexts.set_ui_texts(self, widgets):
             return
@@ -196,6 +197,7 @@ class CommodityDialog(QDialog):
             spinbox_line_edit = spinbox.lineEdit()
             self.spinboxes_line_edits.append(spinbox_line_edit)
             spinbox_line_edit.installEventFilter(self)
+        self.price_input.setSuffix(f" {self.price_suffix}")
 
     def _setup_style(self) -> None:
         self.warning_label.setStyleSheet(WARNING_STYLE)
