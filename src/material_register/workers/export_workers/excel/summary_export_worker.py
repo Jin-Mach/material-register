@@ -8,7 +8,7 @@ from material_register.db.queries.export_queries.summary_export_queries import (
 )
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.export.excel.summary_export.summary_workbook import (
+from material_register.services.export_service.excel.summary_export.summary_workbook import (
     SummaryWorkbook,
 )
 from material_register.ui.config.ui_constants import (

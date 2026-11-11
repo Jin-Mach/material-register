@@ -14,7 +14,7 @@ from reportlab.platypus import (
 
 from material_register.domain.branch_dataclass import BranchDataclass
 from material_register.domain.transaction_dataclass import Transaction
-from material_register.services.export.config.font_constants import (
+from material_register.services.export_service.config.font_constants import (
     BLACK_COLOR,
     BOLD_FONT,
     HEADER_FONT_SIZE,

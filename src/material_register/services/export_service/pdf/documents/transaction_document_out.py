@@ -18,7 +18,7 @@ from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
-from material_register.services.export.config.font_constants import (
+from material_register.services.export_service.config.font_constants import (
     BLACK_COLOR,
     BOLD_FONT,
     GREY_COLOR,
@@ -26,7 +26,7 @@ from material_register.services.export.config.font_constants import (
     STANDARD_FONT_SIZE,
     TOTAL_FONT_SIZE,
 )
-from material_register.services.export.pdf.documents.documents_helper import (
+from material_register.services.export_service.pdf.documents.documents_helper import (
     create_footer,
     create_header,
     create_horizontal_line,

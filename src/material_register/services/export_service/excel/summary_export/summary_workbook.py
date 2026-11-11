@@ -6,7 +6,7 @@ from material_register.domain.export_dataclass.summary_dataclass import (
     SummaryExportItemIn,
     SummaryExportItemOut,
 )
-from material_register.services.export.excel.summary_export.summary_sheet import (
+from material_register.services.export_service.excel.summary_export.summary_sheet import (
     SummarySheet,
 )
 

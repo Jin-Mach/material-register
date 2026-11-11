@@ -5,10 +5,10 @@ from openpyxl import Workbook
 from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportDay,
 )
-from material_register.services.export.excel.transactions_export.transactions_day_sheet_in import (
+from material_register.services.export_service.excel.transactions_export.transactions_day_sheet_in import (
     TransactionsDaySheetIn,
 )
-from material_register.services.export.excel.transactions_export.transactions_day_sheet_out import (
+from material_register.services.export_service.excel.transactions_export.transactions_day_sheet_out import (
     TransactionsDaySheetOut,
 )
 from material_register.ui.config.ui_constants import TRANSFER_IN, TRANSFER_OUT

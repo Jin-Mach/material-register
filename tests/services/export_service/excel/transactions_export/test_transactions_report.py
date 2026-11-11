@@ -3,7 +3,7 @@ import pytest
 from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportDay,
 )
-from material_register.services.export.excel.transactions_export.transactions_report import (
+from material_register.services.export_service.excel.transactions_export.transactions_report import (
     TransactionsReport,
 )
 

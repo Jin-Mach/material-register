@@ -11,7 +11,7 @@ from material_register.domain.export_dataclass.transactions_dataclass import (
 )
 from material_register.init.db_init import DbInit
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.export.excel.transactions_export.transactions_workbook import (
+from material_register.services.export_service.excel.transactions_export.transactions_workbook import (
     TransactionsWorkbook,
 )
 from material_register.ui.config.ui_constants import (

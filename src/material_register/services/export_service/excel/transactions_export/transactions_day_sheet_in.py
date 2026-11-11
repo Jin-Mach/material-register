@@ -9,7 +9,7 @@ from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportDay,
     TransactionsExportTransaction,
 )
-from material_register.services.export.excel.excel_helpers import (
+from material_register.services.export_service.excel.excel_helpers import (
     cell_alignment,
     cell_font,
     set_borders,

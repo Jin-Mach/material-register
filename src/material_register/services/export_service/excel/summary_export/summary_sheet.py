@@ -10,13 +10,13 @@ from material_register.domain.export_dataclass.summary_dataclass import (
     SummaryItemDataIn,
     SummaryItemDataOut,
 )
-from material_register.services.export.excel.excel_helpers import (
+from material_register.services.export_service.excel.excel_helpers import (
     cell_alignment,
     cell_font,
     set_background_color,
     set_borders,
 )
-from material_register.services.export.excel.summary_export.summary_report import (
+from material_register.services.export_service.excel.summary_export.summary_report import (
     SummaryReport,
 )
 from material_register.ui.config.ui_constants import PAYMENT_TRANSFER

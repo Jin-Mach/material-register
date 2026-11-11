@@ -6,10 +6,10 @@ from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
 from material_register.services.error_handler import ErrorHandler
-from material_register.services.export.pdf.documents.transaction_document_in import (
+from material_register.services.export_service.pdf.documents.transaction_document_in import (
     TransactionDocumentIn,
 )
-from material_register.services.export.pdf.documents.transaction_document_out import (
+from material_register.services.export_service.pdf.documents.transaction_document_out import (
     TransactionDocumentOut,
 )
 from material_register.ui.config.ui_constants import (
