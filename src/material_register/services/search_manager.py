@@ -1,10 +1,12 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from material_register.controllers.advanced_search_controller import (
+    from material_register.controllers.search_controllers.advanced_search_controller import (
         AdvancedSearchController,
     )
-    from material_register.controllers.search_controller import SearchController
+    from material_register.controllers.search_controllers.search_controller import (
+        SearchController,
+    )
     from material_register.controllers.transactions_controller import (
         TransactionsController,
     )

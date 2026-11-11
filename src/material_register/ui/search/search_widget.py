@@ -4,13 +4,15 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from material_register.controllers.advanced_search_controller import (
-    AdvancedSearchController,
-)
 from material_register.controllers.export_controllers.pdf.search_document_controller import (
     SearchDocumentController,
 )
-from material_register.controllers.search_controller import SearchController
+from material_register.controllers.search_controllers.advanced_search_controller import (
+    AdvancedSearchController,
+)
+from material_register.controllers.search_controllers.search_controller import (
+    SearchController,
+)
 from material_register.db.config.model_constants import SEARCH_MODEL_COLUMNS
 from material_register.db.models.search_models.search_material_model import (
     SearchMaterialModel,

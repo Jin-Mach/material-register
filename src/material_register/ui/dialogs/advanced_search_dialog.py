@@ -8,10 +8,10 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from material_register.controllers.material_filter_controller import (
+from material_register.controllers.search_controllers.material_filter_controller import (
     MaterialFilterController,
 )
-from material_register.domain.adavanced_search_dataclass import (
+from material_register.domain.advanced_search_dataclass import (
     AdvancedSearchDataclass,
     MaterialFiltersDataclass,
 )

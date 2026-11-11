@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.domain.adavanced_search_dataclass import MaterialSearchDataclass
+from material_register.domain.advanced_search_dataclass import MaterialSearchDataclass
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.services.error_handler import ErrorHandler

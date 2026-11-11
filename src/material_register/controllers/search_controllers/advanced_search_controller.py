@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtWidgets import QDialog, QWidget
 
-from material_register.domain.adavanced_search_dataclass import (
+from material_register.domain.advanced_search_dataclass import (
     AdvancedSearchDataclass,
     MaterialFiltersDataclass,
 )

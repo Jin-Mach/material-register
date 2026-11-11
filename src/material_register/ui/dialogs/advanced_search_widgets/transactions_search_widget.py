@@ -21,7 +21,7 @@ from material_register.db.config.advanced_search_queries_constants import (
     HAVING_CLAUSE,
     WHERE_CLAUSE,
 )
-from material_register.domain.adavanced_search_dataclass import (
+from material_register.domain.advanced_search_dataclass import (
     AdvancedSearchDataclass,
 )
 from material_register.services.error_handler import ErrorHandler

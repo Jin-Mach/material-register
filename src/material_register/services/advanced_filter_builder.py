@@ -13,7 +13,7 @@ from material_register.db.config.advanced_search_queries_constants import (
     MATERIAL_FILTER_TOTAL_PRICE,
     WHERE_CLAUSE,
 )
-from material_register.domain.adavanced_search_dataclass import (
+from material_register.domain.advanced_search_dataclass import (
     AdvancedSearchDataclass,
     MaterialFiltersDataclass,
 )

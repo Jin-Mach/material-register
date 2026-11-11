@@ -14,7 +14,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from material_register.controllers.documents_controller import DocumentsController
+from material_register.controllers.export_controllers.pdf.documents_controller import (
+    DocumentsController,
+)
 from material_register.providers.settings_provider import SettingsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (

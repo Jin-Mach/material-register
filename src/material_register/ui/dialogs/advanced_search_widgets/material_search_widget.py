@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
 from material_register.db.models.search_models.material_filter_model import (
     MaterialFilterModel,
 )
-from material_register.domain.adavanced_search_dataclass import (
+from material_register.domain.advanced_search_dataclass import (
     MaterialFiltersDataclass,
     MaterialSearchDataclass,
 )
@@ -27,7 +27,7 @@ from material_register.ui.config.ui_constants import (
 from material_register.ui.setup.ui_texts import UiTexts
 
 if TYPE_CHECKING:
-    from material_register.controllers.material_filter_controller import (
+    from material_register.controllers.search_controllers.material_filter_controller import (
         MaterialFilterController,
     )
     from material_register.ui.dialogs.advanced_search_dialog import AdvancedSearchDialog

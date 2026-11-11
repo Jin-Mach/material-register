@@ -1,6 +1,6 @@
 from PySide6.QtGui import QStandardItem, QStandardItemModel, Qt
 
-from material_register.domain.adavanced_search_dataclass import MaterialSearchDataclass
+from material_register.domain.advanced_search_dataclass import MaterialSearchDataclass
 
 
 class MaterialFilterModel(QStandardItemModel):

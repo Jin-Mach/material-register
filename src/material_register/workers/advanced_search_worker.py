@@ -3,7 +3,7 @@ from PySide6.QtSql import QSqlDatabase
 
 from material_register.db.queries.advanced_search_queries import AdvancedSearchQueries
 from material_register.db.queries.basic_database_queries import BasicDatabaseQueries
-from material_register.domain.adavanced_search_dataclass import (
+from material_register.domain.advanced_search_dataclass import (
     AdvancedSearchDataclass,
     MaterialFiltersDataclass,
 )
