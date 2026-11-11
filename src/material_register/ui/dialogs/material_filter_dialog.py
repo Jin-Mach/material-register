@@ -37,7 +37,9 @@ if TYPE_CHECKING:
 
 class MaterialFilterDialog(QDialog):
     LESS_THAN = "<"
+
     EQUAL_THAN = "="
+
     MORE_THAN = ">"
 
     def __init__(
@@ -355,6 +357,16 @@ class MaterialFilterDialog(QDialog):
                 break
         self.material_amount_spinbox.setSuffix(f" {suffix}")
 
+    @staticmethod
+    def _update_sub_filter_state(
+        checked: bool, operator: QComboBox, spinbox: QDoubleSpinBox
+    ) -> None:
+        operator.setEnabled(checked)
+        spinbox.setEnabled(checked)
+        if checked:
+            spinbox.selectAll()
+            spinbox.setFocus()
+
     def _get_main_filters(
         self, filters_text: list, material_filters: MaterialSearchDataclass
     ) -> None:
@@ -422,16 +434,6 @@ class MaterialFilterDialog(QDialog):
         if self.commodity_check_box.isChecked():
             self._get_commodity_sub_filters(filters_text, material_filters)
         return " | ".join(filters_text), material_filters
-
-    @staticmethod
-    def _update_sub_filter_state(
-        checked: bool, operator: QComboBox, spinbox: QDoubleSpinBox
-    ) -> None:
-        operator.setEnabled(checked)
-        spinbox.setEnabled(checked)
-        if checked:
-            spinbox.selectAll()
-            spinbox.setFocus()
 
     def eventFilter(self, watched: QObject, event: QEvent) -> bool:
         if (

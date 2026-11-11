@@ -110,17 +110,17 @@ class CategoryDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
-    def _setup_text_edit(self) -> None:
-        setup_text_edit(self.notes_input)
-
-    def _setup_context_menu(self) -> None:
-        disable_context_menu(self.findChildren(QWidget))
-
     def _create_connection(self) -> None:
         self.category_name_input.textChanged.connect(self._on_form_changed)
         self.notes_input.textChanged.connect(self._update_notes_count)
         self.save_button.clicked.connect(self.accept)
         self.close_button.clicked.connect(self.reject)
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
+
+    def _setup_text_edit(self) -> None:
+        setup_text_edit(self.notes_input)
 
     def _setup_mode(self) -> None:
         if self.mode == ADD_MODE:

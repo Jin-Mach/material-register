@@ -69,78 +69,6 @@ class TransactionsSearchWidget(QWidget):
         main_layout.addLayout(buttons_layout)
         return main_layout
 
-    def _create_filters_section(self) -> QWidget:
-        filters_widget = QWidget()
-        main_layout = QVBoxLayout()
-        filters_layout = QGridLayout()
-        filters_layout.setHorizontalSpacing(UI_SPACING * 4)
-        filters_layout.setVerticalSpacing(UI_SPACING)
-        filters_layout.setContentsMargins(*UI_MARGINS_5)
-        filters_layout.setColumnStretch(0, 1)
-        filters_layout.setColumnStretch(1, 2)
-        filters_layout.setColumnStretch(2, 2)
-        self.transaction_number_checkbox = QCheckBox()
-        self.transaction_number_checkbox.setObjectName("transactionNumberCheckbox")
-        self.transaction_number_spinbox = QSpinBox()
-        self.created_at_checkbox = QCheckBox()
-        self.created_at_checkbox.setObjectName("createdAtCheckbox")
-        from_date_layout = QHBoxLayout()
-        self.from_date_label = QLabel()
-        self.from_date_label.setObjectName("fromDateLabel")
-        self.from_date_edit = QDateEdit()
-        self.from_date_edit.setCalendarPopup(True)
-        to_date_layout = QHBoxLayout()
-        self.to_date_label = QLabel()
-        self.to_date_label.setObjectName("toDateLabel")
-        self.to_date_edit = QDateEdit()
-        self.to_date_edit.setCalendarPopup(True)
-        self.transaction_type_checkbox = QCheckBox()
-        self.transaction_type_checkbox.setObjectName("transactionTypeCheckBox")
-        self.transaction_type_combobox = QComboBox()
-        self.transaction_type_combobox.setObjectName("transactionTypeComboBox")
-        self.payment_type_checkbox = QCheckBox()
-        self.payment_type_checkbox.setObjectName("paymentTypeCheckbox")
-        self.payment_type_combobox = QComboBox()
-        self.payment_type_combobox.setObjectName("paymentTypeComboBox")
-        self.is_invoiced_checkbox = QCheckBox()
-        self.is_invoiced_checkbox.setObjectName("isInvoicedCheckbox")
-        self.is_invoiced_combobox = QComboBox()
-        self.is_invoiced_combobox.setObjectName("isInvoicedComboBox")
-        self.transaction_price_checkbox = QCheckBox()
-        self.transaction_price_checkbox.setObjectName("transactionPriceCheckbox")
-        self.transaction_price_operator = QComboBox()
-        self.transaction_price_operator.setObjectName("transactionPriceOperator")
-        self.transaction_price_spinbox = QDoubleSpinBox()
-        self.transaction_price_spinbox.setObjectName("transactionPriceSpinbox")
-        self.notes_checkbox = QCheckBox()
-        self.notes_checkbox.setObjectName("notesCheckbox")
-        self.notes_edit = QLineEdit()
-        self.notes_edit.setObjectName("notesEdit")
-        from_date_layout.addWidget(self.from_date_label)
-        from_date_layout.addWidget(self.from_date_edit, 1)
-        to_date_layout.addWidget(self.to_date_label)
-        to_date_layout.addWidget(self.to_date_edit, 1)
-        filters_layout.addWidget(self.transaction_number_checkbox, 0, 0)
-        filters_layout.addWidget(self.transaction_number_spinbox, 0, 1)
-        filters_layout.addWidget(self.created_at_checkbox, 1, 0)
-        filters_layout.addLayout(from_date_layout, 1, 1)
-        filters_layout.addLayout(to_date_layout, 2, 1)
-        filters_layout.addWidget(self.transaction_type_checkbox, 3, 0)
-        filters_layout.addWidget(self.transaction_type_combobox, 3, 1)
-        filters_layout.addWidget(self.payment_type_checkbox, 4, 0)
-        filters_layout.addWidget(self.payment_type_combobox, 4, 1)
-        filters_layout.addWidget(self.is_invoiced_checkbox, 5, 0)
-        filters_layout.addWidget(self.is_invoiced_combobox, 5, 1)
-        filters_layout.addWidget(self.transaction_price_checkbox, 6, 0)
-        filters_layout.addWidget(self.transaction_price_operator, 6, 1)
-        filters_layout.addWidget(self.transaction_price_spinbox, 6, 2)
-        filters_layout.addWidget(self.notes_checkbox, 7, 0)
-        filters_layout.addWidget(self.notes_edit, 7, 1, 1, 2)
-        main_layout.addLayout(filters_layout)
-        main_layout.addStretch()
-        filters_widget.setLayout(main_layout)
-        return filters_widget
-
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_spinboxes()
@@ -216,6 +144,97 @@ class TransactionsSearchWidget(QWidget):
             lambda: self._setup_default_states(reset_values=True)
         )
 
+    def _create_filters_section(self) -> QWidget:
+        filters_widget = QWidget()
+        main_layout = QVBoxLayout()
+        filters_layout = QGridLayout()
+        filters_layout.setHorizontalSpacing(UI_SPACING * 4)
+        filters_layout.setVerticalSpacing(UI_SPACING)
+        filters_layout.setContentsMargins(*UI_MARGINS_5)
+        filters_layout.setColumnStretch(0, 1)
+        filters_layout.setColumnStretch(1, 2)
+        filters_layout.setColumnStretch(2, 2)
+        self.transaction_number_checkbox = QCheckBox()
+        self.transaction_number_checkbox.setObjectName("transactionNumberCheckbox")
+        self.transaction_number_spinbox = QSpinBox()
+        self.created_at_checkbox = QCheckBox()
+        self.created_at_checkbox.setObjectName("createdAtCheckbox")
+        from_date_layout = QHBoxLayout()
+        self.from_date_label = QLabel()
+        self.from_date_label.setObjectName("fromDateLabel")
+        self.from_date_edit = QDateEdit()
+        self.from_date_edit.setCalendarPopup(True)
+        to_date_layout = QHBoxLayout()
+        self.to_date_label = QLabel()
+        self.to_date_label.setObjectName("toDateLabel")
+        self.to_date_edit = QDateEdit()
+        self.to_date_edit.setCalendarPopup(True)
+        self.transaction_type_checkbox = QCheckBox()
+        self.transaction_type_checkbox.setObjectName("transactionTypeCheckBox")
+        self.transaction_type_combobox = QComboBox()
+        self.transaction_type_combobox.setObjectName("transactionTypeComboBox")
+        self.payment_type_checkbox = QCheckBox()
+        self.payment_type_checkbox.setObjectName("paymentTypeCheckbox")
+        self.payment_type_combobox = QComboBox()
+        self.payment_type_combobox.setObjectName("paymentTypeComboBox")
+        self.is_invoiced_checkbox = QCheckBox()
+        self.is_invoiced_checkbox.setObjectName("isInvoicedCheckbox")
+        self.is_invoiced_combobox = QComboBox()
+        self.is_invoiced_combobox.setObjectName("isInvoicedComboBox")
+        self.transaction_price_checkbox = QCheckBox()
+        self.transaction_price_checkbox.setObjectName("transactionPriceCheckbox")
+        self.transaction_price_operator = QComboBox()
+        self.transaction_price_operator.setObjectName("transactionPriceOperator")
+        self.transaction_price_spinbox = QDoubleSpinBox()
+        self.transaction_price_spinbox.setObjectName("transactionPriceSpinbox")
+        self.notes_checkbox = QCheckBox()
+        self.notes_checkbox.setObjectName("notesCheckbox")
+        self.notes_edit = QLineEdit()
+        self.notes_edit.setObjectName("notesEdit")
+        from_date_layout.addWidget(self.from_date_label)
+        from_date_layout.addWidget(self.from_date_edit, 1)
+        to_date_layout.addWidget(self.to_date_label)
+        to_date_layout.addWidget(self.to_date_edit, 1)
+        filters_layout.addWidget(self.transaction_number_checkbox, 0, 0)
+        filters_layout.addWidget(self.transaction_number_spinbox, 0, 1)
+        filters_layout.addWidget(self.created_at_checkbox, 1, 0)
+        filters_layout.addLayout(from_date_layout, 1, 1)
+        filters_layout.addLayout(to_date_layout, 2, 1)
+        filters_layout.addWidget(self.transaction_type_checkbox, 3, 0)
+        filters_layout.addWidget(self.transaction_type_combobox, 3, 1)
+        filters_layout.addWidget(self.payment_type_checkbox, 4, 0)
+        filters_layout.addWidget(self.payment_type_combobox, 4, 1)
+        filters_layout.addWidget(self.is_invoiced_checkbox, 5, 0)
+        filters_layout.addWidget(self.is_invoiced_combobox, 5, 1)
+        filters_layout.addWidget(self.transaction_price_checkbox, 6, 0)
+        filters_layout.addWidget(self.transaction_price_operator, 6, 1)
+        filters_layout.addWidget(self.transaction_price_spinbox, 6, 2)
+        filters_layout.addWidget(self.notes_checkbox, 7, 0)
+        filters_layout.addWidget(self.notes_edit, 7, 1, 1, 2)
+        main_layout.addLayout(filters_layout)
+        main_layout.addStretch()
+        filters_widget.setLayout(main_layout)
+        return filters_widget
+
+    def _setup_comboboxes(self) -> None:
+        self.transaction_type_combobox.addItems(self.transaction_type_items)
+        self.payment_type_combobox.addItems(self.payment_type_items)
+        self.is_invoiced_combobox.addItems(self.invoiced_items)
+        self.transaction_price_operator.addItems(self.price_operators)
+
+    def _setup_date_edits(self) -> None:
+        date_edits = [self.from_date_edit, self.to_date_edit]
+        for date_edit in date_edits:
+            calendar = date_edit.calendarWidget()
+            if calendar:
+                calendar.setMinimumWidth(250)
+                calendar.setMinimumHeight(200)
+        today = QDate.currentDate()
+        self.from_date_edit.setMaximumDate(today)
+        self.from_date_edit.setDate(today)
+        self.to_date_edit.setMaximumDate(today)
+        self.to_date_edit.setDate(today)
+
     def _setup_default_states(self, reset_values: bool = False) -> None:
         widgets = [
             self.transaction_number_spinbox,
@@ -248,6 +267,31 @@ class TransactionsSearchWidget(QWidget):
             self.to_date_edit.setDate(QDate.currentDate())
             self.notes_edit.clear()
 
+    def _setup_property(self) -> None:
+        self.transaction_number_spinbox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_id"]
+        )
+        self.transaction_number_spinbox.setProperty("query", "= ?")
+        self.notes_edit.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_notes"]
+        )
+        self.notes_edit.setProperty("query", "LIKE ?")
+        self.transaction_type_combobox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_type"]
+        )
+        self.transaction_type_combobox.setProperty("query", "= ?")
+        self.payment_type_combobox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_payment_type"]
+        )
+        self.payment_type_combobox.setProperty("query", "= ?")
+        self.is_invoiced_combobox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["transaction_is_invoiced"]
+        )
+        self.is_invoiced_combobox.setProperty("query", "= ?")
+        self.transaction_price_spinbox.setProperty(
+            "column", ADVANCED_SEARCH_COLUMNS["total"]
+        )
+
     def _setup_spinboxes(self) -> None:
         spinboxes = [self.transaction_number_spinbox, self.transaction_price_spinbox]
         self.spinboxes_line_edits = []
@@ -268,11 +312,16 @@ class TransactionsSearchWidget(QWidget):
         self.transaction_price_spinbox.setGroupSeparatorShown(True)
         self.transaction_price_spinbox.setSuffix(f" {self.price_suffix}")
 
-    def _setup_comboboxes(self) -> None:
-        self.transaction_type_combobox.addItems(self.transaction_type_items)
-        self.payment_type_combobox.addItems(self.payment_type_items)
-        self.is_invoiced_combobox.addItems(self.invoiced_items)
-        self.transaction_price_operator.addItems(self.price_operators)
+    def _setup_user_role(self) -> None:
+        user_role_map = {
+            self.transaction_type_combobox: [TRANSFER_IN, TRANSFER_OUT],
+            self.payment_type_combobox: [PAYMENT_CASH, PAYMENT_TRANSFER],
+            self.is_invoiced_combobox: [1, 0],
+            self.transaction_price_operator: ["< ?", "= ?", "> ?"],
+        }
+        for widget, user_roles in user_role_map.items():
+            for index, value in enumerate(user_roles):
+                widget.setItemData(index, value, Qt.ItemDataRole.UserRole)
 
     def _setup_checkboxes_state(self, check_box: QCheckBox) -> None:
         widgets_map = {
@@ -300,57 +349,8 @@ class TransactionsSearchWidget(QWidget):
                 widget.selectAll()
                 widget.setFocus()
 
-    def _setup_date_edits(self) -> None:
-        date_edits = [self.from_date_edit, self.to_date_edit]
-        for date_edit in date_edits:
-            calendar = date_edit.calendarWidget()
-            if calendar:
-                calendar.setMinimumWidth(250)
-                calendar.setMinimumHeight(200)
-        today = QDate.currentDate()
-        self.from_date_edit.setMaximumDate(today)
-        self.from_date_edit.setDate(today)
-        self.to_date_edit.setMaximumDate(today)
-        self.to_date_edit.setDate(today)
-
     def _setup_notes_edit(self) -> None:
         self.notes_edit.setMaxLength(SEARCH_TRANSACTION_NOTES_LENGTH)
-
-    def _setup_property(self) -> None:
-        self.transaction_number_spinbox.setProperty(
-            "column", ADVANCED_SEARCH_COLUMNS["transaction_id"]
-        )
-        self.transaction_number_spinbox.setProperty("query", "= ?")
-        self.notes_edit.setProperty(
-            "column", ADVANCED_SEARCH_COLUMNS["transaction_notes"]
-        )
-        self.notes_edit.setProperty("query", "LIKE ?")
-        self.transaction_type_combobox.setProperty(
-            "column", ADVANCED_SEARCH_COLUMNS["transaction_type"]
-        )
-        self.transaction_type_combobox.setProperty("query", "= ?")
-        self.payment_type_combobox.setProperty(
-            "column", ADVANCED_SEARCH_COLUMNS["transaction_payment_type"]
-        )
-        self.payment_type_combobox.setProperty("query", "= ?")
-        self.is_invoiced_combobox.setProperty(
-            "column", ADVANCED_SEARCH_COLUMNS["transaction_is_invoiced"]
-        )
-        self.is_invoiced_combobox.setProperty("query", "= ?")
-        self.transaction_price_spinbox.setProperty(
-            "column", ADVANCED_SEARCH_COLUMNS["total"]
-        )
-
-    def _setup_user_role(self) -> None:
-        user_role_map = {
-            self.transaction_type_combobox: [TRANSFER_IN, TRANSFER_OUT],
-            self.payment_type_combobox: [PAYMENT_CASH, PAYMENT_TRANSFER],
-            self.is_invoiced_combobox: [1, 0],
-            self.transaction_price_operator: ["< ?", "= ?", "> ?"],
-        }
-        for widget, user_roles in user_role_map.items():
-            for index, value in enumerate(user_roles):
-                widget.setItemData(index, value, Qt.ItemDataRole.UserRole)
 
     def _update_to_date_minimum(self, date: QDate) -> None:
         self.to_date_edit.setMinimumDate(date)

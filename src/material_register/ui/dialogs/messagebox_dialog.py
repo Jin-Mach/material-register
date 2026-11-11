@@ -49,15 +49,6 @@ class MessageBoxDialog(QDialog):
             widget.hide()
         self._setup_style()
 
-    def _setup_style(self) -> None:
-        font = QFont()
-        font.setBold(True)
-        self.text_label.setFont(font)
-
-    def _create_connection(self) -> None:
-        self.ok_button.clicked.connect(self.accept)
-        self.cancel_button.clicked.connect(self.reject)
-
     def setup_texts(
         self,
         title: str,
@@ -78,6 +69,15 @@ class MessageBoxDialog(QDialog):
         if informative_text:
             self.informative_label.setText(informative_text)
             self.informative_label.show()
+
+    def _create_connection(self) -> None:
+        self.ok_button.clicked.connect(self.accept)
+        self.cancel_button.clicked.connect(self.reject)
+
+    def _setup_style(self) -> None:
+        font = QFont()
+        font.setBold(True)
+        self.text_label.setFont(font)
 
     def setup_icon(self, icon_key: str | None = None) -> None:
         app_style = QApplication.style()

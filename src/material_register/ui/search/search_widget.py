@@ -166,10 +166,6 @@ class SearchWidget(QWidget):
         self.price_count_value.setStyleSheet(PRICE_STYLE)
         self.price_count_value.setFont(font)
 
-    def _setup_model(self) -> None:
-        self._setup_transactions_model()
-        self._setup_materials_model()
-
     def _setup_transactions_model(self) -> None:
         self.search_transactions_model.set_suffix(self.price_sufix)
         self.search_transactions_model.set_tooltip_texts(self.tooltip_texts)
@@ -192,6 +188,10 @@ class SearchWidget(QWidget):
         self.search_material_model = SearchMaterialModel()
         self.search_tab_widget.material_tab.setModel(self.search_material_model)
         self.search_tab_widget.material_tab.setup_ui()
+
+    def _setup_model(self) -> None:
+        self._setup_transactions_model()
+        self._setup_materials_model()
 
     def _load_data(self) -> None:
         self.search_controller.start_basic_filter(None, [], True)

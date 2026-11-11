@@ -62,6 +62,36 @@ class NotesWidget(QWidget):
         self._update_button_states()
         self._set_cursor_position()
 
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
+    def _create_connection(self) -> None:
+        self.permanent_notes_edit.textChanged.connect(self._update_button_states)
+        self.local_notes_edit.textChanged.connect(self._update_button_states)
+        self.search_edit.textChanged.connect(self._search_in_notes)
+        self.permanent_copy_button.clicked.connect(
+            lambda: NotesWidget._copy_notes_to_clipboard(self.permanent_notes_edit)
+        )
+        self.permanent_delete_button.clicked.connect(
+            lambda: NotesWidget._delete_notes(self.permanent_notes_edit)
+        )
+        self.local_copy_button.clicked.connect(
+            lambda: NotesWidget._copy_notes_to_clipboard(self.local_notes_edit)
+        )
+        self.local_delete_button.clicked.connect(
+            lambda: NotesWidget._delete_notes(self.local_notes_edit)
+        )
+
     def _create_permanent_notes(self) -> QGroupBox:
         permanent_group_box = QGroupBox()
         permanent_group_box.setObjectName("permanentGroupBox")
@@ -116,40 +146,10 @@ class NotesWidget(QWidget):
         self.local_delete_button.setIcon(UiIcons.DELETE_ICON)
         self.local_delete_button.setIconSize(QSize(self.ICON_SIZE, self.ICON_SIZE))
 
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
-
     def _setup_text_edits(self) -> None:
         edits = [self.permanent_notes_edit, self.local_notes_edit]
         for edit in edits:
             setup_text_edit(edit)
-
-    def _create_connection(self) -> None:
-        self.permanent_notes_edit.textChanged.connect(self._update_button_states)
-        self.local_notes_edit.textChanged.connect(self._update_button_states)
-        self.search_edit.textChanged.connect(self._search_in_notes)
-        self.permanent_copy_button.clicked.connect(
-            lambda: NotesWidget._copy_notes_to_clipboard(self.permanent_notes_edit)
-        )
-        self.permanent_delete_button.clicked.connect(
-            lambda: NotesWidget._delete_notes(self.permanent_notes_edit)
-        )
-        self.local_copy_button.clicked.connect(
-            lambda: NotesWidget._copy_notes_to_clipboard(self.local_notes_edit)
-        )
-        self.local_delete_button.clicked.connect(
-            lambda: NotesWidget._delete_notes(self.local_notes_edit)
-        )
 
     def _search_in_notes(self) -> None:
         text = self.search_edit.text()
@@ -171,6 +171,24 @@ class NotesWidget(QWidget):
         self._update_button_states()
         self._set_cursor_position()
 
+    def _update_button_states(self) -> None:
+        self.permanent_copy_button.setEnabled(
+            self.permanent_notes_edit.toPlainText() != ""
+        )
+        self.permanent_delete_button.setEnabled(
+            self.permanent_notes_edit.toPlainText() != ""
+        )
+        self.local_copy_button.setEnabled(self.local_notes_edit.toPlainText() != "")
+        self.local_delete_button.setEnabled(self.local_notes_edit.toPlainText() != "")
+
+    @staticmethod
+    def _copy_notes_to_clipboard(text_edit: QTextEdit) -> None:
+        QGuiApplication.clipboard().setText(text_edit.toPlainText().strip())
+
+    @staticmethod
+    def _delete_notes(text_edit: QTextEdit) -> None:
+        text_edit.clear()
+
     def _get_selections(self, text: str) -> list[QTextEdit.ExtraSelection]:
         selections = []
         document = self.permanent_notes_edit.document()
@@ -189,21 +207,3 @@ class NotesWidget(QWidget):
 
     def get_permanent_notes(self) -> str:
         return self.permanent_notes_edit.toPlainText().strip()
-
-    def _update_button_states(self) -> None:
-        self.permanent_copy_button.setEnabled(
-            self.permanent_notes_edit.toPlainText() != ""
-        )
-        self.permanent_delete_button.setEnabled(
-            self.permanent_notes_edit.toPlainText() != ""
-        )
-        self.local_copy_button.setEnabled(self.local_notes_edit.toPlainText() != "")
-        self.local_delete_button.setEnabled(self.local_notes_edit.toPlainText() != "")
-
-    @staticmethod
-    def _copy_notes_to_clipboard(text_edit: QTextEdit) -> None:
-        QGuiApplication.clipboard().setText(text_edit.toPlainText().strip())
-
-    @staticmethod
-    def _delete_notes(text_edit: QTextEdit) -> None:
-        text_edit.clear()

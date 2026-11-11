@@ -78,14 +78,6 @@ class MainWindow(QMainWindow):
         if UiTexts.set_default_texts(self, []):
             return
 
-    def _setup_splitter(self) -> None:
-        self.tools_width = (
-            SettingsProvider.SETTINGS.get("tools", {})
-            .get("right_toolbar_panel", {})
-            .get("user", {})
-            .get("splitterWidth", 400)
-        )
-
     def _create_connection(self) -> None:
         buttons_map = {
             self.side_panel.transactions_button: 0,
@@ -101,6 +93,14 @@ class MainWindow(QMainWindow):
             )
         self.side_panel.settings_button.clicked.connect(self._show_settings_dialog)
         self.splitter.splitterMoved.connect(self._update_splitter_size)
+
+    def _setup_splitter(self) -> None:
+        self.tools_width = (
+            SettingsProvider.SETTINGS.get("tools", {})
+            .get("right_toolbar_panel", {})
+            .get("user", {})
+            .get("splitterWidth", 400)
+        )
 
     def _show_settings_dialog(self) -> None:
         self.settings_dialog = SettingsDialog(self)
@@ -123,6 +123,10 @@ class MainWindow(QMainWindow):
         ToolsSettingsController.save_tools(self.tools_width, self.right_toolbar_widget)
         SettingsProvider.save_settings()
 
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        super().resizeEvent(event)
+        self.right_toolbar_widget.update_tools_max_width()
+
     def showEvent(self, event: QShowEvent) -> None:
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
             screen = self.screen()
@@ -132,10 +136,6 @@ class MainWindow(QMainWindow):
             self.move(frame.topLeft())
         super().showEvent(event)
         self._handle_startup_errors()
-
-    def resizeEvent(self, event: QResizeEvent) -> None:
-        super().resizeEvent(event)
-        self.right_toolbar_widget.update_tools_max_width()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self._before_close()

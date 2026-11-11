@@ -91,9 +91,6 @@ class SettingsDialog(QDialog):
         if UiTexts.set_default_texts(self, []):
             return
 
-    def _setup_context_menu(self) -> None:
-        disable_context_menu(self.findChildren(QWidget))
-
     def _create_connection(self) -> None:
         buttons_map = {
             self.settings_side_panel.branch_button: 0,
@@ -106,6 +103,9 @@ class SettingsDialog(QDialog):
                 lambda _, i=index: self.settings_stacked_widget.setCurrentIndex(i)
             )
         self.close_button.clicked.connect(self.close)
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
 
     def set_info_text(self, key: str, time_sleep: int = 3000) -> None:
         if not self.status_texts:

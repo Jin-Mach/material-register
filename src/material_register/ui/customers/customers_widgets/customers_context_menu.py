@@ -31,16 +31,16 @@ class CustomersContextMenu(QMenu):
         self.addAction(self.update_customer_action)
         self.addAction(self.active_customer_action)
 
+    def _create_connection(self) -> None:
+        self.update_customer_action.triggered.connect(self._update_customer)
+        self.active_customer_action.triggered.connect(self._change_customer_active)
+
     def set_ui_texts(self, ui_texts: dict[str, str]) -> None:
         if ui_texts:
             for widget in self.findChildren(QAction):
                 key = widget.objectName() + "Text"
                 if key in ui_texts:
                     widget.setText(ui_texts[key])
-
-    def _create_connection(self) -> None:
-        self.update_customer_action.triggered.connect(self._update_customer)
-        self.active_customer_action.triggered.connect(self._change_customer_active)
 
     def set_customer_index(self, index: QModelIndex) -> None:
         self.customer_index = index

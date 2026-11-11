@@ -103,6 +103,75 @@ class SummaryExportWidget(QWidget):
         main_layout.addWidget(export_action_group)
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_spinboxes()
+        self.apply_settings()
+        self._set_folder_path()
+        self._set_file_suffix()
+        self._set_validators()
+        self._apply_date_state()
+        self._setup_date_edits()
+        self._set_required_style()
+        self._apply_export_action_state()
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        if not ui_texts:
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.folder_dialog_title = ui_texts.get(
+            "folderDialogTitle", "Select Export Folder"
+        )
+        self.price_suffix = ui_texts.get("priceSuffix", "")
+        type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
+        if not type_items:
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.file_type_combobox.addItems(type_items)
+        if UiTexts.set_ui_texts(self, widgets):
+            self.default_name = ui_texts.get(
+                f"{self.file_name_line_edit.objectName()}Text", "Export"
+            )
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
+    def _create_connection(self) -> None:
+        date_radiobuttons = [
+            self.today_radio_button,
+            self.week_radio_button,
+            self.month_radio_button,
+            self.year_radio_button,
+            self.custom_radio_button,
+        ]
+        self.branch_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
+        self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
+        self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
+        self.path_button.clicked.connect(self._select_export_folder)
+        for radio_button in date_radiobuttons:
+            radio_button.toggled.connect(self._apply_date_state)
+        self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
+        self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+        self.export_button.clicked.connect(self.summary_export_controller.start_export)
+
     def _create_branch_group(self) -> QGroupBox:
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
@@ -305,56 +374,43 @@ class SummaryExportWidget(QWidget):
         self.export_action_group_box.setLayout(main_layout)
         return self.export_action_group_box
 
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self._setup_spinboxes()
-        self.apply_settings()
-        self._set_folder_path()
-        self._set_file_suffix()
-        self._set_validators()
-        self._apply_date_state()
-        self._setup_date_edits()
-        self._set_required_style()
-        self._apply_export_action_state()
+    def _setup_date_edits(self) -> None:
+        date_edits = [self.from_date_edit, self.to_date_edit]
+        for date_edit in date_edits:
+            calendar = date_edit.calendarWidget()
+            if calendar:
+                year_button = calendar.findChild(QToolButton, "qt_calendar_yearbutton")
+                year_button.setDisabled(True)
+                calendar.setMinimumWidth(250)
+                calendar.setMinimumHeight(200)
+        today = QDate.currentDate()
+        start_of_year = QDate(today.year(), 1, 1)
+        self.from_date_edit.setMinimumDate(start_of_year)
+        self.from_date_edit.setMaximumDate(today)
+        self.from_date_edit.setDate(start_of_year)
+        self.to_date_edit.setMinimumDate(start_of_year)
+        self.to_date_edit.setMaximumDate(today)
+        self.to_date_edit.setDate(today)
 
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        if not ui_texts:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
-        self.folder_dialog_title = ui_texts.get(
-            "folderDialogTitle", "Select Export Folder"
-        )
-        self.price_suffix = ui_texts.get("priceSuffix", "")
-        type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
-        if not type_items:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
-        self.file_type_combobox.addItems(type_items)
-        if UiTexts.set_ui_texts(self, widgets):
-            self.default_name = ui_texts.get(
-                f"{self.file_name_line_edit.objectName()}Text", "Export"
-            )
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
+    def _setup_spinboxes(self) -> None:
+        spinboxes = self.findChildren(QDoubleSpinBox)
+        self.spinboxes_line_edits = []
+        for spinbox in spinboxes:
+            minimum = SUMMARY_EXPORT_PRICE_MIN_VALUE
+            if spinbox == self.opening_balance_spinbox:
+                minimum = SUMMARY_BALANCE_PRICE_MIN_VALUE
+            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+            spinbox.setMinimum(minimum)
+            spinbox.setMaximum(SUMMARY_EXPORT_PRICE_MAX_VALUE)
+            spinbox.setDecimals(1)
+            spinbox.setSingleStep(0.1)
+            spinbox.setGroupSeparatorShown(True)
+            if self.price_suffix:
+                spinbox.setSuffix(f" {self.price_suffix}")
+            disable_spinbox_wheel(spinbox)
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
 
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
@@ -377,44 +433,6 @@ class SummaryExportWidget(QWidget):
                 f"{self.default_name}_{today.year()}_{today.month()}_{today.day()}"
             )
         self.today_radio_button.setChecked(True)
-
-    def _create_connection(self) -> None:
-        date_radiobuttons = [
-            self.today_radio_button,
-            self.week_radio_button,
-            self.month_radio_button,
-            self.year_radio_button,
-            self.custom_radio_button,
-        ]
-        self.branch_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
-        self.file_type_combobox.currentIndexChanged.connect(self._set_file_suffix)
-        self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
-        self.path_button.clicked.connect(self._select_export_folder)
-        for radio_button in date_radiobuttons:
-            radio_button.toggled.connect(self._apply_date_state)
-        self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
-        self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
-        self.export_button.clicked.connect(self.summary_export_controller.start_export)
-
-    def _setup_spinboxes(self) -> None:
-        spinboxes = self.findChildren(QDoubleSpinBox)
-        self.spinboxes_line_edits = []
-        for spinbox in spinboxes:
-            minimum = SUMMARY_EXPORT_PRICE_MIN_VALUE
-            if spinbox == self.opening_balance_spinbox:
-                minimum = SUMMARY_BALANCE_PRICE_MIN_VALUE
-            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
-            spinbox.setMinimum(minimum)
-            spinbox.setMaximum(SUMMARY_EXPORT_PRICE_MAX_VALUE)
-            spinbox.setDecimals(1)
-            spinbox.setSingleStep(0.1)
-            spinbox.setGroupSeparatorShown(True)
-            if self.price_suffix:
-                spinbox.setSuffix(f" {self.price_suffix}")
-            disable_spinbox_wheel(spinbox)
-            spinbox_line_edit = spinbox.lineEdit()
-            self.spinboxes_line_edits.append(spinbox_line_edit)
-            spinbox_line_edit.installEventFilter(self)
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(
@@ -462,24 +480,6 @@ class SummaryExportWidget(QWidget):
             self.export_button.setEnabled(True)
         else:
             self.export_button.setEnabled(False)
-
-    def _setup_date_edits(self) -> None:
-        date_edits = [self.from_date_edit, self.to_date_edit]
-        for date_edit in date_edits:
-            calendar = date_edit.calendarWidget()
-            if calendar:
-                year_button = calendar.findChild(QToolButton, "qt_calendar_yearbutton")
-                year_button.setDisabled(True)
-                calendar.setMinimumWidth(250)
-                calendar.setMinimumHeight(200)
-        today = QDate.currentDate()
-        start_of_year = QDate(today.year(), 1, 1)
-        self.from_date_edit.setMinimumDate(start_of_year)
-        self.from_date_edit.setMaximumDate(today)
-        self.from_date_edit.setDate(start_of_year)
-        self.to_date_edit.setMinimumDate(start_of_year)
-        self.to_date_edit.setMaximumDate(today)
-        self.to_date_edit.setDate(today)
 
     def _update_to_date_minimum(self, date: QDate) -> None:
         self.to_date_edit.setMinimumDate(date)

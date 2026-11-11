@@ -103,48 +103,6 @@ class CategoryCommodityDialog(QDialog):
         self._setup_categories_items()
         self._on_value_changed()
 
-    def _setup_widgets(self) -> None:
-        for widget in (
-            self.commodity_combo_box,
-            self.unit_spinbox,
-            self.price_spinbox,
-            self.add_button,
-        ):
-            widget.setEnabled(False)
-        if self.transfer_type == TRANSFER_OUT:
-            self.price_label.hide()
-            self.price_spinbox.hide()
-
-    def _setup_spinboxes(self) -> None:
-        self.spinboxes_line_edits = []
-        self._setup_unit_spinbox()
-        self._setup_price_spinbox()
-        for spinbox in (self.unit_spinbox, self.price_spinbox):
-            spinbox_line_edit = spinbox.lineEdit()
-            self.spinboxes_line_edits.append(spinbox_line_edit)
-            spinbox_line_edit.installEventFilter(self)
-
-    def _setup_context_menu(self) -> None:
-        disable_context_menu(self.findChildren(QWidget))
-
-    def _setup_unit_spinbox(self) -> None:
-        self.unit_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.unit_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
-        self.unit_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE)
-        self.unit_spinbox.setDecimals(1)
-        self.unit_spinbox.setSingleStep(0.1)
-        self.unit_spinbox.setGroupSeparatorShown(True)
-        disable_spinbox_wheel(self.unit_spinbox)
-
-    def _setup_price_spinbox(self) -> None:
-        self.price_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.price_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
-        self.price_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE)
-        self.price_spinbox.setDecimals(1)
-        self.price_spinbox.setSingleStep(0.1)
-        self.price_spinbox.setGroupSeparatorShown(True)
-        disable_spinbox_wheel(self.price_spinbox)
-
     def _setup_texts(self) -> None:
         widgets = [
             self.category_label,
@@ -170,6 +128,70 @@ class CategoryCommodityDialog(QDialog):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        self.category_combo_box.currentIndexChanged.connect(
+            self._setup_commodities_items
+        )
+        self.category_combo_box.currentIndexChanged.connect(self._on_value_changed)
+        self.commodity_combo_box.currentIndexChanged.connect(
+            self._setup_commodity_values
+        )
+        self.commodity_combo_box.currentIndexChanged.connect(self._on_value_changed)
+        self.unit_spinbox.valueChanged.connect(self._on_value_changed)
+        self.price_spinbox.valueChanged.connect(self._on_value_changed)
+        self.add_button.clicked.connect(self.accept)
+        self.cancel_button.clicked.connect(self.reject)
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
+
+    def _setup_spinboxes(self) -> None:
+        self.spinboxes_line_edits = []
+        self._setup_unit_spinbox()
+        self._setup_price_spinbox()
+        for spinbox in (self.unit_spinbox, self.price_spinbox):
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
+
+    def _setup_widgets(self) -> None:
+        for widget in (
+            self.commodity_combo_box,
+            self.unit_spinbox,
+            self.price_spinbox,
+            self.add_button,
+        ):
+            widget.setEnabled(False)
+        if self.transfer_type == TRANSFER_OUT:
+            self.price_label.hide()
+            self.price_spinbox.hide()
+
+    def setup_update(self, item_data: dict[str, str | int | float]) -> None:
+        self._setup_categories_items()
+        self.category_combo_box.setCurrentText(item_data["category"])
+        self._setup_commodities_items()
+        self.commodity_combo_box.setCurrentText(item_data["commodity"])
+        self.unit_spinbox.setValue(item_data["unitCount"])
+        self.price_spinbox.setValue(item_data["pricePerUnit"])
+
+    def _setup_unit_spinbox(self) -> None:
+        self.unit_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.unit_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
+        self.unit_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_UNIT_VALUE)
+        self.unit_spinbox.setDecimals(1)
+        self.unit_spinbox.setSingleStep(0.1)
+        self.unit_spinbox.setGroupSeparatorShown(True)
+        disable_spinbox_wheel(self.unit_spinbox)
+
+    def _setup_price_spinbox(self) -> None:
+        self.price_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.price_spinbox.setMinimum(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
+        self.price_spinbox.setMaximum(CATEGORY_COMMODITY_DIALOG_MAX_PRICE_VALUE)
+        self.price_spinbox.setDecimals(1)
+        self.price_spinbox.setSingleStep(0.1)
+        self.price_spinbox.setGroupSeparatorShown(True)
+        disable_spinbox_wheel(self.price_spinbox)
 
     def _setup_categories_items(self) -> None:
         self.category_combo_box.clear()
@@ -220,42 +242,25 @@ class CategoryCommodityDialog(QDialog):
             enabled=[self.unit_spinbox, self.price_spinbox]
         )
 
-    def setup_update(self, item_data: dict[str, str | int | float]) -> None:
-        self._setup_categories_items()
-        self.category_combo_box.setCurrentText(item_data["category"])
-        self._setup_commodities_items()
-        self.commodity_combo_box.setCurrentText(item_data["commodity"])
-        self.unit_spinbox.setValue(item_data["unitCount"])
-        self.price_spinbox.setValue(item_data["pricePerUnit"])
+    @staticmethod
+    def _setup_enable_state(
+        enabled: list[QWidget] | None = None, disabled: list[QWidget] | None = None
+    ) -> None:
+        if enabled is not None:
+            for widget in enabled:
+                widget.setEnabled(True)
+        if disabled is not None:
+            for widget in disabled:
+                widget.setEnabled(False)
 
     def _reset_spinboxes_values(self) -> None:
         self.unit_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
         self.unit_spinbox.setSuffix("")
         self.price_spinbox.setValue(CATEGORY_COMMODITY_DIALOG_MIN_VALUE)
 
-    def _create_connection(self) -> None:
-        self.category_combo_box.currentIndexChanged.connect(
-            self._setup_commodities_items
-        )
-        self.category_combo_box.currentIndexChanged.connect(self._on_value_changed)
-        self.commodity_combo_box.currentIndexChanged.connect(
-            self._setup_commodity_values
-        )
-        self.commodity_combo_box.currentIndexChanged.connect(self._on_value_changed)
-        self.unit_spinbox.valueChanged.connect(self._on_value_changed)
-        self.price_spinbox.valueChanged.connect(self._on_value_changed)
-        self.add_button.clicked.connect(self.accept)
-        self.cancel_button.clicked.connect(self.reject)
-
     def _on_value_changed(self) -> None:
         self._set_required_style()
         self._update_button_state()
-
-    def _has_commodity(self, category: Category) -> bool:
-        for commodity in self.commodities:
-            if commodity.category_id == category.id:
-                return True
-        return False
 
     def _update_button_state(self) -> None:
         valid = self._is_valid()
@@ -285,6 +290,38 @@ class CategoryCommodityDialog(QDialog):
             return unit, 0
         return unit, price
 
+    @staticmethod
+    def _adjust_combo_view_width(combobox: QComboBox) -> None:
+        font_metrics = QFontMetrics(combobox.font())
+        max_width = 0
+        for i in range(combobox.count()):
+            text = combobox.itemText(i)
+            max_width = max(max_width, font_metrics.horizontalAdvance(text))
+        combobox.view().setMinimumWidth(max_width + 40)
+
+    def _valid_values(self) -> bool:
+        if self.transfer_type == TRANSFER_OUT:
+            return CategoryCommodityDialog._is_unit_valid_value(
+                self.unit_spinbox.value()
+            )
+        return CategoryCommodityDialog._is_unit_valid_value(
+            self.unit_spinbox.value()
+        ) and CategoryCommodityDialog._is_price_valid_value(self.price_spinbox.value())
+
+    def _has_commodity(self, category: Category) -> bool:
+        for commodity in self.commodities:
+            if commodity.category_id == category.id:
+                return True
+        return False
+
+    @staticmethod
+    def _is_unit_valid_value(value: float) -> bool:
+        return normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE
+
+    @staticmethod
+    def _is_price_valid_value(value: float) -> bool:
+        return normalize_value(value) >= CATEGORY_COMMODITY_DIALOG_MIN_VALUE
+
     def _is_valid(self) -> bool:
         if self.transfer_type == TRANSFER_OUT:
             return (
@@ -302,43 +339,6 @@ class CategoryCommodityDialog(QDialog):
                 self.price_spinbox.value()
             )
         )
-
-    @staticmethod
-    def _adjust_combo_view_width(combobox: QComboBox) -> None:
-        font_metrics = QFontMetrics(combobox.font())
-        max_width = 0
-        for i in range(combobox.count()):
-            text = combobox.itemText(i)
-            max_width = max(max_width, font_metrics.horizontalAdvance(text))
-        combobox.view().setMinimumWidth(max_width + 40)
-
-    @staticmethod
-    def _setup_enable_state(
-        enabled: list[QWidget] | None = None, disabled: list[QWidget] | None = None
-    ) -> None:
-        if enabled is not None:
-            for widget in enabled:
-                widget.setEnabled(True)
-        if disabled is not None:
-            for widget in disabled:
-                widget.setEnabled(False)
-
-    @staticmethod
-    def _is_unit_valid_value(value: float) -> bool:
-        return normalize_value(value) > CATEGORY_COMMODITY_DIALOG_MIN_VALUE
-
-    @staticmethod
-    def _is_price_valid_value(value: float) -> bool:
-        return normalize_value(value) >= CATEGORY_COMMODITY_DIALOG_MIN_VALUE
-
-    def _valid_values(self) -> bool:
-        if self.transfer_type == TRANSFER_OUT:
-            return CategoryCommodityDialog._is_unit_valid_value(
-                self.unit_spinbox.value()
-            )
-        return CategoryCommodityDialog._is_unit_valid_value(
-            self.unit_spinbox.value()
-        ) and CategoryCommodityDialog._is_price_valid_value(self.price_spinbox.value())
 
     def get_category_commodity_data(self) -> dict[str, str | int | float | None] | None:
         commodity_id = self.commodity_combo_box.currentData()

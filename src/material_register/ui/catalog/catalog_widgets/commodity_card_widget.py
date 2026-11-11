@@ -109,6 +109,13 @@ class CommodityCardWidget(QTabWidget):
         )
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
+    def create_connection(
+        self, commodity: Commodity, on_update_clicked: Callable[[Commodity], None]
+    ) -> None:
+        self.update_commodity_button.clicked.connect(
+            lambda: on_update_clicked(commodity)
+        )
+
     def _setup_text_edit(self) -> None:
         setup_text_edit(self.notes_edit)
 
@@ -121,13 +128,6 @@ class CommodityCardWidget(QTabWidget):
         )
         self.active_value.setChecked(bool(commodity.active))
         self.notes_edit.setPlainText(commodity.notes)
-
-    def create_connection(
-        self, commodity: Commodity, on_update_clicked: Callable[[Commodity], None]
-    ) -> None:
-        self.update_commodity_button.clicked.connect(
-            lambda: on_update_clicked(commodity)
-        )
 
     def sizeHint(self) -> QSize:
         return QSize(250, 180)

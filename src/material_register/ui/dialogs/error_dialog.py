@@ -83,10 +83,10 @@ class ErrorDialog(QDialog):
         self.close_app_button.setVisible(close_app)
         self.exec()
 
-    def showEvent(self, event: QShowEvent) -> None:
-        centre_dialog(self)
-        super().showEvent(event)
-
     @staticmethod
     def _close_app() -> None:
         QApplication.exit(1)
+
+    def showEvent(self, event: QShowEvent) -> None:
+        centre_dialog(self)
+        super().showEvent(event)

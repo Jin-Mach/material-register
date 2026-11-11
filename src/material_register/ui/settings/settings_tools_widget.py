@@ -58,6 +58,29 @@ class SettingsToolsWidget(QWidget):
         main_layout.addWidget(actions_group)
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self.apply_settings()
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        if not UiTexts.set_ui_texts(self, widgets):
+            ErrorHandler.handle_error(
+                f"Settings load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "CONFIG_LOAD_FAILED"
+            return
+
+    def _create_connection(self) -> None:
+        self.restore_button.clicked.connect(
+            self.tools_settings_controller.restore_tools_settings
+        )
+        self.save_button.clicked.connect(
+            self.tools_settings_controller.update_tools_settings
+        )
+
     def _create_tools_group(self) -> QGroupBox:
         self.tools_group_box = QGroupBox()
         self.tools_group_box.setObjectName("toolsGroupBox")
@@ -106,29 +129,6 @@ class SettingsToolsWidget(QWidget):
         main_layout.addWidget(self.save_button)
         self.actions_group_box.setLayout(main_layout)
         return self.actions_group_box
-
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self.apply_settings()
-
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        if not UiTexts.set_ui_texts(self, widgets):
-            ErrorHandler.handle_error(
-                f"Settings load failed: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "CONFIG_LOAD_FAILED"
-            return
-
-    def _create_connection(self) -> None:
-        self.restore_button.clicked.connect(
-            self.tools_settings_controller.restore_tools_settings
-        )
-        self.save_button.clicked.connect(
-            self.tools_settings_controller.update_tools_settings
-        )
 
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(

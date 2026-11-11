@@ -44,17 +44,17 @@ class TransactionsContextMenu(QMenu):
         self.addSeparator()
         self.addAction(self.show_transaction_document_action)
 
+    def _create_connection(self) -> None:
+        self.update_transaction_action.triggered.connect(self._update_transaction)
+        self.delete_transaction_action.triggered.connect(self._delete_transaction)
+        self.show_transaction_document_action.triggered.connect(self._show_document)
+
     def set_ui_texts(self, ui_texts: dict[str, str]) -> None:
         if ui_texts:
             for widget in self.findChildren(QAction):
                 key = widget.objectName() + "Text"
                 if key in ui_texts:
                     widget.setText(ui_texts[key])
-
-    def _create_connection(self) -> None:
-        self.update_transaction_action.triggered.connect(self._update_transaction)
-        self.delete_transaction_action.triggered.connect(self._delete_transaction)
-        self.show_transaction_document_action.triggered.connect(self._show_document)
 
     def set_customer_index(self, index: QModelIndex) -> None:
         self.transaction_index = index

@@ -35,6 +35,7 @@ if TYPE_CHECKING:
 
 class MaterialSearchWidget(QWidget):
     AND_OPERATOR = "AND"
+
     OR_OPERATOR = "OR"
 
     def __init__(
@@ -127,6 +128,10 @@ class MaterialSearchWidget(QWidget):
         self._setup_radio_buttons()
         self.material_filter_model.clear()
 
+    def _setup_property(self) -> None:
+        self.and_operator_radio_button.setProperty("operator", self.AND_OPERATOR)
+        self.or_operator_radio_button.setProperty("operator", self.OR_OPERATOR)
+
     def _setup_push_buttons(self) -> None:
         self.update_filter_button.setDisabled(True)
         self.delete_filter_button.setDisabled(True)
@@ -145,10 +150,6 @@ class MaterialSearchWidget(QWidget):
         self.material_filter_controller.set_material_filter_model(
             self.material_filter_model
         )
-
-    def _setup_property(self) -> None:
-        self.and_operator_radio_button.setProperty("operator", self.AND_OPERATOR)
-        self.or_operator_radio_button.setProperty("operator", self.OR_OPERATOR)
 
     def _update_buttons_state(self) -> None:
         selection = self.filters_list_view.currentIndex().isValid()

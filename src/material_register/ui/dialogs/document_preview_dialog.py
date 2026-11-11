@@ -29,6 +29,7 @@ from material_register.ui.setup.ui_texts import UiTexts
 
 class DocumentPreviewDialog(QDialog):
     MIN_ZOOM_FACTOR = 0.5
+
     MAX_ZOOM_FACTOR = 2.0
 
     def __init__(self, parent: QWidget = None) -> None:
@@ -95,10 +96,13 @@ class DocumentPreviewDialog(QDialog):
         if UiTexts.set_default_texts(self, buttons):
             return
 
-    def _setup_view(self) -> None:
-        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
-        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitInView)
-        self.pdf_view.setPageSpacing(10)
+    def _create_connection(self) -> None:
+        self.print_document_button.clicked.connect(self._print_document)
+        self.save_document_button.clicked.connect(self._save_document)
+        self.zoom_in_button.clicked.connect(self._zoom_in)
+        self.zoom_reset_button.clicked.connect(self._reset_zoom)
+        self.zoom_out_button.clicked.connect(self._zoom_out)
+        self.close_button.clicked.connect(self.close)
 
     def _setup_icons(self) -> None:
         self.print_document_button.setIcon(UiIcons.PRINT_ICON)
@@ -117,13 +121,10 @@ class DocumentPreviewDialog(QDialog):
             button.setIconSize(QSize(24, 24))
             button.setFixedSize(28, 28)
 
-    def _create_connection(self) -> None:
-        self.print_document_button.clicked.connect(self._print_document)
-        self.save_document_button.clicked.connect(self._save_document)
-        self.zoom_in_button.clicked.connect(self._zoom_in)
-        self.zoom_reset_button.clicked.connect(self._reset_zoom)
-        self.zoom_out_button.clicked.connect(self._zoom_out)
-        self.close_button.clicked.connect(self.close)
+    def _setup_view(self) -> None:
+        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitInView)
+        self.pdf_view.setPageSpacing(10)
 
     def load_pdf_from_bytes(self, pdf_bytes: bytes, transaction_id: int) -> None:
         self._pdf_bytes = pdf_bytes

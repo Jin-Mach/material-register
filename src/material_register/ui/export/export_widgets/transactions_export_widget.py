@@ -102,6 +102,85 @@ class TransactionsExportWidget(QWidget):
         main_layout.addWidget(export_action_group)
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self.apply_settings()
+        self._set_folder_path()
+        self._setup_combobox()
+        self._setup_completer()
+        self._set_validators()
+        self._apply_date_state()
+        self._setup_date_edits()
+        self._set_required_style()
+        self._apply_export_action_state()
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        if not ui_texts:
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.folder_dialog_title = ui_texts.get(
+            "folderDialogTitle", "Select Export Folder"
+        )
+        type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
+        if not type_items:
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.file_type_combobox.addItems(type_items)
+        self.all_customers_text = ui_texts.get("allCustomersText", "All customers...")
+        if UiTexts.set_ui_texts(self, widgets):
+            self.default_name = ui_texts.get(
+                f"{self.file_name_line_edit.objectName()}Text", "Export"
+            )
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
+    def _create_connection(self) -> None:
+        date_radiobuttons = [
+            self.today_radio_button,
+            self.week_radio_button,
+            self.month_radio_button,
+            self.year_radio_button,
+            self.custom_radio_button,
+        ]
+        self.branch_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
+        self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
+        self.path_button.clicked.connect(self._select_export_folder)
+        for radio_button in date_radiobuttons:
+            radio_button.toggled.connect(self._apply_date_state)
+            radio_button.toggled.connect(self._update_sheet_state)
+        self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
+        self.from_date_edit.dateChanged.connect(self._update_sheet_state)
+        self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+        self.to_date_edit.dateChanged.connect(self._update_sheet_state)
+        self.customer_combobox.currentIndexChanged.connect(
+            self._on_customer_selection_changed
+        )
+        self.customer_combobox.lineEdit().textEdited.connect(
+            self._on_customer_text_edited
+        )
+        self.export_button.clicked.connect(
+            self.transactions_export_controller.start_export
+        )
+
     def _create_branch_group(self) -> QGroupBox:
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
@@ -318,56 +397,32 @@ class TransactionsExportWidget(QWidget):
         self.export_action_group_box.setLayout(main_layout)
         return self.export_action_group_box
 
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self.apply_settings()
-        self._set_folder_path()
-        self._setup_combobox()
-        self._setup_completer()
-        self._set_validators()
-        self._apply_date_state()
-        self._setup_date_edits()
-        self._set_required_style()
-        self._apply_export_action_state()
+    def _setup_completer(self) -> None:
+        completer = QCompleter()
+        completer.setModel(self.completer_model)
+        completer.setCompletionRole(Qt.ItemDataRole.UserRole + 10)
+        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        self.customer_combobox.setCompleter(completer)
 
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        if not ui_texts:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
-        self.folder_dialog_title = ui_texts.get(
-            "folderDialogTitle", "Select Export Folder"
-        )
-        type_items = ui_texts.get(f"{self.file_type_combobox.objectName()}Items", [])
-        if not type_items:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
-        self.file_type_combobox.addItems(type_items)
-        self.all_customers_text = ui_texts.get("allCustomersText", "All customers...")
-        if UiTexts.set_ui_texts(self, widgets):
-            self.default_name = ui_texts.get(
-                f"{self.file_name_line_edit.objectName()}Text", "Export"
-            )
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
+    def _setup_date_edits(self) -> None:
+        date_edits = [self.from_date_edit, self.to_date_edit]
+        for date_edit in date_edits:
+            calendar = date_edit.calendarWidget()
+            if calendar:
+                year_button = calendar.findChild(QToolButton, "qt_calendar_yearbutton")
+                year_button.setDisabled(True)
+                calendar.setMinimumWidth(250)
+                calendar.setMinimumHeight(200)
+        today = QDate.currentDate()
+        start_of_year = QDate(today.year(), 1, 1)
+        self.from_date_edit.setMinimumDate(start_of_year)
+        self.from_date_edit.setMaximumDate(today)
+        self.from_date_edit.setDate(start_of_year)
+        self.to_date_edit.setMinimumDate(start_of_year)
+        self.to_date_edit.setMaximumDate(today)
+        self.to_date_edit.setDate(today)
 
     def _setup_combobox(self) -> None:
         self.customer_combobox.addItem(self.all_customers_text, None)
@@ -377,15 +432,6 @@ class TransactionsExportWidget(QWidget):
                 f"{name} - {address}",
                 customer.id,
             )
-
-    def _setup_completer(self) -> None:
-        completer = QCompleter()
-        completer.setModel(self.completer_model)
-        completer.setCompletionRole(Qt.ItemDataRole.UserRole + 10)
-        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
-        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-        completer.setFilterMode(Qt.MatchFlag.MatchContains)
-        self.customer_combobox.setCompleter(completer)
 
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
@@ -410,34 +456,6 @@ class TransactionsExportWidget(QWidget):
         self.week_radio_button.setChecked(True)
         self.customer_combobox.setEditable(True)
         self.in_radio_button.setChecked(True)
-
-    def _create_connection(self) -> None:
-        date_radiobuttons = [
-            self.today_radio_button,
-            self.week_radio_button,
-            self.month_radio_button,
-            self.year_radio_button,
-            self.custom_radio_button,
-        ]
-        self.branch_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
-        self.file_name_line_edit.textChanged.connect(self._on_text_or_value_changed)
-        self.path_button.clicked.connect(self._select_export_folder)
-        for radio_button in date_radiobuttons:
-            radio_button.toggled.connect(self._apply_date_state)
-            radio_button.toggled.connect(self._update_sheet_state)
-        self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
-        self.from_date_edit.dateChanged.connect(self._update_sheet_state)
-        self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
-        self.to_date_edit.dateChanged.connect(self._update_sheet_state)
-        self.customer_combobox.currentIndexChanged.connect(
-            self._on_customer_selection_changed
-        )
-        self.customer_combobox.lineEdit().textEdited.connect(
-            self._on_customer_text_edited
-        )
-        self.export_button.clicked.connect(
-            self.transactions_export_controller.start_export
-        )
 
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(
@@ -478,20 +496,6 @@ class TransactionsExportWidget(QWidget):
         self.customer_combobox.setCurrentIndex(0)
         self._apply_export_action_state()
 
-    def _is_customer_selection_valid(self) -> bool:
-        text = self.customer_combobox.currentText().strip()
-        if text == self.all_customers_text:
-            return self.customer_combobox.currentIndex() == 0
-        index = self.customer_combobox.findText(
-            text,
-            Qt.MatchFlag.MatchExactly,
-        )
-        if index < 1:
-            return False
-        return (
-            self.customer_combobox.itemData(index, Qt.ItemDataRole.UserRole) is not None
-        )
-
     def _apply_date_state(self) -> None:
         if self.custom_radio_button.isChecked():
             self.from_date_edit.setEnabled(True)
@@ -527,24 +531,6 @@ class TransactionsExportWidget(QWidget):
             self.export_button.setEnabled(True)
         else:
             self.export_button.setEnabled(False)
-
-    def _setup_date_edits(self) -> None:
-        date_edits = [self.from_date_edit, self.to_date_edit]
-        for date_edit in date_edits:
-            calendar = date_edit.calendarWidget()
-            if calendar:
-                year_button = calendar.findChild(QToolButton, "qt_calendar_yearbutton")
-                year_button.setDisabled(True)
-                calendar.setMinimumWidth(250)
-                calendar.setMinimumHeight(200)
-        today = QDate.currentDate()
-        start_of_year = QDate(today.year(), 1, 1)
-        self.from_date_edit.setMinimumDate(start_of_year)
-        self.from_date_edit.setMaximumDate(today)
-        self.from_date_edit.setDate(start_of_year)
-        self.to_date_edit.setMinimumDate(start_of_year)
-        self.to_date_edit.setMaximumDate(today)
-        self.to_date_edit.setDate(today)
 
     def _update_to_date_minimum(self, date: QDate) -> None:
         self.to_date_edit.setMinimumDate(date)
@@ -616,6 +602,20 @@ class TransactionsExportWidget(QWidget):
             "Excel": ".xlsx",
         }
         return file_map[file_type]
+
+    def _is_customer_selection_valid(self) -> bool:
+        text = self.customer_combobox.currentText().strip()
+        if text == self.all_customers_text:
+            return self.customer_combobox.currentIndex() == 0
+        index = self.customer_combobox.findText(
+            text,
+            Qt.MatchFlag.MatchExactly,
+        )
+        if index < 1:
+            return False
+        return (
+            self.customer_combobox.itemData(index, Qt.ItemDataRole.UserRole) is not None
+        )
 
     def get_export_data(self) -> dict[str, Path | str | int | None | bool]:
         from_date, to_date = self._get_date_interval()

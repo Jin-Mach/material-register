@@ -66,6 +66,37 @@ class SettingsDocumentsWidget(QWidget):
         main_layout.addWidget(self._create_actions_group())
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self.apply_settings()
+        self.set_folder_path()
+        self._create_connection()
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.printer_dialog_title = ui_texts.get("printerDialogTitle", "Select Printer")
+        self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Folder")
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        self.printer_name_button.clicked.connect(self.select_printer)
+        self.save_path_button.clicked.connect(self.select_save_path)
+        self.restore_button.clicked.connect(
+            lambda: self.documents_settings_controller.restore_settings(self)
+        )
+        self.save_button.clicked.connect(
+            lambda: self.documents_settings_controller.update_settings(self)
+        )
+
     def _create_print_group(self) -> QGroupBox:
         self.print_group_box = QGroupBox()
         self.print_group_box.setObjectName("printGroupBox")
@@ -145,27 +176,6 @@ class SettingsDocumentsWidget(QWidget):
         self.actions_group_box.setLayout(main_layout)
         return self.actions_group_box
 
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self.apply_settings()
-        self.set_folder_path()
-        self._create_connection()
-
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.printer_dialog_title = ui_texts.get("printerDialogTitle", "Select Printer")
-        self.folder_dialog_title = ui_texts.get("folderDialogTitle", "Select Folder")
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
-
     def apply_settings(self) -> None:
         user_settings = self.documents_settings_controller.settings.get("user", {})
         self.printer_name = user_settings.get("printerNameLineEdit", "")
@@ -183,16 +193,6 @@ class SettingsDocumentsWidget(QWidget):
         self.save_path_line_edit.setToolTip(self.save_current_path)
         self.printer_name_line_edit.setToolTipDuration(3000)
         self.save_path_line_edit.setToolTipDuration(3000)
-
-    def _create_connection(self) -> None:
-        self.printer_name_button.clicked.connect(self.select_printer)
-        self.save_path_button.clicked.connect(self.select_save_path)
-        self.restore_button.clicked.connect(
-            lambda: self.documents_settings_controller.restore_settings(self)
-        )
-        self.save_button.clicked.connect(
-            lambda: self.documents_settings_controller.update_settings(self)
-        )
 
     def select_printer(self) -> None:
         printers = QPrinterInfo.availablePrinters()

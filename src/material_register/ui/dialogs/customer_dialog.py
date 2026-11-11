@@ -164,11 +164,26 @@ class CustomerDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
-    def _setup_text_edit(self) -> None:
-        setup_text_edit(self.notes_input)
+    def _create_connection(self) -> None:
+        for widget in (
+            self.first_name_input,
+            self.last_name_input,
+            self.company_input,
+            self.document_type_input,
+            self.address_input,
+        ):
+            widget.textChanged.connect(self._on_form_changed)
+        self.subject_type.currentIndexChanged.connect(self._on_type_changed)
+        self.document_type_input.textChanged.connect(self._on_document_type_changed)
+        self.notes_input.textChanged.connect(self._update_notes_count)
+        self.save_button.clicked.connect(self.accept)
+        self.close_button.clicked.connect(self.reject)
 
     def _setup_context_menu(self) -> None:
         disable_context_menu(self.findChildren(QWidget))
+
+    def _setup_text_edit(self) -> None:
+        setup_text_edit(self.notes_input)
 
     def _setup_items(self) -> None:
         self.subject_type.clear()
@@ -285,21 +300,6 @@ class CustomerDialog(QDialog):
             CUSTOMERS_DIALOG_NOTES_LENGTH,
         )
 
-    def _create_connection(self) -> None:
-        for widget in (
-            self.first_name_input,
-            self.last_name_input,
-            self.company_input,
-            self.document_type_input,
-            self.address_input,
-        ):
-            widget.textChanged.connect(self._on_form_changed)
-        self.subject_type.currentIndexChanged.connect(self._on_type_changed)
-        self.document_type_input.textChanged.connect(self._on_document_type_changed)
-        self.notes_input.textChanged.connect(self._update_notes_count)
-        self.save_button.clicked.connect(self.accept)
-        self.close_button.clicked.connect(self.reject)
-
     def _update_required_styles(self) -> None:
         for widget in (
             self.first_name_input,
@@ -336,32 +336,6 @@ class CustomerDialog(QDialog):
         self._apply_type_state()
         self._on_form_changed()
 
-    def get_customer_data(self) -> Customer | None:
-        type_index = self.subject_type.currentIndex()
-        if not self._is_input_valid(type_index):
-            return None
-        if type_index == 0:
-            return Customer(
-                company=None,
-                first_name=self.first_name_input.text().strip(),
-                last_name=self.last_name_input.text().strip(),
-                document_number=self.document_type_input.text().strip(),
-                address=self.address_input.text().strip(),
-                notes=self.notes_input.toPlainText().strip(),
-                active=int(self.active_checkbox.isChecked()),
-            )
-        if type_index == 1:
-            return Customer(
-                company=self.company_input.text().strip(),
-                first_name=None,
-                last_name=None,
-                document_number=self.document_type_input.text().strip(),
-                address=self.address_input.text().strip(),
-                notes=self.notes_input.toPlainText().strip(),
-                active=int(self.active_checkbox.isChecked()),
-            )
-        return None
-
     def _is_input_valid(self, type_index: int) -> bool:
         document = self.document_type_input.text().strip()
         address = self.address_input.text().strip()
@@ -388,6 +362,32 @@ class CustomerDialog(QDialog):
         return not self.customers_widget.customers_model.document_exists(
             document, ignored_id=ignored_id
         )
+
+    def get_customer_data(self) -> Customer | None:
+        type_index = self.subject_type.currentIndex()
+        if not self._is_input_valid(type_index):
+            return None
+        if type_index == 0:
+            return Customer(
+                company=None,
+                first_name=self.first_name_input.text().strip(),
+                last_name=self.last_name_input.text().strip(),
+                document_number=self.document_type_input.text().strip(),
+                address=self.address_input.text().strip(),
+                notes=self.notes_input.toPlainText().strip(),
+                active=int(self.active_checkbox.isChecked()),
+            )
+        if type_index == 1:
+            return Customer(
+                company=self.company_input.text().strip(),
+                first_name=None,
+                last_name=None,
+                document_number=self.document_type_input.text().strip(),
+                address=self.address_input.text().strip(),
+                notes=self.notes_input.toPlainText().strip(),
+                active=int(self.active_checkbox.isChecked()),
+            )
+        return None
 
     def showEvent(self, event: QShowEvent) -> None:
         self.adjustSize()

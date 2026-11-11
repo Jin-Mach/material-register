@@ -78,6 +78,42 @@ class DatabaseBackupWidget(QWidget):
         self.setup_backup_tree()
         self._setup_widgets()
 
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.selected_path_text = ui_texts.get(
+            "selectedPathLabelText", "Select a backup"
+        )
+        self.backup_dialog_title = ui_texts.get("folderBackupDialogTitleText", "")
+        self.restore_dialog_title = ui_texts.get("fileRestoreDialogTitleText", "")
+        self.restore_filter_text = ui_texts.get("fileRestoreDialogFilterText", "")
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
+    def _create_connection(self) -> None:
+        self.backup_tree_widget.itemSelectionChanged.connect(self._update_backup_path)
+        self.backup_tree_widget.itemSelectionChanged.connect(
+            self._update_backup_button_state
+        )
+        self.custom_backup_button.clicked.connect(
+            self.custom_backup_controller.start_backup_thread
+        )
+        self.custom_restore_button.clicked.connect(self.get_custom_restore_path)
+        self.restore_backup_button.clicked.connect(
+            self.database_restore_controller.start_restore_thread
+        )
+        AppContext.TIME_CONTROLLER.hourly_database_backup.connect(
+            self.database_backup_controller.start_thread
+        )
+
     def _create_info_group(self) -> QGroupBox:
         info_group_box = QGroupBox()
         info_group_box.setObjectName("infoGroupBox")
@@ -158,44 +194,16 @@ class DatabaseBackupWidget(QWidget):
         backup_group_box.setLayout(backup_layout)
         return backup_group_box
 
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.selected_path_text = ui_texts.get(
-            "selectedPathLabelText", "Select a backup"
-        )
-        self.backup_dialog_title = ui_texts.get("folderBackupDialogTitleText", "")
-        self.restore_dialog_title = ui_texts.get("fileRestoreDialogTitleText", "")
-        self.restore_filter_text = ui_texts.get("fileRestoreDialogFilterText", "")
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
-
     def _setup_widgets(self) -> None:
         self.restore_backup_button.setDisabled(True)
 
-    def _create_connection(self) -> None:
-        self.backup_tree_widget.itemSelectionChanged.connect(self._update_backup_path)
-        self.backup_tree_widget.itemSelectionChanged.connect(
-            self._update_backup_button_state
-        )
-        self.custom_backup_button.clicked.connect(
-            self.custom_backup_controller.start_backup_thread
-        )
-        self.custom_restore_button.clicked.connect(self.get_custom_restore_path)
-        self.restore_backup_button.clicked.connect(
-            self.database_restore_controller.start_restore_thread
-        )
-        AppContext.TIME_CONTROLLER.hourly_database_backup.connect(
-            self.database_backup_controller.start_thread
-        )
+    def setup_backup_tree(self) -> None:
+        backup_map = self.database_backup_controller.get_backup_map()
+        is_backup = bool(backup_map)
+        self.backup_tree_widget.setVisible(is_backup)
+        self.no_backup_label.setVisible(not is_backup)
+        if is_backup:
+            self.backup_tree_widget.load_tree_widget(backup_map)
 
     def setup_info_group(self) -> None:
         name, size, modified, last_backup = (
@@ -206,13 +214,18 @@ class DatabaseBackupWidget(QWidget):
         self.database_last_modified_value.setText(str(modified))
         self.database_last_backup_value.setText(str(last_backup))
 
-    def setup_backup_tree(self) -> None:
-        backup_map = self.database_backup_controller.get_backup_map()
-        is_backup = bool(backup_map)
-        self.backup_tree_widget.setVisible(is_backup)
-        self.no_backup_label.setVisible(not is_backup)
-        if is_backup:
-            self.backup_tree_widget.load_tree_widget(backup_map)
+    def _update_backup_path(self) -> None:
+        backup_path = self.backup_tree_widget.get_selected_data()
+        if backup_path is None:
+            self.restore_path = None
+            self.selected_path_label.setText(self.selected_path_text)
+            return
+        self.restore_path = backup_path
+        displayed_name = DatabaseBackupWidget.get_displayed_path(backup_path)
+        self.selected_path_label.setText(displayed_name)
+
+    def _update_backup_button_state(self) -> None:
+        self.restore_backup_button.setDisabled(self.restore_path is None)
 
     def get_custom_backup_path(self) -> tuple[Path, str] | None:
         file_path, _ = QFileDialog.getSaveFileName(
@@ -242,19 +255,6 @@ class DatabaseBackupWidget(QWidget):
         displayed_name = DatabaseBackupWidget.get_displayed_path(self.restore_path)
         self.selected_path_label.setText(displayed_name)
         self._update_backup_button_state()
-
-    def _update_backup_path(self) -> None:
-        backup_path = self.backup_tree_widget.get_selected_data()
-        if backup_path is None:
-            self.restore_path = None
-            self.selected_path_label.setText(self.selected_path_text)
-            return
-        self.restore_path = backup_path
-        displayed_name = DatabaseBackupWidget.get_displayed_path(backup_path)
-        self.selected_path_label.setText(displayed_name)
-
-    def _update_backup_button_state(self) -> None:
-        self.restore_backup_button.setDisabled(self.restore_path is None)
 
     @staticmethod
     def get_displayed_path(path: Path) -> str:

@@ -76,6 +76,39 @@ class CashBalanceWidget(QWidget):
         self._create_connections()
         self._setup_values()
 
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.cash_tab_text = ui_texts.get("cashTabText", "Income and expenses")
+        self.values_tab_text = ui_texts.get("valuesTabText", "Cash")
+        self.values_items = ui_texts.get("valueItems", [])
+        self.others_label_text = ui_texts.get("othersLabelText", "Other:")
+        self.cash_total_label_text = ui_texts.get("cashTotalLabelText", "Total:")
+        self.total_label_text = ui_texts.get("totalLabelText", "Difference:")
+        self.currency_suffix = ui_texts.get("currencySuffix", "")
+        self.quantity_suffix = ui_texts.get("quantitySuffix", "")
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        if UiTexts.set_default_texts(self, widgets):
+            return
+
+    def _create_connections(self) -> None:
+        spinboxes = [
+            self.opening_balance_spinbox,
+            self.income_spinbox,
+            self.expense_spinbox,
+            self.others_spinbox,
+        ]
+        spinboxes += list(self.values_spinboxes.values())
+        for spinbox in spinboxes:
+            spinbox.valueChanged.connect(self.update_totals)
+
     def _create_balance_widget(self) -> QWidget:
         balance_widget = QWidget()
         balance_layout = QVBoxLayout()
@@ -147,27 +180,59 @@ class CashBalanceWidget(QWidget):
         values_tab_layout.addWidget(scroll_area)
         self.values_tab.setLayout(values_tab_layout)
 
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.cash_tab_text = ui_texts.get("cashTabText", "Income and expenses")
-        self.values_tab_text = ui_texts.get("valuesTabText", "Cash")
-        self.values_items = ui_texts.get("valueItems", [])
-        self.others_label_text = ui_texts.get("othersLabelText", "Other:")
-        self.cash_total_label_text = ui_texts.get("cashTotalLabelText", "Total:")
-        self.total_label_text = ui_texts.get("totalLabelText", "Difference:")
-        self.currency_suffix = ui_texts.get("currencySuffix", "")
-        self.quantity_suffix = ui_texts.get("quantitySuffix", "")
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        if UiTexts.set_default_texts(self, widgets):
-            return
+    def _setup_spinboxes(self) -> None:
+        decimal_spinboxes = [
+            self.opening_balance_spinbox,
+            self.transaction_cash_spinbox,
+            self.income_spinbox,
+            self.expense_spinbox,
+            self.balance_count_spinbox,
+            self.cash_total_spinbox,
+            self.others_spinbox,
+        ]
+        self._setup_spinbox_values(decimal_spinboxes)
+        self._setup_spinbox_display()
+        self._setup_spinbox_inputs(decimal_spinboxes)
+
+    def _setup_spinbox_values(self, decimal_spinboxes: list[QDoubleSpinBox]) -> None:
+        disabled_spinboxes = [
+            self.balance_count_spinbox,
+            self.transaction_cash_spinbox,
+            self.cash_total_spinbox,
+        ]
+        for spinbox in disabled_spinboxes:
+            spinbox.setDisabled(True)
+        for spinbox in decimal_spinboxes:
+            spinbox.setDecimals(1)
+            spinbox.setSingleStep(1)
+            spinbox.setMinimum(CASH_BALANCE_MIN_VALUE)
+            spinbox.setMaximum(CASH_BALANCE_MAX_VALUE)
+        self.opening_balance_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
+        self.balance_count_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
+
+    def _setup_spinbox_display(self) -> None:
+        for spinbox in self.findChildren(QSpinBox):
+            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+            spinbox.setGroupSeparatorShown(True)
+            disable_spinbox_wheel(spinbox)
+        for spinbox in self.findChildren(QDoubleSpinBox):
+            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+            spinbox.setGroupSeparatorShown(True)
+            disable_spinbox_wheel(spinbox)
+
+    def _setup_spinbox_inputs(self, decimal_spinboxes: list[QDoubleSpinBox]) -> None:
+        self.spinboxes_line_edits = []
+        spinboxes = self.findChildren(QSpinBox) + self.findChildren(QDoubleSpinBox)
+        for spinbox in spinboxes:
+            spinbox_line_edit = spinbox.lineEdit()
+            self.spinboxes_line_edits.append(spinbox_line_edit)
+            spinbox_line_edit.installEventFilter(self)
+        for spinbox in decimal_spinboxes:
+            spinbox.setSuffix(self.currency_suffix)
+        for spinbox in self.values_spinboxes.values():
+            spinbox.setSuffix(self.quantity_suffix)
+        locale = self.opening_balance_spinbox.locale()
+        self.decimal = locale.decimalPoint()
 
     def _setup_specific_texts(self) -> None:
         self.tab_widget.setTabText(0, self.cash_tab_text)
@@ -188,17 +253,6 @@ class CashBalanceWidget(QWidget):
         )
         self.update_totals()
 
-    def _create_connections(self) -> None:
-        spinboxes = [
-            self.opening_balance_spinbox,
-            self.income_spinbox,
-            self.expense_spinbox,
-            self.others_spinbox,
-        ]
-        spinboxes += list(self.values_spinboxes.values())
-        for spinbox in spinboxes:
-            spinbox.valueChanged.connect(self.update_totals)
-
     def update_totals(self) -> None:
         balance = CashBalanceWidget._calculate_balance(
             self.opening_balance_spinbox.value(),
@@ -218,51 +272,6 @@ class CashBalanceWidget(QWidget):
             self.total_label_value.setStyleSheet("")
         total_text = f"{total:.1f}".replace(".", self.decimal)
         self.total_label_value.setText(f"{total_text} {self.currency_suffix}")
-
-    def _setup_spinboxes(self) -> None:
-        disabled_spinboxes = [
-            self.balance_count_spinbox,
-            self.transaction_cash_spinbox,
-            self.cash_total_spinbox,
-        ]
-        decimal_spinboxes = [
-            self.opening_balance_spinbox,
-            self.transaction_cash_spinbox,
-            self.income_spinbox,
-            self.expense_spinbox,
-            self.balance_count_spinbox,
-            self.cash_total_spinbox,
-            self.others_spinbox,
-        ]
-        for spinbox in disabled_spinboxes:
-            spinbox.setDisabled(True)
-        for spinbox in decimal_spinboxes:
-            spinbox.setDecimals(1)
-            spinbox.setSingleStep(1)
-            spinbox.setMinimum(CASH_BALANCE_MIN_VALUE)
-            spinbox.setMaximum(CASH_BALANCE_MAX_VALUE)
-        self.opening_balance_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
-        self.balance_count_spinbox.setMinimum(CASH_BALANCE_NEGATIVE_MIN_VALUE)
-        for spinbox in self.findChildren(QSpinBox):
-            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
-            spinbox.setGroupSeparatorShown(True)
-            disable_spinbox_wheel(spinbox)
-        for spinbox in self.findChildren(QDoubleSpinBox):
-            spinbox.setAlignment(Qt.AlignmentFlag.AlignRight)
-            spinbox.setGroupSeparatorShown(True)
-            disable_spinbox_wheel(spinbox)
-        self.spinboxes_line_edits = []
-        spinboxes = self.findChildren(QSpinBox) + self.findChildren(QDoubleSpinBox)
-        for spinbox in spinboxes:
-            spinbox_line_edit = spinbox.lineEdit()
-            self.spinboxes_line_edits.append(spinbox_line_edit)
-            spinbox_line_edit.installEventFilter(self)
-        for spinbox in decimal_spinboxes:
-            spinbox.setSuffix(self.currency_suffix)
-        for spinbox in self.values_spinboxes.values():
-            spinbox.setSuffix(self.quantity_suffix)
-        locale = self.opening_balance_spinbox.locale()
-        self.decimal = locale.decimalPoint()
 
     def _calculate_cash_total(self) -> float:
         cash_total = sum(

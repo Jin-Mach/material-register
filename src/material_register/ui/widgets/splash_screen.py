@@ -29,6 +29,14 @@ class SplashScreen(QWidget):
             main_layout.addWidget(SplashScreen._create_progress_bar())
         return main_layout
 
+    @staticmethod
+    def _create_progress_bar() -> QProgressBar:
+        progress_bar = QProgressBar()
+        progress_bar.setMinimum(0)
+        progress_bar.setMaximum(0)
+        progress_bar.setTextVisible(False)
+        return progress_bar
+
     def _load_pixmap(self, pixmap_name: str) -> QPixmap | None:
         image_path = self.resources_path / "images" / "system" / f"{pixmap_name}.jpg"
         if image_path.exists():
@@ -41,14 +49,6 @@ class SplashScreen(QWidget):
             )
             return pixmap
         return None
-
-    @staticmethod
-    def _create_progress_bar() -> QProgressBar:
-        progress_bar = QProgressBar()
-        progress_bar.setMinimum(0)
-        progress_bar.setMaximum(0)
-        progress_bar.setTextVisible(False)
-        return progress_bar
 
     def _center_window(self) -> None:
         self.adjustSize()

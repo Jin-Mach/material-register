@@ -28,20 +28,6 @@ class CustomersView(QTableView):
         self.setObjectName("customersView")
         self.customers_widget = customers_widget
 
-    def setModel(self, model: QAbstractItemModel | None) -> None:
-        super().setModel(model)
-        if not isinstance(model, CustomersModel):
-            ErrorHandler.handle_error(
-                f"Invalid model instance: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
-            return
-        model.rowsInserted.connect(self._refresh_headers)
-        model.rowsRemoved.connect(self._refresh_headers)
-        model.dataChanged.connect(self._refresh_headers)
-
     def setup_ui(self) -> None:
         model = self.model()
         if not isinstance(model, CustomersModel):
@@ -65,15 +51,8 @@ class CustomersView(QTableView):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         self.menu_texts = DEFAULT_TEXTS.get(self.__class__.__name__, {})
 
-    def _setup_headers_texts(self, model: CustomersModel) -> None:
-        if HeadersTexts.set_headers_text(self, model):
-            return
-        ErrorHandler.handle_error(
-            f"Headers text load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+    def _create_connection(self) -> None:
+        self.doubleClicked.connect(self._update_customer)
 
     def _setup_columns(self, model: CustomersModel) -> None:
         for name in CUSTOMERS_HIDDEN_COLUMNS:
@@ -91,24 +70,15 @@ class CustomersView(QTableView):
                 header.setSectionResizeMode(col, QHeaderView.ResizeMode.Fixed)
         self._update_headers(model)
 
-    def _create_connection(self) -> None:
-        self.doubleClicked.connect(self._update_customer)
-
-    def _refresh_headers(self, *args: object) -> None:
-        model = self.model()
-        if isinstance(model, CustomersModel):
-            self._update_headers(model)
-
-    def _update_headers(self, model: CustomersModel) -> None:
-        address_column = model.fieldIndex("address")
-        active_column = model.fieldIndex("active")
-        self.resizeColumnsToContents()
-        for col in range(model.columnCount()):
-            if col in (address_column, active_column):
-                continue
-            self.setColumnWidth(
-                col, self.columnWidth(col) + CUSTOMERS_HORIZONTAL_PADDING
-            )
+    def _setup_headers_texts(self, model: CustomersModel) -> None:
+        if HeadersTexts.set_headers_text(self, model):
+            return
+        ErrorHandler.handle_error(
+            f"Headers text load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
 
     def _setup_default_sorting(self) -> None:
         model = self.model()
@@ -127,6 +97,36 @@ class CustomersView(QTableView):
         self.setCornerButtonEnabled(False)
         self.setAlternatingRowColors(True)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+    def setModel(self, model: QAbstractItemModel | None) -> None:
+        super().setModel(model)
+        if not isinstance(model, CustomersModel):
+            ErrorHandler.handle_error(
+                f"Invalid model instance: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "UNKNOWN_ERROR"
+            return
+        model.rowsInserted.connect(self._refresh_headers)
+        model.rowsRemoved.connect(self._refresh_headers)
+        model.dataChanged.connect(self._refresh_headers)
+
+    def _refresh_headers(self, *args: object) -> None:
+        model = self.model()
+        if isinstance(model, CustomersModel):
+            self._update_headers(model)
+
+    def _update_headers(self, model: CustomersModel) -> None:
+        address_column = model.fieldIndex("address")
+        active_column = model.fieldIndex("active")
+        self.resizeColumnsToContents()
+        for col in range(model.columnCount()):
+            if col in (address_column, active_column):
+                continue
+            self.setColumnWidth(
+                col, self.columnWidth(col) + CUSTOMERS_HORIZONTAL_PADDING
+            )
 
     def open_context_menu(self, position: QPoint) -> None:
         index = self.indexAt(position)

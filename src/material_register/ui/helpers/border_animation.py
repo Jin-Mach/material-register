@@ -39,12 +39,6 @@ class BorderAnimation(QWidget):
         self.timer.stop()
         self.hide()
 
-    def eventFilter(self, watched_widget: QObject, event: QEvent) -> bool:
-        if watched_widget is self.widget and event.type() == QEvent.Type.Resize:
-            self.setGeometry(self.widget.rect())
-            self.update()
-        return super().eventFilter(watched_widget, event)
-
     def _update_position(self) -> None:
         self.progress = min(self.progress + self.speed, self.width())
         self.update()
@@ -57,6 +51,12 @@ class BorderAnimation(QWidget):
             else:
                 self.progress = 0
                 self.update()
+
+    def eventFilter(self, watched_widget: QObject, event: QEvent) -> bool:
+        if watched_widget is self.widget and event.type() == QEvent.Type.Resize:
+            self.setGeometry(self.widget.rect())
+            self.update()
+        return super().eventFilter(watched_widget, event)
 
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)

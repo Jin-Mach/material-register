@@ -82,6 +82,41 @@ class BaseExportWidget(QWidget):
         main_layout.addWidget(actions_group)
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self.apply_settings()
+        self.set_folder_path()
+        self._set_validators()
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.folder_dialog_title = ui_texts.get(
+            "folderDialogTitle", "Select Export Folder"
+        )
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        self.path_button.clicked.connect(self._select_export_path)
+        self.restore_button.clicked.connect(
+            lambda: self.export_settings_controller.restore_summary_settings(
+                self.export_type, self
+            )
+        )
+        self.save_button.clicked.connect(
+            lambda: self.export_settings_controller.update_summary_settings(
+                self.export_type, self
+            )
+        )
+
     def _create_branch_group(self) -> QGroupBox:
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
@@ -200,28 +235,6 @@ class BaseExportWidget(QWidget):
         self.actions_group_box.setLayout(main_layout)
         return self.actions_group_box
 
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self.apply_settings()
-        self.set_folder_path()
-        self._set_validators()
-
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.folder_dialog_title = ui_texts.get(
-            "folderDialogTitle", "Select Export Folder"
-        )
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
-
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
             "export", self.export_type, self.findChildren(QWidget)
@@ -246,19 +259,6 @@ class BaseExportWidget(QWidget):
         self.path_line_edit.setToolTipDuration(3000)
         self.path_line_edit.setReadOnly(True)
 
-    def _create_connection(self) -> None:
-        self.path_button.clicked.connect(self._select_export_path)
-        self.restore_button.clicked.connect(
-            lambda: self.export_settings_controller.restore_summary_settings(
-                self.export_type, self
-            )
-        )
-        self.save_button.clicked.connect(
-            lambda: self.export_settings_controller.update_summary_settings(
-                self.export_type, self
-            )
-        )
-
     def _set_validators(self) -> None:
         name_validator = QRegularExpressionValidator(
             QRegularExpression(r"[A-Za-zÀ-ž0-9_\- ]{1,30}")
@@ -281,11 +281,6 @@ class BaseExportWidget(QWidget):
             self.current_path = folder
             self._set_elided_path(self.current_path)
             self.path_line_edit.setToolTip(self.current_path)
-
-    def _get_settings_path(self) -> str:
-        if not self.path_line_edit.text().strip():
-            return ""
-        return str(self.current_path)
 
     def set_visible_widgets(
         self,
@@ -357,6 +352,11 @@ class BaseExportWidget(QWidget):
         self.actions_group_box.setVisible(
             actions_group_box and any((restore_button, save_button))
         )
+
+    def _get_settings_path(self) -> str:
+        if not self.path_line_edit.text().strip():
+            return ""
+        return str(self.current_path)
 
     def get_export_settings_data(self) -> dict[str, str | bool]:
         return_data = {}

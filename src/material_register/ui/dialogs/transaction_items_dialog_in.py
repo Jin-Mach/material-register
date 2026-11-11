@@ -123,43 +123,6 @@ class TransactionItemsDialogIn(QDialog):
         if UiTexts.set_default_texts(self, widgets):
             return
 
-    def _setup_context_menu(self) -> None:
-        disable_context_menu(self.findChildren(QWidget))
-
-    def set_create_data(self, create_data: dict[str, str | int]) -> None:
-        self._setup_create_data(create_data)
-        self.transaction_info_widget.set_create_data(
-            self.payment_text,
-            self.payment_type,
-            self.is_invoiced,
-            self.customer,
-            self.document_number,
-            self.address,
-            self.notes,
-        )
-
-    def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
-        payment_type = create_data.get("paymentType", "N/A")
-        payment_text = self.cash_payment
-        if payment_type == PAYMENT_TRANSFER:
-            payment_text = self.transfer_payment
-        self.payment_text = payment_text
-        self.payment_type = payment_type
-        self.is_invoiced = create_data.get("isInvoiced", False)
-        self.customer_id = create_data.get("customerId", None)
-        self.customer = create_data.get("customer", "")
-        self.document_number = create_data.get("documentNumber", "")
-        self.address = create_data.get("address", "")
-        self.notes = create_data.get("notes", "")
-
-    def _update_create_data(self) -> None:
-        new_data = self.transactions_controller.create_transaction_data(
-            self.transfer_type, update_transaction=True
-        )
-        if new_data is None:
-            return
-        self.set_create_data(new_data)
-
     def _create_connection(self) -> None:
         self.save_transaction_button.clicked.connect(self.accept)
         self.cancel_transaction_button.clicked.connect(self.reject)
@@ -175,6 +138,46 @@ class TransactionItemsDialogIn(QDialog):
         self.transactions_items_widget.delete_item_button.clicked.connect(
             self._delete_transaction_item
         )
+
+    def _setup_context_menu(self) -> None:
+        disable_context_menu(self.findChildren(QWidget))
+
+    def setup_total_value(self, model: "TransactionItemsModelIn") -> None:
+        self.transactions_items_widget.setup_total_value(model)
+
+    def _setup_create_data(self, create_data: dict[str, str | int]) -> None:
+        payment_type = create_data.get("paymentType", "N/A")
+        payment_text = self.cash_payment
+        if payment_type == PAYMENT_TRANSFER:
+            payment_text = self.transfer_payment
+        self.payment_text = payment_text
+        self.payment_type = payment_type
+        self.is_invoiced = create_data.get("isInvoiced", False)
+        self.customer_id = create_data.get("customerId", None)
+        self.customer = create_data.get("customer", "")
+        self.document_number = create_data.get("documentNumber", "")
+        self.address = create_data.get("address", "")
+        self.notes = create_data.get("notes", "")
+
+    def set_create_data(self, create_data: dict[str, str | int]) -> None:
+        self._setup_create_data(create_data)
+        self.transaction_info_widget.set_create_data(
+            self.payment_text,
+            self.payment_type,
+            self.is_invoiced,
+            self.customer,
+            self.document_number,
+            self.address,
+            self.notes,
+        )
+
+    def _update_create_data(self) -> None:
+        new_data = self.transactions_controller.create_transaction_data(
+            self.transfer_type, update_transaction=True
+        )
+        if new_data is None:
+            return
+        self.set_create_data(new_data)
 
     def _add_transaction_item(self) -> None:
         new_item_data = self.transactions_controller.create_category_commodity_data(
@@ -207,6 +210,19 @@ class TransactionItemsDialogIn(QDialog):
         if question:
             self.transactions_items_widget.delete_item(index)
 
+    def return_transaction_data(self) -> dict[str, str | int | bool]:
+        return {
+            "transaction_type": self.transfer_type,
+            "customer_id": self.customer_id,
+            "payment_type": self.payment_type,
+            "is_invoiced": self.transaction_info_widget.is_invoiced(),
+            "notes": self.transaction_info_widget.get_notes(),
+        }
+
+    def done(self, result: int) -> None:
+        WindowStateManager.save_geometry(self, self.__class__.__name__)
+        super().done(result)
+
     def _get_item_data(
         self,
     ) -> tuple[QModelIndex | None, dict[str, str | int | float] | None]:
@@ -218,26 +234,10 @@ class TransactionItemsDialogIn(QDialog):
         )
         return index, data
 
-    def return_transaction_data(self) -> dict[str, str | int | bool]:
-        return {
-            "transaction_type": self.transfer_type,
-            "customer_id": self.customer_id,
-            "payment_type": self.payment_type,
-            "is_invoiced": self.transaction_info_widget.is_invoiced(),
-            "notes": self.transaction_info_widget.get_notes(),
-        }
-
     def get_current_model(self) -> "TransactionItemsModelIn":
         return self.transactions_items_widget.current_model
-
-    def setup_total_value(self, model: "TransactionItemsModelIn") -> None:
-        self.transactions_items_widget.setup_total_value(model)
 
     def showEvent(self, event: QShowEvent) -> None:
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
             centre_dialog(self)
         super().showEvent(event)
-
-    def done(self, result: int) -> None:
-        WindowStateManager.save_geometry(self, self.__class__.__name__)
-        super().done(result)

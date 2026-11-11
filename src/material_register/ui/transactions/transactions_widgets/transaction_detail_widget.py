@@ -63,6 +63,38 @@ class TransactionDetailWidget(QWidget):
         main_layout.addWidget(self.tab_widget)
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_check_box()
+        self._setup_style()
+
+    def _setup_texts(self) -> None:
+        widgets = [
+            self.is_invoiced_checkbox,
+            self.customer_group_box,
+            self.customer_name_label,
+            self.document_number_label,
+            self.customer_address_label,
+            self.notes_group_box,
+        ]
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.info_tab_text = ui_texts.get("infoTabText", "")
+        self.items_tab_text = ui_texts.get("itemsTabText", "")
+        self.cash_payment = ui_texts.get("CASH", "CASH")
+        self.transfer_payment = ui_texts.get("TRANSFER", "TRANSFER")
+        self.price_suffix = ui_texts.get("priceSuffix", "")
+        self.tab_widget.setTabText(0, self.info_tab_text)
+        self.tab_widget.setTabText(1, self.items_tab_text)
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
     def _create_info_tab(self) -> QWidget:
         info_tab = QWidget()
         main_layout = QVBoxLayout()
@@ -142,47 +174,25 @@ class TransactionDetailWidget(QWidget):
         items_tab.setLayout(main_layout)
         return items_tab
 
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self._setup_check_box()
-        self._setup_style()
-
-    def _setup_texts(self) -> None:
-        widgets = [
-            self.is_invoiced_checkbox,
-            self.customer_group_box,
-            self.customer_name_label,
-            self.document_number_label,
-            self.customer_address_label,
-            self.notes_group_box,
-        ]
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        self.info_tab_text = ui_texts.get("infoTabText", "")
-        self.items_tab_text = ui_texts.get("itemsTabText", "")
-        self.cash_payment = ui_texts.get("CASH", "CASH")
-        self.transfer_payment = ui_texts.get("TRANSFER", "TRANSFER")
-        self.price_suffix = ui_texts.get("priceSuffix", "")
-        self.tab_widget.setTabText(0, self.info_tab_text)
-        self.tab_widget.setTabText(1, self.items_tab_text)
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
-
-    def _setup_check_box(self) -> None:
-        self.is_invoiced_checkbox.setDisabled(True)
-        self.is_invoiced_checkbox.hide()
-
     def _setup_style(self) -> None:
         font = QFont()
         font.setBold(True)
         self.payment_info.setFont(font)
         self.payment_info.setStyleSheet(WARNING_STYLE)
+
+    def _setup_check_box(self) -> None:
+        self.is_invoiced_checkbox.setDisabled(True)
+        self.is_invoiced_checkbox.hide()
+
+    def _setup_customer_data(
+        self,
+        create_data: dict[str, str | int],
+    ) -> None:
+        self.customer_name.setText(str(create_data.get("customer", "")))
+        self.customer_document.setText(str(create_data.get("documentNumber", "")))
+        self.address_label.setText(str(create_data.get("address", "")))
+        self.notes_label.setText(str(create_data.get("notes", "")))
+        self.customer_group_box.layout().activate()
 
     def _apply_payment_data(self, create_data: dict[str, str | int]) -> None:
         self.payment_info.show()
@@ -197,16 +207,6 @@ class TransactionDetailWidget(QWidget):
             self.payment_info.clear()
             self.is_invoiced_checkbox.hide()
         self.is_invoiced_checkbox.setChecked(bool(create_data.get("isInvoiced", False)))
-
-    def _setup_customer_data(
-        self,
-        create_data: dict[str, str | int],
-    ) -> None:
-        self.customer_name.setText(str(create_data.get("customer", "")))
-        self.customer_document.setText(str(create_data.get("documentNumber", "")))
-        self.address_label.setText(str(create_data.get("address", "")))
-        self.notes_label.setText(str(create_data.get("notes", "")))
-        self.customer_group_box.layout().activate()
 
     def update_data(
         self,

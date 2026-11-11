@@ -168,14 +168,14 @@ class TransactionInfoWidget(QWidget):
         self.notes_group_box.setLayout(notes_layout)
         return self.notes_group_box
 
-    def _setup_text_edit(self) -> None:
-        setup_text_edit(self.notes_edit)
-
     def _setup_style(self) -> None:
         font = QFont()
         font.setBold(True)
         self.payment_info.setFont(font)
         self.payment_info.setStyleSheet(WARNING_STYLE)
+
+    def _setup_text_edit(self) -> None:
+        setup_text_edit(self.notes_edit)
 
     def _update_notes_count(self) -> None:
         check_notes_length(

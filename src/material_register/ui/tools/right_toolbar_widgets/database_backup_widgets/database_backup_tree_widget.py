@@ -39,6 +39,13 @@ class DatabaseBackupTreeWidget(QTreeWidget):
                 backup_item.setIcon(0, UiIcons.DATABASE_ICON)
                 year_item.addChild(backup_item)
 
+    @staticmethod
+    def _get_backup_name(backup_path: Path) -> str:
+        backup_name = backup_path.stem
+        if backup_name.startswith("backup_"):
+            backup_name = backup_name.removeprefix("backup_")
+        return backup_name
+
     def get_selected_data(self) -> Path | None:
         item = self.currentItem()
         if item is None:
@@ -46,10 +53,3 @@ class DatabaseBackupTreeWidget(QTreeWidget):
         if item.parent() is None:
             return None
         return item.data(0, Qt.ItemDataRole.UserRole)
-
-    @staticmethod
-    def _get_backup_name(backup_path: Path) -> str:
-        backup_name = backup_path.stem
-        if backup_name.startswith("backup_"):
-            backup_name = backup_name.removeprefix("backup_")
-        return backup_name

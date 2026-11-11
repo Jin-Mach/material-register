@@ -36,8 +36,11 @@ if TYPE_CHECKING:
 
 class CustomersSearchWidget(QWidget):
     WIDTH = 300
+
     PREFIX = "prefix"
+
     CONTAINS = "contains"
+
     SUFFIX = "suffix"
 
     def __init__(self, advanced_search_dialog: "AdvancedSearchDialog") -> None:
@@ -60,6 +63,79 @@ class CustomersSearchWidget(QWidget):
         main_layout.addWidget(filters_section, 1)
         main_layout.addLayout(buttons_layout)
         return main_layout
+
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_comboboxes()
+        self._setup_line_edits()
+        self._setup_property()
+        self._setup_user_role()
+        self._setup_default_states()
+        self._update_reset_button_state()
+        self._set_validators()
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        if not ui_texts:
+            ErrorHandler.handle_error(
+                f"Texts load failed: {self.__class__.__name__}",
+                LOGGER_UI,
+                LOG_LEVEL_WARNING,
+            )
+            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+            return
+        self.subject_type_items = ui_texts.get(
+            f"{self.subject_type_combo_box.objectName()}Items", []
+        )
+        self.company_name_operators = ui_texts.get(
+            f"{self.company_name_operator.objectName()}Items", []
+        )
+        self.first_name_operators = ui_texts.get(
+            f"{self.first_name_operator.objectName()}Items", []
+        )
+        self.last_name_operators = ui_texts.get(
+            f"{self.last_name_operator.objectName()}Items", []
+        )
+        self.document_operators = ui_texts.get(
+            f"{self.document_operator.objectName()}Items", []
+        )
+        self.address_operators = ui_texts.get(
+            f"{self.address_operator.objectName()}Items", []
+        )
+        self.active_items = ui_texts.get(
+            f"{self.active_combo_box.objectName()}Items", []
+        )
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        check_boxes = self.findChildren(QCheckBox)
+        for check_box in check_boxes:
+            check_box.toggled.connect(
+                lambda _, selected_check_box=check_box: self._setup_checkboxes_state(
+                    selected_check_box
+                )
+            )
+            check_box.toggled.connect(self._update_reset_button_state)
+        self.subject_type_checkbox.toggled.connect(self._update_customer_state)
+        self.subject_type_combo_box.currentIndexChanged.connect(
+            self._update_customer_state
+        )
+        self.company_name_checkbox.toggled.connect(self._update_customer_state)
+        self.first_name_checkbox.toggled.connect(self._update_customer_state)
+        self.last_name_checkbox.toggled.connect(self._update_customer_state)
+        self.notes_edit.textChanged.connect(self._set_notes_style)
+        self.reset_button.clicked.connect(
+            lambda: self._setup_default_states(reset_values=True)
+        )
 
     def _create_filters_section(self) -> QWidget:
         filters_widget = QWidget()
@@ -135,78 +211,14 @@ class CustomersSearchWidget(QWidget):
         filters_widget.setLayout(main_layout)
         return filters_widget
 
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self._setup_comboboxes()
-        self._setup_line_edits()
-        self._setup_property()
-        self._setup_user_role()
-        self._setup_default_states()
-        self._update_reset_button_state()
-        self._set_validators()
-
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        if not ui_texts:
-            ErrorHandler.handle_error(
-                f"Texts load failed: {self.__class__.__name__}",
-                LOGGER_UI,
-                LOG_LEVEL_WARNING,
-            )
-            ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-            return
-        self.subject_type_items = ui_texts.get(
-            f"{self.subject_type_combo_box.objectName()}Items", []
-        )
-        self.company_name_operators = ui_texts.get(
-            f"{self.company_name_operator.objectName()}Items", []
-        )
-        self.first_name_operators = ui_texts.get(
-            f"{self.first_name_operator.objectName()}Items", []
-        )
-        self.last_name_operators = ui_texts.get(
-            f"{self.last_name_operator.objectName()}Items", []
-        )
-        self.document_operators = ui_texts.get(
-            f"{self.document_operator.objectName()}Items", []
-        )
-        self.address_operators = ui_texts.get(
-            f"{self.address_operator.objectName()}Items", []
-        )
-        self.active_items = ui_texts.get(
-            f"{self.active_combo_box.objectName()}Items", []
-        )
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
-
-    def _create_connection(self) -> None:
-        check_boxes = self.findChildren(QCheckBox)
-        for check_box in check_boxes:
-            check_box.toggled.connect(
-                lambda _, selected_check_box=check_box: self._setup_checkboxes_state(
-                    selected_check_box
-                )
-            )
-            check_box.toggled.connect(self._update_reset_button_state)
-        self.subject_type_checkbox.toggled.connect(self._update_customer_state)
-        self.subject_type_combo_box.currentIndexChanged.connect(
-            self._update_customer_state
-        )
-        self.company_name_checkbox.toggled.connect(self._update_customer_state)
-        self.first_name_checkbox.toggled.connect(self._update_customer_state)
-        self.last_name_checkbox.toggled.connect(self._update_customer_state)
-        self.notes_edit.textChanged.connect(self._set_notes_style)
-        self.reset_button.clicked.connect(
-            lambda: self._setup_default_states(reset_values=True)
-        )
+    def _setup_comboboxes(self) -> None:
+        self.subject_type_combo_box.addItems(self.subject_type_items)
+        self.company_name_operator.addItems(self.company_name_operators)
+        self.first_name_operator.addItems(self.first_name_operators)
+        self.last_name_operator.addItems(self.last_name_operators)
+        self.document_operator.addItems(self.document_operators)
+        self.address_operator.addItems(self.address_operators)
+        self.active_combo_box.addItems(self.active_items)
 
     def _setup_default_states(self, reset_values: bool = False) -> None:
         widgets = self.findChildren(QComboBox) + self.findChildren(QLineEdit)
@@ -219,59 +231,6 @@ class CustomersSearchWidget(QWidget):
                 widget.setCurrentIndex(0)
             for widget in self.findChildren(QLineEdit):
                 widget.clear()
-
-    def _set_validators(self) -> None:
-        name_validator = QRegularExpressionValidator(
-            QRegularExpression(r"[\p{L}'\- ]{1,20}")
-        )
-        company_validator = QRegularExpressionValidator(
-            QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}")
-        )
-        document_validator = QRegularExpressionValidator(
-            QRegularExpression(r"[\p{L}0-9 .\-/]{1,30}")
-        )
-        address_validator = QRegularExpressionValidator(
-            QRegularExpression(r"[\p{L}0-9 .,:&'()\-\/]{1,50}")
-        )
-        self.company_name_edit.setValidator(company_validator)
-        self.first_name_edit.setValidator(name_validator)
-        self.last_name_edit.setValidator(name_validator)
-        self.document_edit.setValidator(document_validator)
-        self.address_edit.setValidator(address_validator)
-
-    def _setup_comboboxes(self) -> None:
-        self.subject_type_combo_box.addItems(self.subject_type_items)
-        self.company_name_operator.addItems(self.company_name_operators)
-        self.first_name_operator.addItems(self.first_name_operators)
-        self.last_name_operator.addItems(self.last_name_operators)
-        self.document_operator.addItems(self.document_operators)
-        self.address_operator.addItems(self.address_operators)
-        self.active_combo_box.addItems(self.active_items)
-
-    def _setup_checkboxes_state(self, check_box: QCheckBox) -> None:
-        widgets_map = {
-            self.subject_type_checkbox: self.subject_type_combo_box,
-            self.company_name_checkbox: [
-                self.company_name_operator,
-                self.company_name_edit,
-            ],
-            self.first_name_checkbox: [self.first_name_operator, self.first_name_edit],
-            self.last_name_checkbox: [self.last_name_operator, self.last_name_edit],
-            self.document_checkbox: [self.document_operator, self.document_edit],
-            self.address_checkbox: [self.address_operator, self.address_edit],
-            self.active_checkbox: self.active_combo_box,
-            self.notes_checkbox: self.notes_edit,
-        }
-        if check_box not in widgets_map:
-            return
-        widgets = widgets_map[check_box]
-        if not isinstance(widgets, list):
-            widgets = [widgets]
-        for widget in widgets:
-            widget.setDisabled(not check_box.isChecked())
-            if check_box.isChecked() and isinstance(widget, QLineEdit):
-                widget.selectAll()
-                widget.setFocus()
 
     def _setup_line_edits(self) -> None:
         for edit in self.findChildren(QLineEdit):
@@ -319,6 +278,50 @@ class CustomersSearchWidget(QWidget):
         for widget, user_role in user_role_map.items():
             for index, value in enumerate(user_role):
                 widget.setItemData(index, value, Qt.ItemDataRole.UserRole)
+
+    def _setup_checkboxes_state(self, check_box: QCheckBox) -> None:
+        widgets_map = {
+            self.subject_type_checkbox: self.subject_type_combo_box,
+            self.company_name_checkbox: [
+                self.company_name_operator,
+                self.company_name_edit,
+            ],
+            self.first_name_checkbox: [self.first_name_operator, self.first_name_edit],
+            self.last_name_checkbox: [self.last_name_operator, self.last_name_edit],
+            self.document_checkbox: [self.document_operator, self.document_edit],
+            self.address_checkbox: [self.address_operator, self.address_edit],
+            self.active_checkbox: self.active_combo_box,
+            self.notes_checkbox: self.notes_edit,
+        }
+        if check_box not in widgets_map:
+            return
+        widgets = widgets_map[check_box]
+        if not isinstance(widgets, list):
+            widgets = [widgets]
+        for widget in widgets:
+            widget.setDisabled(not check_box.isChecked())
+            if check_box.isChecked() and isinstance(widget, QLineEdit):
+                widget.selectAll()
+                widget.setFocus()
+
+    def _set_validators(self) -> None:
+        name_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}'\- ]{1,20}")
+        )
+        company_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,&\-]{1,30}")
+        )
+        document_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .\-/]{1,30}")
+        )
+        address_validator = QRegularExpressionValidator(
+            QRegularExpression(r"[\p{L}0-9 .,:&'()\-\/]{1,50}")
+        )
+        self.company_name_edit.setValidator(company_validator)
+        self.first_name_edit.setValidator(name_validator)
+        self.last_name_edit.setValidator(name_validator)
+        self.document_edit.setValidator(document_validator)
+        self.address_edit.setValidator(address_validator)
 
     def _update_customer_state(self) -> None:
         subject_type_enabled = self.subject_type_checkbox.isChecked()

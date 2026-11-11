@@ -147,8 +147,28 @@ class CreateTransactionDialog(QDialog):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
+    def _create_connection(self) -> None:
+        self.continue_transaction_button.clicked.connect(self.accept)
+        self.cancel_transaction_button.clicked.connect(self.reject)
+        self.completer.activated.connect(self._on_customer_selected)
+        self.customer_name_input.textEdited.connect(self._customer_name_edited)
+
+    def _setup_completer(self, completer_model: "CustomersCompleterModel") -> None:
+        self.completer = CustomersCompleter()
+        self.completer.setModel(completer_model)
+        self.customer_name_input.setCompleter(self.completer)
+
     def _setup_context_menu(self) -> None:
         disable_context_menu(self.findChildren(QWidget))
+
+    def _setup_items(self) -> None:
+        payment_values = PAYMENT_VALUES
+        texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        payment_items = texts.get(
+            f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"]
+        )
+        for text, value in zip(payment_items, payment_values):
+            self.payment_type_combobox.addItem(text, value)
 
     def _set_validators(self) -> None:
         customer_validator = QRegularExpressionValidator(
@@ -162,26 +182,6 @@ class CreateTransactionDialog(QDialog):
             self.payment_type_combobox.hide()
             return
         self._setup_items()
-
-    def _setup_items(self) -> None:
-        payment_values = PAYMENT_VALUES
-        texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
-        payment_items = texts.get(
-            f"{self.payment_type_combobox.objectName()}Items", ["Cash", "Transfer"]
-        )
-        for text, value in zip(payment_items, payment_values):
-            self.payment_type_combobox.addItem(text, value)
-
-    def _setup_completer(self, completer_model: "CustomersCompleterModel") -> None:
-        self.completer = CustomersCompleter()
-        self.completer.setModel(completer_model)
-        self.customer_name_input.setCompleter(self.completer)
-
-    def _create_connection(self) -> None:
-        self.continue_transaction_button.clicked.connect(self.accept)
-        self.cancel_transaction_button.clicked.connect(self.reject)
-        self.completer.activated.connect(self._on_customer_selected)
-        self.customer_name_input.textEdited.connect(self._customer_name_edited)
 
     def _on_customer_selected(self, text: str) -> None:
         customer = self.completer_model.get_customer_by_text(text)

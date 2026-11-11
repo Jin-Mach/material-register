@@ -62,14 +62,6 @@ class CustomersWidget(QWidget):
         main_layout.addWidget(self.count_group_box, 0)
         return main_layout
 
-    def _create_connection(self) -> None:
-        self.action_widget.add_customer_button.clicked.connect(
-            self.customers_controller.add_customer
-        )
-
-    def _init_counts(self) -> None:
-        self.customers_controller.update_counts()
-
     def _setup_ui(self) -> None:
         self._setup_texts()
         self.customers_view.setModel(self.customers_model)
@@ -89,6 +81,14 @@ class CustomersWidget(QWidget):
             ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
             return
         self.count_text = ui_texts.get("countLabelText", "Count: ")
+
+    def _create_connection(self) -> None:
+        self.action_widget.add_customer_button.clicked.connect(
+            self.customers_controller.add_customer
+        )
+
+    def _init_counts(self) -> None:
+        self.customers_controller.update_counts()
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.count_label.setText(f"{self.count_text} {filtered}/{total}")

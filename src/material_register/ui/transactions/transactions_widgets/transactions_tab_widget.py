@@ -43,6 +43,10 @@ class TransactionsTabWidget(QTabWidget):
         self.in_tab_title = ui_texts.get("inTabTitleText", "IN")
         self.out_tab_title = ui_texts.get("outTabTitleText", "OUT")
 
+    def _create_connection(self) -> None:
+        self.transaction_in_view.doubleClicked.connect(self._update_transaction)
+        self.transactions_out_view.doubleClicked.connect(self._update_transaction)
+
     def _setup_tabs(self) -> None:
         self.transaction_in_view = TransactionsView(
             self,
@@ -56,10 +60,6 @@ class TransactionsTabWidget(QTabWidget):
         )
         self.addTab(self.transaction_in_view, self.in_tab_title)
         self.addTab(self.transactions_out_view, self.out_tab_title)
-
-    def _create_connection(self) -> None:
-        self.transaction_in_view.doubleClicked.connect(self._update_transaction)
-        self.transactions_out_view.doubleClicked.connect(self._update_transaction)
 
     def _update_transaction(self, index: QModelIndex) -> None:
         self.transaction_index = index

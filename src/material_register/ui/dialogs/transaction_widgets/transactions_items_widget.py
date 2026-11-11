@@ -123,11 +123,25 @@ class TransactionsItemsWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
+    def _create_connection(self) -> None:
+        selection_model = self.transactions_items_view.selectionModel()
+        if selection_model:
+            selection_model.selectionChanged.connect(self._update_buttons_state)
+        self.current_model.rowsInserted.connect(self._update_save_button_state)
+        self.current_model.rowsRemoved.connect(self._update_save_button_state)
+        self.current_model.modelReset.connect(self._update_save_button_state)
+
     def _setup_style(self) -> None:
         font = QFont()
         font.setBold(True)
         self.total_price_value_label.setStyleSheet(PRICE_STYLE)
         self.total_price_value_label.setFont(font)
+
+    def setup_total_value(
+        self, current_model: TransactionItemsModelIn | TransactionItemsModelOut
+    ) -> None:
+        self.total_count_value_label.setText(str(current_model.rowCount()))
+        self.total_price_value_label.setText(current_model.return_total())
 
     def _setup_model(self, transfer_type: str) -> None:
         if transfer_type == TRANSFER_IN:
@@ -138,14 +152,6 @@ class TransactionsItemsWidget(QWidget):
             self.transaction_item_model_out = TransactionItemsModelOut()
             self.transactions_items_view.setModel(self.transaction_item_model_out)
             self.current_model = self.transaction_item_model_out
-
-    def _create_connection(self) -> None:
-        selection_model = self.transactions_items_view.selectionModel()
-        if selection_model:
-            selection_model.selectionChanged.connect(self._update_buttons_state)
-        self.current_model.rowsInserted.connect(self._update_save_button_state)
-        self.current_model.rowsRemoved.connect(self._update_save_button_state)
-        self.current_model.modelReset.connect(self._update_save_button_state)
 
     def _check_selection(self) -> bool:
         return self.transactions_items_view.selectionModel().hasSelection()
@@ -158,12 +164,6 @@ class TransactionsItemsWidget(QWidget):
     def _update_save_button_state(self) -> None:
         state = self.current_model.rowCount() > 0
         self.transaction_items_dialog.save_transaction_button.setEnabled(state)
-
-    def get_selected_index(self) -> QModelIndex | None:
-        index = self.transactions_items_view.selectionModel().currentIndex()
-        if not index.isValid():
-            return None
-        return index
 
     def add_item(self, new_item_data: dict[str, str | int | float] | None) -> None:
         if new_item_data is None:
@@ -186,8 +186,8 @@ class TransactionsItemsWidget(QWidget):
         self.current_model.delete_item(index)
         self.setup_total_value(self.current_model)
 
-    def setup_total_value(
-        self, current_model: TransactionItemsModelIn | TransactionItemsModelOut
-    ) -> None:
-        self.total_count_value_label.setText(str(current_model.rowCount()))
-        self.total_price_value_label.setText(current_model.return_total())
+    def get_selected_index(self) -> QModelIndex | None:
+        index = self.transactions_items_view.selectionModel().currentIndex()
+        if not index.isValid():
+            return None
+        return index

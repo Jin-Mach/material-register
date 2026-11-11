@@ -61,6 +61,29 @@ class SettingsBranchWidget(QWidget):
         main_layout.addWidget(actions_group, 0)
         return main_layout
 
+    def _setup_ui(self) -> None:
+        self._setup_texts()
+        self._setup_edits()
+        self._apply_settings()
+        self._set_validators()
+
+    def _setup_texts(self) -> None:
+        widgets = self.findChildren(QWidget)
+        if UiTexts.set_ui_texts(self, widgets):
+            return
+        ErrorHandler.handle_error(
+            f"Texts load failed: {self.__class__.__name__}",
+            LOGGER_UI,
+            LOG_LEVEL_WARNING,
+        )
+        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
+        UiTexts.set_default_texts(self, widgets)
+
+    def _create_connection(self) -> None:
+        self.save_button.clicked.connect(
+            lambda: self.branch_settings_controller.update_branch_settings(self)
+        )
+
     def _create_branch_group(self) -> QGroupBox:
         self.branch_group_box = QGroupBox()
         self.branch_group_box.setObjectName("branchGroupBox")
@@ -150,23 +173,10 @@ class SettingsBranchWidget(QWidget):
         self.actions_group_box.setLayout(main_layout)
         return self.actions_group_box
 
-    def _setup_ui(self) -> None:
-        self._setup_texts()
-        self._setup_edits()
-        self._apply_settings()
-        self._set_validators()
-
-    def _setup_texts(self) -> None:
-        widgets = self.findChildren(QWidget)
-        if UiTexts.set_ui_texts(self, widgets):
-            return
-        ErrorHandler.handle_error(
-            f"Texts load failed: {self.__class__.__name__}",
-            LOGGER_UI,
-            LOG_LEVEL_WARNING,
-        )
-        ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
-        UiTexts.set_default_texts(self, widgets)
+    def _setup_edits(self) -> None:
+        for edit in self.findChildren(QLineEdit):
+            edit.setMinimumWidth(self.WIDTH)
+            edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
     def _apply_settings(self) -> None:
         branch_settings = UiSettings.get_branch_settings()
@@ -181,16 +191,6 @@ class SettingsBranchWidget(QWidget):
         self.establishment_id_line_edit.setText(branch_settings.establishment_id or "")
         self.facility_id_line_edit.setText(branch_settings.facility_id or "")
         self.opening_hours_line_edit.setText(branch_settings.opening_hours or "")
-
-    def _setup_edits(self) -> None:
-        for edit in self.findChildren(QLineEdit):
-            edit.setMinimumWidth(self.WIDTH)
-            edit.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-
-    def _create_connection(self) -> None:
-        self.save_button.clicked.connect(
-            lambda: self.branch_settings_controller.update_branch_settings(self)
-        )
 
     def _set_validators(self) -> None:
         company_validator = QRegularExpressionValidator(

@@ -187,11 +187,6 @@ class TransactionsWidget(QWidget):
         self.price_count_value.setStyleSheet(PRICE_STYLE)
         self.price_count_value.setFont(font)
 
-    def _setup_model(self) -> None:
-        self._setup_in_model()
-        self._setup_out_model()
-        self.active_proxy = self.transactions_proxy_model_in
-
     def _setup_in_model(self) -> None:
         self.transactions_proxy_model_in = TransactionsProxyModel()
         self.transactions_proxy_model_in.setSourceModel(self.transactions_load_model_in)
@@ -218,6 +213,11 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transactions_out_view.customContextMenuRequested.connect(
             self.transactions_tab_widget.transactions_out_view.open_context_menu
         )
+
+    def _setup_model(self) -> None:
+        self._setup_in_model()
+        self._setup_out_model()
+        self.active_proxy = self.transactions_proxy_model_in
 
     def _apply_timer(self) -> None:
         self.filter_timer = QTimer(self)

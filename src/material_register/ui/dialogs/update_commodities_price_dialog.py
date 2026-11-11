@@ -100,6 +100,10 @@ class UpdateCommoditiesPriceDialog(QDialog):
         if UiTexts.set_default_texts(self, self.findChildren(QWidget)):
             return
 
+    def _create_connection(self) -> None:
+        self.save_button.clicked.connect(self.accept)
+        self.cancel_button.clicked.connect(self.reject)
+
     def _setup_context_menu(self) -> None:
         disable_context_menu(self.findChildren(QWidget))
 
@@ -110,10 +114,6 @@ class UpdateCommoditiesPriceDialog(QDialog):
             self.new_price_label,
         ]:
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-    def _create_connection(self) -> None:
-        self.save_button.clicked.connect(self.accept)
-        self.cancel_button.clicked.connect(self.reject)
 
     def setup_commodities(self, commodities: list[Commodity]) -> None:
         for index, commodity in enumerate(commodities):

@@ -33,6 +33,7 @@ if TYPE_CHECKING:
 
 class RightToolbarWidget(QWidget):
     WIDTH = 35
+
     BUTTON_SIZE = 28
 
     def __init__(self, main_window: "MainWindow") -> None:
@@ -97,6 +98,15 @@ class RightToolbarWidget(QWidget):
         if UiTexts.set_default_texts(self, widgets):
             return
 
+    def _create_connection(self) -> None:
+        buttons_map = {
+            self.notes_button: 0,
+            self.cash_balance_button: 1,
+            self.database_button: 2,
+        }
+        for button, index in buttons_map.items():
+            button.clicked.connect(lambda _, i=index: self._set_container_widget(i))
+
     def _setup_icons(self) -> None:
         widgets = [self.notes_button, self.cash_balance_button, self.database_button]
         if not UiIcons.set_icons("tools", widgets, icon_size=24):
@@ -127,15 +137,6 @@ class RightToolbarWidget(QWidget):
         self.animation.setDuration(300)
         self.animation.valueChanged.connect(self._update_animation)
         self.animation.finished.connect(self._animation_finished)
-
-    def _create_connection(self) -> None:
-        buttons_map = {
-            self.notes_button: 0,
-            self.cash_balance_button: 1,
-            self.database_button: 2,
-        }
-        for button, index in buttons_map.items():
-            button.clicked.connect(lambda _, i=index: self._set_container_widget(i))
 
     def _update_animation(self, value: object) -> None:
         width = int(value)
