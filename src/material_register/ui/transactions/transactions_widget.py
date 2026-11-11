@@ -63,47 +63,10 @@ class TransactionsWidget(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(*UI_MARGINS_5)
-        self.transactions_actions_widget = TransactionsActionsWidget(self)
-        self.transaction_detail_widget = TransactionDetailWidget(self)
-        self.transactions_tab_widget = TransactionsTabWidget(self)
-        self.actions_group_box = QGroupBox()
-        self.actions_group_box.setObjectName("actionsGroupBox")
-        action_layout = QHBoxLayout()
-        action_layout.setContentsMargins(*UI_MARGINS_5)
-        action_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        action_layout.addWidget(self.transactions_actions_widget)
-        self.actions_group_box.setLayout(action_layout)
-        self.detail_group_box = QGroupBox()
-        self.detail_group_box.setObjectName("detailGroupBox")
-        detail_group_layout = QVBoxLayout()
-        detail_group_layout.setContentsMargins(*UI_MARGINS_5)
-        detail_group_layout.addWidget(self.transaction_detail_widget)
-        self.detail_group_box.setLayout(detail_group_layout)
-        self.transactions_group_box = QGroupBox()
-        self.transactions_group_box.setObjectName("transactionsGroupBox")
-        transactions_group_layout = QVBoxLayout()
-        transactions_group_layout.setContentsMargins(*UI_MARGINS_5)
-        transactions_group_layout.addSpacing(5)
-        transactions_group_layout.addWidget(self.transactions_tab_widget)
-        self.transactions_group_box.setLayout(transactions_group_layout)
-        count_group_box = QGroupBox()
-        count_layout = QHBoxLayout()
-        count_layout.setSpacing(0)
-        self.items_count_label = QLabel()
-        self.items_count_label.setObjectName("itemsCountLabel")
-        self.price_count_label = QLabel()
-        self.price_count_label.setObjectName("priceCountLabel")
-        self.price_count_value = QLabel()
-        self.price_count_value.setObjectName("priceCountValue")
-        count_layout.addWidget(self.items_count_label)
-        count_layout.addStretch()
-        count_layout.addWidget(self.price_count_label)
-        count_layout.addWidget(self.price_count_value)
-        count_group_box.setLayout(count_layout)
-        main_layout.addWidget(self.actions_group_box, 0)
-        main_layout.addWidget(self.detail_group_box, 0)
-        main_layout.addWidget(self.transactions_group_box, 1)
-        main_layout.addWidget(count_group_box)
+        main_layout.addWidget(self._create_actions_group(), 0)
+        main_layout.addWidget(self._create_detail_group(), 0)
+        main_layout.addWidget(self._create_transactions_group(), 1)
+        main_layout.addWidget(self._create_count_group())
         return main_layout
 
     def _setup_ui(self) -> None:
@@ -142,17 +105,6 @@ class TransactionsWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
-    def _setup_style(self) -> None:
-        font = QFont()
-        font.setBold(True)
-        self.price_count_value.setStyleSheet(PRICE_STYLE)
-        self.price_count_value.setFont(font)
-
-    def _setup_model(self) -> None:
-        self._setup_in_model()
-        self._setup_out_model()
-        self.active_proxy = self.transactions_proxy_model_in
-
     def _create_connection(self) -> None:
         self.transactions_actions_widget.in_transaction_button.clicked.connect(
             lambda: self.transactions_controller.create_transaction(TRANSFER_IN)
@@ -176,6 +128,69 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transactions_out_view.selectionModel().currentChanged.connect(
             self.transactions_controller.update_transaction_detail_widget
         )
+
+    def _create_actions_group(self) -> QGroupBox:
+        self.transactions_actions_widget = TransactionsActionsWidget(self)
+        group_box = QGroupBox()
+        group_box.setObjectName("actionsGroupBox")
+        layout = QHBoxLayout()
+        layout.setContentsMargins(*UI_MARGINS_5)
+        layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self.transactions_actions_widget)
+        group_box.setLayout(layout)
+        self.actions_group_box = group_box
+        return group_box
+
+    def _create_detail_group(self) -> QGroupBox:
+        self.transaction_detail_widget = TransactionDetailWidget(self)
+        group_box = QGroupBox()
+        group_box.setObjectName("detailGroupBox")
+        layout = QVBoxLayout()
+        layout.setContentsMargins(*UI_MARGINS_5)
+        layout.addWidget(self.transaction_detail_widget)
+        group_box.setLayout(layout)
+        self.detail_group_box = group_box
+        return group_box
+
+    def _create_transactions_group(self) -> QGroupBox:
+        self.transactions_tab_widget = TransactionsTabWidget(self)
+        group_box = QGroupBox()
+        group_box.setObjectName("transactionsGroupBox")
+        layout = QVBoxLayout()
+        layout.setContentsMargins(*UI_MARGINS_5)
+        layout.addSpacing(5)
+        layout.addWidget(self.transactions_tab_widget)
+        group_box.setLayout(layout)
+        self.transactions_group_box = group_box
+        return group_box
+
+    def _create_count_group(self) -> QGroupBox:
+        group_box = QGroupBox()
+        layout = QHBoxLayout()
+        layout.setSpacing(0)
+        self.items_count_label = QLabel()
+        self.items_count_label.setObjectName("itemsCountLabel")
+        self.price_count_label = QLabel()
+        self.price_count_label.setObjectName("priceCountLabel")
+        self.price_count_value = QLabel()
+        self.price_count_value.setObjectName("priceCountValue")
+        layout.addWidget(self.items_count_label)
+        layout.addStretch()
+        layout.addWidget(self.price_count_label)
+        layout.addWidget(self.price_count_value)
+        group_box.setLayout(layout)
+        return group_box
+
+    def _setup_style(self) -> None:
+        font = QFont()
+        font.setBold(True)
+        self.price_count_value.setStyleSheet(PRICE_STYLE)
+        self.price_count_value.setFont(font)
+
+    def _setup_model(self) -> None:
+        self._setup_in_model()
+        self._setup_out_model()
+        self.active_proxy = self.transactions_proxy_model_in
 
     def _setup_in_model(self) -> None:
         self.transactions_proxy_model_in = TransactionsProxyModel()
@@ -204,6 +219,12 @@ class TransactionsWidget(QWidget):
             self.transactions_tab_widget.transactions_out_view.open_context_menu
         )
 
+    def _apply_timer(self) -> None:
+        self.filter_timer = QTimer(self)
+        self.filter_timer.setSingleShot(True)
+        self.filter_timer.setInterval(300)
+        self.filter_timer.timeout.connect(self._apply_filter)
+
     def _on_tab_changed(self, index: int) -> None:
         if index == 0:
             self.active_proxy = self.transactions_proxy_model_in
@@ -221,12 +242,6 @@ class TransactionsWidget(QWidget):
     def _apply_filter(self) -> None:
         text = self.transactions_actions_widget.search_line_edit.text()
         self.transactions_controller.set_proxy_transactions_filter(text)
-
-    def _apply_timer(self) -> None:
-        self.filter_timer = QTimer(self)
-        self.filter_timer.setSingleShot(True)
-        self.filter_timer.setInterval(300)
-        self.filter_timer.timeout.connect(self._apply_filter)
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.items_count_label.setText(f"{self.items_count_text} {filtered}/{total}")

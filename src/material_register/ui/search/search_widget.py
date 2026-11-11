@@ -65,56 +65,16 @@ class SearchWidget(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING)
         main_layout.setContentsMargins(*UI_MARGINS_5)
-        self.search_actions_widget = SearchActionsWidget(self)
-        self.search_detail_widget = SearchDetailWidget(self)
-        self.search_tab_widget = SearchTabWidget(self)
-        self.actions_group_box = QGroupBox()
-        self.actions_group_box.setObjectName("actionsGroupBox")
-        action_layout = QHBoxLayout()
-        action_layout.setContentsMargins(*UI_MARGINS_5)
-        action_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        action_layout.addWidget(self.search_actions_widget)
-        self.actions_group_box.setLayout(action_layout)
-        self.detail_group_box = QGroupBox()
-        self.detail_group_box.setObjectName("detailGroupBox")
-        detail_group_layout = QVBoxLayout()
-        detail_group_layout.setContentsMargins(*UI_MARGINS_5)
-        detail_group_layout.addWidget(self.search_detail_widget)
-        self.detail_group_box.setLayout(detail_group_layout)
-        self.transactions_group_box = QGroupBox()
-        self.transactions_group_box.setObjectName("transactionsGroupBox")
-        transactions_group_layout = QVBoxLayout()
-        transactions_group_layout.setContentsMargins(*UI_MARGINS_5)
-        transactions_group_layout.addSpacing(5)
-        transactions_group_layout.addWidget(self.search_tab_widget)
-        self.transactions_group_box.setLayout(transactions_group_layout)
-        count_group_box = QGroupBox()
-        count_layout = QHBoxLayout()
-        count_layout.setSpacing(0)
-        self.items_count_label = QLabel()
-        self.items_count_label.setObjectName("itemsCountLabel")
-        self.price_count_label = QLabel()
-        self.price_count_label.setObjectName("priceCountLabel")
-        self.price_count_value = QLabel()
-        self.price_count_value.setObjectName("priceCountValue")
-        count_layout.addWidget(self.items_count_label)
-        count_layout.addStretch()
-        count_layout.addWidget(self.price_count_label)
-        count_layout.addWidget(self.price_count_value)
-        count_group_box.setLayout(count_layout)
-        main_layout.addWidget(self.actions_group_box, 0)
-        main_layout.addWidget(self.detail_group_box, 0)
-        main_layout.addWidget(self.transactions_group_box, 1)
-        main_layout.addWidget(count_group_box)
+        main_layout.addWidget(self._create_actions_group(), 0)
+        main_layout.addWidget(self._create_detail_group(), 0)
+        main_layout.addWidget(self._create_transactions_group(), 1)
+        main_layout.addWidget(self._create_count_group())
         return main_layout
 
     def _setup_ui(self) -> None:
         self._setup_texts()
         self._setup_style()
         self._setup_model()
-
-    def _load_data(self) -> None:
-        self.search_controller.start_basic_filter(None, [], True)
 
     def _setup_texts(self) -> None:
         widgets = [self.detail_group_box, self.transactions_group_box]
@@ -143,6 +103,63 @@ class SearchWidget(QWidget):
         ErrorHandler.ui_texts_error = "TEXTS_LOAD_FAILED"
         UiTexts.set_default_texts(self, widgets)
 
+    def _create_connection(self) -> None:
+        self.search_tab_widget.transactions_tab.selectionModel().currentChanged.connect(
+            self.search_controller.update_transaction_detail_widget
+        )
+
+    def _create_actions_group(self) -> QGroupBox:
+        self.search_actions_widget = SearchActionsWidget(self)
+        group_box = QGroupBox()
+        group_box.setObjectName("actionsGroupBox")
+        layout = QHBoxLayout()
+        layout.setContentsMargins(*UI_MARGINS_5)
+        layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self.search_actions_widget)
+        group_box.setLayout(layout)
+        self.actions_group_box = group_box
+        return group_box
+
+    def _create_detail_group(self) -> QGroupBox:
+        self.search_detail_widget = SearchDetailWidget(self)
+        group_box = QGroupBox()
+        group_box.setObjectName("detailGroupBox")
+        layout = QVBoxLayout()
+        layout.setContentsMargins(*UI_MARGINS_5)
+        layout.addWidget(self.search_detail_widget)
+        group_box.setLayout(layout)
+        self.detail_group_box = group_box
+        return group_box
+
+    def _create_transactions_group(self) -> QGroupBox:
+        self.search_tab_widget = SearchTabWidget(self)
+        group_box = QGroupBox()
+        group_box.setObjectName("transactionsGroupBox")
+        layout = QVBoxLayout()
+        layout.setContentsMargins(*UI_MARGINS_5)
+        layout.addSpacing(5)
+        layout.addWidget(self.search_tab_widget)
+        group_box.setLayout(layout)
+        self.transactions_group_box = group_box
+        return group_box
+
+    def _create_count_group(self) -> QGroupBox:
+        group_box = QGroupBox()
+        layout = QHBoxLayout()
+        layout.setSpacing(0)
+        self.items_count_label = QLabel()
+        self.items_count_label.setObjectName("itemsCountLabel")
+        self.price_count_label = QLabel()
+        self.price_count_label.setObjectName("priceCountLabel")
+        self.price_count_value = QLabel()
+        self.price_count_value.setObjectName("priceCountValue")
+        layout.addWidget(self.items_count_label)
+        layout.addStretch()
+        layout.addWidget(self.price_count_label)
+        layout.addWidget(self.price_count_value)
+        group_box.setLayout(layout)
+        return group_box
+
     def _setup_style(self) -> None:
         font = QFont()
         font.setBold(True)
@@ -152,11 +169,6 @@ class SearchWidget(QWidget):
     def _setup_model(self) -> None:
         self._setup_transactions_model()
         self._setup_materials_model()
-
-    def _create_connection(self) -> None:
-        self.search_tab_widget.transactions_tab.selectionModel().currentChanged.connect(
-            self.search_controller.update_transaction_detail_widget
-        )
 
     def _setup_transactions_model(self) -> None:
         self.search_transactions_model.set_suffix(self.price_sufix)
@@ -180,6 +192,9 @@ class SearchWidget(QWidget):
         self.search_material_model = SearchMaterialModel()
         self.search_tab_widget.material_tab.setModel(self.search_material_model)
         self.search_tab_widget.material_tab.setup_ui()
+
+    def _load_data(self) -> None:
+        self.search_controller.start_basic_filter(None, [], True)
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.items_count_label.setText(f"{self.items_count_text} {filtered}/{total}")
