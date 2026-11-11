@@ -68,7 +68,6 @@ class TransactionItemsDialogOut(QDialog):
             QDialogButtonBox.StandardButton.Cancel
         )
         self.cancel_transaction_button.setObjectName("cancelTransactionButton")
-        self.cancel_transaction_button.setDefault(True)
         main_layout.addWidget(self.transaction_info_widget)
         main_layout.addWidget(self.transactions_items_widget, 3)
         main_layout.addWidget(button_box)
@@ -162,6 +161,7 @@ class TransactionItemsDialogOut(QDialog):
         if new_item_data is None:
             return
         self.transactions_items_widget.add_item(new_item_data)
+        self.save_transaction_button.setFocus()
 
     def _update_transaction_item(self) -> None:
         index, item_data = self._get_item_data()
@@ -186,6 +186,8 @@ class TransactionItemsDialogOut(QDialog):
         if question:
             self.transactions_items_widget.delete_item(index)
             self.transactions_controller.on_item_deleted(self.transfer_type)
+            if self.transactions_items_widget.current_model.rowCount() == 0:
+                self.transactions_items_widget.add_item_button.setFocus()
 
     def return_transaction_data(self) -> dict[str, str | int | bool] | None:
         if self.customer_id is None:
@@ -220,3 +222,4 @@ class TransactionItemsDialogOut(QDialog):
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
             centre_dialog(self)
         super().showEvent(event)
+        self.transactions_items_widget.add_item_button.setFocus()

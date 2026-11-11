@@ -62,10 +62,15 @@ class MessageBoxDialog(QDialog):
         if ok_button:
             self.ok_button.setText(ok_button)
             self.ok_button.show()
+            self.ok_button.setDefault(True)
+            self.ok_button.setFocus()
+            self.cancel_button.setAutoDefault(False)
         if cancel_button:
             self.cancel_button.setText(cancel_button)
             self.cancel_button.show()
-            self.cancel_button.setFocus()
+            if not ok_button:
+                self.cancel_button.setDefault(True)
+                self.cancel_button.setFocus()
         if informative_text:
             self.informative_label.setText(informative_text)
             self.informative_label.show()

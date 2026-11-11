@@ -57,8 +57,10 @@ class AdvancedSearchDialog(QDialog):
         )
         self.search_button = button_box.button(QDialogButtonBox.StandardButton.Ok)
         self.search_button.setObjectName("searchButton")
+        self.search_button.setDefault(True)
         self.cancel_button = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         self.cancel_button.setObjectName("cancelButton")
+        self.cancel_button.setAutoDefault(False)
         main_layout.addWidget(self.tab_widget)
         main_layout.addWidget(button_box)
         return main_layout

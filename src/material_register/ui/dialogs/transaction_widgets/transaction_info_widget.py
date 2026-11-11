@@ -142,6 +142,7 @@ class TransactionInfoWidget(QWidget):
         button_layout = QHBoxLayout()
         self.update_transaction_info_button = QPushButton()
         self.update_transaction_info_button.setObjectName("updateTransactionInfoButton")
+        self.update_transaction_info_button.setAutoDefault(False)
         customer_form_layout.addRow(self.customer_name_label, self.customer_name)
         customer_form_layout.addRow(self.document_number_label, self.document_number)
         customer_form_layout.addRow(self.address_label, self.address)
