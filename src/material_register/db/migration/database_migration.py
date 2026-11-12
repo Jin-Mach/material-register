@@ -46,7 +46,6 @@ class DatabaseMigration:
     def migrate(cls, db_connection: QSqlDatabase) -> bool:
         if cls.DB_VERSION is None:
             return False
-
         if not db_connection.transaction():
             ErrorHandler.handle_error(
                 "Migration BEGIN failed.",

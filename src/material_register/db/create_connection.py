@@ -53,11 +53,8 @@ def create_connection(
             backup_path = (
                 history_directory / f"{database_file.stem}_V{current_version}.db"
             )
-            if (
-                not backup_path.exists()
-                and not DatabaseBackupService.create_custom_backup(
-                    database_file, backup_path
-                )
+            if not DatabaseBackupService.create_custom_backup(
+                database_file, backup_path
             ):
                 connection.close()
                 return None
