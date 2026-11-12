@@ -4,7 +4,6 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QCloseEvent, QShowEvent
 from PySide6.QtWidgets import (
     QDialog,
-    QGroupBox,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -56,20 +55,19 @@ class SettingsDialog(QDialog):
         stacked_layout = QVBoxLayout()
         stacked_layout.setSpacing(UI_SPACING)
         stacked_layout.setContentsMargins(*UI_MARGINS_5)
-        group_box = QGroupBox()
         buttons_layout = QHBoxLayout()
         buttons_layout.setContentsMargins(*UI_MARGINS_5)
-        buttons_layout.setSpacing(UI_SPACING * 2)
+        buttons_layout.setSpacing(UI_SPACING)
         self.info_label = QLabel()
         self.info_label.setObjectName("infoLabel")
         self.close_button = QPushButton()
         self.close_button.setObjectName("closeButton")
+        self.close_button.setDefault(True)
         buttons_layout.addWidget(self.info_label)
         buttons_layout.addStretch()
         buttons_layout.addWidget(self.close_button)
-        group_box.setLayout(buttons_layout)
         stacked_layout.addWidget(self.settings_stacked_widget, 1)
-        stacked_layout.addWidget(group_box, 0)
+        stacked_layout.addLayout(buttons_layout, 0)
         widgets_layout.addWidget(self.settings_side_panel, 0)
         widgets_layout.addLayout(stacked_layout, 1)
         main_layout.addLayout(widgets_layout)
@@ -115,11 +113,16 @@ class SettingsDialog(QDialog):
 
     def showEvent(self, event: QShowEvent) -> None:
         if not WindowStateManager.load_geometry(self, self.__class__.__name__):
+            self.adjustSize()
+            self.setFixedSize(self.width() + 10, self.height() + 10)
             screen = self.main_window.screen()
             geometry = screen.availableGeometry()
             frame = self.frameGeometry()
             frame.moveCenter(geometry.center())
             self.move(frame.topLeft())
+        else:
+            self.adjustSize()
+            self.setFixedSize(self.width() + 10, self.height() + 10)
         super().showEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:

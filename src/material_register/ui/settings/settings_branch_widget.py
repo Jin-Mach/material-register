@@ -45,6 +45,8 @@ class SettingsBranchWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(UI_SPACING)
+        main_layout.setContentsMargins(*UI_MARGINS_5)
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         group_widget = QWidget()
