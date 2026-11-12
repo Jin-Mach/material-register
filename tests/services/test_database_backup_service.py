@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 from material_register.providers.paths_provider import PathsProvider
@@ -6,7 +7,7 @@ from material_register.services.database_backup_service import DatabaseBackupSer
 
 
 def create_test_database(database_path: Path) -> None:
-    with sqlite3.connect(database_path) as database:
+    with closing(sqlite3.connect(database_path)) as database, database:
         database.execute("CREATE TABLE test (id INTEGER, name TEXT)")
         database.execute("INSERT INTO test VALUES (1, 'Test')")
         database.commit()
@@ -21,7 +22,7 @@ def test_create_month_backup(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup" / "2026" / "02.db"
     assert result is True
     assert backup_path.exists()
-    with sqlite3.connect(backup_path) as database:
+    with closing(sqlite3.connect(backup_path)) as database, database:
         cursor = database.execute("SELECT id, name FROM test")
         for row in cursor:
             assert row[0] == 1
@@ -48,7 +49,7 @@ def test_create_year_backup(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup" / "2025" / "backup_2025.db"
     assert result is True
     assert backup_path.exists()
-    with sqlite3.connect(backup_path) as database:
+    with closing(sqlite3.connect(backup_path)) as database, database:
         cursor = database.execute("SELECT id, name FROM test")
         for row in cursor:
             assert row[0] == 1
@@ -89,7 +90,7 @@ def test_create_custom_backup(tmp_path: Path) -> None:
     result = DatabaseBackupService.create_custom_backup(database_path, backup_path)
     assert result is True
     assert backup_path.exists()
-    with sqlite3.connect(backup_path) as database:
+    with closing(sqlite3.connect(backup_path)) as database, database:
         cursor = database.execute("SELECT id, name FROM test")
         for row in cursor:
             assert row[0] == 1
@@ -101,12 +102,12 @@ def test_restore_database(tmp_path: Path) -> None:
     backup_path = tmp_path / "backup.db"
     create_test_database(database_path)
     DatabaseBackupService.create_custom_backup(database_path, backup_path)
-    with sqlite3.connect(database_path) as database:
+    with closing(sqlite3.connect(database_path)) as database, database:
         database.execute("UPDATE test SET name = 'Changed' WHERE id = 1")
         database.commit()
     result = DatabaseBackupService.restore_database(database_path, backup_path)
     assert result is True
-    with sqlite3.connect(database_path) as database:
+    with closing(sqlite3.connect(database_path)) as database, database:
         cursor = database.execute("SELECT name FROM test WHERE id = 1")
         row = cursor.fetchone()
     assert row[0] == "Test"

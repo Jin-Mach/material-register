@@ -1,5 +1,6 @@
 import shutil
 import sqlite3
+from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -21,8 +22,8 @@ class DatabaseBackupService:
             backup_path = backup_directory / f"backup_{year}.db"
             if backup_path.exists():
                 return False
-            with sqlite3.connect(database_path) as database:
-                with sqlite3.connect(backup_path) as backup:
+            with closing(sqlite3.connect(database_path)) as database, database:
+                with closing(sqlite3.connect(backup_path)) as backup, backup:
                     database.backup(backup)
             DatabaseBackupService._clear_year_folder(backup_directory, backup_path)
             return True
@@ -42,8 +43,8 @@ class DatabaseBackupService:
             backup_path = backup_directory / f"{month:02}.db"
             if backup_path.exists():
                 return False
-            with sqlite3.connect(database_path) as database:
-                with sqlite3.connect(backup_path) as backup:
+            with closing(sqlite3.connect(database_path)) as database, database:
+                with closing(sqlite3.connect(backup_path)) as backup, backup:
                     database.backup(backup)
             return True
         except sqlite3.Error as e:
@@ -56,8 +57,8 @@ class DatabaseBackupService:
     @staticmethod
     def create_custom_backup(database_path: Path, backup_path: Path) -> bool:
         try:
-            with sqlite3.connect(database_path) as database:
-                with sqlite3.connect(backup_path) as backup:
+            with closing(sqlite3.connect(database_path)) as database, database:
+                with closing(sqlite3.connect(backup_path)) as backup, backup:
                     database.backup(backup)
             return True
         except sqlite3.Error as e:
@@ -70,8 +71,8 @@ class DatabaseBackupService:
     @staticmethod
     def restore_database(database_path: Path, restore_path: Path) -> bool:
         try:
-            with sqlite3.connect(restore_path) as backup:
-                with sqlite3.connect(database_path) as database:
+            with closing(sqlite3.connect(restore_path)) as backup, backup:
+                with closing(sqlite3.connect(database_path)) as database, database:
                     backup.backup(database)
             return True
         except sqlite3.Error as e:
