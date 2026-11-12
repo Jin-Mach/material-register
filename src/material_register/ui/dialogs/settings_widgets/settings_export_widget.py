@@ -14,7 +14,7 @@ from material_register.ui.config.ui_constants import (
     UI_MARGINS_5,
     UI_SPACING,
 )
-from material_register.ui.settings.settings_widgets.base_export_widget import (
+from material_register.ui.dialogs.settings_widgets.base_export_widget import (
     BaseExportWidget,
 )
 from material_register.ui.setup.ui_texts import UiTexts

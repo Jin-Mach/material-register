@@ -13,7 +13,7 @@ from material_register.ui.setup.ui_settings import UiSettings
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.settings_dialog import SettingsDialog
-    from material_register.ui.settings.settings_branch_widget import (
+    from material_register.ui.dialogs.settings_widgets.settings_branch_widget import (
         SettingsBranchWidget,
     )
 

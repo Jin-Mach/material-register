@@ -2,12 +2,18 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QStackedWidget
 
-from material_register.ui.settings.settings_branch_widget import SettingsBranchWidget
-from material_register.ui.settings.settings_documents_widget import (
+from material_register.ui.dialogs.settings_widgets.settings_branch_widget import (
+    SettingsBranchWidget,
+)
+from material_register.ui.dialogs.settings_widgets.settings_documents_widget import (
     SettingsDocumentsWidget,
 )
-from material_register.ui.settings.settings_export_widget import SettingsExportWidget
-from material_register.ui.settings.settings_tools_widget import SettingsToolsWidget
+from material_register.ui.dialogs.settings_widgets.settings_export_widget import (
+    SettingsExportWidget,
+)
+from material_register.ui.dialogs.settings_widgets.settings_tools_widget import (
+    SettingsToolsWidget,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.settings_dialog import SettingsDialog

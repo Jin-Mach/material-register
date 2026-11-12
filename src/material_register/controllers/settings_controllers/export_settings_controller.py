@@ -15,7 +15,7 @@ from material_register.ui.dialogs.message_boxes import MessageBoxes
 
 if TYPE_CHECKING:
     from material_register.ui.dialogs.settings_dialog import SettingsDialog
-    from material_register.ui.settings.settings_widgets.base_export_widget import (
+    from material_register.ui.dialogs.settings_widgets.base_export_widget import (
         BaseExportWidget,
     )
 

@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from material_register.controllers.settings_controllers.export_settings_controller import (
         ExportSettingsController,
     )
-    from material_register.ui.settings.settings_export_widget import (
+    from material_register.ui.dialogs.settings_widgets.settings_export_widget import (
         SettingsExportWidget,
     )
 
