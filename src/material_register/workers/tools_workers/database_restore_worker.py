@@ -39,7 +39,7 @@ class DatabaseRestoreWorker(QObject):
                 return
             ok, error = are_foreign_keys_valid(connection)
             if not ok:
-                self.error.emit(error)
+                self.error.emit("\n".join(error))
                 return
         finally:
             connection.close()
