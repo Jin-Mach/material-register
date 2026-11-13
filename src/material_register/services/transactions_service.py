@@ -87,7 +87,7 @@ class TransactionsService:
     ) -> tuple[bool, str, bool]:
         try:
             if not db_connection.transaction():
-                return False, "Failed to start transaction"
+                return False, "Failed to start transaction", False
             new_stock_dict = TransactionsService._get_stock_dict(new_items_data)
             old_stock_dict = TransactionsService._get_stock_dict(old_items_data)
             final_stock_dict = TransactionsService._get_final_stock_dict(

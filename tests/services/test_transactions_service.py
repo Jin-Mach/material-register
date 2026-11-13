@@ -88,6 +88,21 @@ def old_items_data() -> list[TransactionItem]:
     ]
 
 
+def test_update_transaction_when_transaction_fails(
+    connection: QSqlDatabase,
+) -> None:
+    connection.close()
+    result = TransactionsService.update_transaction(
+        connection,
+        1,
+        {},
+        {},
+        [],
+        [],
+    )
+    assert result == (False, "Failed to start transaction", False)
+
+
 @pytest.mark.parametrize(
     "column_name,new_value",
     [
