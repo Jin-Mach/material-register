@@ -71,6 +71,7 @@ class CreateTransactionDialog(QDialog):
         self.customer_name_input = QLineEdit()
         self.customer_name_input.setObjectName("customerNameInput")
         self.customer_name_input.setMinimumWidth(300)
+        self.customer_name_input.setFocus()
         self.customer_name_input.setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
         )
