@@ -28,7 +28,7 @@ from material_register.ui.config.ui_constants import (
     UI_SPACING,
 )
 from material_register.ui.setup.ui_texts import UiTexts
-from material_register.ui.setup.ui_widgets import disable_spinbox_wheel
+from material_register.ui.setup.ui_widgets import disable_spinbox_wheel, set_suffix_mode
 from material_register.utils.formatting_utils import format_number_to_locale
 
 if TYPE_CHECKING:
@@ -358,6 +358,7 @@ class MaterialFilterDialog(QDialog):
                 suffix = str(commodity.unit)
                 break
         self.material_amount_spinbox.setSuffix(f" {suffix}")
+        set_suffix_mode(self.material_amount_spinbox, suffix)
 
     @staticmethod
     def _update_sub_filter_state(

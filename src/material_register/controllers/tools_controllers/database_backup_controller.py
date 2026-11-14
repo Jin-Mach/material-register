@@ -7,6 +7,7 @@ from PySide6.QtCore import QObject, QThread, QTimer
 from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.database_backup_service import DatabaseBackupService
+from material_register.utils.date_filters import DATE_FORMAT_FULL
 from material_register.utils.formatting_utils import format_datetime_to_locale
 from material_register.workers.tools_workers.database_backup_worker import (
     DatabaseBackupWorker,
@@ -41,14 +42,14 @@ class DatabaseBackupController(QObject):
             size_text = f"{size / (1024**2):.1f} MB"
         last_modify = format_datetime_to_locale(
             datetime.fromtimestamp(database_stat.st_mtime, UTC).strftime(
-                "%Y-%m-%d %H:%M:%S"
+                DATE_FORMAT_FULL
             )
         )
         last_backup = DatabaseBackupService.get_last_backup_date(
             self._database_folder / "backup"
         )
         last_backup_text = (
-            format_datetime_to_locale(last_backup.strftime("%Y-%m-%d %H:%M:%S"))
+            format_datetime_to_locale(last_backup.strftime(DATE_FORMAT_FULL))
             if last_backup
             else "?"
         )
