@@ -8,7 +8,6 @@ from material_register.ui.config.ui_constants import (
 from material_register.ui.config.ui_defaults import DEFAULT_TEXTS
 
 
-# noinspection PyBroadException
 class UiTexts:
     UI_TEXTS: dict[str, dict[str, str]] = {}
 

@@ -18,6 +18,7 @@ from material_register.ui.helpers.window_state_manager import WindowStateManager
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.ui.setup.ui_widgets import disable_context_menu
 from material_register.ui.tools.right_toolbar_widget import RightToolbarWidget
+from material_register.ui.widgets.menu_bar import MenuBar
 from material_register.ui.widgets.side_panel import SidePanel
 from material_register.ui.widgets.stacked_widget import StackedWidget
 from material_register.ui.widgets.status_bar import StatusBar
@@ -56,6 +57,7 @@ class MainWindow(QMainWindow):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_menu_bar()
         self._setup_splitter()
         disable_context_menu(
             self.findChildren(QWidget),
@@ -93,6 +95,10 @@ class MainWindow(QMainWindow):
             )
         self.side_panel.settings_button.clicked.connect(self._show_settings_dialog)
         self.splitter.splitterMoved.connect(self._update_splitter_size)
+
+    def _setup_menu_bar(self) -> None:
+        self.menu_bar = MenuBar(self)
+        self.setMenuBar(self.menu_bar)
 
     def _setup_splitter(self) -> None:
         self.tools_width = (

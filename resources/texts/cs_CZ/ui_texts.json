@@ -5,6 +5,20 @@
   "MainWindow": {
     "titleText": "Evidence materiálu"
   },
+  "MenuBar": {
+    "transactionsMenuText": "Transakce",
+    "addTransactionInText": "Přidat výkup",
+    "addTransactionOutText": "Přidat vývoz",
+    "exportMenuText": "Export",
+    "runSummaryExportText": "Evidence materiálu",
+    "runTransactionsExportText": "Přehled transakcí",
+    "customersMenuText": "Zákazníci",
+    "addCustomerText": "Přidat zákazníka",
+    "catalogMenuText": "Katalog",
+    "addCategoryText": "Přidat kategorii",
+    "addCommodityText": "Přidat položku",
+    "addCategoryTitleText": "Položku přidat do kategorie:"
+  },
   "SidePanel": {
     "transactionsButtonText": "Transakce",
     "transactionsButtonTooltipText": "Zobrazí seznam transakcí",

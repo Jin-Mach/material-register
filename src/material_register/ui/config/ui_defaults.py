@@ -1,6 +1,20 @@
 DEFAULT_TEXTS = {
     "Application": {"titleText": "Material Register"},
     "MainWindow": {"titleText": "Material Register"},
+    "MenuBar": {
+        "transactionsMenuText": "Transactions",
+        "addTransactionInText": "Add purchase",
+        "addTransactionOutText": "Add sale",
+        "exportMenuText": "Export",
+        "runSummaryExportText": "Material summary",
+        "runTransactionsExportText": "Transactions",
+        "customersMenuText": "Customers",
+        "addCustomerText": "Add customer",
+        "catalogMenuText": "Catalog",
+        "addCategoryText": "Add category",
+        "addCommodityText": "Add item",
+        "addCategoryTitleText": "Add item to category:",
+    },
     "SidePanel": {
         "transactionsButtonText": "Transactions",
         "transactionsButtonTooltipText": "Displays the list of transactions",

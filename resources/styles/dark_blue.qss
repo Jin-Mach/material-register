@@ -447,6 +447,11 @@ QStatusBar QLabel {
     padding: 0 6px;
 }
 
+QMenuBar::item:selected {
+    background-color: #3d6f9f;
+    color: #ffffff;
+}
+
 QMenu {
     background-color: #232528;
     border: 1px solid #45484d;
@@ -467,6 +472,11 @@ QMenu::item:selected {
 QMenu::item:pressed {
     background-color: #315a82;
     color: #ffffff;
+}
+
+QMenu::right-arrow {
+    width: 6px;
+    height: 6px;
 }
 
 QToolTip {
