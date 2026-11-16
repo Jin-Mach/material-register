@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 )
 
 from material_register.controllers.catalog_controller import CatalogController
+from material_register.domain.category_dataclass import Category
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.catalog.catalog_widgets.catalog_details_widget import (
     CatalogDetailsWidget,
@@ -107,7 +108,7 @@ class CatalogWidget(QWidget):
 
     def _create_connection(self) -> None:
         self.tree_widget.itemSelectionChanged.connect(self._on_selection_changed)
-        self.add_category_button.clicked.connect(self.catalog_controller.add_category)
+        self.add_category_button.clicked.connect(self.add_category)
         self.update_commodities_price.clicked.connect(
             self.catalog_controller.update_commodities_price
         )
@@ -115,7 +116,7 @@ class CatalogWidget(QWidget):
             self.catalog_controller.update_category
         )
         self.details_widget.category_with_commodities_widget.category_detail_widget.add_commodity_button.clicked.connect(
-            self.catalog_controller.add_commodity
+            lambda: self.add_commodity(category=None)
         )
 
     def _reload_data(self) -> None:
@@ -123,3 +124,9 @@ class CatalogWidget(QWidget):
 
     def _on_selection_changed(self) -> None:
         self.catalog_controller.setup_details_widget()
+
+    def add_category(self) -> None:
+        self.catalog_controller.add_category()
+
+    def add_commodity(self, category: Category | None = None) -> None:
+        self.catalog_controller.add_commodity(category)

@@ -25,6 +25,7 @@ class MenuBar(QMenuBar):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_widgets()
 
     def _setup_texts(self) -> None:
         menu = self.findChildren(QMenu)
@@ -43,6 +44,33 @@ class MenuBar(QMenuBar):
 
     def _create_connection(self) -> None:
         self.add_commodity.aboutToShow.connect(self._setup_commodity_menu)
+        self.add_transaction_in.triggered.connect(
+            self.transactions_widget.add_transaction_in
+        )
+        self.add_transaction_out.triggered.connect(
+            self.transactions_widget.add_transaction_out
+        )
+        self.run_summary_export.triggered.connect(
+            self.summary_export_widget.start_export
+        )
+        self.run_transactions_export.triggered.connect(
+            self.transactions_export_widget.start_export
+        )
+        self.add_customer.triggered.connect(self.customers_widget.add_customer)
+        self.add_category.triggered.connect(self.catalog_widget.add_category)
+        self.add_commodity.triggered.connect(self._add_commodity)
+
+    def _add_commodity(self, action: QAction) -> None:
+        selected_category = action.data()
+        self.catalog_widget.add_commodity(selected_category)
+
+    def _setup_widgets(self) -> None:
+        self.transactions_widget = self.main_window.stacked_widget.transactions_widget
+        export_widget = self.main_window.stacked_widget.export_widget
+        self.summary_export_widget = export_widget.summary_export_widget
+        self.transactions_export_widget = export_widget.transactions_export_widget
+        self.customers_widget = self.main_window.stacked_widget.customers_widget
+        self.catalog_widget = self.main_window.stacked_widget.catalog_widget
 
     def _setup_transactions_menu(self) -> QMenu:
         self.transactions_menu = QMenu(self)

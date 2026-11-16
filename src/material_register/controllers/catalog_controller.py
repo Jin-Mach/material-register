@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QDialog, QWidget
 from material_register.core.app_context import AppContext
 from material_register.db.queries.category_queries import CategoryQueries
 from material_register.db.queries.commodities_queries import CommoditiesQueries
+from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
@@ -71,10 +72,11 @@ class CatalogController:
                 self.notification_texts, "ADD_CATEGORY", "Category added"
             )
 
-    def add_commodity(self) -> None:
-        category, _ = self.catalog_widget.tree_widget.get_selected_data()
+    def add_commodity(self, category: Category | None = None) -> None:
         if category is None:
-            return
+            category, _ = self.catalog_widget.tree_widget.get_selected_data()
+            if category is None:
+                return
         dialog = CommodityDialog(self.catalog_widget, category.id, category.name)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             commodity_data = dialog.get_commodity_data()

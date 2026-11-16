@@ -107,10 +107,10 @@ class TransactionsWidget(QWidget):
 
     def _create_connection(self) -> None:
         self.transactions_actions_widget.in_transaction_button.clicked.connect(
-            lambda: self.transactions_controller.create_transaction(TRANSFER_IN)
+            self.add_transaction_in
         )
         self.transactions_actions_widget.out_transaction_button.clicked.connect(
-            lambda: self.transactions_controller.create_transaction(TRANSFER_OUT)
+            self.add_transaction_out
         )
         self.transactions_actions_widget.base_filter_combobox.currentIndexChanged.connect(
             self._on_index_changed
@@ -128,6 +128,12 @@ class TransactionsWidget(QWidget):
         self.transactions_tab_widget.transactions_out_view.selectionModel().currentChanged.connect(
             self.transactions_controller.update_transaction_detail_widget
         )
+
+    def add_transaction_in(self) -> None:
+        self.transactions_controller.create_transaction(TRANSFER_IN)
+
+    def add_transaction_out(self) -> None:
+        self.transactions_controller.create_transaction(TRANSFER_OUT)
 
     def _create_actions_group(self) -> QGroupBox:
         self.transactions_actions_widget = TransactionsActionsWidget(self)

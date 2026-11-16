@@ -170,7 +170,7 @@ class SummaryExportWidget(QWidget):
             radio_button.toggled.connect(self._apply_date_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
-        self.export_button.clicked.connect(self.summary_export_controller.start_export)
+        self.export_button.clicked.connect(self.start_export)
 
     def _create_branch_group(self) -> QGroupBox:
         self.branch_group_box = QGroupBox()
@@ -542,6 +542,9 @@ class SummaryExportWidget(QWidget):
             "Excel": ".xlsx",
         }
         return file_map[file_type]
+
+    def start_export(self) -> None:
+        self.summary_export_controller.start_export()
 
     def get_export_data(self) -> dict[str, Path | str | float | bool]:
         from_date, to_date = self._get_date_interval()

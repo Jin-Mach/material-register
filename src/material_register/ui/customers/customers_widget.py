@@ -83,12 +83,13 @@ class CustomersWidget(QWidget):
         self.count_text = ui_texts.get("countLabelText", "Count: ")
 
     def _create_connection(self) -> None:
-        self.action_widget.add_customer_button.clicked.connect(
-            self.customers_controller.add_customer
-        )
+        self.action_widget.add_customer_button.clicked.connect(self.add_customer)
 
     def _init_counts(self) -> None:
         self.customers_controller.update_counts()
+
+    def add_customer(self) -> None:
+        self.customers_controller.add_customer()
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.count_label.setText(f"{self.count_text} {filtered}/{total}")

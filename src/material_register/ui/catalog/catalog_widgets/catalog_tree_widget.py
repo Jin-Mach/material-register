@@ -37,6 +37,7 @@ class CatalogTreeWidget(QTreeWidget):
         item = QTreeWidgetItem(parent_item)
         item.setText(0, commodity.name)
         item.setData(0, Qt.ItemDataRole.UserRole, commodity)
+        item.setIcon(0, UiIcons.ITEM_ICON)
         parent_item.sortChildren(0, Qt.SortOrder.AscendingOrder)
         return parent_item, item
 

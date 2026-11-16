@@ -177,9 +177,7 @@ class TransactionsExportWidget(QWidget):
         self.customer_combobox.lineEdit().textEdited.connect(
             self._on_customer_text_edited
         )
-        self.export_button.clicked.connect(
-            self.transactions_export_controller.start_export
-        )
+        self.export_button.clicked.connect(self.start_export)
 
     def _create_branch_group(self) -> QGroupBox:
         self.branch_group_box = QGroupBox()
@@ -433,6 +431,17 @@ class TransactionsExportWidget(QWidget):
                 customer.id,
             )
 
+    def reload_customers(self) -> None:
+        selected_customer = self.customer_combobox.currentData(Qt.ItemDataRole.UserRole)
+        self.completer_model.reload_customers(DbCache.customers)
+        self.customer_combobox.clear()
+        self._setup_combobox()
+        index = self.customer_combobox.findData(
+            selected_customer, Qt.ItemDataRole.UserRole
+        )
+        if index >= 0:
+            self.customer_combobox.setCurrentIndex(index)
+
     def apply_settings(self) -> None:
         if not UiSettings.apply_settings(
             "export", EXPORT_TYPE_TRANSACTIONS, self.findChildren(QWidget)
@@ -616,6 +625,9 @@ class TransactionsExportWidget(QWidget):
         return (
             self.customer_combobox.itemData(index, Qt.ItemDataRole.UserRole) is not None
         )
+
+    def start_export(self) -> None:
+        self.transactions_export_controller.start_export()
 
     def get_export_data(self) -> dict[str, Path | str | int | None | bool]:
         from_date, to_date = self._get_date_interval()

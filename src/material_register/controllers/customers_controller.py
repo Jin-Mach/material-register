@@ -55,7 +55,7 @@ class CustomersController:
                     self.customers_widget,
                 )
                 return
-            ok, error = CustomersController._refresh_cache()
+            ok, error = self._refresh_cache()
             if not ok:
                 CustomersController._handle_db_error(
                     error,
@@ -96,7 +96,7 @@ class CustomersController:
                 )
                 return
             self._refresh_transactions_data()
-            ok, error = CustomersController._refresh_cache()
+            ok, error = self._refresh_cache()
             if not ok:
                 CustomersController._handle_db_error(
                     error,
@@ -128,7 +128,7 @@ class CustomersController:
                     self.customers_widget,
                 )
                 return
-            ok, error = CustomersController._refresh_cache()
+            ok, error = self._refresh_cache()
             if not ok:
                 CustomersController._handle_db_error(
                     error,
@@ -161,12 +161,12 @@ class CustomersController:
         transaction_controller = self.transactions_widget.transactions_controller
         transaction_controller.refresh_models_data()
 
-    @staticmethod
-    def _refresh_cache() -> tuple[bool, str]:
+    def _refresh_cache(self) -> tuple[bool, str]:
         ok, error = DbCache.refresh_customers_data()
         if not ok:
             return False, error
         DataInit.customers_completer_model.reload_customers(DbCache.active_customers)
+        self.customers_widget.stacked_widget.export_widget.transactions_export_widget.reload_customers()
         return True, ""
 
     @staticmethod
