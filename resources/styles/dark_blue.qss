@@ -154,12 +154,17 @@ QCalendarWidget QTableView::item:hover {
 
 #qt_calendar_navigationbar {
     background-color: #232528;
+    min-height: 25px;
 }
 
 QCalendarWidget QToolButton#qt_calendar_monthbutton {
     background-color: #232528;
     border: none;
     color: #d4d4d4;
+}
+
+QCalendarWidget QToolButton#qt_calendar_yearbutton {
+    margin-left: 4px;
 }
 
 QCalendarWidget QToolButton#qt_calendar_monthbutton::menu-indicator {
@@ -807,6 +812,44 @@ QDateEdit::down-arrow {
     height: 12px;
     border: none;
     margin: 0px;
+}
+
+QTreeView::branch:closed:has-children {
+    image: url("{TREEVIEW_RIGHT_ICON}");
+    width: 8px;
+    height: 8px;
+    border: none;
+    margin: 0px;
+}
+
+QTreeView::branch:open:has-children {
+    image: url("{TREEVIEW_DOWN_ICON}");
+    width: 8px;
+    height: 8px;
+    border: none;
+    margin: 0px;
+}
+
+QCalendarWidget QToolButton#qt_calendar_prevmonth {
+    qproperty-icon: url("{CALENDAR_PREV_ICON}");
+    qproperty-iconSize: 12px 12px;
+}
+
+QCalendarWidget QToolButton#qt_calendar_nextmonth {
+    qproperty-icon: url("{CALENDAR_NEXT_ICON}");
+    qproperty-iconSize: 12px 12px;
+}
+
+QCalendarWidget QToolButton#qt_calendar_monthbutton {
+    padding-right: 8px;
+}
+
+QCalendarWidget QToolButton#qt_calendar_monthbutton::menu-indicator {
+    image: url("{CALENDAR_DROPDOWN_ICON}");
+    subcontrol-position: right center;
+    margin-top: 2px;
+    width: 8px;
+    height: 8px;
 }
 
 QFrame#transactionDetailFrame {

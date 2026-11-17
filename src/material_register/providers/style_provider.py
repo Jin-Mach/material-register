@@ -39,6 +39,11 @@ class StyleProvider:
             "{SPINBOX_DOWN_ICON}": "spinboxDownArrow.png",
             "{DOUBLE_SPINBOX_UP_ICON}": "doubleSpinboxUpArrow",
             "{DOUBLE_SPINBOX_DOWN_ICON}": "doubleSpinboxDownArrow",
+            "{TREEVIEW_RIGHT_ICON}": "treeviewRightIcon.png",
+            "{TREEVIEW_DOWN_ICON}": "treeviewDownIcon.png",
+            "{CALENDAR_PREV_ICON}": "calendarPrevIcon.png",
+            "{CALENDAR_NEXT_ICON}": "calendarNextIcon.png",
+            "{CALENDAR_DROPDOWN_ICON}": "calendarDropdownIcon.png"
         }
         for placeholder, icon_name in icons_map.items():
             stylesheet = stylesheet.replace(
