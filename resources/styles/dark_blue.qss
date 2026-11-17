@@ -61,11 +61,9 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: none;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid #c8c9cc;
-    margin-right: 6px;
+    image: url("{COMBO_ARROW}");
+    width: 12px;
+    height: 12px;
 }
 
 QComboBox QAbstractItemView {
@@ -100,6 +98,13 @@ QDateEdit {
     color: #d4d4d4;
     selection-background-color: #3d6f9f;
     selection-color: #ffffff;
+}
+
+QDateEdit::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: center right;
+    width: 24px;
+    border: none;
 }
 
 QCalendarWidget {
@@ -223,8 +228,13 @@ QCheckBox::indicator {
     border-radius: 3px;
 }
 
-QRadioButton::indicator:checked,
+QRadioButton::indicator:checked {
+    background-color: #4b8cc9;
+    border-color: #4b8cc9;
+}
+
 QCheckBox::indicator:checked {
+    image: url("{CHECK_ICON}");
     background-color: #4b8cc9;
     border-color: #4b8cc9;
 }
@@ -767,20 +777,36 @@ QAbstractSpinBox::down-button:pressed {
     background-color: #303236;
 }
 
-QAbstractSpinBox::up-arrow {
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-bottom: 5px solid #c8c9cc;
+QSpinBox::up-arrow {
+    image: url("{SPINBOX_UP_ICON}");
+    width: 12px;
+    height: 12px;
 }
 
-QAbstractSpinBox::down-arrow {
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid #c8c9cc;
+QSpinBox::down-arrow {
+    image: url("{SPINBOX_DOWN_ICON}");
+    width: 12px;
+    height: 12px;
+}
+
+QDoubleSpinBox::up-arrow {
+    image: url("{DOUBLE_SPINBOX_UP_ICON}");
+    width: 12px;
+    height: 12px;
+}
+
+QDoubleSpinBox::down-arrow {
+    image: url("{DOUBLE_SPINBOX_DOWN_ICON}");
+    width: 12px;
+    height: 12px;
+}
+
+QDateEdit::down-arrow {
+    image: url("{CALENDAR_ICON}");
+    width: 12px;
+    height: 12px;
+    border: none;
+    margin: 0px;
 }
 
 QFrame#transactionDetailFrame {
