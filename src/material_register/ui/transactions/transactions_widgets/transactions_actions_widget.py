@@ -33,7 +33,7 @@ class TransactionsActionsWidget(QWidget):
         self.base_filter_combobox.setObjectName("baseFilterCombobox")
         self.search_line_edit = QLineEdit()
         self.search_line_edit.setObjectName("searchLineEdit")
-        self.search_line_edit.setMinimumWidth(600)
+        self.search_line_edit.setFixedWidth(600)
         main_layout.addWidget(self.in_transaction_button)
         main_layout.addWidget(self.out_transaction_button)
         main_layout.addWidget(self.base_filter_combobox)

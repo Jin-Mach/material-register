@@ -37,7 +37,7 @@ class SearchActionsWidget(QWidget):
         self.base_filter_combobox.setObjectName("baseFilterCombobox")
         self.search_line_edit = QLineEdit()
         self.search_line_edit.setObjectName("searchLineEdit")
-        self.search_line_edit.setMinimumWidth(400)
+        self.search_line_edit.setFixedWidth(400)
         self.search_button = QPushButton()
         self.search_button.setObjectName("searchButton")
         self.reset_filter_button = QPushButton()
@@ -48,10 +48,10 @@ class SearchActionsWidget(QWidget):
         main_layout.addWidget(self.invisible_out_button)
         main_layout.addWidget(self.base_filter_combobox)
         main_layout.addWidget(self.search_line_edit, 1)
-        main_layout.addStretch()
         main_layout.addWidget(self.search_button)
         main_layout.addWidget(self.reset_filter_button)
         main_layout.addWidget(self.create_filter_button)
+        main_layout.addStretch()
         return main_layout
 
     def _setup_ui(self) -> None:

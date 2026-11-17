@@ -59,7 +59,7 @@ if TYPE_CHECKING:
 
 
 class TransactionsExportWidget(QWidget):
-    WIDTH = 400
+    WIDTH = 600
 
     def __init__(self, export_widget: "ExportWidget") -> None:
         super().__init__(export_widget)
@@ -185,6 +185,7 @@ class TransactionsExportWidget(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(UI_SPACING * 2)
         main_layout.setContentsMargins(*UI_MARGINS_10)
+        horizontal_layout = QHBoxLayout()
         form_layout = QFormLayout()
         self.branch_name_label = QLabel()
         self.branch_name_label.setObjectName("branchNameLabel")
@@ -195,7 +196,10 @@ class TransactionsExportWidget(QWidget):
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
         )
         form_layout.addRow(self.branch_name_label, self.branch_name_line_edit)
-        main_layout.addLayout(form_layout)
+        horizontal_layout.addStretch()
+        horizontal_layout.addLayout(form_layout)
+        horizontal_layout.addStretch()
+        main_layout.addLayout(horizontal_layout)
         self.branch_group_box.setLayout(main_layout)
         return self.branch_group_box
 
@@ -210,15 +214,13 @@ class TransactionsExportWidget(QWidget):
         self.file_type_label.setObjectName("fileTypeLabel")
         self.file_type_combobox = QComboBox()
         self.file_type_combobox.setObjectName("fileTypeComboBox")
+        horizontal_layout = QHBoxLayout()
         form_layout = QFormLayout()
         self.path_label = QLabel()
         self.path_label.setObjectName("pathLabel")
         self.path_line_edit = QLineEdit()
         self.path_line_edit.setObjectName("pathLineEdit")
-        self.path_line_edit.setMinimumWidth(self.WIDTH)
-        self.path_line_edit.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
-        )
+        self.path_line_edit.setFixedWidth(self.WIDTH)
         self.path_button = QPushButton()
         self.path_button.setObjectName("pathButton")
         path_layout = QHBoxLayout()
@@ -228,10 +230,7 @@ class TransactionsExportWidget(QWidget):
         self.file_name_label.setObjectName("fileNameLabel")
         self.file_name_line_edit = QLineEdit()
         self.file_name_line_edit.setObjectName("fileNameLineEdit")
-        self.file_name_line_edit.setMinimumWidth(self.WIDTH)
-        self.file_name_line_edit.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
-        )
+        self.file_name_line_edit.setFixedWidth(self.WIDTH)
         name_layout = QHBoxLayout()
         name_layout.addWidget(self.file_name_line_edit)
         file_type_layout.addStretch()
@@ -240,8 +239,11 @@ class TransactionsExportWidget(QWidget):
         file_type_layout.addStretch()
         form_layout.addRow(self.path_label, path_layout)
         form_layout.addRow(self.file_name_label, name_layout)
+        horizontal_layout.addStretch()
+        horizontal_layout.addLayout(form_layout)
+        horizontal_layout.addStretch()
         main_layout.addLayout(file_type_layout)
-        main_layout.addLayout(form_layout)
+        main_layout.addLayout(horizontal_layout)
         self.path_name_group_box.setLayout(main_layout)
         return self.path_name_group_box
 
