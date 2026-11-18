@@ -139,7 +139,16 @@ class TransactionsSearchWidget(QWidget):
             self._update_invoiced_state
         )
         self.is_invoiced_checkbox.stateChanged.connect(self._update_invoiced_state)
-        self.notes_edit.textChanged.connect(self._set_notes_style)
+        self.notes_checkbox.toggled.connect(
+            lambda: TransactionsSearchWidget._set_required_style(
+                self.notes_checkbox, self.notes_edit
+            )
+        )
+        self.notes_edit.textChanged.connect(
+            lambda: TransactionsSearchWidget._set_required_style(
+                self.notes_checkbox, self.notes_edit
+            )
+        )
         self.reset_button.clicked.connect(
             lambda: self._setup_default_states(reset_values=True)
         )
@@ -387,13 +396,6 @@ class TransactionsSearchWidget(QWidget):
             out_selected or not self.transaction_price_checkbox.isChecked()
         )
 
-    def _set_notes_style(self) -> None:
-        text = self.notes_edit.text().strip()
-        if len(text) >= SEARCH_TRANSACTION_NOTES_LENGTH:
-            self.notes_edit.setStyleSheet(INVALID_INPUT_STYLE)
-        else:
-            self.notes_edit.setStyleSheet("")
-
     def _update_reset_button_state(self) -> None:
         check_boxes = [
             self.transaction_number_checkbox,
@@ -413,6 +415,16 @@ class TransactionsSearchWidget(QWidget):
         self.advanced_search_dialog.update_search_button_state(
             transactions_state=not disabled
         )
+
+    @staticmethod
+    def _set_required_style(checkbox: QCheckBox, lineedit: QLineEdit) -> None:
+        text = lineedit.text().strip()
+        if (checkbox.isChecked() and not text) or len(
+            text
+        ) >= SEARCH_TRANSACTION_NOTES_LENGTH:
+            lineedit.setStyleSheet(INVALID_INPUT_STYLE)
+        else:
+            lineedit.setStyleSheet("")
 
     def _get_property_filters(self) -> list[AdvancedSearchDataclass]:
         filters_map = {

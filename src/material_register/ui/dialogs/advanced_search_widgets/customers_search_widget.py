@@ -130,9 +130,68 @@ class CustomersSearchWidget(QWidget):
             self._update_customer_state
         )
         self.company_name_checkbox.toggled.connect(self._update_customer_state)
+        self.company_name_checkbox.toggled.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.company_name_checkbox, self.company_name_edit
+            )
+        )
+        self.company_name_edit.textChanged.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.company_name_checkbox, self.company_name_edit
+            )
+        )
         self.first_name_checkbox.toggled.connect(self._update_customer_state)
+        self.first_name_checkbox.toggled.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.first_name_checkbox, self.first_name_edit
+            )
+        )
+        self.first_name_edit.textChanged.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.first_name_checkbox, self.first_name_edit
+            )
+        )
         self.last_name_checkbox.toggled.connect(self._update_customer_state)
-        self.notes_edit.textChanged.connect(self._set_notes_style)
+        self.last_name_checkbox.toggled.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.last_name_checkbox, self.last_name_edit
+            )
+        )
+        self.last_name_edit.textChanged.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.last_name_checkbox, self.last_name_edit
+            )
+        )
+        self.document_checkbox.toggled.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.document_checkbox, self.document_edit
+            )
+        )
+        self.document_edit.textChanged.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.document_checkbox, self.document_edit
+            )
+        )
+        self.address_checkbox.toggled.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.address_checkbox, self.address_edit
+            )
+        )
+        self.address_edit.textChanged.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.address_checkbox, self.address_edit
+            )
+        )
+        self.notes_checkbox.toggled.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.notes_checkbox, self.notes_edit, SEARCH_TRANSACTION_NOTES_LENGTH
+            )
+        )
+        self.notes_edit.textChanged.connect(
+            lambda: CustomersSearchWidget._set_required_style(
+                self.notes_checkbox, self.notes_edit, SEARCH_TRANSACTION_NOTES_LENGTH
+            )
+        )
         self.reset_button.clicked.connect(
             lambda: self._setup_default_states(reset_values=True)
         )
@@ -236,7 +295,8 @@ class CustomersSearchWidget(QWidget):
         for edit in self.findChildren(QLineEdit):
             if edit.objectName() != self.notes_edit.objectName():
                 edit.setFixedWidth(self.WIDTH)
-            edit.setMaxLength(SEARCH_TRANSACTION_NOTES_LENGTH)
+            else:
+                edit.setMaxLength(SEARCH_TRANSACTION_NOTES_LENGTH)
 
     def _setup_property(self) -> None:
         self.subject_type_combo_box.setProperty(
@@ -356,13 +416,6 @@ class CustomersSearchWidget(QWidget):
             elif name_selected:
                 self.subject_type_combo_box.setCurrentIndex(0)
 
-    def _set_notes_style(self) -> None:
-        text = self.notes_edit.text().strip()
-        if len(text) >= SEARCH_TRANSACTION_NOTES_LENGTH:
-            self.notes_edit.setStyleSheet(INVALID_INPUT_STYLE)
-        else:
-            self.notes_edit.setStyleSheet("")
-
     def _update_reset_button_state(self) -> None:
         check_boxes = [
             self.subject_type_checkbox,
@@ -383,6 +436,18 @@ class CustomersSearchWidget(QWidget):
         self.advanced_search_dialog.update_search_button_state(
             customers_state=not disabled
         )
+
+    @staticmethod
+    def _set_required_style(
+        checkbox: QCheckBox, lineedit: QLineEdit, max_text_length: int | None = None
+    ) -> None:
+        text = lineedit.text().strip()
+        if (checkbox.isChecked() and not text) or (
+            max_text_length is not None and len(text) >= max_text_length
+        ):
+            lineedit.setStyleSheet(INVALID_INPUT_STYLE)
+        else:
+            lineedit.setStyleSheet("")
 
     def _get_property_filters(self) -> list[AdvancedSearchDataclass]:
         property_map = {
