@@ -43,7 +43,7 @@ class StyleProvider:
             "{TREEVIEW_DOWN_ICON}": "treeviewDownIcon.png",
             "{CALENDAR_PREV_ICON}": "calendarPrevIcon.png",
             "{CALENDAR_NEXT_ICON}": "calendarNextIcon.png",
-            "{CALENDAR_DROPDOWN_ICON}": "calendarDropdownIcon.png"
+            "{CALENDAR_DROPDOWN_ICON}": "calendarDropdownIcon.png",
         }
         for placeholder, icon_name in icons_map.items():
             stylesheet = stylesheet.replace(
