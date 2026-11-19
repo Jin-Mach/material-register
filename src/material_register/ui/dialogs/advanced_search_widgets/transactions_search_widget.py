@@ -501,6 +501,16 @@ class TransactionsSearchWidget(QWidget):
                     )
         return user_role_filters
 
+    def is_input_valid(self) -> tuple[int, QLineEdit] | None:
+        tab_index = 0
+        filters_map = {
+            self.notes_checkbox: self.notes_edit,
+        }
+        for state, edit in filters_map.items():
+            if state.isChecked() and not edit.text().strip():
+                return tab_index, edit
+        return None
+
     def get_filters_data(self) -> list[AdvancedSearchDataclass]:
         filters_data = []
         filters = [

@@ -533,6 +533,21 @@ class CustomersSearchWidget(QWidget):
             return f"%{text}"
         return f"%{text}%"
 
+    def is_input_valid(self) -> tuple[int, QLineEdit] | None:
+        tab_index = 1
+        filters_map = {
+            self.company_name_checkbox: self.company_name_edit,
+            self.first_name_checkbox: self.first_name_edit,
+            self.last_name_checkbox: self.last_name_edit,
+            self.document_checkbox: self.document_edit,
+            self.address_checkbox: self.address_edit,
+            self.notes_checkbox: self.notes_edit,
+        }
+        for state, edit in filters_map.items():
+            if state.isChecked() and not edit.text().strip():
+                return tab_index, edit
+        return None
+
     def get_filters_data(self) -> list[AdvancedSearchDataclass]:
         filters_data = []
         filters = [

@@ -115,6 +115,18 @@ class AdvancedSearchDialog(QDialog):
         self.tab_widget.addTab(self.customers_search_widget, self.customers_tab_title)
         self.tab_widget.addTab(self.material_search_widget, self.material_tab_title)
 
+    def _is_filters_valid(self) -> bool:
+        for invalid_filter in [
+            self.transactions_search_widget.is_input_valid(),
+            self.customers_search_widget.is_input_valid(),
+        ]:
+            if isinstance(invalid_filter, tuple):
+                tab_index, edit = invalid_filter
+                self.tab_widget.setCurrentIndex(tab_index)
+                edit.setFocus()
+                return False
+        return True
+
     def update_search_button_state(
         self,
         transactions_state: bool | None = None,
@@ -144,6 +156,11 @@ class AdvancedSearchDialog(QDialog):
             if section_filters:
                 advanced_filters.extend(section_filters)
         return advanced_filters, self.material_search_widget.get_filters_data()
+
+    def accept(self) -> None:
+        if not self._is_filters_valid():
+            return
+        super().accept()
 
     def showEvent(self, event: QShowEvent) -> None:
         self.adjustSize()
