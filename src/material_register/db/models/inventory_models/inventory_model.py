@@ -4,8 +4,8 @@ from PySide6.QtCore import QModelIndex, Qt
 from PySide6.QtGui import QColor
 from PySide6.QtSql import QSqlDatabase, QSqlQueryModel
 
+from material_register.db.config.inventory_queries_constants import INVENTORY_QUERY
 from material_register.db.config.model_constants import INVENTORY_COLUMNS_MAP
-from material_register.db.config.transactions_queries_constants import INVENTORY_QUERY
 from material_register.ui.config.styles_constants import INVENTORY_STOCK_STYLE
 from material_register.ui.setup.ui_icons import UiIcons
 from material_register.utils.formatting_utils import format_number_to_locale
@@ -54,6 +54,8 @@ class InventoryModel(QSqlQueryModel):
                 else:
                     return UiIcons.INACTIVE_ICON
         if role == Qt.ItemDataRole.UserRole:
+            if column == INVENTORY_COLUMNS_MAP["commodity_id"]:
+                return super().data(index, Qt.ItemDataRole.DisplayRole)
             if column == INVENTORY_COLUMNS_MAP["inventory_stock"]:
                 return super().data(index, Qt.ItemDataRole.DisplayRole)
             if column == INVENTORY_COLUMNS_MAP["commodity_active"]:
@@ -66,3 +68,18 @@ class InventoryModel(QSqlQueryModel):
         if error.isValid():
             return False, error.text()
         return True, ""
+
+    def get_commodity_data(self, index: QModelIndex) -> tuple[int | None, str | None]:
+        if not index.isValid():
+            return None, None
+        commodity_id_index = index.siblingAtColumn(
+            INVENTORY_COLUMNS_MAP["commodity_id"]
+        )
+        commodity_name_index = index.siblingAtColumn(
+            INVENTORY_COLUMNS_MAP["commodity_name"]
+        )
+        if not commodity_id_index.isValid() or not commodity_name_index.isValid():
+            return None, None
+        commodity_id = self.data(commodity_id_index, Qt.ItemDataRole.UserRole)
+        commodity_name = self.data(commodity_name_index, Qt.ItemDataRole.DisplayRole)
+        return commodity_id, commodity_name

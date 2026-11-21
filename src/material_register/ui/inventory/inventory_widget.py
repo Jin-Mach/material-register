@@ -137,7 +137,15 @@ class InventoryWidget(QWidget):
         if not selected.isValid():
             return
         model_index = self.active_proxy.mapToSource(selected)
-        print("model_index:", model_index)
+        commodity_id, commodity_name = self.inventory_model.get_commodity_data(
+            model_index
+        )
+        print("commodity id", commodity_id)
+        print("commodity name", commodity_name)
+        if commodity_id is None:
+            return
+        if commodity_name is not None:
+            self.inventory_history_widget.set_info_text(commodity_name)
         from_date, to_date = self.inventory_history_widget.get_date_range()
         print("from_date:", from_date)
         print("to_date:", to_date)

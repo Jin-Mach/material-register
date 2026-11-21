@@ -64,6 +64,7 @@ INVENTORY_COLUMNS = ["category", "commodity", "inventory_stock", "commodity_acti
 
 INVENTORY_MODEL_COLUMNS = [
     "category_name",
+    "commodity_id",
     "commodity_name",
     "commodity_unit",
     "inventory_stock",
@@ -72,13 +73,14 @@ INVENTORY_MODEL_COLUMNS = [
 
 INVENTORY_COLUMNS_MAP = {
     "category_name": 0,
-    "commodity_name": 1,
-    "commodity_unit": 2,
-    "inventory_stock": 3,
-    "commodity_active": 4,
+    "commodity_id": 1,
+    "commodity_name": 2,
+    "commodity_unit": 3,
+    "inventory_stock": 4,
+    "commodity_active": 5,
 }
 
-INVENTORY_VIEW_HIDDEN_COLUMNS = ["commodity_unit"]
+INVENTORY_VIEW_HIDDEN_COLUMNS = ["commodity_id", "commodity_unit"]
 
 SEARCH_MODEL_COLUMNS = [
     "transaction_id",

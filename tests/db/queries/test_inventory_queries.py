@@ -3,7 +3,7 @@ import uuid
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.transactions_queries_constants import INVENTORY_QUERY
+from material_register.db.config.inventory_queries_constants import INVENTORY_QUERY
 from material_register.db.queries.inventory_queries import InventoryQueries
 
 
@@ -81,11 +81,13 @@ def test_get_inventory(connection: QSqlDatabase, schema) -> None:
                 select_query.value(1),
                 select_query.value(2),
                 select_query.value(3),
+                select_query.value(4),
+                select_query.value(5),
             )
         )
     assert rows == [
-        ("category1", "commodity1", "kg", 11),
-        ("category2", "commodity2", "pcs", 22),
+        ("category1", 1, "commodity1", "kg", 11, 1),
+        ("category2", 2, "commodity2", "pcs", 22, 1),
     ]
 
 
@@ -131,9 +133,11 @@ def test_update_inventory_item(connection: QSqlDatabase, schema) -> None:
                 select_query.value(1),
                 select_query.value(2),
                 select_query.value(3),
+                select_query.value(4),
+                select_query.value(5),
             )
         )
     assert rows == [
-        ("category1", "commodity1", "kg", 22),
-        ("category2", "commodity2", "pcs", 11),
+        ("category1", 1, "commodity1", "kg", 22, 1),
+        ("category2", 2, "commodity2", "pcs", 11, 1),
     ]

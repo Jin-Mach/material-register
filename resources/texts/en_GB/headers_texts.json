@@ -24,10 +24,9 @@
   },
   "InventoryView": {
     "0": "Category",
-    "1": "Item",
-    "2": "Unit",
-    "3": "Stock quantity",
-    "4": "Status"
+    "2": "Item",
+    "4": "Stock quantity",
+    "5": "Status"
   },
   "TransactionDetailView": {
     "category": "Category",

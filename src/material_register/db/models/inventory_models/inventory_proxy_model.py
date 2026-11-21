@@ -20,8 +20,7 @@ class InventoryProxyModel(QSortFilterProxyModel):
             return True
         text = self._text.lower()
         model = self.sourceModel()
-        column_count = model.columnCount(source_parent)
-        for column in range(column_count):
+        for column in (0, 2):
             index = model.index(source_row, column, source_parent)
             value = normalize_text(model.data(index, Qt.ItemDataRole.DisplayRole))
             if value is not None and text in value:

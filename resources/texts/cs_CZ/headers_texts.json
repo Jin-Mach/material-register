@@ -24,11 +24,10 @@
   },
   "InventoryView": {
     "0": "Kategorie",
-    "1": "Položka",
-    "2": "Jednotka",
-    "3": "Stav zásob",
-    "4": "Stav"
-  },
+    "2": "Položka",
+    "4": "Stav zásob",
+    "5": "Stav"
+},
   "TransactionDetailView": {
     "category": "Kategorie",
     "commodity": "Položka",
