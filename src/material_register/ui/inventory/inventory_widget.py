@@ -18,6 +18,9 @@ from material_register.ui.config.ui_constants import (
 from material_register.ui.inventory.inventory_widgets.inventory_actions_widget import (
     InventoryActionsWidget,
 )
+from material_register.ui.inventory.inventory_widgets.inventory_history_widget import (
+    InventoryHistoryWidget,
+)
 from material_register.ui.inventory.inventory_widgets.inventory_view import (
     InventoryView,
 )
@@ -39,15 +42,34 @@ class InventoryWidget(QWidget):
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(UI_SPACING)
+        main_layout.setSpacing(0)
         main_layout.setContentsMargins(*UI_MARGINS_5)
         self.inventory_actions_widget = InventoryActionsWidget(self)
-        self.inventory_view = InventoryView(self)
         self.actions_group_box = QGroupBox()
         actions_layout = QHBoxLayout()
+        actions_layout.setSpacing(UI_SPACING)
         actions_layout.setContentsMargins(*UI_MARGINS_5)
         actions_layout.addWidget(self.inventory_actions_widget)
         self.actions_group_box.setLayout(actions_layout)
+        inventory_layout = QHBoxLayout()
+        inventory_layout.setSpacing(UI_SPACING)
+        inventory_layout.setContentsMargins(0, 0, 0, 0)
+        self.inventory_history_widget = InventoryHistoryWidget(self)
+        self.inventory_history_group_box = QGroupBox()
+        history_layout = QHBoxLayout()
+        history_layout.setSpacing(UI_SPACING)
+        history_layout.setContentsMargins(*UI_MARGINS_5)
+        history_layout.addWidget(self.inventory_history_widget)
+        self.inventory_history_group_box.setLayout(history_layout)
+        self.inventory_view = InventoryView(self)
+        self.inventory_group_box = QGroupBox()
+        inventory_view_layout = QHBoxLayout()
+        inventory_view_layout.setSpacing(UI_SPACING)
+        inventory_view_layout.setContentsMargins(*UI_MARGINS_5)
+        inventory_view_layout.addWidget(self.inventory_view)
+        self.inventory_group_box.setLayout(inventory_view_layout)
+        inventory_layout.addWidget(self.inventory_history_group_box)
+        inventory_layout.addWidget(self.inventory_group_box, 1)
         self.count_group_box = QGroupBox()
         count_layout = QHBoxLayout()
         count_layout.setSpacing(0)
@@ -57,8 +79,7 @@ class InventoryWidget(QWidget):
         count_layout.addStretch()
         self.count_group_box.setLayout(count_layout)
         main_layout.addWidget(self.actions_group_box, 0)
-        main_layout.addSpacing(10)
-        main_layout.addWidget(self.inventory_view, 1)
+        main_layout.addLayout(inventory_layout, 1)
         main_layout.addWidget(self.count_group_box, 0)
         return main_layout
 

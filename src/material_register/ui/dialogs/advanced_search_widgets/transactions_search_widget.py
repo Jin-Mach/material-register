@@ -241,8 +241,11 @@ class TransactionsSearchWidget(QWidget):
                 calendar.setMinimumWidth(250)
                 calendar.setMinimumHeight(200)
         today = QDate.currentDate()
+        minimum_date = QDate(2026, 1, 1)
+        self.from_date_edit.setMinimumDate(minimum_date)
         self.from_date_edit.setMaximumDate(today)
         self.from_date_edit.setDate(today)
+        self.to_date_edit.setMinimumDate(minimum_date)
         self.to_date_edit.setMaximumDate(today)
         self.to_date_edit.setDate(today)
 

@@ -98,6 +98,17 @@
   "InventoryActionsWidget": {
     "searchLineEditPlaceholderText": "Zadejte text pro vyhledávání..."
   },
+  "InventoryHistoryWidget": {
+    "todayRadioButtonText": "Dnes",
+    "weekRadioButtonText": "Tento týden",
+    "monthRadioButtonText": "Tento měsíc",
+    "yearRadioButtonText": "Tento rok",
+    "customRadioButtonText": "Vlastní",
+    "fromDateLabelText": "od:",
+    "toDateLabelText": "do:",
+    "countLabelText": "Zobrazeno:",
+    "valueLabelText": "Celkem:"
+  },
   "ExportWidget": {
     "summaryTabTitle": "Evidence materiálu",
     "transactionsTabTitle": "Přehled transakcí"

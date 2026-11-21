@@ -85,6 +85,17 @@ DEFAULT_TEXTS = {
     },
     "InventoryWidget": {"countLabelText": "Displayed:"},
     "InventoryActionsWidget": {"searchLineEditPlaceholderText": "Enter search text..."},
+    "InventoryHistoryWidget": {
+        "todayRadioButtonText": "Today",
+        "weekRadioButtonText": "This week",
+        "monthRadioButtonText": "This month",
+        "yearRadioButtonText": "This year",
+        "customRadioButtonText": "Custom",
+        "fromDateLabelText": "From:",
+        "toDateLabelText": "To:",
+        "countLabelText": "Displayed:",
+        "valueLabelText": "Total:"
+    },
     "ExportWidget": {
         "summaryTabTitle": "Material summary",
         "transactionsTabTitle": "Transactions",
