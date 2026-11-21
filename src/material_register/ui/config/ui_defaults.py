@@ -94,7 +94,7 @@ DEFAULT_TEXTS = {
         "fromDateLabelText": "From:",
         "toDateLabelText": "To:",
         "countLabelText": "Displayed:",
-        "valueLabelText": "Total:"
+        "valueLabelText": "Total:",
     },
     "ExportWidget": {
         "summaryTabTitle": "Material summary",

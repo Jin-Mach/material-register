@@ -1,9 +1,12 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QModelIndex, QTimer
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from material_register.controllers.inventory_controller import InventoryController
+from material_register.controllers.inventory_history_controller import (
+    InventoryHistoryController,
+)
 from material_register.db.models.inventory_models.inventory_proxy_model import (
     InventoryProxyModel,
 )
@@ -39,6 +42,7 @@ class InventoryWidget(QWidget):
         self._setup_ui()
         self._create_connection()
         self._apply_timer()
+        self.inventory_history_controller = InventoryHistoryController(self)
 
     def _create_ui(self) -> QVBoxLayout:
         main_layout = QVBoxLayout()
@@ -104,6 +108,9 @@ class InventoryWidget(QWidget):
         self.inventory_actions_widget.search_line_edit.textChanged.connect(
             self._on_text_changed
         )
+        self.inventory_view.selectionModel().currentChanged.connect(
+            self._reload_history
+        )
 
     def _setup_model(self) -> None:
         self.inventory_proxy_model = InventoryProxyModel()
@@ -125,6 +132,15 @@ class InventoryWidget(QWidget):
         self.filter_timer.setSingleShot(True)
         self.filter_timer.setInterval(300)
         self.filter_timer.timeout.connect(self._apply_filter)
+
+    def _reload_history(self, selected: QModelIndex, _: QModelIndex) -> None:
+        if not selected.isValid():
+            return
+        model_index = self.active_proxy.mapToSource(selected)
+        print("model_index:", model_index)
+        from_date, to_date = self.inventory_history_widget.get_date_range()
+        print("from_date:", from_date)
+        print("to_date:", to_date)
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.count_label.setText(f"{self.count_text} {filtered}/{total}")

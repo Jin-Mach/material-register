@@ -20,7 +20,9 @@ from material_register.ui.config.ui_constants import (
     UI_MARGINS_10,
     UI_SPACING,
 )
-from material_register.ui.inventory.inventory_widgets.inventory_history_view import InventoryHistoryView
+from material_register.ui.inventory.inventory_widgets.inventory_history_view import (
+    InventoryHistoryView,
+)
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.date_filters import get_filter_range
 from material_register.utils.formatting_utils import format_date_to_utc
