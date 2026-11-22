@@ -5,4 +5,5 @@ LOG_STRUCTURE = {
     "export": ("export_logs", "export.log"),
     "settings": ("settings_logs", "settings.log"),
     "error": ("error_logs", "error.log"),
+    "performance": ("performance_logs", "performance.log"),
 }

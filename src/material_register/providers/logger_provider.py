@@ -14,6 +14,7 @@ class LoggerProvider:
     export: logging.Logger
     settings: logging.Logger
     error: logging.Logger
+    performance: logging.Logger
 
     @classmethod
     def init_loggers(
@@ -33,6 +34,9 @@ class LoggerProvider:
                 "material-transactions.settings", "settings"
             )
             cls.error = cls._create_logger("material-transactions.error", "error")
+            cls.performance = cls._create_logger(
+                "material-transactions.performance", "performance", level=logging.INFO
+            )
             return True
         except Exception as e:
             print(f"{cls.__name__}: {e}")
@@ -40,9 +44,11 @@ class LoggerProvider:
             return False
 
     @classmethod
-    def _create_logger(cls, name: str, key: str) -> logging.Logger:
+    def _create_logger(
+        cls, name: str, key: str, level: int = logging.WARNING
+    ) -> logging.Logger:
         logger = logging.getLogger(name)
-        logger.setLevel(logging.WARNING)
+        logger.setLevel(level)
         logger.propagate = False
         folder, file_name = cls.LOG_STRUCTURE[key]
         path = cls.LOGS_PATH / folder / file_name
@@ -53,5 +59,7 @@ class LoggerProvider:
             path, maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8"
         )
         handler.setFormatter(cls.FORMATTER)
+        if key == "performance":
+            handler.setFormatter(logging.Formatter("%(message)s"))
         logger.addHandler(handler)
         return logger

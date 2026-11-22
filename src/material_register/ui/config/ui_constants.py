@@ -54,6 +54,7 @@ LOGGER_DB = "db"
 LOGGER_EXPORT = "export"
 LOGGER_SETTINGS = "settings"
 LOGGER_ERROR = "error"
+LOGGER_PERFORMANCE = "performance"
 
 LOG_LEVEL_WARNING = "warning"
 LOG_LEVEL_ERROR = "error"
