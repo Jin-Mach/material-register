@@ -13,6 +13,7 @@ from material_register.db.models.transactions_models.transactions_load_model_out
     TransactionsLoadModelOut,
 )
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
@@ -31,6 +32,7 @@ class DataInit:
 
     @classmethod
     def init_data(cls) -> tuple[bool, str]:
+        start = PerformanceProvider.start()
         try:
             cls.customers_model = CustomersModel(DbInit.db_connection)
             ok, error = DbCache.setup_init(DbInit.db_connection)
@@ -52,3 +54,5 @@ class DataInit:
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False, "DATABASE_FAILED"
+        finally:
+            PerformanceProvider.stop(start, "DATAINIT.init_data")

@@ -6,6 +6,7 @@ from material_register.db.queries.customers_queries import CustomersQueries
 from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.domain.customers_dataclass import Customer
+from material_register.providers.performance_provider import PerformanceProvider
 
 
 class DbCache:
@@ -18,11 +19,15 @@ class DbCache:
 
     @classmethod
     def setup_init(cls, db_connection: QSqlDatabase) -> tuple[bool, str]:
-        cls.db_connection = db_connection
-        ok, error = cls.refresh_customers_data()
-        if not ok:
-            return False, error
-        return cls.refresh_catalog_data()
+        start_time = PerformanceProvider.start()
+        try:
+            cls.db_connection = db_connection
+            ok, error = cls.refresh_customers_data()
+            if not ok:
+                return False, error
+            return cls.refresh_catalog_data()
+        finally:
+            PerformanceProvider.stop(start_time, "DB_CACHE.setup_init")
 
     @classmethod
     def refresh_customers_data(cls) -> tuple[bool, str]:

@@ -16,6 +16,11 @@ def test_init_data_propagates_cache_setup_failure(monkeypatch) -> None:
         "handle_error",
         lambda message, logger, level: errors.append((message, logger, level)),
     )
+    monkeypatch.setattr(
+        data_init.PerformanceProvider,
+        "stop",
+        lambda start_time, section, comment="": None,
+    )
     result = data_init.DataInit.init_data()
     assert result == (False, "DATABASE_FAILED")
     assert errors == [("customer query failed", LOGGER_DB, LOG_LEVEL_CRITICAL)]
