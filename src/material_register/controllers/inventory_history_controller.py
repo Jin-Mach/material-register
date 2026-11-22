@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QObject, QThread, QTimer
 from PySide6.QtWidgets import QWidget
 
+from material_register.domain.inventory_dataclass import InventoryHistoryDataclass
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_CRITICAL, LOGGER_DB
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -34,12 +35,14 @@ class InventoryHistoryController(QObject):
         self.thread.start()
 
     def _search_error(self, error: str) -> None:
+        print("error:", error)
         self._clean_thread()
         QTimer.singleShot(100, lambda: self._finish_search(error=error))
 
-    def _search_ok(self) -> None:
+    def _search_ok(self, results: InventoryHistoryDataclass) -> None:
+        print("OK")
         self._clean_thread()
-        QTimer.singleShot(100, lambda: self._finish_search())
+        QTimer.singleShot(100, lambda: self._finish_search(results=results))
 
     def _clean_thread(self) -> None:
         self.thread.quit()
@@ -51,7 +54,9 @@ class InventoryHistoryController(QObject):
         self.worker = None
         self.thread = None
 
-    def _finish_search(self, error: str | None = None) -> None:
+    def _finish_search(
+        self, results: InventoryHistoryDataclass | None, error: str | None = None
+    ) -> None:
         self._reset_variables()
         if error is not None:
             print("error:", error)
@@ -61,7 +66,16 @@ class InventoryHistoryController(QObject):
                 self.inventory_widget,
             )
             return
+        if results is None:
+            InventoryHistoryController._handle_search_error(
+                "InventoryHistoryDataclass is None",
+                f"{self.__class__.__name__}._search_error",
+                self.inventory_widget,
+            )
+            return
         print("OK")
+        print("results data:", results.history_data)
+        print("results total:", results.total)
 
     @staticmethod
     def _handle_search_error(error: str, method: str, parent: QWidget) -> None:

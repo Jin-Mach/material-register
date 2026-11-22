@@ -140,15 +140,14 @@ class InventoryWidget(QWidget):
         commodity_id, commodity_name = self.inventory_model.get_commodity_data(
             model_index
         )
-        print("commodity id", commodity_id)
-        print("commodity name", commodity_name)
         if commodity_id is None:
             return
         if commodity_name is not None:
             self.inventory_history_widget.set_info_text(commodity_name)
         from_date, to_date = self.inventory_history_widget.get_date_range()
-        print("from_date:", from_date)
-        print("to_date:", to_date)
+        self.inventory_history_controller.reload_commodity_history(
+            commodity_id, from_date, to_date
+        )
 
     def set_count_text(self, filtered: int, total: int) -> None:
         self.count_label.setText(f"{self.count_text} {filtered}/{total}")
