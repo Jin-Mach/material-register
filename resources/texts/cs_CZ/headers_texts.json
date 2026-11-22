@@ -62,5 +62,11 @@
       "2": "Jednotka",
       "3": "Celkový pohyb"
     }
+  },
+  "InventoryHistoryView": {
+    "headers_texts": {
+      "0": "Datum",
+      "1": "Množství"
+    }
   }
 }

@@ -15,6 +15,7 @@ class InventoryHistoryModel(QAbstractTableModel):
     def __init__(self) -> None:
         super().__init__()
         self.history_data = []
+        self.headers = {}
         self.commodity_unit = ""
 
     def data(
@@ -41,6 +42,19 @@ class InventoryHistoryModel(QAbstractTableModel):
         ):
             return QColor(INVENTORY_STOCK_STYLE)
         return None
+
+    def headerData(
+        self,
+        section: int,
+        orientation: Qt.Orientation,
+        role: Qt.ItemDataRole = Qt.ItemDataRole.DisplayRole,
+    ) -> Any:
+        if (
+            orientation == Qt.Orientation.Horizontal
+            and role == Qt.ItemDataRole.DisplayRole
+        ):
+            return self.headers.get(section)
+        return super().headerData(section, orientation, role)
 
     def rowCount(self, parent: QModelIndex | None = None) -> int:
         return len(self.history_data)

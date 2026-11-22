@@ -12,6 +12,9 @@ from material_register.ui.config.ui_constants import (
 )
 
 if TYPE_CHECKING:
+    from material_register.db.models.inventory_models.inventory_history_model import (
+        InventoryHistoryModel,
+    )
     from material_register.db.models.inventory_models.inventory_proxy_model import (
         InventoryProxyModel,
     )
@@ -32,7 +35,7 @@ if TYPE_CHECKING:
     )
 
 
-# noinspection PyBroadException, PyUnresolvedReferences
+# noinspection PyUnresolvedReferences
 class HeadersTexts:
     HEADERS_TEXTS: dict[str, dict[str, str]] = {}
 
@@ -127,6 +130,26 @@ class HeadersTexts:
     @classmethod
     def set_material_headers_text(
         cls, view: QTableView, model: "SearchMaterialModel"
+    ) -> bool:
+        try:
+            headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {}).get(
+                "headers_texts", {}
+            )
+            if not headers_texts:
+                return False
+            for index, text in headers_texts.items():
+                model.headers[int(index)] = text
+            model.headerDataChanged.emit(
+                Qt.Orientation.Horizontal, 0, model.columnCount() - 1
+            )
+            return True
+        except Exception as e:
+            ErrorHandler.handle_error(e, LOGGER_UI, LOG_LEVEL_WARNING)
+            return False
+
+    @classmethod
+    def set_inventory_history_headers_text(
+        cls, view: QTableView, model: "InventoryHistoryModel"
     ) -> bool:
         try:
             headers_texts = cls.HEADERS_TEXTS.get(view.__class__.__name__, {}).get(

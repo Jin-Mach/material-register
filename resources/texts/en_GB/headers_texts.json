@@ -62,5 +62,11 @@
       "2": "Unit",
       "3": "Net Movement"
     }
+  },
+  "InventoryHistoryView": {
+    "headers_texts": {
+      "0": "Date",
+      "1": "Quantity"
+    }
   }
 }

@@ -7,6 +7,9 @@ from PySide6.QtGui import QStandardItemModel
 from PySide6.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PySide6.QtWidgets import QTableView
 
+from material_register.db.models.inventory_models.inventory_history_model import (
+    InventoryHistoryModel,
+)
 from material_register.db.models.inventory_models.inventory_proxy_model import (
     InventoryProxyModel,
 )
@@ -256,4 +259,33 @@ def test_set_material_headers_text_no_config(qtbot) -> None:
     model = SearchMaterialModel()
     HeadersTexts.setup_init({})
     result = HeadersTexts.set_material_headers_text(view, model)
+    assert result is False
+
+
+def test_set_inventory_history_headers_text_success(qtbot) -> None:
+    view = QTableView()
+    qtbot.addWidget(view)
+    model = InventoryHistoryModel()
+    HeadersTexts.setup_init(
+        {
+            "QTableView": {
+                "headers_texts": {
+                    "0": "Date",
+                    "1": "Total",
+                }
+            }
+        }
+    )
+    result = HeadersTexts.set_inventory_history_headers_text(view, model)
+    assert result is True
+    assert model.headerData(0, Qt.Orientation.Horizontal) == "Date"
+    assert model.headerData(1, Qt.Orientation.Horizontal) == "Total"
+
+
+def test_set_inventory_history_headers_text_no_config(qtbot) -> None:
+    view = QTableView()
+    qtbot.addWidget(view)
+    model = InventoryHistoryModel()
+    HeadersTexts.setup_init({})
+    result = HeadersTexts.set_inventory_history_headers_text(view, model)
     assert result is False

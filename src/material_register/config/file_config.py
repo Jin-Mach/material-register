@@ -633,6 +633,7 @@ HEADERS_KEYS = [
     ("SearchDetailView", "pricePerUnit"),
     ("SearchDetailView", "totalPrice"),
     ("SearchMaterialView", "headers_texts"),
+    ("InventoryHistoryView", "headers_texts"),
 ]
 
 ERROR_KEYS = [

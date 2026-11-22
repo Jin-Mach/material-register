@@ -94,6 +94,7 @@ class InventoryHistoryWidget(QWidget):
 
     def _setup_model(self) -> None:
         self.inventory_history_view.setModel(self.inventory_history_model)
+        self.inventory_history_view.setup_ui()
 
     def _create_info_group(self) -> QGroupBox:
         info_group = QGroupBox()
