@@ -7,6 +7,7 @@ from material_register.db.queries.export_queries.summary_export_queries import (
     SummaryExportQueries,
 )
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.export_service.excel.summary_export.summary_workbook import (
     SummaryWorkbook,
@@ -36,6 +37,7 @@ class SummaryExportWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         try:
             export_path = self.export_settings["export_path"]
             from_date = self.export_settings["from_date"]
@@ -75,6 +77,7 @@ class SummaryExportWorker(QObject):
             self.error.emit(f"Export failed: {e}")
         finally:
             self._clean_db_connection()
+            PerformanceProvider.stop(start, "SUMMARY_EXPORT_WORKER.run")
 
     def _clean_db_connection(self) -> None:
         if self.db_connection is None:

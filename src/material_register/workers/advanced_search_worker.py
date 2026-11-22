@@ -9,6 +9,7 @@ from material_register.domain.advanced_search_dataclass import (
 )
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.search_service.advanced_filter_builder import (
     AdvancedFilterBuilder,
@@ -32,6 +33,7 @@ class AdvancedSearchWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         results_dataclass = None
         try:
             ok, error, self.db_connection = DbInit.thread_connection(
@@ -94,6 +96,7 @@ class AdvancedSearchWorker(QObject):
             self.error.emit(f"Advanced search failed: {e}")
         finally:
             self._clean_db_connection()
+            PerformanceProvider.stop(start, "ADVANCED_SEARCH_WORKER.run")
         if results_dataclass is not None:
             self.finished.emit(results_dataclass)
 

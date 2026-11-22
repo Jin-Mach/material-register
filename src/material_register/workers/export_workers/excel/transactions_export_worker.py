@@ -10,6 +10,7 @@ from material_register.domain.export_dataclass.transactions_dataclass import (
     TransactionsExportDay,
 )
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.export_service.excel.transactions_export.transactions_workbook import (
     TransactionsWorkbook,
@@ -44,6 +45,7 @@ class TransactionsExportWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         try:
             from_date = self.export_settings["from_date"]
             to_date = self.export_settings["to_date"]
@@ -93,6 +95,7 @@ class TransactionsExportWorker(QObject):
             self.error.emit(f"Export failed: {e}")
         finally:
             self._clean_db_connection()
+            PerformanceProvider.stop(start, "TRANSACTIONS_EXPORT_WORKER.run")
 
     def _create_non_split_exports(
         self,

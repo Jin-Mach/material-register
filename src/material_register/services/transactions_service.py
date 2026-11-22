@@ -6,6 +6,7 @@ from material_register.db.queries.transaction_items_queries import (
 )
 from material_register.db.queries.transactions_queries import TransactionsQueries
 from material_register.domain.transaction_item_dataclass import TransactionItem
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_CRITICAL,
@@ -23,6 +24,7 @@ class TransactionsService:
         dialog_data: dict[str, str | int],
         items_data: list[TransactionItem],
     ) -> tuple[bool, str]:
+        start = PerformanceProvider.start()
         try:
             if not db_connection.transaction():
                 return False, "Failed to start transaction"
@@ -75,6 +77,8 @@ class TransactionsService:
             except Exception as rb_e:
                 ErrorHandler.handle_error(rb_e, LOGGER_DB, LOG_LEVEL_WARNING)
             return False, str(e)
+        finally:
+            PerformanceProvider.stop(start, "TRANSACTIONS_SERVICE.create_transaction")
 
     @staticmethod
     def update_transaction(
@@ -85,6 +89,7 @@ class TransactionsService:
         new_items_data: list[TransactionItem],
         old_items_data: list[TransactionItem],
     ) -> tuple[bool, str, bool]:
+        start = PerformanceProvider.start()
         try:
             if not db_connection.transaction():
                 return False, "Failed to start transaction", False
@@ -145,11 +150,14 @@ class TransactionsService:
             except Exception as rb_e:
                 ErrorHandler.handle_error(rb_e, LOGGER_DB, LOG_LEVEL_WARNING)
             return False, str(e), False
+        finally:
+            PerformanceProvider.stop(start, "TRANSACTIONS_SERVICE.update_transaction")
 
     @staticmethod
     def delete_transaction(
         db_connection: QSqlDatabase, transaction_id: int, transfer_type: str
     ) -> tuple[bool, str]:
+        start = PerformanceProvider.start()
         try:
             if not db_connection.transaction():
                 return False, "Failed to start transaction"
@@ -186,6 +194,8 @@ class TransactionsService:
             except Exception as rb_e:
                 ErrorHandler.handle_error(rb_e, LOGGER_DB, LOG_LEVEL_WARNING)
             return False, str(e)
+        finally:
+            PerformanceProvider.stop(start, "TRANSACTIONS_SERVICE.delete_transaction")
 
     @staticmethod
     def _get_amount(

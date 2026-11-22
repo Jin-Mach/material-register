@@ -5,6 +5,7 @@ from material_register.domain.transaction_dataclass import Transaction
 from material_register.domain.transaction_item_detail_dataclass import (
     TransactionItemDetail,
 )
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.export_service.pdf.documents.transaction_document_in import (
     TransactionDocumentIn,
@@ -41,6 +42,7 @@ class TransactionDocumentWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         try:
             pdf_document = None
             if self.transfer_type == TRANSFER_IN:
@@ -64,3 +66,5 @@ class TransactionDocumentWorker(QObject):
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_EXPORT, LOG_LEVEL_ERROR)
             self.error.emit(f"Document failed: {e}")
+        finally:
+            PerformanceProvider.stop(start, "TRANSACTION_DOCUMENT_WORKER.run")

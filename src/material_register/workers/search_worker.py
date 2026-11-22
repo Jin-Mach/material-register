@@ -5,6 +5,7 @@ from material_register.db.queries.basic_database_queries import BasicDatabaseQue
 from material_register.db.queries.search_queries import SearchQueries
 from material_register.domain.search_dataclass import SearchResultsDataclass
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_ERROR, LOGGER_DB
 
@@ -22,6 +23,7 @@ class SearchWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         results_dataclass = None
         try:
             ok, error, self.db_connection = DbInit.thread_connection(
@@ -63,6 +65,7 @@ class SearchWorker(QObject):
             self.error.emit(f"Search failed: {e}")
         finally:
             self._clean_db_connection()
+            PerformanceProvider.stop(start, "SEARCH_WORKER.run")
         if results_dataclass is not None:
             self.finished.emit(results_dataclass, self.init)
 

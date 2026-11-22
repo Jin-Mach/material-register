@@ -2,6 +2,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal, Slot
 
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.database_backup_service import DatabaseBackupService
 
 
@@ -16,9 +17,13 @@ class CustomBackupWorker(QObject):
 
     @Slot()
     def run(self) -> None:
-        if not DatabaseBackupService.create_custom_backup(
-            self.database_path, self.backup_path
-        ):
-            self.error.emit("BACKUP_ERROR")
-            return
-        self.finished.emit()
+        start = PerformanceProvider.start()
+        try:
+            if not DatabaseBackupService.create_custom_backup(
+                self.database_path, self.backup_path
+            ):
+                self.error.emit("BACKUP_ERROR")
+                return
+            self.finished.emit()
+        finally:
+            PerformanceProvider.stop(start, "CUSTOM_BACKUP_WORKER.run")

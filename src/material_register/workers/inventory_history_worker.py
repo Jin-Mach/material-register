@@ -6,6 +6,7 @@ from material_register.db.queries.inventory_history_queries import (
 )
 from material_register.domain.inventory_dataclass import InventoryHistoryDataclass
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_ERROR, LOGGER_DB
 
@@ -23,6 +24,7 @@ class InventoryHistoryWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         result_dataclass = None
         try:
             ok, error, self.db_connection = DbInit.thread_connection(
@@ -52,6 +54,7 @@ class InventoryHistoryWorker(QObject):
             self.error.emit(f"History search failed: {e}")
         finally:
             self._clean_db_connection()
+            PerformanceProvider.stop(start, "INVENTORY_HISTORY_WORKER.run")
         if result_dataclass is not None:
             self.finished.emit(result_dataclass)
 

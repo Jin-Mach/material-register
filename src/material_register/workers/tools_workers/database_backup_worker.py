@@ -9,6 +9,7 @@ from material_register.db.queries.tools_queries.database_backup_queries import (
     DatabaseBackupQueries,
 )
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.database_backup_service import DatabaseBackupService
 
 
@@ -28,6 +29,7 @@ class DatabaseBackupWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         try:
             ok, _, self.db_connection = DbInit.thread_connection(
                 "database_backup_connection"
@@ -59,6 +61,7 @@ class DatabaseBackupWorker(QObject):
         finally:
             self._clean_db_connection()
             self.finished.emit()
+            PerformanceProvider.stop(start, "DATABASE_BACKUP_WORKER.run")
 
     def _clean_db_connection(self) -> None:
         if self.db_connection is None:
