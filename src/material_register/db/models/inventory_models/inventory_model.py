@@ -69,17 +69,27 @@ class InventoryModel(QSqlQueryModel):
             return False, error.text()
         return True, ""
 
-    def get_commodity_data(self, index: QModelIndex) -> tuple[int | None, str | None]:
+    def get_commodity_data(
+        self, index: QModelIndex
+    ) -> tuple[int | None, str | None, str | None]:
         if not index.isValid():
-            return None, None
+            return None, None, None
         commodity_id_index = index.siblingAtColumn(
             INVENTORY_COLUMNS_MAP["commodity_id"]
         )
         commodity_name_index = index.siblingAtColumn(
             INVENTORY_COLUMNS_MAP["commodity_name"]
         )
-        if not commodity_id_index.isValid() or not commodity_name_index.isValid():
-            return None, None
+        commodity_unit_index = index.siblingAtColumn(
+            INVENTORY_COLUMNS_MAP["commodity_unit"]
+        )
+        if (
+            not commodity_id_index.isValid()
+            or not commodity_name_index.isValid()
+            or not commodity_unit_index.isValid()
+        ):
+            return None, None, None
         commodity_id = self.data(commodity_id_index, Qt.ItemDataRole.UserRole)
         commodity_name = self.data(commodity_name_index, Qt.ItemDataRole.DisplayRole)
-        return commodity_id, commodity_name
+        commodity_unit = self.data(commodity_unit_index, Qt.ItemDataRole.DisplayRole)
+        return commodity_id, commodity_name, commodity_unit

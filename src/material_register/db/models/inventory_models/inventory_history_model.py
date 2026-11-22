@@ -15,6 +15,7 @@ class InventoryHistoryModel(QAbstractTableModel):
     def __init__(self) -> None:
         super().__init__()
         self.history_data = []
+        self.commodity_unit = ""
 
     def data(
         self, index: QModelIndex, role: Qt.ItemDataRole = Qt.ItemDataRole.DisplayRole
@@ -27,7 +28,7 @@ class InventoryHistoryModel(QAbstractTableModel):
             if column == "history_date":
                 return format_sql_date_to_locale(history_value)
             if column == "date_total":
-                return format_number_to_locale(history_value)
+                return f"{format_number_to_locale(history_value)} {self.commodity_unit}"
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if column == "history_date":
                 return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
@@ -47,7 +48,10 @@ class InventoryHistoryModel(QAbstractTableModel):
     def columnCount(self, parent: QModelIndex | None = None) -> int:
         return len(INVENTORY_HISTORY_MODEL_COLUMNS)
 
-    def load_data(self, history_data: list[list[str | float]]) -> None:
+    def load_data(
+        self, history_data: list[list[str | float]], commodity_unit: str
+    ) -> None:
         self.beginResetModel()
         self.history_data = history_data
+        self.commodity_unit = commodity_unit
         self.endResetModel()

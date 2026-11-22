@@ -137,8 +137,8 @@ class InventoryWidget(QWidget):
         if not selected.isValid():
             return
         model_index = self.active_proxy.mapToSource(selected)
-        commodity_id, commodity_name = self.inventory_model.get_commodity_data(
-            model_index
+        commodity_id, commodity_name, commodity_unit = (
+            self.inventory_model.get_commodity_data(model_index)
         )
         if commodity_id is None:
             return
@@ -146,7 +146,7 @@ class InventoryWidget(QWidget):
             self.inventory_history_widget.set_info_text(commodity_name)
         from_date, to_date = self.inventory_history_widget.get_date_range()
         self.inventory_history_controller.reload_commodity_history(
-            commodity_id, from_date, to_date
+            commodity_id, from_date, to_date, commodity_unit
         )
 
     def set_count_text(self, filtered: int, total: int) -> None:

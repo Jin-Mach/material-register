@@ -235,5 +235,7 @@ class InventoryHistoryWidget(QWidget):
     def get_date_range(self) -> tuple[str, str]:
         return self._get_date_interval()
 
-    def reload_history_data(self, history_data: list[list[str | float]]) -> None:
-        self.inventory_history_model.load_data(history_data)
+    def reload_history_data(
+        self, history_data: list[list[str | float]], commodity_unit: str
+    ) -> None:
+        self.inventory_history_model.load_data(history_data, commodity_unit)
