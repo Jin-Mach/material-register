@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 
 from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
+from material_register.ui.config.styles_constants import INVENTORY_HISTORY_STYLE
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
     LOGGER_UI,
@@ -166,13 +167,15 @@ class InventoryHistoryWidget(QWidget):
     def _create_total_group(self) -> QGroupBox:
         total_group_box = QGroupBox()
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(UI_SPACING)
+        main_layout.setSpacing(0)
         main_layout.setContentsMargins(*UI_MARGINS_5)
         self.total_count_label = QLabel()
         self.total_value_label = QLabel()
+        self.total_value = QLabel()
         main_layout.addWidget(self.total_count_label)
         main_layout.addStretch()
         main_layout.addWidget(self.total_value_label)
+        main_layout.addWidget(self.total_value)
         total_group_box.setLayout(main_layout)
         return total_group_box
 
@@ -213,7 +216,12 @@ class InventoryHistoryWidget(QWidget):
         self.total_count_label.setText(f"{self.count_text} {total_count}")
 
     def set_value_text(self, value: float, unit: str) -> None:
-        self.total_value_label.setText(f"{self.value_text} {value} {unit}")
+        self.total_value_label.setText(self.value_text)
+        self.total_value.setText(f"{value} {unit}")
+        if value < 0:
+            self.total_value.setStyleSheet(INVENTORY_HISTORY_STYLE)
+        else:
+            self.total_value.setStyleSheet("")
 
     def _get_date_interval(self) -> tuple[str, str]:
         date_map = {
