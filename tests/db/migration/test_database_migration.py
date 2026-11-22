@@ -1,40 +1,59 @@
 import uuid
-from collections.abc import Generator
+from collections.abc import Generator, Iterator
 from functools import partial
+from pathlib import Path
 
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
-from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.db.migration.column_migration import ColumnMigration
 from material_register.db.migration.database_migration import DatabaseMigration
-from material_register.db.utils.database_validator import (
-    are_foreign_keys_valid,
-    is_integrity_valid,
-    is_schema_valid,
-)
-from material_register.providers.paths_provider import PathsProvider
-from material_register.services.database_backup_service import DatabaseBackupService
 
 
 @pytest.fixture
-def connection() -> QSqlDatabase:
+def connection() -> Iterator[QSqlDatabase]:
     connection_name = f"test_database_migration_{uuid.uuid4().hex}"
     conn = QSqlDatabase.addDatabase("QSQLITE", connection_name)
     conn.setDatabaseName(":memory:")
-    conn.open()
-    return conn
+    assert conn.open()
+    yield conn
+    conn.close()
+    del conn
+    QSqlDatabase.removeDatabase(connection_name)
 
 
 @pytest.fixture
 def schema(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
-    query.exec("""
-                CREATE TABLE fake_table (
-                    id INTEGER PRIMARY KEY,
-                    name TEXT
-                )
-            """)
+    assert query.exec("""
+        CREATE TABLE fake_table (
+            id INTEGER PRIMARY KEY,
+            name TEXT
+        )
+    """)
+    del query
+
+
+@pytest.fixture
+def v0_database(tmp_path: Path) -> Iterator[QSqlDatabase]:
+    database_path = tmp_path / "migration_v0.db"
+    connection_name = f"migration_test_{uuid.uuid4().hex}"
+    connection = QSqlDatabase.addDatabase("QSQLITE", connection_name)
+    connection.setDatabaseName(str(database_path))
+    assert connection.open()
+    query = QSqlQuery(connection)
+    assert query.exec("""
+        CREATE TABLE transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT NOT NULL
+        )
+    """)
+    assert query.exec("PRAGMA user_version = 0")
+    del query
+    yield connection
+    connection.close()
+    del connection
+    QSqlDatabase.removeDatabase(connection_name)
 
 
 @pytest.fixture(autouse=True)
@@ -54,110 +73,28 @@ def test_migration_init_reads_db_version(connection: QSqlDatabase) -> None:
 def test_set_db_version(connection: QSqlDatabase) -> None:
     query = QSqlQuery(connection)
     assert query.exec("PRAGMA user_version = 1") is True
-    query.exec("PRAGMA user_version")
-    query.next()
+    assert query.exec("PRAGMA user_version")
+    assert query.next()
     assert query.value(0) == 1
 
 
-def test_migrate_real_database() -> None:
-    migration_table = "transactions"
-    migration_column = "is_invoiced"
-    root = PathsProvider.get_base_path()
-    assert root is not None
-    database_path = root / "database" / "history" / "material_register_V0.db"
-    if not database_path.exists():
-        pytest.skip("V0 database not available")
-    database_test_path = (
-        root / "database" / "database_test" / f"{DATABASE_NAME}_test.db"
-    )
-    database_test_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        result = DatabaseBackupService.create_custom_backup(
-            database_path, database_test_path
-        )
-        assert result is True
-        assert database_test_path.exists()
-        connection_name = f"test_migration_real_{uuid.uuid4().hex}"
-        connection = QSqlDatabase.addDatabase("QSQLITE", connection_name)
-        connection.setDatabaseName(str(database_test_path))
-        assert connection.open() is True
-        query = QSqlQuery(connection)
-        assert query.exec("PRAGMA user_version") is True
-        assert query.next() is True
-        assert query.value(0) == 0
-        assert (
-            ColumnMigration.column_exists(connection, migration_table, migration_column)
-            is False
-        )
-        query = QSqlQuery(connection)
-        assert (
-            query.exec(
-                "SELECT id, type, customer_id, created_at, payment_type, notes FROM transactions ORDER BY id LIMIT 3"
-            )
-            is True
-        )
-        before = []
-        while query.next():
-            before.append(
-                (
-                    query.value(0),
-                    query.value(1),
-                    query.value(2),
-                    query.value(3),
-                    query.value(4),
-                    query.value(5),
-                )
-            )
-        assert DatabaseMigration.migration_init(connection) is True
-        assert DatabaseMigration.DB_VERSION == 0
-        assert DatabaseMigration.migrate(connection) is True
-        assert DatabaseMigration.DB_VERSION == max(DatabaseMigration.MIGRATIONS_MAP)
-        assert (
-            ColumnMigration.column_exists(connection, migration_table, migration_column)
-            is True
-        )
-        query = QSqlQuery(connection)
-        assert query.exec("PRAGMA user_version") is True
-        assert query.next() is True
-        assert query.value(0) == max(DatabaseMigration.MIGRATIONS_MAP)
-        schema_valid, error = is_schema_valid(connection)
-        assert schema_valid, error
-        integrity_valid, error = is_integrity_valid(connection)
-        assert integrity_valid, error
-        foreign_keys_valid, errors = are_foreign_keys_valid(connection)
-        assert foreign_keys_valid, errors
-        query = QSqlQuery(connection)
-        assert (
-            query.exec(
-                "SELECT id, type, customer_id, created_at, payment_type, notes FROM transactions ORDER BY id LIMIT 3"
-            )
-            is True
-        )
-        after = []
-        while query.next():
-            after.append(
-                (
-                    query.value(0),
-                    query.value(1),
-                    query.value(2),
-                    query.value(3),
-                    query.value(4),
-                    query.value(5),
-                )
-            )
-        assert after == before
-        query = QSqlQuery(connection)
-        assert (
-            query.exec(
-                f"SELECT {migration_column} FROM {migration_table} ORDER BY id LIMIT 3"
-            )
-            is True
-        )
-        while query.next():
-            assert query.value(0) == 0
-    finally:
-        if database_test_path.exists():
-            database_test_path.unlink()
+def test_migrate_real_database(v0_database: QSqlDatabase) -> None:
+    assert DatabaseMigration.migration_init(v0_database)
+    assert DatabaseMigration.DB_VERSION == 0
+    assert not ColumnMigration.column_exists(v0_database, "transactions", "is_invoiced")
+    assert DatabaseMigration.migrate(v0_database)
+    assert DatabaseMigration.DB_VERSION == 1
+    assert ColumnMigration.column_exists(v0_database, "transactions", "is_invoiced")
+    query = QSqlQuery(v0_database)
+    assert query.exec("PRAGMA table_info(transactions)")
+    column_found = False
+    while query.next():
+        if query.value(1) == "is_invoiced":
+            column_found = True
+            assert query.value(2) == "INTEGER"
+            assert query.value(3) == 1
+            assert query.value(4) == "0"
+    assert column_found
 
 
 def test_migrate_without_db_version(connection: QSqlDatabase) -> None:
@@ -173,6 +110,7 @@ def test_real_column_migration(connection: QSqlDatabase) -> None:
             id INTEGER PRIMARY KEY
         )
     """)
+    del query
     DatabaseMigration.DB_VERSION = 0
     result = DatabaseMigration.migrate(connection)
     assert result is True

@@ -12,10 +12,12 @@ authors = [
 
 dependencies = [
     "PySide6",
+    "PySide6-Pdf",
     "requests",
     "tomli_w",
     "openpyxl",
-    "reportlab"
+    "reportlab",
+    "tzdata"
 ]
 
 [project.optional-dependencies]
