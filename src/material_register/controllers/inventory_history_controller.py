@@ -35,12 +35,10 @@ class InventoryHistoryController(QObject):
         self.thread.start()
 
     def _search_error(self, error: str) -> None:
-        print("error:", error)
         self._clean_thread()
         QTimer.singleShot(100, lambda: self._finish_search(error=error))
 
     def _search_ok(self, results: InventoryHistoryDataclass) -> None:
-        print("OK")
         self._clean_thread()
         QTimer.singleShot(100, lambda: self._finish_search(results=results))
 
@@ -55,11 +53,10 @@ class InventoryHistoryController(QObject):
         self.thread = None
 
     def _finish_search(
-        self, results: InventoryHistoryDataclass | None, error: str | None = None
+        self, results: InventoryHistoryDataclass | None = None, error: str | None = None
     ) -> None:
         self._reset_variables()
         if error is not None:
-            print("error:", error)
             InventoryHistoryController._handle_search_error(
                 error,
                 f"{self.__class__.__name__}._search_error",
@@ -73,9 +70,9 @@ class InventoryHistoryController(QObject):
                 self.inventory_widget,
             )
             return
-        print("OK")
-        print("results data:", results.history_data)
-        print("results total:", results.total)
+        self.inventory_history_widget.reload_history_data(results.history_data)
+        self.inventory_history_widget.set_count_text(len(results.history_data))
+        self.inventory_history_widget.set_value_text(results.total, "xx")
 
     @staticmethod
     def _handle_search_error(error: str, method: str, parent: QWidget) -> None:

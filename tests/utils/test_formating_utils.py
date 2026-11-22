@@ -8,6 +8,7 @@ from material_register.utils.formatting_utils import (
     format_date_to_utc,
     format_datetime_to_locale,
     format_number_to_locale,
+    format_sql_date_to_locale,
     format_time_to_locale,
     format_utc_date_to_locale,
 )
@@ -118,3 +119,19 @@ def test_format_utc_date_to_locale() -> None:
     result = format_utc_date_to_locale("2026-07-05 22:30:00")
     expected = "06.07.2026"
     assert result == expected
+
+
+@pytest.mark.parametrize(
+    "sql_date, expected_date",
+    [
+        ("2026-09-28", QDate(2026, 9, 28)),
+        ("2026-01-15", QDate(2026, 1, 15)),
+        ("2026-12-31", QDate(2026, 12, 31)),
+    ],
+)
+def test_format_sql_date_to_locale(sql_date: str, expected_date: QDate) -> None:
+    expected = QLocale().toString(
+        expected_date,
+        QLocale.FormatType.ShortFormat,
+    )
+    assert format_sql_date_to_locale(sql_date) == expected

@@ -82,6 +82,8 @@ INVENTORY_COLUMNS_MAP = {
 
 INVENTORY_VIEW_HIDDEN_COLUMNS = ["commodity_id", "commodity_unit"]
 
+INVENTORY_HISTORY_MODEL_COLUMNS = ["history_date", "date_total"]
+
 SEARCH_MODEL_COLUMNS = [
     "transaction_id",
     "transaction_type",

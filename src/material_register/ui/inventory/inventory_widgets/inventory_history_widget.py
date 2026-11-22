@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from material_register.init.data_init import DataInit
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
     LOG_LEVEL_WARNING,
@@ -34,6 +35,7 @@ if TYPE_CHECKING:
 class InventoryHistoryWidget(QWidget):
     def __init__(self, inventory_widget: "InventoryWidget"):
         super().__init__(inventory_widget)
+        self.inventory_history_model = DataInit.inventory_history_model
         self.setLayout(self._create_ui())
         self._setup_ui()
         self._create_connection()
@@ -54,6 +56,7 @@ class InventoryHistoryWidget(QWidget):
 
     def _setup_ui(self) -> None:
         self._setup_texts()
+        self._setup_model()
         self._setup_date_edits()
         self._apply_date_state()
         self.today_radio_button.setChecked(True)
@@ -88,6 +91,9 @@ class InventoryHistoryWidget(QWidget):
             radio_button.toggled.connect(self._apply_date_state)
         self.from_date_edit.dateChanged.connect(self._update_to_date_minimum)
         self.to_date_edit.dateChanged.connect(self._update_from_date_maximum)
+
+    def _setup_model(self) -> None:
+        self.inventory_history_view.setModel(self.inventory_history_model)
 
     def _create_info_group(self) -> QGroupBox:
         info_group = QGroupBox()
@@ -228,3 +234,6 @@ class InventoryHistoryWidget(QWidget):
 
     def get_date_range(self) -> tuple[str, str]:
         return self._get_date_interval()
+
+    def reload_history_data(self, history_data: list[list[str | float]]) -> None:
+        self.inventory_history_model.load_data(history_data)

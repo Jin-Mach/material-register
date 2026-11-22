@@ -2,6 +2,9 @@ from material_register.db.models.customers_models.customers_completer_model impo
     CustomersCompleterModel,
 )
 from material_register.db.models.customers_models.customers_model import CustomersModel
+from material_register.db.models.inventory_models.inventory_history_model import (
+    InventoryHistoryModel,
+)
 from material_register.db.models.inventory_models.inventory_model import InventoryModel
 from material_register.db.models.transactions_models.transactions_load_model_in import (
     TransactionsLoadModelIn,
@@ -24,6 +27,7 @@ class DataInit:
     transactions_load_model_in: TransactionsLoadModelIn | None = None
     transactions_load_model_out: TransactionsLoadModelOut | None = None
     inventory_model: InventoryModel | None = None
+    inventory_history_model: InventoryHistoryModel | None = None
 
     @classmethod
     def init_data(cls) -> tuple[bool, str]:
@@ -43,6 +47,7 @@ class DataInit:
                 DbInit.db_connection
             )
             cls.inventory_model = InventoryModel(DbInit.db_connection)
+            cls.inventory_history_model = InventoryHistoryModel()
             return True, ""
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)

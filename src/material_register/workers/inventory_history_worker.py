@@ -20,9 +20,6 @@ class InventoryHistoryWorker(QObject):
         self.from_date = from_date
         self.to_date = to_date
         self.db_connection = None
-        print("commodity_id:", commodity_id)
-        print("from_date:", from_date)
-        print("to_date:", to_date)
 
     @Slot()
     def run(self) -> None:

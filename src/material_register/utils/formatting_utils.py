@@ -21,6 +21,11 @@ def format_date_to_locale(iso_datetime: str) -> str:
     return _locale.toString(date_time.date(), QLocale.FormatType.ShortFormat)
 
 
+def format_sql_date_to_locale(sql_date: str) -> str:
+    date = QDate.fromString(sql_date, "yyyy-MM-dd")
+    return _locale.toString(date, QLocale.FormatType.ShortFormat)
+
+
 def format_date_range_to_locale(from_date: str, to_date: str) -> str:
     from_date_time = QDateTime.fromString(from_date, DATE_FORMAT)
     from_date_time.setTimeZone(QTimeZone.utc())
