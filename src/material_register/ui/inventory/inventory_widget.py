@@ -142,11 +142,9 @@ class InventoryWidget(QWidget):
         )
         if commodity_id is None:
             return
-        if commodity_name is not None:
-            self.inventory_history_widget.set_info_text(commodity_name)
         from_date, to_date = self.inventory_history_widget.get_date_range()
         self.inventory_history_controller.reload_commodity_history(
-            commodity_id, from_date, to_date, commodity_unit
+            commodity_id, from_date, to_date, commodity_name, commodity_unit
         )
 
     def refresh_history(self) -> None:

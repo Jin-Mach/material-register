@@ -20,13 +20,20 @@ class InventoryHistoryController(QObject):
         self.inventory_history_widget = self.inventory_widget.inventory_history_widget
         self.worker = None
         self.thread = None
+        self.commodity_name = ""
         self.commodity_unit = None
 
     def reload_commodity_history(
-        self, commodity_id: int, from_date: str, to_date: str, commodity_unit: str
+        self,
+        commodity_id: int,
+        from_date: str,
+        to_date: str,
+        commodity_name: str,
+        commodity_unit: str,
     ) -> None:
         if self.thread is not None or self.worker is not None:
             return
+        self.commodity_name = commodity_name
         self.commodity_unit = commodity_unit
         self.thread = QThread()
         self.worker = InventoryHistoryWorker(commodity_id, from_date, to_date)
@@ -75,8 +82,10 @@ class InventoryHistoryController(QObject):
         self.inventory_history_widget.reload_history_data(
             results.history_data, self.commodity_unit
         )
+        self.inventory_history_widget.set_info_text(self.commodity_name)
         self.inventory_history_widget.set_count_text(len(results.history_data))
         self.inventory_history_widget.set_value_text(results.total, self.commodity_unit)
+        self.commodity_name = ""
         self.commodity_unit = None
 
     @staticmethod

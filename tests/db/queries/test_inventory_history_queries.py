@@ -1,4 +1,6 @@
 import uuid
+from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import pytest
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
@@ -181,3 +183,41 @@ def test_get_inventory_history_total_returns_zero(
     )
     assert success is True
     assert total == 0
+
+
+def test_get_inventory_history_data_groups_by_local_date(
+    connection: QSqlDatabase, schema
+) -> None:
+    prague_tz = ZoneInfo("Europe/Prague")
+    local_midnight = datetime.now(prague_tz).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+    utc_before = (local_midnight - timedelta(minutes=30)).astimezone(UTC)
+    utc_after = (local_midnight + timedelta(minutes=30)).astimezone(UTC)
+    query = QSqlQuery(connection)
+    query.exec(f"""
+        INSERT INTO transactions (id, type, created_at)
+        VALUES
+            (1, 'IN', '{utc_before.strftime("%Y-%m-%d %H:%M:%S")}'),
+            (2, 'IN', '{utc_after.strftime("%Y-%m-%d %H:%M:%S")}')
+    """)
+    query.exec("""
+        INSERT INTO transaction_items
+            (id, transaction_id, commodity_id, unit_count)
+        VALUES
+            (1, 1, 1, 5),
+            (2, 2, 1, 3)
+    """)
+    start = (local_midnight - timedelta(hours=1)).astimezone(UTC)
+    end = (local_midnight + timedelta(hours=1)).astimezone(UTC)
+    success, data = InventoryHistoryQueries.get_inventory_history_data(
+        connection,
+        1,
+        start.strftime("%Y-%m-%d %H:%M:%S"),
+        end.strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    assert success is True
+    assert data == [
+        [(local_midnight - timedelta(days=1)).strftime("%Y-%m-%d"), 5],
+        [local_midnight.strftime("%Y-%m-%d"), 3],
+    ]

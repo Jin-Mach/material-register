@@ -35,6 +35,7 @@ if TYPE_CHECKING:
 class CatalogWidget(QWidget):
     def __init__(self, stacked_widget: "StackedWidget") -> None:
         super().__init__(stacked_widget)
+        self.stacked_widget = stacked_widget
         self.catalog_controller = CatalogController(self)
         self.setLayout(self._create_ui())
         self._setup_ui()

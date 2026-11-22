@@ -27,7 +27,10 @@ from material_register.ui.inventory.inventory_widgets.inventory_history_view imp
 )
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.utils.date_filters import get_filter_range
-from material_register.utils.formatting_utils import format_date_to_utc
+from material_register.utils.formatting_utils import (
+    format_date_to_utc,
+    format_number_to_locale,
+)
 
 if TYPE_CHECKING:
     from material_register.ui.inventory.inventory_widget import InventoryWidget
@@ -217,7 +220,7 @@ class InventoryHistoryWidget(QWidget):
 
     def set_value_text(self, value: float, unit: str) -> None:
         self.total_value_label.setText(self.value_text)
-        self.total_value.setText(f"{value} {unit}")
+        self.total_value.setText(f"{format_number_to_locale(value)} {unit}")
         if value < 0:
             self.total_value.setStyleSheet(INVENTORY_HISTORY_STYLE)
         else:

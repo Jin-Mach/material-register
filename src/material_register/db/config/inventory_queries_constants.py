@@ -20,8 +20,8 @@ INVENTORY_QUERY = """
 
 INVENTORY_HISTORY_DAILY_QUERY = """
     SELECT
-        DATE(transactions.created_at) AS transaction_date,
-        
+        DATE(transactions.created_at, 'localtime') AS transaction_date,
+
         SUM(
             CASE
                 WHEN transactions.type = 'IN'
@@ -39,8 +39,8 @@ INVENTORY_HISTORY_DAILY_QUERY = """
     WHERE transaction_items.commodity_id = ?
         AND transactions.created_at BETWEEN ? AND ?
 
-    GROUP BY DATE(transactions.created_at)
-    ORDER BY DATE(transactions.created_at)
+    GROUP BY DATE(transactions.created_at, 'localtime')
+    ORDER BY DATE(transactions.created_at, 'localtime')
 """
 
 INVENTORY_HISTORY_TOTAL_QUERY = """

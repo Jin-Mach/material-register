@@ -163,6 +163,7 @@ class CatalogController:
                 item.setExpanded(True)
             self.inventory_model.load_inventory_data()
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
+            self.catalog_widget.stacked_widget.inventory_widget.refresh_history()
             CatalogController._notification_handler(
                 self.notification_texts, "UPDATE_CATEGORY", "Category updated"
             )
@@ -216,6 +217,7 @@ class CatalogController:
                 item.setExpanded(True)
             self.inventory_model.load_inventory_data()
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
+            self.catalog_widget.stacked_widget.inventory_widget.refresh_history()
             CatalogController._notification_handler(
                 self.notification_texts, "UPDATE_COMMODITY", "Item updated"
             )
