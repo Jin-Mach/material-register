@@ -11,6 +11,7 @@ from material_register.domain.search_dataclass import (
 )
 from material_register.domain.transaction_dataclass import Transaction
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.services.search_service.filter_builder import FilterBuilder
 from material_register.services.search_service.search_manager import SearchManager
@@ -112,6 +113,7 @@ class SearchController(QObject):
     ) -> None:
         self._check_finish()
         self._reset_variables()
+        start = PerformanceProvider.start()
         try:
             if error is not None:
                 SearchController._handle_search_error(
@@ -155,6 +157,7 @@ class SearchController(QObject):
             self.search_widget.set_price_text(transactions_amount)
             self.search_widget.search_material_model.load_data(materials)
         finally:
+            PerformanceProvider.stop(start, "SEARCH_CONTROLLER._finish_search")
             if self._refresh_exists:
                 self._refresh_exists = False
                 QTimer.singleShot(0, self.refresh_filters_data)

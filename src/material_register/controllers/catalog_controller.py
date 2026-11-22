@@ -9,6 +9,7 @@ from material_register.domain.category_dataclass import Category
 from material_register.domain.commodities_dataclass import Commodity
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
@@ -226,33 +227,39 @@ class CatalogController:
         dialog = UpdateCommoditiesPriceDialog(self.catalog_widget)
         dialog.setup_commodities(DbCache.commodities)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            for commodity_id, spinbox in dialog.commodities_map.items():
-                default_value = spinbox.property("default_price")
-                new_value = spinbox.value()
-                if default_value != new_value:
-                    ok, error = CommoditiesQueries.update_commodity_price(
-                        self.db_connection, commodity_id, new_value
-                    )
-                    if not ok:
-                        CatalogController._handle_db_error(
-                            error,
-                            f"{self.__class__.__name__}.update_commodities_price",
-                            self.catalog_widget,
+            start = PerformanceProvider.start()
+            try:
+                for commodity_id, spinbox in dialog.commodities_map.items():
+                    default_value = spinbox.property("default_price")
+                    new_value = spinbox.value()
+                    if default_value != new_value:
+                        ok, error = CommoditiesQueries.update_commodity_price(
+                            self.db_connection, commodity_id, new_value
                         )
-                        return
-            ok, error = CatalogController._refresh_cache()
-            if not ok:
-                CatalogController._handle_db_error(
-                    error,
-                    f"{self.__class__.__name__}.update_commodities_price",
-                    self.catalog_widget,
+                        if not ok:
+                            CatalogController._handle_db_error(
+                                error,
+                                f"{self.__class__.__name__}.update_commodities_price",
+                                self.catalog_widget,
+                            )
+                            return
+                ok, error = CatalogController._refresh_cache()
+                if not ok:
+                    CatalogController._handle_db_error(
+                        error,
+                        f"{self.__class__.__name__}.update_commodities_price",
+                        self.catalog_widget,
+                    )
+                    return
+                self.setup_details_widget()
+                AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
+                CatalogController._notification_handler(
+                    self.notification_texts, "UPDATE_PRICE", "Prices updated"
                 )
-                return
-            self.setup_details_widget()
-            AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
-            CatalogController._notification_handler(
-                self.notification_texts, "UPDATE_PRICE", "Prices updated"
-            )
+            finally:
+                PerformanceProvider.stop(
+                    start, "CATALOG_CONTROLLER.update_commodities_price"
+                )
 
     def reload_catalog_tree(self) -> None:
         self.catalog_widget.tree_widget.reload_tree(

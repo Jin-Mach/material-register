@@ -24,6 +24,7 @@ from material_register.domain.transaction_item_detail_dataclass import (
 )
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
@@ -448,14 +449,18 @@ class TransactionsController:
         self._update_counts()
 
     def load_transactions(self) -> None:
-        for model in (self.transactions_model_in, self.transactions_model_out):
-            ok, error = model.load_transactions_data()
-            if not ok:
-                TransactionsController._handle_db_error(
-                    error,
-                    f"{self.__class__.__name__}.load_transactions",
-                    self.transactions_widget,
-                )
+        start = PerformanceProvider.start()
+        try:
+            for model in (self.transactions_model_in, self.transactions_model_out):
+                ok, error = model.load_transactions_data()
+                if not ok:
+                    TransactionsController._handle_db_error(
+                        error,
+                        f"{self.__class__.__name__}.load_transactions",
+                        self.transactions_widget,
+                    )
+        finally:
+            PerformanceProvider.stop(start, "TRANSACTIONS_CONTROLLER.load_transactions")
 
     def reset_model_data(self) -> None:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
@@ -482,23 +487,29 @@ class TransactionsController:
         tab_context = self._get_tab_context()
         if tab_context is None:
             return
-        key = self.transactions_widget.transactions_actions_widget.get_filter_key()
-        from_date, to_date = get_filter_range(key)
-        for model, transfer_type in self._models_map.values():
-            filtered_data = TransactionsQueries.get_basic_filter_data(
-                self._db_connection, transfer_type, from_date, to_date
-            )
-            if filtered_data is None:
-                TransactionsController._handle_db_error(
-                    "Failed to load filtered transactions",
-                    f"{self.__class__.__name__}.refresh_models_data",
-                    self.transactions_widget,
+        start = PerformanceProvider.start()
+        try:
+            key = self.transactions_widget.transactions_actions_widget.get_filter_key()
+            from_date, to_date = get_filter_range(key)
+            for model, transfer_type in self._models_map.values():
+                filtered_data = TransactionsQueries.get_basic_filter_data(
+                    self._db_connection, transfer_type, from_date, to_date
                 )
-                return
-            model.set_basic_filter(filtered_data)
-        self._update_counts()
-        self.update_total_price()
-        TransactionsController._update_cash_balance_value()
+                if filtered_data is None:
+                    TransactionsController._handle_db_error(
+                        "Failed to load filtered transactions",
+                        f"{self.__class__.__name__}.refresh_models_data",
+                        self.transactions_widget,
+                    )
+                    return
+                model.set_basic_filter(filtered_data)
+            self._update_counts()
+            self.update_total_price()
+            TransactionsController._update_cash_balance_value()
+        finally:
+            PerformanceProvider.stop(
+                start, "TRANSACTIONS_CONTROLLER.refresh_models_data"
+            )
 
     def update_total_price(self) -> None:
         key = self.transactions_widget.transactions_actions_widget.get_filter_key()
