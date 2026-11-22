@@ -131,6 +131,7 @@ class TransactionsController:
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             self._items_dialog = None
             SearchManager.refresh_filters_data()
+            self.transactions_widget.stacked_widget.inventory_widget.refresh_history()
             TransactionsController._notification_handler(
                 self._notification_text, "ADD_TRANSACTION", "Transaction added"
             )
@@ -211,6 +212,7 @@ class TransactionsController:
             )
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             SearchManager.refresh_filters_data()
+            self.transactions_widget.stacked_widget.inventory_widget.refresh_history()
             TransactionsController._notification_handler(
                 self._notification_text, "UPDATE_TRANSACTION", "Transaction updated"
             )
@@ -247,6 +249,7 @@ class TransactionsController:
             self._reset_detail_widget_data(model)
             AppContext.MAIN_WINDOW.right_toolbar_widget.database_backup_widget.setup_info_group()
             SearchManager.refresh_filters_data()
+            self.transactions_widget.stacked_widget.inventory_widget.refresh_history()
             TransactionsController._notification_handler(
                 self._notification_text, "DELETE_TRANSACTION", "Transaction deleted"
             )

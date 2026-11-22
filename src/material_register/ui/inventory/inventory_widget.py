@@ -149,5 +149,11 @@ class InventoryWidget(QWidget):
             commodity_id, from_date, to_date, commodity_unit
         )
 
+    def refresh_history(self) -> None:
+        current_index = self.inventory_view.currentIndex()
+        if not current_index.isValid():
+            return
+        self._reload_history(current_index, QModelIndex())
+
     def set_count_text(self, filtered: int, total: int) -> None:
         self.count_label.setText(f"{self.count_text} {filtered}/{total}")
