@@ -19,7 +19,9 @@
     "addCommodityText": "Add item",
     "addCategoryTitleText": "Add item to category:",
     "toolsMenuText": "Tools",
-    "exportLogsDataText": "Export diagnostics"
+    "exportLogsDataText": "Export diagnostics",
+    "folderDialogTitleText": "Save file",
+    "fileZipDialogFilterText": "Compressed files"
   },
   "SidePanel": {
     "transactionsButtonText": "Transactions",

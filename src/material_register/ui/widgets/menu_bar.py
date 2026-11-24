@@ -1,8 +1,13 @@
+import os
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenu, QMenuBar
+from PySide6.QtWidgets import QFileDialog, QMenu, QMenuBar
 
+from material_register.controllers.menu_controllers.export_logs_data_controller import (
+    ExportLogsDataController,
+)
 from material_register.services.db_cache import DbCache
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_WARNING, LOGGER_UI
@@ -16,6 +21,7 @@ class MenuBar(QMenuBar):
     def __init__(self, main_window: "MainWindow") -> None:
         super().__init__(main_window)
         self.main_window = main_window
+        self.export_logs_data_controller = ExportLogsDataController(self)
         self.addMenu(self._setup_transactions_menu())
         self.addMenu(self._setup_export_menu())
         self.addMenu(self._setup_customers_menu())
@@ -32,6 +38,9 @@ class MenuBar(QMenuBar):
         menu = self.findChildren(QMenu)
         actions = self.findChildren(QAction)
         widgets = menu + actions
+        ui_texts = UiTexts.UI_TEXTS.get(self.__class__.__name__, {})
+        self.dialog_title = ui_texts.get("folderDialogTitleText", "Save file")
+        self.zip_filter_text = ui_texts.get("fileZipDialogFilterText", "Save file")
         if UiTexts.set_ui_texts(self, widgets):
             return
         ErrorHandler.handle_error(
@@ -60,6 +69,9 @@ class MenuBar(QMenuBar):
         self.add_customer.triggered.connect(self.customers_widget.add_customer)
         self.add_category.triggered.connect(self.catalog_widget.add_category)
         self.add_commodity.triggered.connect(self._add_commodity)
+        self.export_logs_data.triggered.connect(
+            self.export_logs_data_controller.start_export
+        )
 
     def _add_commodity(self, action: QAction) -> None:
         selected_category = action.data()
@@ -135,3 +147,16 @@ class MenuBar(QMenuBar):
         self.export_logs_data.setObjectName("exportLogsData")
         self.tools_menu.addAction(self.export_logs_data)
         return self.tools_menu
+
+    def get_export_logs_path(self) -> tuple[Path, str] | None:
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, self.dialog_title, str(Path.home()), f"{self.zip_filter_text} (*.zip)"
+        )
+        if not file_path:
+            return None
+        export_path = Path(file_path)
+        return export_path, MenuBar.get_displayed_path(export_path)
+
+    @staticmethod
+    def get_displayed_path(path: Path) -> str:
+        return f"...{os.sep}{Path(*path.parts[-2:])}"

@@ -16,6 +16,8 @@ DEFAULT_TEXTS = {
         "addCategoryTitleText": "Add item to category:",
         "toolsMenuText": "Tools",
         "exportLogsDataText": "Export diagnostics",
+        "folderDialogTitleText": "Save file",
+        "fileZipDialogFilterText": "Compressed files",
     },
     "SidePanel": {
         "transactionsButtonText": "Transactions",

@@ -19,7 +19,9 @@
     "addCommodityText": "Přidat položku",
     "addCategoryTitleText": "Položku přidat do kategorie:",
     "toolsMenuText": "Nástroje",
-    "exportLogsDataText": "Export diagnostiky"
+    "exportLogsDataText": "Export diagnostiky",
+    "folderDialogTitleText": "Uložit soubor",
+    "fileZipDialogFilterText": "Komprimované soubory"
   },
   "SidePanel": {
     "transactionsButtonText": "Transakce",
