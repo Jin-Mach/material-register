@@ -17,7 +17,9 @@
     "catalogMenuText": "Catalog",
     "addCategoryText": "Add category",
     "addCommodityText": "Add item",
-    "addCategoryTitleText": "Add item to category:"
+    "addCategoryTitleText": "Add item to category:",
+    "toolsMenuText": "Tools",
+    "exportLogsDataText": "Export diagnostics"
   },
   "SidePanel": {
     "transactionsButtonText": "Transactions",

@@ -78,6 +78,8 @@ UI_KEYS = [
     ("MenuBar", "addCategoryText"),
     ("MenuBar", "addCommodityText"),
     ("MenuBar", "addCategoryTitleText"),
+    ("MenuBar", "toolsMenuTextText"),
+    ("MenuBar", "exportLogsDataText"),
     ("SidePanel", "transactionsButtonText"),
     ("SidePanel", "transactionsButtonTooltipText"),
     ("SidePanel", "customersButtonText"),

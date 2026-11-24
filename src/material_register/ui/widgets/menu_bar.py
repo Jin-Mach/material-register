@@ -20,6 +20,7 @@ class MenuBar(QMenuBar):
         self.addMenu(self._setup_export_menu())
         self.addMenu(self._setup_customers_menu())
         self.addMenu(self._setup_catalog_menu())
+        self.addMenu(self._setup_tools_menu())
         self._setup_ui()
         self._create_connection()
 
@@ -126,3 +127,11 @@ class MenuBar(QMenuBar):
             action.setText(category.name)
             action.setData(category)
             self.add_commodity.addAction(action)
+
+    def _setup_tools_menu(self) -> QMenu:
+        self.tools_menu = QMenu(self)
+        self.tools_menu.setObjectName("toolsMenu")
+        self.export_logs_data = QAction(self)
+        self.export_logs_data.setObjectName("exportLogsData")
+        self.tools_menu.addAction(self.export_logs_data)
+        return self.tools_menu

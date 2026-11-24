@@ -17,7 +17,9 @@
     "catalogMenuText": "Katalog",
     "addCategoryText": "Přidat kategorii",
     "addCommodityText": "Přidat položku",
-    "addCategoryTitleText": "Položku přidat do kategorie:"
+    "addCategoryTitleText": "Položku přidat do kategorie:",
+    "toolsMenuText": "Nástroje",
+    "exportLogsDataText": "Export diagnostiky"
   },
   "SidePanel": {
     "transactionsButtonText": "Transakce",

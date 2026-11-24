@@ -14,6 +14,8 @@ DEFAULT_TEXTS = {
         "addCategoryText": "Add category",
         "addCommodityText": "Add item",
         "addCategoryTitleText": "Add item to category:",
+        "toolsMenuText": "Tools",
+        "exportLogsDataText": "Export diagnostics",
     },
     "SidePanel": {
         "transactionsButtonText": "Transactions",
