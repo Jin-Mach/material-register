@@ -3,6 +3,9 @@ from pathlib import Path
 from PySide6.QtCore import QObject, Signal, Slot
 
 from material_register.providers.performance_provider import PerformanceProvider
+from material_register.services.menu_service.export_logs_data_service import (
+    ExportLogsDataService,
+)
 
 
 class ExportLogsDataWorker(QObject):
@@ -18,11 +21,14 @@ class ExportLogsDataWorker(QObject):
     def run(self) -> None:
         start = PerformanceProvider.start()
         try:
-            print("logs path", self.logs_path)
-            print("export path", self.export_path)
+            ok, error = ExportLogsDataService.create_zip_file(
+                self.logs_path, self.export_path
+            )
+            if not ok:
+                self.error.emit(error)
+                return
+            self.finished.emit()
         except Exception as e:
-            print(e)
             self.error.emit(str(e))
         finally:
             PerformanceProvider.stop(start, "ExportLogsDataWorker.run")
-            self.finished.emit()

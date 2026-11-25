@@ -45,6 +45,8 @@ class ExportLogsDataController(QObject):
         self._start_worker(logs_path, export_path)
 
     def _start_worker(self, logs_path: Path, export_path: Path) -> None:
+        if self.thread is not None or self.worker is not None:
+            return
         self.thread = QThread()
         self.worker = ExportLogsDataWorker(logs_path, export_path)
         self.worker.moveToThread(self.thread)
