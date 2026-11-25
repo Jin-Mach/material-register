@@ -12,6 +12,8 @@ from material_register.ui.config.ui_constants import LOG_LEVEL_WARNING, LOGGER_E
 from material_register.ui.dialogs.error_dialog import ErrorDialog
 from material_register.ui.dialogs.message_boxes import MessageBoxes
 from material_register.ui.dialogs.notification_dialog import NotificationDialog
+from material_register.ui.dialogs.progress_dialog import ProgressDialog
+from material_register.ui.setup.ui_texts import UiTexts
 from material_register.workers.menu_workers.export_logs_data_worker import (
     ExportLogsDataWorker,
 )
@@ -24,7 +26,9 @@ class ExportLogsDataController(QObject):
     def __init__(self, menu_bar: "MenuBar") -> None:
         super().__init__(menu_bar)
         self.menu_bar = menu_bar
+        self.ui_texts = UiTexts.UI_TEXTS
         self._notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("EXPORT", None)
+        self.progress_dialog = None
         self.worker = None
         self.thread = None
 
@@ -42,6 +46,9 @@ class ExportLogsDataController(QObject):
             )
             if not question:
                 return
+        self.progress_dialog = ProgressDialog(self.ui_texts, AppContext.MAIN_WINDOW)
+        self.progress_dialog.set_label_text("exportInProgressText")
+        self.progress_dialog.show()
         self._start_worker(logs_path, export_path)
 
     def _start_worker(self, logs_path: Path, export_path: Path) -> None:
@@ -57,11 +64,11 @@ class ExportLogsDataController(QObject):
 
     def _export_error(self, error: str) -> None:
         self._clean_thread()
-        QTimer.singleShot(100, lambda: self._finish_export(error=error))
+        QTimer.singleShot(1000, lambda: self._finish_export(error=error))
 
     def _export_ok(self) -> None:
         self._clean_thread()
-        QTimer.singleShot(100, self._finish_export)
+        QTimer.singleShot(1000, self._finish_export)
 
     def _clean_thread(self) -> None:
         self.thread.quit()
@@ -70,10 +77,12 @@ class ExportLogsDataController(QObject):
         self.thread.deleteLater()
 
     def _reset_variables(self) -> None:
+        self.progress_dialog = None
         self.worker = None
         self.thread = None
 
     def _finish_export(self, error: str | None = None) -> None:
+        self.progress_dialog.close()
         self._reset_variables()
         if error is not None:
             ExportLogsDataController._handle_export_error(
