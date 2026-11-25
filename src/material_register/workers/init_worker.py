@@ -4,6 +4,7 @@ from material_register.init.app_init import AppInit
 from material_register.init.data_init import DataInit
 from material_register.init.db_init import DbInit
 from material_register.init.setup_init import SetupInit
+from material_register.providers.performance_provider import PerformanceProvider
 
 
 class InitWorker(QObject):
@@ -15,6 +16,7 @@ class InitWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        start = PerformanceProvider.start()
         app_ok, app_error = AppInit.init_app()
         if not app_ok:
             self.error.emit(app_error)
@@ -31,4 +33,5 @@ class InitWorker(QObject):
         if not models_ok:
             self.error.emit(models_error)
             return
+        PerformanceProvider.stop(start, "InitWorker.run")
         self.finished.emit()

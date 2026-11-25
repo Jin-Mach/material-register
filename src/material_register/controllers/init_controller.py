@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QApplication
 from material_register.controllers.time_controller import TimeController
 from material_register.core.app_context import AppContext
 from material_register.core.application_setup import ApplicationSetup
+from material_register.providers.performance_provider import PerformanceProvider
 from material_register.providers.style_provider import StyleProvider
 from material_register.providers.texts_provider import TextsProvider
 from material_register.ui.dialogs.error_dialog import ErrorDialog
@@ -47,6 +48,7 @@ class InitController(QObject):
         QTimer.singleShot(1000, self._finish_ok)
 
     def _finish_ok(self) -> None:
+        start = PerformanceProvider.start()
         self.splash_screen.close()
         ApplicationSetup.setup_ui()
         AppContext.TIME_CONTROLLER = TimeController()
@@ -54,6 +56,7 @@ class InitController(QObject):
         AppContext.set_main_window(self.main_window)
         StyleProvider.apply_style()
         self.main_window.show()
+        PerformanceProvider.stop(start, "InitController._finish_ok")
         QTimer.singleShot(1000, self._check_startup_notification)
 
     def _finish_error(self, error: str) -> None:
