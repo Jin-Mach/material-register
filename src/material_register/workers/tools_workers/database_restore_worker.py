@@ -10,6 +10,7 @@ from material_register.db.utils.database_validator import (
 )
 from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.database_backup_service import DatabaseBackupService
+from material_register.utils.system import is_disk_writable
 
 
 class DatabaseRestoreWorker(QObject):
@@ -48,6 +49,9 @@ class DatabaseRestoreWorker(QObject):
                 connection.close()
                 del connection
                 QSqlDatabase.removeDatabase("restore_connection")
+            if not is_disk_writable(self.database_path.parent):
+                self.error.emit("RESTORE_ERROR")
+                return
             if not DatabaseBackupService.restore_database(
                 self.database_path, self.restore_path
             ):

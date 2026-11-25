@@ -6,6 +6,7 @@ from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.menu_service.export_logs_data_service import (
     ExportLogsDataService,
 )
+from material_register.utils.system import is_disk_writable
 
 
 class ExportLogsDataWorker(QObject):
@@ -21,6 +22,9 @@ class ExportLogsDataWorker(QObject):
     def run(self) -> None:
         start = PerformanceProvider.start()
         try:
+            if not is_disk_writable(self.export_path.parent):
+                self.error.emit("BACKUP_ERROR")
+                return
             ok, error = ExportLogsDataService.create_zip_file(
                 self.logs_path, self.export_path
             )
@@ -29,6 +33,6 @@ class ExportLogsDataWorker(QObject):
                 return
             self.finished.emit()
         except Exception as e:
-            self.error.emit(str(e))
+            self.error.emit(f"Export logs data failed: {e}")
         finally:
             PerformanceProvider.stop(start, "ExportLogsDataWorker.run")

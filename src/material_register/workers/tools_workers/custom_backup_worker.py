@@ -4,6 +4,7 @@ from PySide6.QtCore import QObject, Signal, Slot
 
 from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.database_backup_service import DatabaseBackupService
+from material_register.utils.system import is_disk_writable
 
 
 class CustomBackupWorker(QObject):
@@ -19,6 +20,9 @@ class CustomBackupWorker(QObject):
     def run(self) -> None:
         start = PerformanceProvider.start()
         try:
+            if not is_disk_writable(self.backup_path.parent):
+                self.error.emit("BACKUP_FAILED")
+                return
             if not DatabaseBackupService.create_custom_backup(
                 self.database_path, self.backup_path
             ):

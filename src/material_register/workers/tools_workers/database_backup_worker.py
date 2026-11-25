@@ -11,6 +11,7 @@ from material_register.db.queries.tools_queries.database_backup_queries import (
 from material_register.init.db_init import DbInit
 from material_register.providers.performance_provider import PerformanceProvider
 from material_register.services.database_backup_service import DatabaseBackupService
+from material_register.utils.system import is_disk_writable
 
 
 class DatabaseBackupWorker(QObject):
@@ -38,6 +39,9 @@ class DatabaseBackupWorker(QObject):
                 self.error.emit("BACKUP_FAILED")
                 return
             if not DatabaseBackupQueries.has_data(self.db_connection):
+                return
+            if not is_disk_writable(Path(self.backup_folder)):
+                self.error.emit("BACKUP_FAILED")
                 return
             self.backup_folder.mkdir(parents=True, exist_ok=True)
             year, month = DatabaseBackupWorker._find_missing_backup(
