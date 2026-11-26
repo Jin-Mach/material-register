@@ -18,6 +18,9 @@ DEFAULT_TEXTS = {
         "exportLogsDataText": "Export diagnostics",
         "folderDialogTitleText": "Save file",
         "fileZipDialogFilterText": "Compressed files",
+        "databaseBackupMenuText": "Backup verification",
+        "databaseBackupCheckText": "Automatic backups",
+        "customDatabaseBackupCheckText": "Custom backup",
     },
     "SidePanel": {
         "transactionsButtonText": "Transactions",

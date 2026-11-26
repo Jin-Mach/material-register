@@ -21,7 +21,10 @@
     "toolsMenuText": "Nástroje",
     "exportLogsDataText": "Export diagnostiky",
     "folderDialogTitleText": "Uložit soubor",
-    "fileZipDialogFilterText": "Komprimované soubory"
+    "fileZipDialogFilterText": "Komprimované soubory",
+    "databaseBackupMenuText": "Kontrola záloh",
+    "databaseBackupCheckText": "Automatické zálohy",
+    "customDatabaseBackupCheckText": "Vlastní záloha"
   },
   "SidePanel": {
     "transactionsButtonText": "Transakce",

@@ -145,7 +145,16 @@ class MenuBar(QMenuBar):
         self.tools_menu.setObjectName("toolsMenu")
         self.export_logs_data = QAction(self)
         self.export_logs_data.setObjectName("exportLogsData")
+        self.database_backup_menu = QMenu(self)
+        self.database_backup_menu.setObjectName("databaseBackupMenu")
+        self.database_backup_check = QAction(self)
+        self.database_backup_check.setObjectName("databaseBackupCheck")
+        self.custom_database_backup_check = QAction(self)
+        self.custom_database_backup_check.setObjectName("customDatabaseBackupCheck")
+        self.database_backup_menu.addAction(self.database_backup_check)
+        self.database_backup_menu.addAction(self.custom_database_backup_check)
         self.tools_menu.addAction(self.export_logs_data)
+        self.tools_menu.addMenu(self.database_backup_menu)
         return self.tools_menu
 
     def get_export_logs_path(self) -> tuple[Path, str] | None:
