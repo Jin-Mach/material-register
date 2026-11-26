@@ -15,6 +15,7 @@ from material_register.ui.config.ui_constants import (
 class DatabaseBackupService:
     @staticmethod
     def create_year_backup(database_path: Path, year: int) -> bool:
+        backup_path = None
         try:
             backup_directory = DatabaseBackupService._get_backup_directory(
                 database_path, year
@@ -25,17 +26,22 @@ class DatabaseBackupService:
             with closing(sqlite3.connect(database_path)) as database, database:
                 with closing(sqlite3.connect(backup_path)) as backup, backup:
                     database.backup(backup)
+        except Exception as e:
+            remove_error = DatabaseBackupService._remove_invalid_file(backup_path)
+            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
+            if remove_error is not None:
+                ErrorHandler.handle_error(remove_error, LOGGER_DB, LOG_LEVEL_CRITICAL)
+            return False
+        try:
             DatabaseBackupService._clear_year_folder(backup_directory, backup_path)
             return True
-        except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
-            return False
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
 
     @staticmethod
     def create_month_backup(database_path: Path, month: int, year: int) -> bool:
+        backup_path = None
         try:
             backup_directory = DatabaseBackupService._get_backup_directory(
                 database_path, year
@@ -47,24 +53,28 @@ class DatabaseBackupService:
                 with closing(sqlite3.connect(backup_path)) as backup, backup:
                     database.backup(backup)
             return True
-        except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
-            return False
         except Exception as e:
+            remove_error = DatabaseBackupService._remove_invalid_file(backup_path)
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
+            if remove_error is not None:
+                ErrorHandler.handle_error(remove_error, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
 
     @staticmethod
     def create_custom_backup(database_path: Path, backup_path: Path) -> bool:
+        backup_exists = backup_path.exists()
         try:
             with closing(sqlite3.connect(database_path)) as database, database:
                 with closing(sqlite3.connect(backup_path)) as backup, backup:
                     database.backup(backup)
             return True
-        except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
-            return False
         except Exception as e:
+            if not backup_exists:
+                remove_error = DatabaseBackupService._remove_invalid_file(backup_path)
+                if remove_error is not None:
+                    ErrorHandler.handle_error(
+                        remove_error, LOGGER_DB, LOG_LEVEL_CRITICAL
+                    )
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
 
@@ -75,9 +85,6 @@ class DatabaseBackupService:
                 with closing(sqlite3.connect(database_path)) as database, database:
                     backup.backup(database)
             return True
-        except sqlite3.Error as e:
-            ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
-            return False
         except Exception as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
@@ -128,3 +135,13 @@ class DatabaseBackupService:
                 continue
             backup_tree[tree_name] = backup_paths
         return backup_tree
+
+    @staticmethod
+    def _remove_invalid_file(backup_path: Path | None) -> str | None:
+        try:
+            if backup_path is None:
+                return None
+            backup_path.unlink(missing_ok=True)
+            return None
+        except OSError as e:
+            return str(e)

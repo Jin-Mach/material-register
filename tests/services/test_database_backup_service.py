@@ -113,19 +113,43 @@ def test_restore_database(tmp_path: Path) -> None:
     assert row[0] == "Test"
 
 
-def test_delete_backup_folder(tmp_path: Path) -> None:
+def test_delete_backup_folder(tmp_path: Path, monkeypatch) -> None:
     backup_folder = tmp_path / "backup"
     year_folder = backup_folder / "2026"
     year_folder.mkdir(parents=True)
     (year_folder / "01.db").touch()
     (year_folder / "02.db").touch()
-    PathsProvider.database = tmp_path
+    monkeypatch.setattr(PathsProvider, "database", tmp_path)
     result = DatabaseBackupService.delete_backup_folder()
     assert result is True
     assert not backup_folder.exists()
 
 
-def test_delete_backup_folder_when_folder_does_not_exist(tmp_path: Path) -> None:
-    PathsProvider.database = tmp_path
+def test_delete_backup_folder_when_folder_does_not_exist(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(PathsProvider, "database", tmp_path)
     result = DatabaseBackupService.delete_backup_folder()
     assert result is True
+
+
+def test_create_custom_backup_when_backup_exists(tmp_path: Path) -> None:
+    database_path = tmp_path / "corrupted.db"
+    database_path.write_text("Invalid SQLite database")
+    backup_path = tmp_path / "existing_backup.db"
+    backup_path.write_text("Existing backup")
+    result = DatabaseBackupService.create_custom_backup(database_path, backup_path)
+    assert result is False
+    assert backup_path.exists()
+    assert backup_path.read_text() == "Existing backup"
+
+
+def test_create_custom_backup_removes_invalid_file_on_failure(
+    tmp_path: Path,
+) -> None:
+    database_path = tmp_path / "corrupted.db"
+    database_path.write_text("Invalid SQLite database")
+    backup_path = tmp_path / "invalid_backup.db"
+    result = DatabaseBackupService.create_custom_backup(database_path, backup_path)
+    assert result is False
+    assert not backup_path.exists()
