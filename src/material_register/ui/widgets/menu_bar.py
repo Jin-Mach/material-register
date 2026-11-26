@@ -5,6 +5,9 @@ from typing import TYPE_CHECKING
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QFileDialog, QMenu, QMenuBar
 
+from material_register.controllers.menu_controllers.database_backup_check_controller import (
+    DatabaseBackupCheckController,
+)
 from material_register.controllers.menu_controllers.export_logs_data_controller import (
     ExportLogsDataController,
 )
@@ -22,6 +25,7 @@ class MenuBar(QMenuBar):
         super().__init__(main_window)
         self.main_window = main_window
         self.export_logs_data_controller = ExportLogsDataController(self)
+        self.database_backup_check_controller = DatabaseBackupCheckController(self)
         self.addMenu(self._setup_transactions_menu())
         self.addMenu(self._setup_export_menu())
         self.addMenu(self._setup_customers_menu())
@@ -71,6 +75,12 @@ class MenuBar(QMenuBar):
         self.add_commodity.triggered.connect(self._add_commodity)
         self.export_logs_data.triggered.connect(
             self.export_logs_data_controller.start_export
+        )
+        self.database_backup_check.triggered.connect(
+            lambda: self.database_backup_check_controller.start_check(False)
+        )
+        self.custom_database_backup_check.triggered.connect(
+            lambda: self.database_backup_check_controller.start_check(True)
         )
 
     def _add_commodity(self, action: QAction) -> None:

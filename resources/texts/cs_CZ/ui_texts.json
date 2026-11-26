@@ -24,7 +24,9 @@
     "fileZipDialogFilterText": "Komprimované soubory",
     "databaseBackupMenuText": "Kontrola záloh",
     "databaseBackupCheckText": "Automatické zálohy",
-    "customDatabaseBackupCheckText": "Vlastní záloha"
+    "customDatabaseBackupCheckText": "Vlastní záloha",
+    "fileCheckDialogTitleText": "Vybrat zálohu databáze",
+    "fileCheckDialogFilterText": "Databázové soubory"
   },
   "SidePanel": {
     "transactionsButtonText": "Transakce",
@@ -515,7 +517,8 @@
     "exportInProgressText": "Probíhá export...",
     "backupInProgressText": "Probíhá záloha...",
     "restoreInProgressText": "Probíhá obnova dat.\nNevypínejte počítač!",
-    "restartApplicationText": "Aplikace se nyní restartuje"
+    "restartApplicationText": "Aplikace se nyní restartuje",
+    "checkInProgressText": "Probíhá kontrola..."
   },
   "DocumentPreviewDialog": {
     "titleText": "Náhled",

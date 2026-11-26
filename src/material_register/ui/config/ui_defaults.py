@@ -21,6 +21,8 @@ DEFAULT_TEXTS = {
         "databaseBackupMenuText": "Backup verification",
         "databaseBackupCheckText": "Automatic backups",
         "customDatabaseBackupCheckText": "Custom backup",
+        "fileCheckDialogTitleText": "Select database backup",
+        "fileCheckDialogFilterText": "Database files",
     },
     "SidePanel": {
         "transactionsButtonText": "Transactions",
@@ -498,6 +500,7 @@ DEFAULT_TEXTS = {
         "backupInProgressText": "Backup in progress...",
         "restoreInProgressText": "Data restoration in progress.\nDo not turn off the computer!",
         "restartApplicationText": "The application will now restart",
+        "checkInProgressText": "Checking...",
     },
     "DocumentPreviewDialog": {
         "titleText": "Preview",
