@@ -61,12 +61,27 @@ class DatabaseBackupCheckController(QObject):
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self._check_ok)
+        self.worker.empty.connect(self._check_empty)
+        self.worker.invalid.connect(self._check_invalid)
         self.worker.error.connect(self._check_error)
         self.thread.start()
 
     def _check_error(self, error: str) -> None:
         self._clean_thread()
         QTimer.singleShot(1000, lambda: self._finish_check(error=error))
+
+    def _check_empty(self) -> None:
+        self._clean_thread()
+        QTimer.singleShot(1000, lambda: self._finish_check(empty=True))
+
+    def _check_invalid(self, invalid_files: list[Path], check_errors: str) -> None:
+        self._clean_thread()
+        QTimer.singleShot(
+            1000,
+            lambda: self._finish_check(
+                invalid_files=invalid_files, check_errors=check_errors
+            ),
+        )
 
     def _check_ok(self) -> None:
         self._clean_thread()
@@ -83,22 +98,43 @@ class DatabaseBackupCheckController(QObject):
         self.worker = None
         self.thread = None
 
-    def _finish_check(self, error: str | None = None) -> None:
+    def _finish_check(
+        self,
+        empty: bool = False,
+        invalid_files: list[Path] | None = None,
+        check_errors: str = "",
+        error: str | None = None,
+    ) -> None:
         self.progress_dialog.close()
         self._reset_variables()
         if error is not None:
-            DatabaseBackupCheckController._handle_export_error(
+            DatabaseBackupCheckController._handle_check_error(
                 error,
                 f"{self.__class__.__name__}._database_backup_check_error",
                 AppContext.MAIN_WINDOW,
             )
             self.custom_check = None
             return
-        self.custom_check = None
+        if empty:
+            print("EMPTY")
+            self.custom_check = None
+            return
+        if invalid_files is not None:
+            if not check_errors:
+                check_errors = f"Invalid files count: {len(invalid_files)}"
+            print("check errors:", check_errors)
+            self.custom_check = None
+            DatabaseBackupCheckController._handle_check_error(
+                check_errors,
+                f"{self.__class__.__name__}._database_backup_check_error",
+                AppContext.MAIN_WINDOW,
+            )
+            return
         print("OK")
+        self.custom_check = None
 
     @staticmethod
-    def _handle_export_error(
+    def _handle_check_error(
         error: str, method: str, parent: QWidget, error_key: str = "DATABASE_ERROR"
     ) -> None:
         if not error:

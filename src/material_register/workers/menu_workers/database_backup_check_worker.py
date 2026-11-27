@@ -14,6 +14,8 @@ from material_register.providers.performance_provider import PerformanceProvider
 
 class DatabaseBackupCheckWorker(QObject):
     finished = Signal()
+    empty = Signal()
+    invalid = Signal(list, str)
     error = Signal(str)
 
     def __init__(self, check_path: Path, custom_check: bool) -> None:
@@ -21,20 +23,27 @@ class DatabaseBackupCheckWorker(QObject):
         self.check_path = check_path
         self.custom_check = custom_check
         self.db_connection = None
+        self.invalid_files = []
 
     @Slot()
     def run(self) -> None:
         start = PerformanceProvider.start()
         try:
             if self.custom_check:
-                ok, error = self._check_external_database()
+                ok, invalid_path, error = self._check_external_database()
                 if not ok:
-                    self.error.emit(error)
+                    self.invalid_files.append(invalid_path)
+                    self.invalid.emit(self.invalid_files, error)
                     return
             else:
-                ok, error = self._check_database_backups()
+                backups_exists = self._check_backups_exists()
+                if not backups_exists:
+                    self.empty.emit()
+                    return
+                ok, invalid_paths, error = self._check_database_backups()
                 if not ok:
-                    self.error.emit(error)
+                    self.invalid_files.extend(invalid_paths)
+                    self.invalid.emit(self.invalid_files, error)
                     return
             self.finished.emit()
         except Exception as e:
@@ -43,13 +52,13 @@ class DatabaseBackupCheckWorker(QObject):
             self._clean_db_connection()
             PerformanceProvider.stop(start, "DatabaseBackupCheckWorker.run")
 
-    def _check_external_database(self) -> tuple[bool, str]:
+    def _check_external_database(self) -> tuple[bool, Path, str]:
         ok, self.db_connection, error = create_external_connection(
             self.check_path,
             "database_backup_check_connection",
         )
         if not ok:
-            return False, error
+            return False, self.check_path, error
         for validator in (
             is_integrity_valid,
             is_schema_valid,
@@ -59,10 +68,13 @@ class DatabaseBackupCheckWorker(QObject):
             if not ok:
                 if isinstance(error, list):
                     error = "\n".join(error)
-                return False, error
-        return True, ""
+                return False, self.check_path, error
+        return True, self.check_path, ""
 
-    def _check_database_backups(self) -> tuple[bool, str]:
+    def _check_database_backups(self) -> tuple[bool, list[Path], str]:
+        invalid_files = []
+        errors = []
+        is_check_valid = False
         for file in self.check_path.rglob("*.db"):
             if file.is_file():
                 try:
@@ -70,7 +82,9 @@ class DatabaseBackupCheckWorker(QObject):
                         file, "database_backup_check_connection"
                     )
                     if not ok:
-                        return False, error
+                        invalid_files.append(file)
+                        errors.append(f"{file} - {error}")
+                        continue
                     for validator in (
                         is_integrity_valid,
                         is_schema_valid,
@@ -78,12 +92,22 @@ class DatabaseBackupCheckWorker(QObject):
                     ):
                         ok, error = validator(self.db_connection)
                         if not ok:
+                            invalid_files.append(file)
                             if isinstance(error, list):
                                 error = "\n".join(error)
-                            return False, error
+                            errors.append(f"{file} - {error}")
+                            break
                 finally:
                     self._clean_db_connection()
-        return True, ""
+        if len(invalid_files) == 0:
+            is_check_valid = True
+        return is_check_valid, invalid_files, "\n".join(errors)
+
+    def _check_backups_exists(self) -> bool:
+        for file in self.check_path.rglob("*.db"):
+            if file.is_file():
+                return True
+        return False
 
     def _clean_db_connection(self) -> None:
         if self.db_connection is None:
