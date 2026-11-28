@@ -4,6 +4,7 @@ from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
 
+from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import (
@@ -99,6 +100,19 @@ class DatabaseBackupService:
         except OSError as e:
             ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
             return False
+        return True
+
+    @staticmethod
+    def delete_invalid_backup(invalid_backup: list[Path]) -> bool:
+        database_path = (PathsProvider.database / DATABASE_NAME).with_suffix(".db")
+        for backup_path in invalid_backup:
+            if backup_path.resolve() == database_path.resolve():
+                continue
+            try:
+                backup_path.unlink(missing_ok=True)
+            except OSError as e:
+                ErrorHandler.handle_error(e, LOGGER_DB, LOG_LEVEL_CRITICAL)
+                return False
         return True
 
     @staticmethod

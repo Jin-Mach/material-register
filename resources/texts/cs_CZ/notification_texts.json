@@ -28,5 +28,9 @@
   "DOCUMENTS": {
     "DOCUMENT_SAVED": "Soubor uložen",
     "DOCUMENT_SENT": "Dokument odeslán do tiskové fronty"
+  },
+  "CHECKS": {
+    "BACKUP_CHECK": "Kontrola záloh dokončena",
+    "BACKUP_DELETED": "Neplatné zálohy smazány"
   }
 }

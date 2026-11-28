@@ -28,5 +28,9 @@
   "DOCUMENTS": {
     "DOCUMENT_SAVED": "Document saved",
     "DOCUMENT_SENT": "Document sent to print queue"
+  },
+  "CHECKS": {
+    "BACKUP_CHECK": "Backup check completed",
+    "BACKUP_DELETED": "Invalid backups deleted"
   }
 }

@@ -6,9 +6,13 @@ from PySide6.QtWidgets import QFileDialog, QWidget
 
 from material_register.core.app_context import AppContext
 from material_register.providers.paths_provider import PathsProvider
+from material_register.providers.texts_provider import TextsProvider
+from material_register.services.database_backup_service import DatabaseBackupService
 from material_register.services.error_handler import ErrorHandler
 from material_register.ui.config.ui_constants import LOG_LEVEL_WARNING, LOGGER_DB
 from material_register.ui.dialogs.error_dialog import ErrorDialog
+from material_register.ui.dialogs.message_boxes import MessageBoxes
+from material_register.ui.dialogs.notification_dialog import NotificationDialog
 from material_register.ui.dialogs.progress_dialog import ProgressDialog
 from material_register.ui.setup.ui_texts import UiTexts
 from material_register.workers.menu_workers.database_backup_check_worker import (
@@ -24,6 +28,7 @@ class DatabaseBackupCheckController(QObject):
         super().__init__(menu_bar)
         self.menu_bar = menu_bar
         self.ui_texts = UiTexts.UI_TEXTS
+        self.notification_texts = TextsProvider.NOTIFICATION_TEXTS.get("CHECKS", None)
         self.custom_check = None
         self.progress_dialog = None
         self.worker = None
@@ -116,21 +121,37 @@ class DatabaseBackupCheckController(QObject):
             self.custom_check = None
             return
         if empty:
-            print("EMPTY")
+            MessageBoxes.show_error(AppContext.MAIN_WINDOW, "NO_DATABASE_BACKUP")
             self.custom_check = None
             return
         if invalid_files is not None:
             if not check_errors:
                 check_errors = f"Invalid files count: {len(invalid_files)}"
-            print("check errors:", check_errors)
+            ErrorHandler.handle_error(check_errors, LOGGER_DB, LOG_LEVEL_WARNING)
+            if self.custom_check:
+                MessageBoxes.show_error(AppContext.MAIN_WINDOW, "INVALID_CUSTOM_BACKUP")
+            else:
+                question = MessageBoxes.show_question(
+                    AppContext.MAIN_WINDOW, "DELETE_INVALID_BACKUP"
+                )
+                if question:
+                    if not DatabaseBackupService.delete_invalid_backup(invalid_files):
+                        DatabaseBackupCheckController._handle_check_error(
+                            "Remove invalid backup failed",
+                            f"{self.__class__.__name__}._database_backup_check_error",
+                            AppContext.MAIN_WINDOW,
+                        )
+                    else:
+                        DatabaseBackupCheckController._notification_handler(
+                            self.notification_texts,
+                            "BACKUP_DELETED",
+                            "Invalid backups deleted",
+                        )
             self.custom_check = None
-            DatabaseBackupCheckController._handle_check_error(
-                check_errors,
-                f"{self.__class__.__name__}._database_backup_check_error",
-                AppContext.MAIN_WINDOW,
-            )
             return
-        print("OK")
+        DatabaseBackupCheckController._notification_handler(
+            self.notification_texts, "BACKUP_CHECK", "Backup check completed"
+        )
         self.custom_check = None
 
     @staticmethod
@@ -141,3 +162,14 @@ class DatabaseBackupCheckController(QObject):
             error = f"Unknown export error: {method}"
         ErrorHandler.handle_error(f"{error}: {method}", LOGGER_DB, LOG_LEVEL_WARNING)
         ErrorDialog(parent).show_dialog(error_key, False)
+
+    @staticmethod
+    def _notification_handler(
+        notification_texts: dict[str, str], key: str, default: str
+    ) -> None:
+        if notification_texts is None:
+            return
+        notification = NotificationDialog(
+            AppContext.MAIN_WINDOW, notification_texts.get(key, default)
+        )
+        notification.show_notification()

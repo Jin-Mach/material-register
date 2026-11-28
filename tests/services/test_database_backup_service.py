@@ -2,6 +2,7 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
+from material_register.db.config.db_constants import DATABASE_NAME
 from material_register.providers.paths_provider import PathsProvider
 from material_register.services.database_backup_service import DatabaseBackupService
 
@@ -153,3 +154,29 @@ def test_create_custom_backup_removes_invalid_file_on_failure(
     result = DatabaseBackupService.create_custom_backup(database_path, backup_path)
     assert result is False
     assert not backup_path.exists()
+
+
+def test_delete_invalid_backup(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(PathsProvider, "database", tmp_path)
+    invalid_file_1 = tmp_path / "invalid_01.db"
+    invalid_file_2 = tmp_path / "invalid_02.db"
+    invalid_file_1.touch()
+    invalid_file_2.touch()
+    result = DatabaseBackupService.delete_invalid_backup(
+        [invalid_file_1, invalid_file_2]
+    )
+    assert result is True
+    assert not invalid_file_1.exists()
+    assert not invalid_file_2.exists()
+
+
+def test_delete_invalid_backup_protects_main_database(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(PathsProvider, "database", tmp_path)
+    database_path = tmp_path / DATABASE_NAME
+    database_path = database_path.with_suffix(".db")
+    database_path.touch()
+    result = DatabaseBackupService.delete_invalid_backup([database_path])
+    assert result is True
+    assert database_path.exists()

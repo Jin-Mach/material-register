@@ -123,5 +123,21 @@
     "TITLE": "Chyba",
     "TEXT": "Není dostupná žádná tiskárna.",
     "CLOSE": "Zavřít"
+  },
+  "NO_DATABASE_BACKUP": {
+    "TITLE": "Kontrola záloh",
+    "TEXT": "Nebyla nalezena žádná záloha databáze.",
+    "CLOSE": "Zavřít"
+  },
+  "INVALID_CUSTOM_BACKUP": {
+    "TITLE": "Kontrola záloh",
+    "TEXT": "Vybraný soubor není platnou zálohou databáze.\nZkontrolujte soubor nebo vyberte jinou zálohu.",
+    "CLOSE": "Zavřít"
+  },
+  "DELETE_INVALID_BACKUP": {
+    "TITLE": "Kontrola záloh",
+    "TEXT": "Nalezeny neplatné zálohy databáze.\nOpravdu smazat?\nTato akce je nevratná.",
+    "YES": "Smazat",
+    "NO": "Zrušit"
   }
 }

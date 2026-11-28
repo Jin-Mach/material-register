@@ -123,5 +123,21 @@
     "TITLE": "Error",
     "TEXT": "No printer available",
     "CLOSE": "Close"
+  },
+  "NO_DATABASE_BACKUP": {
+    "TITLE": "Backup check",
+    "TEXT": "No database backup was found.",
+    "CLOSE": "Close"
+  },
+  "INVALID_CUSTOM_BACKUP": {
+    "TITLE": "Backup Check",
+    "TEXT": "The database backup is invalid.\nWe recommend deleting the file and creating a new backup.",
+    "CLOSE": "Close"
+  },
+  "DELETE_INVALID_BACKUP": {
+    "TITLE": "Backup check",
+    "TEXT": "Invalid database backups were found.\nAre you sure you want to delete them? This action cannot be undone.",
+    "YES": "Delete",
+    "NO": "Cancel"
   }
 }
